@@ -13,9 +13,12 @@ Beta Java bindings for the [Intercom API](https://api.intercom.io/docs)
  - [Configuration](#configuration)
 
 
-## Download
+## Add a dependency
 
 [ ![Download](https://api.bintray.com/packages/intercom/intercom-maven/intercom-java/images/download.svg) ](https://bintray.com/intercom/intercom-maven/intercom-java/_latestVersion)
+
+The distribution is hosted on [bintray](https://bintray.com/intercom/intercom-maven/intercom-java/view). 
+To use the client,you can add the jcenter repository to your dependencies. 
 
 ### maven
  
