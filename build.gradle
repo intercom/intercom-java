@@ -1,0 +1,155 @@
+buildscript {
+  repositories {
+    jcenter()
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
+    classpath 'org.ajoberstar:gradle-git:0.10.0'
+  }
+}
+
+apply plugin: 'maven'
+apply plugin: 'idea'
+apply plugin: 'java'
+
+sourceCompatibility = '1.7'
+
+
+import org.ajoberstar.grgit.*
+
+import java.text.SimpleDateFormat
+
+final globalVersion = new Version(version)
+def rawVersion = version
+
+configurations {
+  published
+}
+
+
+allprojects {
+  sourceCompatibility = '1.7'
+  repositories {
+    jcenter()
+    mavenCentral()
+  }
+  apply plugin: 'idea'
+  apply plugin: 'com.jfrog.bintray'
+  configure(subprojects.findAll { new File(it.projectDir, 'src').directory }) {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'idea'
+  }
+  group = 'io.intercom'
+  version = globalVersion
+  status = version.status
+  ext.publish = true
+  bintray {
+    // gradle apslodes if the bintray* props aren't found and we never run this task in circle
+    if (System.getenv('release') != null) {
+      user = bintrayUser
+      key = bintrayKey
+    }
+    configurations = ['published', 'archives']
+    publish = project.publish
+    pkg {
+      repo = 'intercom-maven'
+      name = 'intercom-java'
+      userOrg = 'intercom'
+      desc = 'Java bindings for the Intercom API'
+      websiteUrl = 'https://github.com/intercom/intercom-java'
+      issueTrackerUrl = 'https://github.com/intercom/intercom-java/issues'
+      vcsUrl = 'https://github.com/intercom/intercom-java.git'
+      licenses = ['Apache-2.0']
+      labels = ['intercom', 'java', 'api']
+      publicDownloadNumbers = true
+      //noinspection GroovyAssignabilityCheck
+      version {
+        name = globalVersion
+        vcsTag = globalVersion
+      }
+    }
+  }
+}
+
+subprojects {
+  apply plugin: 'maven'
+  sourceCompatibility = '1.7'
+  if (project.plugins.hasPlugin('java')) {
+    configurations {
+      published
+    }
+    dependencies {
+      testCompile 'junit:junit:4.11'
+    }
+    task sourceJar(type: Jar) {
+      from sourceSets.main.allSource
+      classifier = 'sources'
+    }
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+      classifier = 'javadoc'
+      from javadoc.destinationDir
+    }
+    artifacts {
+      published sourceJar
+      published javadocJar
+    }
+  }
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.0'
+}
+
+class Version {
+  // snapshot to tstamped version via from https://github.com/bintray/bintray-examples
+  String originalVersion
+  String thisVersion
+  String status
+  Date buildTime
+
+  Version(String versionValue) {
+    buildTime = new Date()
+    originalVersion = versionValue
+    if (originalVersion.endsWith('-SNAPSHOT')) {
+      status = 'integration'
+      thisVersion = originalVersion.substring(0, originalVersion.length() - 'SNAPSHOT'.length()) + getTimestamp()
+    } else {
+      status = 'release'
+      thisVersion = versionValue
+    }
+  }
+
+  String getTimestamp() {
+    // Convert local file timestamp to UTC
+    def format = new SimpleDateFormat('yyyyMMddHHmmss')
+    format.setCalendar(Calendar.getInstance(TimeZone.getTimeZone('UTC')));
+    return format.format(buildTime)
+  }
+
+  String toString() {
+    thisVersion
+  }
+}
+
+ext.repo = Grgit.open(project.file('.'))
+
+
+task tagRelease << {
+  repo.tag.add {
+    name = globalVersion
+    message = "Release of ${rawVersion}"
+  }
+  repo.push(tags: true)
+}
+
+/*
+  export release=1 && gradle publishRelease
+*/
+
+task publishRelease(dependsOn: ['clean', 'tagRelease', 'bintrayUpload'])
+tagRelease.mustRunAfter clean
+bintrayUpload.mustRunAfter tagRelease
+
+
