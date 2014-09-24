@@ -27,7 +27,7 @@ class HttpClient {
 
     private static final String CLIENT_AGENT_DETAILS = clientAgentDetails();
 
-    private static final String USER_AGENT = "intercom-java/%s" + Intercom.VERSION;
+    private static final String USER_AGENT = Intercom.USER_AGENT;
 
     private static final String UTF_8 = "UTF-8";
 
