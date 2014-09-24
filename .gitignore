@@ -1,0 +1,13 @@
+*/**/SpikeMain.java
+.gradle
+*.class
+out/*
+*.iml
+*.ipr
+*.iws
+build
+*/build/*
+*/build/**/*.jar
+*.war
+*.ear
+hs_err_pid*
