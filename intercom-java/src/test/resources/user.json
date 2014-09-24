@@ -1,0 +1,75 @@
+{
+    "type": "user",
+    "id": "530370b477ad7120001d",
+    "user_id": "25",
+    "email": "wash@serenity.io",
+    "name": "Hoban Washburne",
+    "remote_created_at": 1392731331,
+    "updated_at": 1392734388,
+    "session_count": 0,
+    "last_seen_ip": "1.2.3.4",
+    "unsubscribed_from_emails": false,
+    "last_request_at": 1397574667,
+    "created_at": 1392734388,
+    "user_agent_data": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9",
+    "custom_attributes": {
+        "truthy_typed": true,
+        "floatly_typed": 155.5,
+        "stringly_typed": "data",
+        "dately_typed_at": 1397574667,
+        "longly_typed": 221397574667,
+        "intly_typed": 1,
+        "nully_typed": null
+    },
+    "avatar": {
+        "type": "avatar",
+        "image_url": "http://example.org/128Wash.jpg"
+    },
+    "location_data": {
+        "type": "location_data",
+        "city_name": "Dublin",
+        "continent_code": "EU",
+        "country_code": "IRL",
+        "country_name": "Ireland",
+        "latitude": 53.159233,
+        "longitude": -6.723,
+        "postal_code": null,
+        "region_name": "Dublin",
+        "timezone": "Europe/Dublin"
+    },
+    "social_profiles": {
+        "type": "social_profile.list",
+        "social_profiles": [
+            {
+                "name": "Twitter",
+                "id": "1235d3213",
+                "username": "th1sland",
+                "url": "http://twitter.com/th1sland"
+            }
+        ]
+    },
+    "companies": {
+        "type": "company.list",
+        "companies": [
+            {
+                "id": "530370b477ad7120001e"
+            }
+        ]
+    },
+    "segments": {
+        "type": "segment.list",
+        "segments": [
+            {
+                "id": "5310d8e7598c9a0b24000002"
+            }
+        ]
+    },
+    "tags": {
+        "type": "tag.list",
+        "tags": [
+            {
+                "id": "202"
+            }
+        ]
+    }
+}

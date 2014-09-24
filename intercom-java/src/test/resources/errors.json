@@ -1,0 +1,13 @@
+{
+    "type": "error.list",
+    "errors": [
+        {
+            "code": "not_found",
+            "message": "No such user_id[314159]"
+        },
+        {
+            "code": "not_found",
+            "message": "No such email[pi@example.org]"
+        }
+    ]
+}
