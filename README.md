@@ -25,7 +25,7 @@ Add this declaration to pom.xml:
 <dependency>
   <groupId>io.intercom</groupId>
   <artifactId>intercom-java</artifactId>
-  <version>0.0.3</version>
+  <version>0.0.0</version>
 </dependency>
 ```
 
@@ -34,7 +34,7 @@ Add this declaration to pom.xml:
 Add this declaration to build.gradle:
 
 ```groovy
-compile 'io.intercom:intercom-java:0.0.3'
+compile 'io.intercom:intercom-java:0.0.0'
 ```
 
 

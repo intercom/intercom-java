@@ -135,6 +135,10 @@ class Version {
 
 ext.repo = Grgit.open(project.file('.'))
 
+task printVersion << {
+  println "publication version: ${globalVersion}"
+  println "raw version: ${rawVersion}"
+}
 
 task tagRelease << {
   repo.tag.add {
