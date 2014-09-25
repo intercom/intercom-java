@@ -21,8 +21,19 @@ The distribution is hosted on [bintray](https://bintray.com/intercom/intercom-ma
 To use the client,you can add the jcenter repository to your dependencies. 
 
 ### maven
+
+Add jcenter to your repositories in `pom.xml` or `settings.xml`:
+
+```xml
+<repositories>
+  <repository>
+    <id>jcenter</id>
+    <url>http://jcenter.bintray.com</url>
+  </repository>
+</repositories>
+```  
  
-Add this declaration to pom.xml:
+and add the project declaration to your `pom.xml`:
   
 ```xml
 <dependency>
@@ -34,10 +45,19 @@ Add this declaration to pom.xml:
 
 ### gradle
 
-Add this declaration to build.gradle:
+Add jcenter to your `repositories` block:
 
 ```groovy
-compile 'io.intercom:intercom-java:0.0.0'
+repositories {
+ jcenter()
+}
+```
+
+and add the project to the `dependencies` block in your `build.gradle`:
+
+dependencies {
+  compile 'io.intercom:intercom-java:0.0.0'
+}  
 ```
 
 
