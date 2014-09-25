@@ -55,6 +55,7 @@ repositories {
 
 and add the project to the `dependencies` block in your `build.gradle`:
 
+```groovy
 dependencies {
   compile 'io.intercom:intercom-java:0.0.0'
 }  
