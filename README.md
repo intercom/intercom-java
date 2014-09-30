@@ -1,4 +1,4 @@
-[![Build Status](https://circleci.com/gh/intercom/intercom-java.png?circle-token=2b31e7a642b2bd7a04ba21719cc6b8afc1932f36)](https://circleci.com/gh/intercom/intercom-java)
+[![Build Status](https://circleci.com/gh/intercom/intercom-java.ping)](https://circleci.com/gh/intercom/intercom-java)
 
 
 # intercom-java
