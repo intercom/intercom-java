@@ -52,4 +52,12 @@ public class NotificationData extends TypedData {
 
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "NotificationData{" +
+            "type='" + type + '\'' +
+            ", item=" + item +
+            "} " + super.toString();
+    }
 }
