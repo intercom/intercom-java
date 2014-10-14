@@ -47,4 +47,8 @@ public class AdminReply extends Reply<Admin> {
         this.from = admin;
     }
 
+    @Override
+    public String toString() {
+        return "AdminReply{} " + super.toString();
+    }
 }

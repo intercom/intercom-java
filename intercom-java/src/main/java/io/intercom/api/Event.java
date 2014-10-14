@@ -149,6 +149,18 @@ public class Event extends TypedData {
         result = 31 * result + (metadata != null ? metadata.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+            "type='" + type + '\'' +
+            ", eventName='" + eventName + '\'' +
+            ", createdAt=" + createdAt +
+            ", email='" + email + '\'' +
+            ", userID='" + userID + '\'' +
+            ", metadata=" + metadata +
+            "} " + super.toString();
+    }
 }
 
 

@@ -55,4 +55,9 @@ public class UserReply extends Reply<User> {
     public UserReply(User user) {
         this.from = user;
     }
+
+    @Override
+    public String toString() {
+        return "UserReply{} " + super.toString();
+    }
 }

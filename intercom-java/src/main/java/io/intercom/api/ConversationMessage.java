@@ -62,4 +62,13 @@ public class ConversationMessage extends TypedData {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "ConversationMessage{" +
+            "type='" + type + '\'' +
+            ", subject='" + subject + '\'' +
+            ", body='" + body + '\'' +
+            ", author=" + author +
+            "} " + super.toString();
+    }
 }
