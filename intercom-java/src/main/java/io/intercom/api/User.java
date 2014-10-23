@@ -38,7 +38,6 @@ public class User extends TypedData implements Replier {
     public static User find(String id)
         throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
         final URI users = UriBuilder.newBuilder().path("users").path(id).build();
-        System.out.println(users.toASCIIString());
         final HttpClient resource = new HttpClient(users);
         return resource.get(User.class);
     }
