@@ -135,14 +135,29 @@ public class User extends TypedData implements Replier {
         @JsonProperty("last_request_at")
         private long lastRequestAt;
 
+        /**
+         * Making this a Boolean allows us to send true or false as set
+         * values leaving null the ignored field for NON_DEFAULT. A
+         * primitive would result in false not being sent
+         */
         @JsonProperty("unsubscribed_from_emails")
-        private boolean unsubscribedFromEmails;
+        private Boolean unsubscribedFromEmails;
 
+        /**
+         * Making this a Boolean allows us to send true or false as set
+         * values leaving null the ignored field for NON_DEFAULT. A
+         * primitive would result in false not being sent
+         */
         @JsonProperty("update_last_request_at")
-        private boolean updateLastRequestAt;
+        private Boolean updateLastRequestAt;
 
+        /**
+         * Making this a Boolean allows us to send true or false as set
+         * values leaving null the ignored field for NON_DEFAULT. A
+         * primitive would result in false not being sent
+         */
         @JsonProperty("new_session")
-        private boolean newSession;
+        private Boolean newSession;
 
         public UserUpdate() {
         }
