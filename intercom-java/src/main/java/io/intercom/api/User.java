@@ -4,9 +4,11 @@ package io.intercom.api;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,12 +29,34 @@ public class User extends TypedData implements Replier {
         userUpdate.lastSeenIp = user.getLastSeenIp();
         userUpdate.customAttributes = user.getCustomAttributes();
         userUpdate.lastSeenUserAgent = user.getUserAgentData();
-        userUpdate.companyCollection = user.getCompanyCollection().getPageItems();
+        userUpdate.companyCollection = buildUserUpdateCompanies(user);
         userUpdate.lastRequestAt = user.getLastRequestAt();
         userUpdate.unsubscribedFromEmails = user.getUnsubscribedFromEmails();
         userUpdate.updateLastRequestAt = user.isUpdateLastRequestAt();
         userUpdate.newSession = user.isNewSession();
         return userUpdate;
+    }
+
+    private static List<CompanyStringPlan> buildUserUpdateCompanies(User user) {
+        // restrictions on the company data that can be sent via a user update
+        final ArrayList<CompanyStringPlan> updatableCompanies = Lists.newArrayList();
+        if (user.getCompanyCollection() != null) {
+            final List<Company> companies = user.getCompanyCollection().getPageItems();
+            for (Company company : companies) {
+                final CompanyStringPlan updatableCompany = new CompanyStringPlan();
+                updatableCompany.setCompanyID(company.getCompanyID());
+                updatableCompany.setName(company.getName());
+                updatableCompany.setSessionCount(company.getSessionCount());
+                updatableCompany.setMonthlySpend(company.getMonthlySpend());
+                updatableCompany.setRemoteCreatedAt(company.getRemoteCreatedAt());
+                //  api doesn't send back plan data for a company inside a user
+                if (company.getPlan() != null) {
+                    updatableCompany.setPlan(company.getPlan().getName());
+                }
+                updatableCompanies.add(updatableCompany);
+            }
+        }
+        return updatableCompanies;
     }
 
     public static User find(String id)
@@ -106,7 +130,7 @@ public class User extends TypedData implements Replier {
         private String lastSeenUserAgent;
 
         @JsonProperty("companies")
-        private List<Company> companyCollection;
+        private List<CompanyStringPlan> companyCollection;
 
         @JsonProperty("last_request_at")
         private long lastRequestAt;
@@ -155,7 +179,7 @@ public class User extends TypedData implements Replier {
             return lastSeenUserAgent;
         }
 
-        public List<Company> getCompanyCollection() {
+        public List<CompanyStringPlan> getCompanyCollection() {
             return companyCollection;
         }
 
