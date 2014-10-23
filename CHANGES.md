@@ -1,5 +1,9 @@
 ### Changes
 
+#### 0.0.3
+
+- only send allowed fields when adding a company to a user (https://github.com/intercom/intercom-java/issues/7)
+
 #### 0.0.2
 
  - add toString methods on some classes
