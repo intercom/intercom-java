@@ -24,6 +24,7 @@ public class SegmentCollection extends TypedDataCollection<Segment> implements I
         return fetchNextPage(SegmentCollection.class);
     }
 
+    @SuppressWarnings("EmptyMethod")
     @JsonProperty("segments")
     @Override
     public List<Segment> getPageItems() {

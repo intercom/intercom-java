@@ -34,7 +34,7 @@ public class UserTest {
             .setNewSession(true)
             .setUserAgentData("user-agent");
 
-        final User.UserUpdate userUpdate = User.buildUserUpdate(user);
+        final User.UserUpdate userUpdate = User.UserUpdate.buildFrom(user);
 
         assertEquals("wash@serenity.io", userUpdate.getEmail());
         assertEquals("22", userUpdate.getUserId());

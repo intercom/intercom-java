@@ -11,9 +11,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 class AdminMessageResponse extends TypedData {
 
-    @JsonProperty("type")
-    private final String type = "admin_message";
-
     @JsonProperty("id")
     private String id;
 
@@ -45,7 +42,7 @@ class AdminMessageResponse extends TypedData {
     }
 
     public String getType() {
-        return type;
+        return "admin_message";
     }
 
     public String getId() {

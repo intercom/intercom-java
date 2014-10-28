@@ -381,7 +381,7 @@ public class Subscription extends TypedData {
         result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (int) (createdAt ^ (createdAt >>> 32));
         result = 31 * result + (int) (updatedAt ^ (updatedAt >>> 32));
-        result = 31 * result + (serviceType != null ? serviceType.hashCode() : 0);
+        result = 31 * result + (serviceType.hashCode());
         result = 31 * result + (appID != null ? appID.hashCode() : 0);
         result = 31 * result + (url != null ? url.hashCode() : 0);
         result = 31 * result + (self != null ? self.hashCode() : 0);

@@ -60,13 +60,13 @@ class HttpClient {
 
     private final String apiKey = Intercom.getApiKey();
 
-    private HttpConnectorSupplier connection = Intercom.getHttpConnectorSupplier();
+    private final HttpConnectorSupplier connection = Intercom.getHttpConnectorSupplier();
 
     public HttpClient(URI uri) {
         this(uri, Maps.<String, String>newHashMap());
     }
 
-    public HttpClient(URI uri, Map<String, String> headers) {
+    private HttpClient(URI uri, Map<String, String> headers) {
         this.uri = uri;
         this.headers = headers;
         this.objectMapper = MapperSupport.objectMapper();
@@ -213,7 +213,7 @@ class HttpClient {
         return conn;
     }
 
-    // todo: expose this config betterly
+    // todo: expose this config
     private HttpURLConnection prepareConnection(HttpURLConnection conn) {
         conn.setConnectTimeout(Intercom.getConnectionTimeout());
         conn.setReadTimeout(Intercom.getRequestTimeout());

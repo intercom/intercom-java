@@ -8,13 +8,13 @@ public class Intercom {
 
     private static volatile URI apiBaseURI = API_BASE_URI;
 
-    private static final String AUTH_SCHEME = getAuthBasic();
-
     static final String AUTH_BASIC = "Basic";
+
+    private static final String AUTH_SCHEME = AUTH_BASIC;
 
     static final String AUTH_BEARER = "Bearer";
 
-    public static final String VERSION = "0.1.0-SNAPSHOT";
+    private static final String VERSION = "0.1.0-SNAPSHOT";
 
     public static final String USER_AGENT = "intercom-java/" + Intercom.VERSION;
 
@@ -86,15 +86,8 @@ public class Intercom {
         Intercom.apiBaseURI = apiBaseURI;
     }
 
-    static String getAuthBasic() {
-        return AUTH_BASIC;
-    }
-
     static String getAuthScheme() {
         return AUTH_SCHEME;
     }
 
-    static String getAuthBearer() {
-        return AUTH_BEARER;
-    }
 }

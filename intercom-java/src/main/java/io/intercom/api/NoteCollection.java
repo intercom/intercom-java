@@ -21,6 +21,7 @@ public class NoteCollection extends TypedDataCollection<Note> implements Iterato
         return fetchNextPage(NoteCollection.class);
     }
 
+    @SuppressWarnings("EmptyMethod")
     @JsonProperty("notes")
     @Override
     public List<Note> getPageItems() {

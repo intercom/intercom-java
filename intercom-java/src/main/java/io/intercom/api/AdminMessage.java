@@ -4,6 +4,7 @@ package io.intercom.api;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.annotations.VisibleForTesting;
 
 
 @SuppressWarnings("UnusedDeclaration")
@@ -49,6 +50,8 @@ public class AdminMessage extends TypedData {
         return id;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
+    @VisibleForTesting
     AdminMessage setId(String id) {
         this.id = id;
         return this;
@@ -94,6 +97,7 @@ public class AdminMessage extends TypedData {
         return createdAt;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public AdminMessage setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
         return this;

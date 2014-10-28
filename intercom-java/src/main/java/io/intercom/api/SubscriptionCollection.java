@@ -23,6 +23,7 @@ public class SubscriptionCollection extends TypedDataCollection<Subscription> im
         return fetchNextPage(SubscriptionCollection.class);
     }
 
+    @SuppressWarnings("EmptyMethod")
     @JsonProperty("items")
     @Override
     public List<Subscription> getPageItems() {

@@ -6,6 +6,7 @@ public class IntercomException extends RuntimeException {
 
     private ErrorCollection errorCollection;
 
+    @SuppressWarnings("WeakerAccess")
     public IntercomException(String message) {
         super(message);
     }
@@ -19,6 +20,7 @@ public class IntercomException extends RuntimeException {
         this.errorCollection = errorCollection;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public IntercomException(ErrorCollection errorCollection, Throwable cause) {
         this(errorCollection.getErrors().get(0).getMessage(), cause);
         this.errorCollection = errorCollection;

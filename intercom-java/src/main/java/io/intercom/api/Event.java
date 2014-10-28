@@ -84,6 +84,7 @@ public class Event extends TypedData {
         return createdAt;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public Event setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
         return this;

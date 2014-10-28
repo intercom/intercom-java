@@ -23,6 +23,7 @@ public class AdminCollection extends TypedDataCollection<Admin> implements Itera
         return fetchNextPage(AdminCollection.class);
     }
 
+    @SuppressWarnings("EmptyMethod")
     @JsonProperty("admins")
     @Override
     public List<Admin> getPageItems() {

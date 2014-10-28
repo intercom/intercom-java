@@ -1,6 +1,5 @@
 package io.intercom.api;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
@@ -15,7 +14,7 @@ class TopicSerializer extends StdSerializer<Subscription.Topic> {
 
     @Override
     public void serialize(Subscription.Topic value, JsonGenerator jgen, SerializerProvider provider)
-        throws IOException, JsonGenerationException {
+        throws IOException {
         jgen.writeObject(value.toString());
     }
 }

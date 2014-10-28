@@ -21,6 +21,7 @@ public class UserCollection extends TypedDataCollection<User> implements Iterato
         this.pageItems = users;
     }
 
+    @SuppressWarnings("EmptyMethod")
     @JsonProperty("users")
     @Override
     public List<User> getPageItems() {

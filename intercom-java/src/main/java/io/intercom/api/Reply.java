@@ -11,17 +11,17 @@ class Reply<T extends Replier> extends TypedData {
     private String body;
 
     @JsonProperty("from")
-    protected T from;
+    T from;
 
     Reply() {
     }
 
     @JsonProperty("type")
-    public String getType() {
+    String getType() {
         return from.getReplyType();
     }
 
-    public String getBody() {
+    String getBody() {
         return body;
     }
 
@@ -30,7 +30,7 @@ class Reply<T extends Replier> extends TypedData {
         return this;
     }
 
-    public T getFrom() {
+    T getFrom() {
         return from;
     }
 
@@ -40,7 +40,7 @@ class Reply<T extends Replier> extends TypedData {
         return this;
     }
 
-    public String getMessageType() {
+    String getMessageType() {
         return messageType;
     }
 

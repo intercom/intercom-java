@@ -17,6 +17,7 @@ public class NotificationErrorCollection extends TypedDataCollection<Notificatio
         iterator = new TypedDataCollectionIterator<NotificationError>(this);
     }
 
+    @SuppressWarnings("EmptyMethod")
     @JsonProperty("notifications")
     @Override
     public List<NotificationError> getPageItems() {

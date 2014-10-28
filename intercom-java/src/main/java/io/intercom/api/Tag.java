@@ -169,7 +169,10 @@ public class Tag extends TypedData {
         return id;
     }
 
-    public Tag setId(String id) {
+
+    @SuppressWarnings("UnusedReturnValue")
+    @VisibleForTesting
+    Tag setId(String id) {
         this.id = id;
         return this;
     }

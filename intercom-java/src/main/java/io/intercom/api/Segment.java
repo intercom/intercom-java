@@ -44,6 +44,7 @@ public class Segment extends TypedData {
     @JsonProperty("updated_at")
     private long updatedAt;
 
+    @SuppressWarnings("WeakerAccess")
     public Segment() {
     }
 

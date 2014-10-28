@@ -26,6 +26,7 @@ public class UserReply extends Reply<User> {
             return reply.getType();
         }
 
+        @SuppressWarnings("SameReturnValue")
         @JsonProperty("message_type")
         public String getMessageType() {
             return "comment";

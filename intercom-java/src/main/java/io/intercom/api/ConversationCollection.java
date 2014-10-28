@@ -17,6 +17,7 @@ public class ConversationCollection extends TypedDataCollection<Conversation> im
         iterator = new TypedDataCollectionIterator<Conversation>(this);
     }
 
+    @SuppressWarnings("EmptyMethod")
     @JsonProperty("conversations")
     public List<Conversation> getPageItems() {
         return super.getPageItems();

@@ -10,9 +10,6 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class ErrorCollection {
 
-    @JsonProperty("type")
-    private String type = "error.list";
-
     @JsonProperty("errors")
     private List<Error> errors;
 
@@ -31,6 +28,6 @@ public final class ErrorCollection {
     }
 
     public String getType() {
-        return type;
+        return "error.list";
     }
 }

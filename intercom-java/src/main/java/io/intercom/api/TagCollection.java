@@ -23,6 +23,7 @@ public class TagCollection extends TypedDataCollection<Tag> implements Iterator<
         return fetchNextPage(TagCollection.class);
     }
 
+    @SuppressWarnings("EmptyMethod")
     @JsonProperty("tags")
     @Override
     public List<Tag> getPageItems() {

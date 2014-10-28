@@ -25,6 +25,7 @@ public class CompanyCollection extends TypedDataCollection<Company> implements I
         this.pageItems = companies;
     }
 
+    @SuppressWarnings("EmptyMethod")
     @JsonProperty("companies")
     @Override
     public List<Company> getPageItems() {

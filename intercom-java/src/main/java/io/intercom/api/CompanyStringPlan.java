@@ -12,9 +12,6 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 class CompanyStringPlan extends TypedData {
 
-    @JsonProperty("type")
-    private final String type = "company";
-
     @JsonProperty("id")
     private String id;
 
@@ -44,7 +41,7 @@ class CompanyStringPlan extends TypedData {
     }
 
     public String getType() {
-        return type;
+        return "company";
     }
 
     public String getId() {

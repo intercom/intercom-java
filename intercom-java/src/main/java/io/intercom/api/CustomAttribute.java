@@ -41,8 +41,8 @@ public class CustomAttribute<T> {
             super(name, value, String.class);
         }
 
-        private StringAttribute(String name, String value, Class<String> classt) {
-            super(name, value, classt);
+        private StringAttribute(String name, String value, Class<String> clazz) {
+            super(name, value, clazz);
         }
     }
 
@@ -52,15 +52,15 @@ public class CustomAttribute<T> {
             super(name, value, Boolean.class);
         }
 
-        private BooleanAttribute(String name, boolean value, Class<Boolean> classt) {
-            super(name, value, classt);
+        private BooleanAttribute(String name, boolean value, Class<Boolean> clazz) {
+            super(name, value, clazz);
         }
     }
 
     public static class DoubleAttribute extends CustomAttribute<Double> {
 
-        private DoubleAttribute(String name, double value, Class<Double> classt) {
-            super(name, value, classt);
+        private DoubleAttribute(String name, double value, Class<Double> clazz) {
+            super(name, value, clazz);
         }
 
         private DoubleAttribute(String name, double value) {
@@ -70,8 +70,8 @@ public class CustomAttribute<T> {
 
     public static class FloatAttribute extends CustomAttribute<Float> {
 
-        private FloatAttribute(String name, float value, Class<Float> classt) {
-            super(name, value, classt);
+        private FloatAttribute(String name, float value, Class<Float> clazz) {
+            super(name, value, clazz);
         }
 
         private FloatAttribute(String name, float value) {
@@ -85,15 +85,15 @@ public class CustomAttribute<T> {
             super(name, value, Integer.class);
         }
 
-        private IntegerAttribute(String name, int value, Class<Integer> classt) {
-            super(name, value, classt);
+        private IntegerAttribute(String name, int value, Class<Integer> clazz) {
+            super(name, value, clazz);
         }
     }
 
     public static class LongAttribute extends CustomAttribute<Long> {
 
-        public LongAttribute(String name, long value, Class<Long> classt) {
-            super(name, value, classt);
+        public LongAttribute(String name, long value, Class<Long> clazz) {
+            super(name, value, clazz);
         }
 
         public LongAttribute(String name, long value) {
@@ -106,21 +106,21 @@ public class CustomAttribute<T> {
 
     private T value;
 
-    private Class<T> classt;
+    private Class<T> clazz;
 
-    public CustomAttribute(String name, T value, Class<T> classt) {
+    public CustomAttribute(String name, T value, Class<T> clazz) {
         //noinspection SuspiciousMethodCalls
-        if (!CLASSES.contains(classt)) {
-            throw new InvalidException(String.format("cannot accept class type [%s] for custom attribute", classt.getName()));
+        if (!CLASSES.contains(clazz)) {
+            throw new InvalidException(String.format("cannot accept class type [%s] for custom attribute", clazz.getName()));
         }
         this.name = name;
         this.value = value;
-        this.classt = classt;
+        this.clazz = clazz;
 
     }
 
     public Class<T> getValueClass() {
-        return classt;
+        return clazz;
     }
 
     public String getName() {
@@ -172,7 +172,7 @@ public class CustomAttribute<T> {
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (classt != null ? classt.hashCode() : 0);
+        result = 31 * result + (clazz != null ? clazz.hashCode() : 0);
         return result;
     }
 
@@ -183,7 +183,7 @@ public class CustomAttribute<T> {
 
         CustomAttribute that = (CustomAttribute) o;
 
-        if (classt != null ? !classt.equals(that.classt) : that.classt != null) return false;
+        if (clazz != null ? !clazz.equals(that.clazz) : that.clazz != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         //noinspection RedundantIfStatement
         if (value != null ? !value.equals(that.value) : that.value != null) return false;
@@ -196,7 +196,7 @@ public class CustomAttribute<T> {
         return "CustomAttribute{" +
             "name='" + name + '\'' +
             ", value=" + value +
-            ", classt=" + classt +
+            ", clazz=" + clazz +
             '}';
     }
 }

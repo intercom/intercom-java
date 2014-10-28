@@ -13,6 +13,7 @@ public class ConversationPartCollection extends TypedDataCollection<Conversation
         type = "conversation_part.list";
     }
 
+    @SuppressWarnings("EmptyMethod")
     @JsonProperty("conversation_parts")
     public List<ConversationPart> getPageItems() {
         return super.getPageItems();

@@ -22,21 +22,7 @@ public class User extends TypedData implements Replier {
 
     @VisibleForTesting
     static UserUpdate buildUserUpdate(User user) {
-        final UserUpdate userUpdate = new UserUpdate();
-        userUpdate.userId = user.getUserId();
-        userUpdate.email = user.getEmail();
-        // userUpdate.id = user.id; // bug: id is treated as custom attribute
-        userUpdate.remoteCreatedAt = user.getRemoteCreatedAt();
-        userUpdate.name = user.getName();
-        userUpdate.lastSeenIp = user.getLastSeenIp();
-        userUpdate.customAttributes = user.getCustomAttributes();
-        userUpdate.lastSeenUserAgent = user.getUserAgentData();
-        userUpdate.companyCollection = buildUserUpdateCompanies(user);
-        userUpdate.lastRequestAt = user.getLastRequestAt();
-        userUpdate.unsubscribedFromEmails = user.getUnsubscribedFromEmails();
-        userUpdate.updateLastRequestAt = user.isUpdateLastRequestAt();
-        userUpdate.newSession = user.isNewSession();
-        return userUpdate;
+        return UserUpdate.buildFrom(user);
     }
 
     private static List<CompanyStringPlan> buildUserUpdateCompanies(User user) {
@@ -78,12 +64,12 @@ public class User extends TypedData implements Replier {
 
     public static User create(User user)
         throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
-        return DataResource.create(buildUserUpdate(user), "users", User.class);
+        return DataResource.create(UserUpdate.buildFrom(user), "users", User.class);
     }
 
     public static User update(User user) throws InvalidException, AuthorizationException {
         // only send fields the server allows for update
-        return DataResource.update(buildUserUpdate(user), "users", User.class);
+        return DataResource.update(UserUpdate.buildFrom(user), "users", User.class);
     }
 
     public static User delete(String id)
@@ -105,6 +91,24 @@ public class User extends TypedData implements Replier {
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     static class UserUpdate extends TypedData {
+
+        static UserUpdate buildFrom(User user) {
+            final UserUpdate userUpdate = new UserUpdate();
+            userUpdate.userId = user.getUserId();
+            userUpdate.email = user.getEmail();
+            // userUpdate.id = user.id; // bug: id is treated as custom attribute
+            userUpdate.remoteCreatedAt = user.getRemoteCreatedAt();
+            userUpdate.name = user.getName();
+            userUpdate.lastSeenIp = user.getLastSeenIp();
+            userUpdate.customAttributes = user.getCustomAttributes();
+            userUpdate.lastSeenUserAgent = user.getUserAgentData();
+            userUpdate.companyCollection = buildUserUpdateCompanies(user);
+            userUpdate.lastRequestAt = user.getLastRequestAt();
+            userUpdate.unsubscribedFromEmails = user.getUnsubscribedFromEmails();
+            userUpdate.updateLastRequestAt = user.isUpdateLastRequestAt();
+            userUpdate.newSession = user.isNewSession();
+            return userUpdate;
+        }
 
         @JsonProperty("type")
         private final String type = "user";

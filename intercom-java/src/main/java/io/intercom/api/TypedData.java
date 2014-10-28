@@ -1,5 +1,5 @@
 package io.intercom.api;
 
-public abstract class TypedData {
+abstract class TypedData {
 
 }
