@@ -47,7 +47,7 @@ public abstract class TypedDataCollection<T extends TypedData> extends TypedData
         }
     }
 
-    public Map<String, URI> getPages() {
+    public Map<String, URI> getPageLinks() {
         return ImmutableMap.<String, URI>builder().putAll(pages).build();
     }
 
