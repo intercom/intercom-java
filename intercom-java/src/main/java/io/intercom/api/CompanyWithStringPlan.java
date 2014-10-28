@@ -10,7 +10,7 @@ import java.util.Map;
 @SuppressWarnings("UnusedDeclaration")
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
 @JsonIgnoreProperties(ignoreUnknown = true)
-class CompanyStringPlan extends TypedData {
+class CompanyWithStringPlan extends TypedData {
 
     @JsonProperty("id")
     private String id;
@@ -37,7 +37,7 @@ class CompanyStringPlan extends TypedData {
     @JsonProperty("custom_attributes")
     private Map<String, CustomAttribute> customAttributes = Maps.newHashMap();
 
-    public CompanyStringPlan() {
+    public CompanyWithStringPlan() {
     }
 
     public String getType() {

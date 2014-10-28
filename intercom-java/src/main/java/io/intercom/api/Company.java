@@ -34,7 +34,7 @@ public class Company extends TypedData {
 
     public static Company update(Company company) throws InvalidException, AuthorizationException {
         // because the data is asymmetric on the plan field
-        final CompanyStringPlan entity = new CompanyStringPlan();
+        final CompanyWithStringPlan entity = new CompanyWithStringPlan();
         entity.setCompanyID(company.getCompanyID());
         entity.setName(company.getName());
         entity.setSessionCount(company.getSessionCount());

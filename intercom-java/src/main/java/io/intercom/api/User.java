@@ -20,13 +20,13 @@ public class User extends TypedData implements Replier {
 
     private static final Map<String, String> SENTINEL = Maps.newHashMap();
 
-    private static List<CompanyStringPlan> buildUserUpdateCompanies(User user) {
+    private static List<CompanyWithStringPlan> buildUserUpdateCompanies(User user) {
         // restrictions on the company data that can be sent via a user update
-        final ArrayList<CompanyStringPlan> updatableCompanies = Lists.newArrayList();
+        final ArrayList<CompanyWithStringPlan> updatableCompanies = Lists.newArrayList();
         if (user.getCompanyCollection() != null) {
             final List<Company> companies = user.getCompanyCollection().getPageItems();
             for (Company company : companies) {
-                final CompanyStringPlan updatableCompany = new CompanyStringPlan();
+                final CompanyWithStringPlan updatableCompany = new CompanyWithStringPlan();
                 updatableCompany.setCompanyID(company.getCompanyID());
                 updatableCompany.setName(company.getName());
                 updatableCompany.setSessionCount(company.getSessionCount());
@@ -131,7 +131,7 @@ public class User extends TypedData implements Replier {
         private String lastSeenUserAgent;
 
         @JsonProperty("companies")
-        private List<CompanyStringPlan> companyCollection;
+        private List<CompanyWithStringPlan> companyCollection;
 
         @JsonProperty("last_request_at")
         private long lastRequestAt;
@@ -195,7 +195,7 @@ public class User extends TypedData implements Replier {
             return lastSeenUserAgent;
         }
 
-        public List<CompanyStringPlan> getCompanyCollection() {
+        public List<CompanyWithStringPlan> getCompanyCollection() {
             return companyCollection;
         }
 
