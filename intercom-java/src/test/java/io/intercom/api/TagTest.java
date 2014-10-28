@@ -11,6 +11,7 @@ import java.util.Map;
 
 import static io.intercom.api.TestSupport.load;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TagTest {
 
@@ -26,23 +27,24 @@ public class TagTest {
         String json = load("tag.json");
         final Tag tag = mapper.readValue(json, Tag.class);
 
-        final User user1 = new User().setEmail("wash@serenity.io");
+        final User user1 = new User().setEmail("wash@serenity.io").untag();
         final User user2 = new User().setUserId("22");
         final User user3 = new User().setId("3434");
         final User user4 = new User().setEmail("malcolm@serenity.io");
         final User user5 = new User().setUserId("23");
         final User user6 = new User().setId("3435");
         final UserCollection uc = new UserCollection(Lists.newArrayList(user1, user2, user3, user4, user5, user6));
-        final Tag.TagTypedCollection tagTypedCollection = Tag.createTagTypedCollection(tag, uc);
-        final List<Map<String, String>> users = tagTypedCollection.getUsers();
+        final Tag.TaggableCollection taggableCollection = Tag.createTagTypedCollection(tag, uc);
+        final List<Map<String, Object>> users = taggableCollection.getUsers();
 
         int match = 0;
-        for (Map<String, String> user : users) {
+        for (Map<String, Object> user : users) {
             if (user.containsKey("id") && user.get("id").equals("3434")) {
                 match += 1;
             }
             if (user.containsKey("email") && user.get("email").equals("wash@serenity.io")) {
                 match += 1;
+                assertTrue(user.containsKey("untag") && user.get("untag") == Boolean.TRUE);
             }
             if (user.containsKey("user_id") && user.get("user_id").equals("22")) {
                 match += 1;
@@ -65,19 +67,20 @@ public class TagTest {
         String json = load("tag.json");
         final Tag tag = mapper.readValue(json, Tag.class);
 
-        final Company c1 = new Company().setCompanyID("c1");
+        final Company c1 = new Company().setCompanyID("c1").untag();
         final Company c2 = new Company().setName("name1");
         final Company c3 = new Company().setCompanyID("c3");
         final Company c4 = new Company().setName("name4");
         final Company c5 = new Company().setId("1");
         final Company c6 = new Company().setId("2");
         final CompanyCollection uc = new CompanyCollection(Lists.newArrayList(c1, c2, c3, c4, c5, c6));
-        final Tag.TagTypedCollection tagTypedCollection = Tag.createTagTypedCollection(tag, uc);
-        final List<Map<String, String>> companies = tagTypedCollection.getCompanies();
+        final Tag.TaggableCollection taggableCollection = Tag.createTagTypedCollection(tag, uc);
+        final List<Map<String, Object>> companies = taggableCollection.getCompanies();
         int match = 0;
-        for (Map<String, String> company : companies) {
+        for (Map<String, Object> company : companies) {
             if (company.containsKey("company_id") && company.get("company_id").equals("c1")) {
                 match += 1;
+                assertTrue(company.containsKey("untag") && company.get("untag") == Boolean.TRUE);
             }
             if (company.containsKey("name") && company.get("name").equals("name1")) {
                 match += 1;

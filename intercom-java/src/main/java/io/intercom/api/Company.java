@@ -193,14 +193,13 @@ public class Company extends TypedData {
     @JsonProperty("tags")
     private TagCollection tagCollection = new TagCollection();
 
-    @JsonProperty("untag")
-    private boolean untag;
+    private Boolean untag;
 
     public Company() {
     }
 
     public Company untag() {
-        untag = true;
+        untag = Boolean.TRUE;
         return this;
     }
 
@@ -306,6 +305,10 @@ public class Company extends TypedData {
         return tagCollection;
     }
 
+    boolean isUntag() {
+        return untag == null ? false : untag;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -317,7 +320,6 @@ public class Company extends TypedData {
         if (Float.compare(company.monthlySpend, monthlySpend) != 0) return false;
         if (remoteCreatedAt != company.remoteCreatedAt) return false;
         if (sessionCount != company.sessionCount) return false;
-        if (untag != company.untag) return false;
         if (updatedAt != company.updatedAt) return false;
         if (companyID != null ? !companyID.equals(company.companyID) : company.companyID != null) return false;
         if (customAttributes != null ? !customAttributes.equals(company.customAttributes) : company.customAttributes != null)
@@ -330,6 +332,7 @@ public class Company extends TypedData {
         if (tagCollection != null ? !tagCollection.equals(company.tagCollection) : company.tagCollection != null)
             return false;
         if (!type.equals(company.type)) return false;
+        if (untag != null ? !untag.equals(company.untag) : company.untag != null) return false;
         //noinspection RedundantIfStatement
         if (userCount != null ? !userCount.equals(company.userCount) : company.userCount != null) return false;
 
@@ -352,7 +355,7 @@ public class Company extends TypedData {
         result = 31 * result + (customAttributes != null ? customAttributes.hashCode() : 0);
         result = 31 * result + (segmentCollection != null ? segmentCollection.hashCode() : 0);
         result = 31 * result + (tagCollection != null ? tagCollection.hashCode() : 0);
-        result = 31 * result + (untag ? 1 : 0);
+        result = 31 * result + (untag != null ? untag.hashCode() : 0);
         return result;
     }
 

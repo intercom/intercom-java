@@ -284,15 +284,18 @@ public class User extends TypedData implements Replier {
     @JsonProperty("new_session")
     private boolean newSession;
 
-    @JsonProperty("untag")
-    private boolean untag;
+    private Boolean untag;
 
     public User() {
     }
 
     public User untag() {
-        untag = true;
+        untag = Boolean.TRUE;
         return this;
+    }
+
+    boolean isUntag() {
+        return untag == null ? false : untag;
     }
 
     public String getReplyType() {
@@ -477,7 +480,6 @@ public class User extends TypedData implements Replier {
         if (remoteCreatedAt != user.remoteCreatedAt) return false;
         if (sessionCount != user.sessionCount) return false;
         if (unsubscribedFromEmails != user.unsubscribedFromEmails) return false;
-        if (untag != user.untag) return false;
         if (updateLastRequestAt != user.updateLastRequestAt) return false;
         if (updatedAt != user.updatedAt) return false;
         if (avatar != null ? !avatar.equals(user.avatar) : user.avatar != null) return false;
@@ -497,6 +499,7 @@ public class User extends TypedData implements Replier {
         if (tagCollection != null ? !tagCollection.equals(user.tagCollection) : user.tagCollection != null)
             return false;
         if (!type.equals(user.type)) return false;
+        if (untag != null ? !untag.equals(user.untag) : user.untag != null) return false;
         if (userAgentData != null ? !userAgentData.equals(user.userAgentData) : user.userAgentData != null)
             return false;
         //noinspection RedundantIfStatement
@@ -529,7 +532,7 @@ public class User extends TypedData implements Replier {
         result = 31 * result + (tagCollection != null ? tagCollection.hashCode() : 0);
         result = 31 * result + (updateLastRequestAt ? 1 : 0);
         result = 31 * result + (newSession ? 1 : 0);
-        result = 31 * result + (untag ? 1 : 0);
+        result = 31 * result + (untag != null ? untag.hashCode() : 0);
         return result;
     }
 
