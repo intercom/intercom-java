@@ -3,6 +3,7 @@ package io.intercom.api;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 
 import java.net.URI;
@@ -209,6 +210,12 @@ public class Company extends TypedData {
 
     public String getId() {
         return id;
+    }
+
+    @VisibleForTesting
+    Company setId(String id) {
+        this.id = id;
+        return this;
     }
 
     public String getName() {
