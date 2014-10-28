@@ -27,7 +27,7 @@ public class SocialProfileCollection extends TypedData {
     }
 
     public List<SocialProfile> getSocialProfiles() {
-        return socialProfiles == null? null: ImmutableList.<SocialProfile>builder().addAll(socialProfiles).build();
+        return socialProfiles == null ? null : ImmutableList.<SocialProfile>builder().addAll(socialProfiles).build();
     }
 
     @Override

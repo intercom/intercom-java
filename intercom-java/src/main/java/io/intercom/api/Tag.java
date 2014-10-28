@@ -111,20 +111,20 @@ public class Tag extends TypedData {
             final String id = company.getId();
             final String name = company.getName();
 
-            if(company.isUntag()) {
+            if (company.isUntag()) {
                 companyMap.put("untag", true);
             }
 
-            if(!Strings.isNullOrEmpty(companyID)) {
+            if (!Strings.isNullOrEmpty(companyID)) {
                 companyMap.put("company_id", companyID);
                 companiesLite.add(companyMap);
-            } else if(!Strings.isNullOrEmpty(id)) {
+            } else if (!Strings.isNullOrEmpty(id)) {
                 companyMap.put("id", id);
                 companiesLite.add(companyMap);
-            } else if(!Strings.isNullOrEmpty(name)) {
+            } else if (!Strings.isNullOrEmpty(name)) {
                 companyMap.put("name", name);
                 companiesLite.add(companyMap);
-            }  else {
+            } else {
                 logger.warn("no identifiers found for company tag target, skipping [" + tag + "] [" + company.toString() + "]");
             }
             taggableCollection.setCompanies(companiesLite);

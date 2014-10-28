@@ -14,15 +14,15 @@ class TypedDataCollectionIterator<T extends TypedData> implements Iterator<T> {
     }
 
     public boolean hasNext() {
-        if(pos == rollingCollection.getPageItems().size()) {
-            if(rollingCollection.hasNextPage()) {
+        if (pos == rollingCollection.getPageItems().size()) {
+            if (rollingCollection.hasNextPage()) {
                 rollingCollection = rollingCollection.nextPage();
                 pos = 0;
                 return true;
             } else {
                 return false;
             }
-        } else  {
+        } else {
             return pos <= rollingCollection.getPageItems().size();
         }
     }
@@ -35,8 +35,8 @@ class TypedDataCollectionIterator<T extends TypedData> implements Iterator<T> {
     }
 
     private void iterate() {
-        if(pos == rollingCollection.getPageItems().size()) {
-            if(rollingCollection.hasNextPage()) {
+        if (pos == rollingCollection.getPageItems().size()) {
+            if (rollingCollection.hasNextPage()) {
                 rollingCollection = rollingCollection.nextPage();
                 pos = 0;
             } else {

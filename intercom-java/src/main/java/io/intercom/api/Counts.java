@@ -24,7 +24,7 @@ public class Counts {
         return resource.get(Counts.class);
     }
 
-    public static Counts.Totals appTotals() throws InvalidException, AuthorizationException{
+    public static Counts.Totals appTotals() throws InvalidException, AuthorizationException {
         final HttpClient resource = new HttpClient(UriBuilder.newBuilder().path("counts").build());
         return resource.get(Totals.class);
     }
@@ -42,20 +42,20 @@ public class Counts {
         return countQuery(params).getUser().getTags();
     }
 
-    public static List<CountItem> userSegments() throws InvalidException, AuthorizationException{
+    public static List<CountItem> userSegments() throws InvalidException, AuthorizationException {
         final HashMap<String, String> params = Maps.newHashMap();
         params.put("type", "user");
         params.put("count", "segment");
         return countQuery(params).getUser().getSegments();
     }
 
-    public static Counts.Conversation conversationTotals() throws InvalidException, AuthorizationException{
+    public static Counts.Conversation conversationTotals() throws InvalidException, AuthorizationException {
         final HashMap<String, String> params = Maps.newHashMap();
         params.put("type", "conversation");
         return countQuery(params).getConversation();
     }
 
-    public static Counts.Conversation conversationAdmins() throws InvalidException, AuthorizationException{
+    public static Counts.Conversation conversationAdmins() throws InvalidException, AuthorizationException {
         final HashMap<String, String> params = Maps.newHashMap();
         params.put("type", "conversation");
         params.put("count", "admin");
@@ -68,21 +68,21 @@ public class Counts {
 //        return countQuery(params).getCompany().getCompanies();
 //    }
 
-    public static List<CountItem> companySegments() throws InvalidException, AuthorizationException{
+    public static List<CountItem> companySegments() throws InvalidException, AuthorizationException {
         final HashMap<String, String> params = Maps.newHashMap();
         params.put("type", "company");
         params.put("count", "segment");
         return countQuery(params).getCompany().getSegments();
     }
 
-    public static List<CountItem> companyTags() throws InvalidException, AuthorizationException{
+    public static List<CountItem> companyTags() throws InvalidException, AuthorizationException {
         final HashMap<String, String> params = Maps.newHashMap();
         params.put("type", "company");
         params.put("count", "tag");
         return countQuery(params).getCompany().getTags();
     }
 
-    public static List<CountItem> companyUsers() throws InvalidException, AuthorizationException{
+    public static List<CountItem> companyUsers() throws InvalidException, AuthorizationException {
         final HashMap<String, String> params = Maps.newHashMap();
         params.put("type", "company");
         params.put("count", "user");

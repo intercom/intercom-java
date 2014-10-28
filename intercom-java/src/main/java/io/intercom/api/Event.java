@@ -35,11 +35,11 @@ public class Event extends TypedData {
 
     @VisibleForTesting
     static void validateCreateEvent(Event event) {
-        if(Strings.isNullOrEmpty(event.getEventName())) {
+        if (Strings.isNullOrEmpty(event.getEventName())) {
             throw new InvalidException(INVALID_NAME);
         }
 
-        if(Strings.isNullOrEmpty(event.getUserID())
+        if (Strings.isNullOrEmpty(event.getUserID())
             && Strings.isNullOrEmpty(event.getEmail())) {
             throw new InvalidException(INVALID_USER);
         }

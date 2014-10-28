@@ -88,7 +88,7 @@ class UriBuilder {
             // URLEncoder is a html forms encoder not a percent encoder
             return java.net.URLEncoder.encode(param, Charsets.UTF_8.name()).replaceAll("\\+", "%20");
         } catch (UnsupportedEncodingException e) {
-            throw new IntercomException("could not encode url param "+param, e);
+            throw new IntercomException("could not encode url param " + param, e);
         }
     }
 }

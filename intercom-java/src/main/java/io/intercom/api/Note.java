@@ -15,15 +15,15 @@ public class Note extends TypedData {
 
     private static final HashMap<String, String> SENTINEL = Maps.newHashMap();
 
-    public static Note find(String id)throws InvalidException, AuthorizationException {
+    public static Note find(String id) throws InvalidException, AuthorizationException {
         return DataResource.find(id, "notes", Note.class);
     }
 
-    public static Note create(Note note)throws InvalidException, AuthorizationException {
+    public static Note create(Note note) throws InvalidException, AuthorizationException {
         return DataResource.create(note, "notes", Note.class);
     }
 
-    public static NoteCollection list(Map<String, String> params)throws InvalidException, AuthorizationException {
+    public static NoteCollection list(Map<String, String> params) throws InvalidException, AuthorizationException {
         if ((!params.containsKey("email")) && (!params.containsKey("id")) && (!params.containsKey("user_id")) && (!params.containsKey("intercom_user_id"))) {
             throw new InvalidException("a notes query must include an email, user_id or intercom_user_id parameter");
         }

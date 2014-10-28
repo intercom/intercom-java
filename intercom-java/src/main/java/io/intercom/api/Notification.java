@@ -13,11 +13,11 @@ import java.util.Map;
 @JsonIgnoreProperties({"intercom"})
 public class Notification extends TypedData {
 
-    public static Notification readJSON(String json) throws InvalidException  {
+    public static Notification readJSON(String json) throws InvalidException {
         try {
             return MapperSupport.objectMapper().readValue(json, Notification.class);
         } catch (IOException e) {
-            throw new InvalidException("could not parse json string ["+e.getMessage()+"]", e);
+            throw new InvalidException("could not parse json string [" + e.getMessage() + "]", e);
         }
     }
 
@@ -25,7 +25,7 @@ public class Notification extends TypedData {
         try {
             return MapperSupport.objectMapper().readValue(json, Notification.class);
         } catch (IOException e) {
-            throw new InvalidException("could not parse json stream ["+e.getMessage()+"]", e);
+            throw new InvalidException("could not parse json stream [" + e.getMessage() + "]", e);
         }
     }
 
