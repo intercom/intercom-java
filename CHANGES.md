@@ -1,4 +1,9 @@
 ### Changes
+
+#### 0.1.0-SNAPSHOT
+
+ - support untag of users and companies
+
 #### 0.0.5
 
 - fix bulk user tagging when using fully populated users  [13](https://github.com/intercom/intercom-java/issues/13)
