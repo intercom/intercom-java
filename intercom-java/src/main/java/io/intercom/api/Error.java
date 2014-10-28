@@ -20,6 +20,11 @@ public class Error extends TypedData {
     public Error() {
     }
 
+    public Error(String code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
     public String getType() {
         return type;
     }

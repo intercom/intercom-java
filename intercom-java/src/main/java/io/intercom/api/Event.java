@@ -3,9 +3,11 @@ package io.intercom.api;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import java.util.Date;
 import java.util.Map;
 
 @SuppressWarnings("UnusedDeclaration")
@@ -14,10 +16,33 @@ import java.util.Map;
 public class Event extends TypedData {
 
     public static void create(Event event) throws InvalidException, AuthorizationException {
+
+        validateCreateEvent(event);
+
         if (event.getCreatedAt() == 0L) {
             event.setCreatedAt(System.currentTimeMillis() / 1000);
         }
         DataResource.create(event, "events", Void.class);
+    }
+
+    private static final ErrorCollection INVALID_NAME = new ErrorCollection(
+        Lists.newArrayList(
+            new Error("invalid", "an event must supply an event name")));
+
+    private static final ErrorCollection INVALID_USER = new ErrorCollection(
+        Lists.newArrayList(
+            new Error("invalid", "an event must supply either an email or a user id")));
+
+    @VisibleForTesting
+    static void validateCreateEvent(Event event) {
+        if(Strings.isNullOrEmpty(event.getEventName())) {
+            throw new InvalidException(INVALID_NAME);
+        }
+
+        if(Strings.isNullOrEmpty(event.getUserID())
+            && Strings.isNullOrEmpty(event.getEmail())) {
+            throw new InvalidException(INVALID_USER);
+        }
     }
 
     @SuppressWarnings("FieldCanBeLocal")
