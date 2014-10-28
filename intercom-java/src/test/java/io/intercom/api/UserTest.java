@@ -21,17 +21,41 @@ public class UserTest {
     }
 
     @Test
+    public void TestUserUpdate() throws Exception {
+
+        final long now = System.currentTimeMillis()/1000;
+        final User user = new User()
+            .setEmail("wash@serenity.io")
+            .setUserId("22")
+            .setRemoteCreatedAt(now)
+            .setName("Wash")
+            .setUnsubscribedFromEmails(true)
+            .setUpdateLastRequestAt(true)
+            .setNewSession(true)
+            .setUserAgentData("user-agent");
+
+        final User.UserUpdate userUpdate = User.buildUserUpdate(user);
+
+        assertEquals("wash@serenity.io", userUpdate.getEmail());
+        assertEquals("22", userUpdate.getUserId());
+        assertEquals(now, userUpdate.getRemoteCreatedAt());
+        assertEquals("Wash", userUpdate.getName());
+        assertEquals(true, userUpdate.getUnsubscribedFromEmails());
+        assertEquals(true, userUpdate.isUpdateLastRequestAt());
+        assertEquals(true, userUpdate.isNewSession());
+        assertEquals("user-agent", userUpdate.getLastSeenUserAgent());
+    }
+
+    @Test
     public void TestUserSerdesNullAndNotEmpty() throws Exception {
         final User user = new User();
         user.setEmail("a@b.com");
         user.setUserId("1");
         final String json = mapper.writeValueAsString(user);
-//        System.out.println(json);
         final Map map = mapper.readValue(json, Map.class);
         assertTrue(map.size() == 2);
         assertTrue(map.containsKey("email"));
         assertTrue(map.containsKey("user_id"));
-//        System.out.println(map);
     }
 
     @Test

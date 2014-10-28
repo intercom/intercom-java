@@ -4,6 +4,7 @@ package io.intercom.api;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -19,7 +20,8 @@ public class User extends TypedData implements Replier {
 
     private static final Map<String, String> SENTINEL = Maps.newHashMap();
 
-    private static UserUpdate buildUserUpdate(User user) {
+    @VisibleForTesting
+    static UserUpdate buildUserUpdate(User user) {
         final UserUpdate userUpdate = new UserUpdate();
         userUpdate.userId = user.getUserId();
         userUpdate.email = user.getEmail();
@@ -206,11 +208,11 @@ public class User extends TypedData implements Replier {
             return unsubscribedFromEmails;
         }
 
-        public boolean isUpdateLastRequestAt() {
+        public Boolean isUpdateLastRequestAt() {
             return updateLastRequestAt;
         }
 
-        public boolean isNewSession() {
+        public Boolean isNewSession() {
             return newSession;
         }
     }
@@ -408,6 +410,12 @@ public class User extends TypedData implements Replier {
         return userAgentData;
     }
 
+    @VisibleForTesting
+    User setUserAgentData(String userAgentData) {
+        this.userAgentData = userAgentData;
+        return this;
+    }
+
     public LocationData getLocationData() {
         return locationData;
     }
@@ -443,16 +451,18 @@ public class User extends TypedData implements Replier {
         return updateLastRequestAt;
     }
 
-    public void setUpdateLastRequestAt(boolean updateLastRequestAt) {
+    public User setUpdateLastRequestAt(boolean updateLastRequestAt) {
         this.updateLastRequestAt = updateLastRequestAt;
+        return this;
     }
 
     public boolean isNewSession() {
         return newSession;
     }
 
-    public void setNewSession(boolean newSession) {
+    public User setNewSession(boolean newSession) {
         this.newSession = newSession;
+        return this;
     }
 
     @Override
