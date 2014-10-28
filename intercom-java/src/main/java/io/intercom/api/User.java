@@ -20,11 +20,6 @@ public class User extends TypedData implements Replier {
 
     private static final Map<String, String> SENTINEL = Maps.newHashMap();
 
-    @VisibleForTesting
-    static UserUpdate buildUserUpdate(User user) {
-        return UserUpdate.buildFrom(user);
-    }
-
     private static List<CompanyStringPlan> buildUserUpdateCompanies(User user) {
         // restrictions on the company data that can be sent via a user update
         final ArrayList<CompanyStringPlan> updatableCompanies = Lists.newArrayList();
