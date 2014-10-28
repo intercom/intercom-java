@@ -1,4 +1,11 @@
 ### Changes
+#### 0.0.5
+
+- fix bulk user tagging when using fully populated users  [13](https://github.com/intercom/intercom-java/issues/13)
+- add client side validation of events  [14](https://github.com/intercom/intercom-java/issues/14)
+- fix npe when updating users [15](https://github.com/intercom/intercom-java/issues/15)
+
+
 #### 0.0.4
 
 - send false boolean values for user updates [8](https://github.com/intercom/intercom-java/issues/8)
