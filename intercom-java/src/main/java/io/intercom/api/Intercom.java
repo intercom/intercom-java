@@ -14,7 +14,7 @@ public class Intercom {
 
     static final String AUTH_BEARER = "Bearer";
 
-    private static final String VERSION = "0.1.0";
+    private static final String VERSION = "0.2.0-SNAPSHOT";
 
     public static final String USER_AGENT = "intercom-java/" + Intercom.VERSION;
 
