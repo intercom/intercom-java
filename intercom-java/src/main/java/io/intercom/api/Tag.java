@@ -73,7 +73,7 @@ public class Tag extends TypedData {
         taggableCollection.setName(tag.getName());
         taggableCollection.setId(tag.getId());
         final List<Map<String, Object>> usersLite = Lists.newArrayList();
-        final List<User> pageItems = users.getPageItems();
+        final List<User> pageItems = users.getPage();
         for (User user : pageItems) {
             Map<String, Object> userMap = Maps.newHashMap();
             final String id = user.getId();
@@ -108,7 +108,7 @@ public class Tag extends TypedData {
         taggableCollection.setId(tag.getId());
 
         final List<Map<String, Object>> companiesLite = Lists.newArrayList();
-        final List<Company> pageItems = companies.getPageItems();
+        final List<Company> pageItems = companies.getPage();
         for (Company company : pageItems) {
             Map<String, Object> companyMap = Maps.newHashMap();
             final String companyID = company.getCompanyID();

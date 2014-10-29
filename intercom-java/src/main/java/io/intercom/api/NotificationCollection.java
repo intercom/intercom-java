@@ -25,8 +25,8 @@ public class NotificationCollection extends TypedDataCollection<Notification> im
     @SuppressWarnings("EmptyMethod")
     @JsonProperty("notifications")
     @Override
-    public List<Notification> getPageItems() {
-        return super.getPageItems();
+    public List<Notification> getPage() {
+        return super.getPage();
     }
 
     public boolean hasNext() {

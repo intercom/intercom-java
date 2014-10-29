@@ -27,8 +27,8 @@ public class SegmentCollection extends TypedDataCollection<Segment> implements I
     @SuppressWarnings("EmptyMethod")
     @JsonProperty("segments")
     @Override
-    public List<Segment> getPageItems() {
-        return super.getPageItems();
+    public List<Segment> getPage() {
+        return super.getPage();
     }
 
     public boolean hasNext() {

@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("UnusedDeclaration")
-@JsonIgnoreProperties({"pageItems"})
+@JsonIgnoreProperties({"page"})
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public abstract class TypedDataCollection<T extends TypedData> extends TypedData {
 
     public static final String NEXT_PAGE_REL = "next";
 
-    protected List<T> pageItems = Lists.newArrayList();
+    protected List<T> page = Lists.newArrayList();
 
     @JsonProperty("pages")
     protected Map<String, URI> pages = Maps.newHashMap();
@@ -33,8 +33,8 @@ public abstract class TypedDataCollection<T extends TypedData> extends TypedData
         return pages.containsKey("next") && pages.get("next") != null;
     }
 
-    public List<T> getPageItems() {
-        return ImmutableList.<T>builder().addAll(pageItems).build();
+    public List<T> getPage() {
+        return ImmutableList.<T>builder().addAll(page).build();
     }
 
     protected <C extends TypedDataCollection<T>> C fetchNextPage(Class<C> typeReference) {
@@ -47,7 +47,7 @@ public abstract class TypedDataCollection<T extends TypedData> extends TypedData
         }
     }
 
-    public Map<String, URI> getPageLinks() {
+    public Map<String, URI> getPages() {
         return ImmutableMap.<String, URI>builder().putAll(pages).build();
     }
 
@@ -62,7 +62,7 @@ public abstract class TypedDataCollection<T extends TypedData> extends TypedData
 
         TypedDataCollection that = (TypedDataCollection) o;
 
-        if (pageItems != null ? !pageItems.equals(that.pageItems) : that.pageItems != null) return false;
+        if (page != null ? !page.equals(that.page) : that.page != null) return false;
         if (pages != null ? !pages.equals(that.pages) : that.pages != null) return false;
         //noinspection RedundantIfStatement
         if (type != null ? !type.equals(that.type) : that.type != null) return false;
@@ -72,7 +72,7 @@ public abstract class TypedDataCollection<T extends TypedData> extends TypedData
 
     @Override
     public int hashCode() {
-        int result = pageItems != null ? pageItems.hashCode() : 0;
+        int result = page != null ? page.hashCode() : 0;
         result = 31 * result + (pages != null ? pages.hashCode() : 0);
         result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
@@ -81,7 +81,7 @@ public abstract class TypedDataCollection<T extends TypedData> extends TypedData
     @Override
     public String toString() {
         return getType() + "{" +
-            "pageItems=" + pageItems +
+            "page=" + page +
             "} " + super.toString();
     }
 }

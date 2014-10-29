@@ -19,8 +19,8 @@ public class ConversationCollection extends TypedDataCollection<Conversation> im
 
     @SuppressWarnings("EmptyMethod")
     @JsonProperty("conversations")
-    public List<Conversation> getPageItems() {
-        return super.getPageItems();
+    public List<Conversation> getPage() {
+        return super.getPage();
     }
 
     @Override

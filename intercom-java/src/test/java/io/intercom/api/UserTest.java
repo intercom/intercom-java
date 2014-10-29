@@ -96,7 +96,7 @@ public class UserTest {
 
         final SegmentCollection segmentCollection = user.getSegmentCollection();
         assertEquals("segment.list", segmentCollection.getType());
-        final List<Segment> items = segmentCollection.getPageItems();
+        final List<Segment> items = segmentCollection.getPage();
         final Segment segment = items.get(0);
         assertEquals("segment", segment.getType());
         assertEquals("5310d8e7598c9a0b24000002", segment.getId());

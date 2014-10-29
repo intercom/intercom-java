@@ -108,7 +108,7 @@ public class Conversation extends TypedData {
     @JsonProperty("type")
     private final String type = "conversation";
 
-    @JsonProperty
+    @JsonProperty("id")
     private String id;
 
     @JsonProperty("conversation_message")
@@ -126,7 +126,7 @@ public class Conversation extends TypedData {
     @JsonProperty("updated_at")
     private long updatedAt;
 
-    @JsonProperty
+    @JsonProperty("conversation_parts")
     private ConversationPartCollection conversationPartCollection;
 
     @JsonProperty("open")
@@ -157,12 +157,12 @@ public class Conversation extends TypedData {
     }
 
     public Optional<ConversationPart> getFirstConversationPart() {
-        return Optional.fromNullable(getConversationPartCollection().getPageItems().get(0));
+        return Optional.fromNullable(getConversationPartCollection().getPage().get(0));
     }
 
     public ConversationPart getMostRecentConversationPart() {
         final ConversationPartCollection conversationParts = getConversationPartCollection();
-        final List<ConversationPart> items = conversationParts.getPageItems();
+        final List<ConversationPart> items = conversationParts.getPage();
         if (items.isEmpty()) {
             return null;
         } else {

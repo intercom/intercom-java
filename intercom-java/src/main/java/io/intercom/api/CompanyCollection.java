@@ -22,14 +22,14 @@ public class CompanyCollection extends TypedDataCollection<Company> implements I
 
     public CompanyCollection(List<Company> companies) {
         this();
-        this.pageItems = companies;
+        this.page = companies;
     }
 
     @SuppressWarnings("EmptyMethod")
     @JsonProperty("companies")
     @Override
-    public List<Company> getPageItems() {
-        return super.getPageItems();
+    public List<Company> getPage() {
+        return super.getPage();
     }
 
     public long getTotalCount() {
@@ -61,6 +61,6 @@ public class CompanyCollection extends TypedDataCollection<Company> implements I
     }
 
     void addCompany(Company company) {
-        pageItems.add(company);
+        page.add(company);
     }
 }

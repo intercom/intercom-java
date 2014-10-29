@@ -26,8 +26,8 @@ public class AdminCollection extends TypedDataCollection<Admin> implements Itera
     @SuppressWarnings("EmptyMethod")
     @JsonProperty("admins")
     @Override
-    public List<Admin> getPageItems() {
-        return super.getPageItems();
+    public List<Admin> getPage() {
+        return super.getPage();
     }
 
     public boolean hasNext() {

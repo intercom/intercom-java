@@ -172,13 +172,14 @@ class HttpClient {
     private <T> T readEntity(HttpURLConnection conn, int responseCode, Class<T> entityType) throws IOException {
         final InputStream entityStream = conn.getInputStream();
         try {
-            if (logger.isDebugEnabled()) {
+//            if (logger.isDebugEnabled()) {
                 final String text = CharStreams.toString(new InputStreamReader(entityStream));
                 logger.debug("api server response status[{}] --\n{}\n-- ", responseCode, text);
-                return objectMapper.readValue(text, entityType);
-            } else {
-                return objectMapper.readValue(entityStream, entityType);
-            }
+            System.out.println(text);
+            return objectMapper.readValue(text, entityType);
+//            } else {
+//                return objectMapper.readValue(entityStream, entityType);
+//            }
         } finally {
             IOUtils.closeQuietly(entityStream);
         }

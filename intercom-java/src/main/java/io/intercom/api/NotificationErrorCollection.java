@@ -20,8 +20,8 @@ public class NotificationErrorCollection extends TypedDataCollection<Notificatio
     @SuppressWarnings("EmptyMethod")
     @JsonProperty("notifications")
     @Override
-    public List<NotificationError> getPageItems() {
-        return super.getPageItems();
+    public List<NotificationError> getPage() {
+        return super.getPage();
     }
 
     @Override

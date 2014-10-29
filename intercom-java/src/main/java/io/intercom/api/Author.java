@@ -14,13 +14,13 @@ public class Author extends TypedData {
     @JsonProperty("type")
     private String type;
 
-    @JsonProperty
+    @JsonProperty("id")
     private String id;
 
-    @JsonProperty
+    @JsonProperty("name")
     private String name;
 
-    @JsonProperty
+    @JsonProperty("email")
     private String email;
 
     @JsonProperty("user_id")

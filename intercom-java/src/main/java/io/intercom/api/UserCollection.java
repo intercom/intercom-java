@@ -18,14 +18,14 @@ public class UserCollection extends TypedDataCollection<User> implements Iterato
 
     public UserCollection(List<User> users) {
         this();
-        this.pageItems = users;
+        this.page = users;
     }
 
     @SuppressWarnings("EmptyMethod")
     @JsonProperty("users")
     @Override
-    public List<User> getPageItems() {
-        return super.getPageItems();
+    public List<User> getPage() {
+        return super.getPage();
     }
 
     @Override

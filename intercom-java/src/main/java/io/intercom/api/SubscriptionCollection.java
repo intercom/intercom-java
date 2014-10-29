@@ -26,8 +26,8 @@ public class SubscriptionCollection extends TypedDataCollection<Subscription> im
     @SuppressWarnings("EmptyMethod")
     @JsonProperty("items")
     @Override
-    public List<Subscription> getPageItems() {
-        return super.getPageItems();
+    public List<Subscription> getPage() {
+        return super.getPage();
     }
 
     public boolean hasNext() {

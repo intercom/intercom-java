@@ -26,8 +26,8 @@ public class TagCollection extends TypedDataCollection<Tag> implements Iterator<
     @SuppressWarnings("EmptyMethod")
     @JsonProperty("tags")
     @Override
-    public List<Tag> getPageItems() {
-        return super.getPageItems();
+    public List<Tag> getPage() {
+        return super.getPage();
     }
 
     public boolean hasNext() {

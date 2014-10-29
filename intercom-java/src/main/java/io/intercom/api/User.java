@@ -24,7 +24,7 @@ public class User extends TypedData implements Replier {
         // restrictions on the company data that can be sent via a user update
         final ArrayList<CompanyWithStringPlan> updatableCompanies = Lists.newArrayList();
         if (user.getCompanyCollection() != null) {
-            final List<Company> companies = user.getCompanyCollection().getPageItems();
+            final List<Company> companies = user.getCompanyCollection().getPage();
             for (Company company : companies) {
                 final CompanyWithStringPlan updatableCompany = new CompanyWithStringPlan();
                 updatableCompany.setCompanyID(company.getCompanyID());

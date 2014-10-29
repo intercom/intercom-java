@@ -34,13 +34,13 @@ public class Admin extends TypedData implements Replier {
     @JsonProperty("type")
     private final String type = "admin";
 
-    @JsonProperty
+    @JsonProperty("id")
     private String id;
 
-    @JsonProperty
+    @JsonProperty("name")
     private String name;
 
-    @JsonProperty
+    @JsonProperty("email")
     private String email;
 
     @JsonProperty("created_at")
