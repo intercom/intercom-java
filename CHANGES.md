@@ -1,8 +1,10 @@
 ### Changes
 
-#### 0.1.0-SNAPSHOT
+#### 0.1.0
 
  - support untag of users and companies
+ 
+ - renamed of current page and page methods on collections (breaking)
 
 #### 0.0.5
 
