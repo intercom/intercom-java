@@ -20,6 +20,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 class HttpClient {
 
@@ -149,8 +150,15 @@ class HttpClient {
     }
 
     private <T> T handleError(URI uri, HttpURLConnection conn, int responseCode) throws IOException {
-        final ErrorCollection errors = objectMapper.readValue(conn.getErrorStream(), ErrorCollection.class);
-        logError(uri, responseCode, errors);
+        ErrorCollection errors;
+        try {
+            errors = objectMapper.readValue(conn.getErrorStream(), ErrorCollection.class);
+        } catch (IOException e) {
+            errors = createUnprocessableErrorResponse(e);
+        }
+        if (logger.isDebugEnabled()) {
+            logger.debug("error json follows --\n{}\n-- ", objectMapper.writeValueAsString(errors));
+        }
         return throwException(responseCode, errors);
     }
 
@@ -159,13 +167,6 @@ class HttpClient {
             return null;
         } else {
             return readEntity(conn, responseCode, response);
-        }
-    }
-
-    private void logError(URI uri, int responseCode, ErrorCollection errors) throws JsonProcessingException {
-        logger.info("[{}] returned [{}] [{}]", uri.toASCIIString(), responseCode, errors);
-        if (logger.isDebugEnabled()) {
-            logger.debug("api error json follows --\n{}\n-- ", objectMapper.writeValueAsString(errors));
         }
     }
 
@@ -239,5 +240,18 @@ class HttpClient {
         return headers;
     }
 
+    private ErrorCollection createUnprocessableErrorResponse(IOException e) {
+        ErrorCollection errors;
+        final long grepCode = getGrepCode();
+        final String msg = String.format("could not parse error response: [%s]", e.getLocalizedMessage());
+        logger.error(String.format("[%016x] %s", grepCode, msg), e);
+        Error err = new Error("unprocessable_entity", String.format("%s logged with code [%016x]", msg, grepCode)) ;
+        errors = new ErrorCollection(Lists.newArrayList(err));
+        return errors;
+    }
+
+    private long getGrepCode() {
+        return ThreadLocalRandom.current().nextLong();
+    }
 
 }
