@@ -211,8 +211,7 @@ User one = new User().setEmail("river@serenity.io");
 User two = new User().setEmail("simon@serenity.io").untag();
 User.create(one);
 User.create(two);
-final ArrayList<User> users = Lists.newArrayList(one, two);
-Tag.tag(tag, new UserCollection(users));
+Tag.tag(tag, one, two);
 
 // iterate over all tags
 final TagCollection tags = Tag.list();
@@ -225,8 +224,7 @@ Company c1 = new Company().setCompanyID("1");
 Company c2 = new Company().setCompanyID("2").untag();
 Company.create(c1);
 Company.create(c2);
-final ArrayList<Company> companies = Lists.newArrayList(c1, c2);
-Tag.tag(tag, new CompanyCollection(companies));
+Tag.tag(tag, c1, c2);
 
 // delete a tag
 Tag.delete(tag);

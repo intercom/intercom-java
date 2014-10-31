@@ -30,16 +30,12 @@ public class Tag extends TypedData {
         return tag(tag, new CompanyCollection(Lists.newArrayList(companies)));
     }
 
-    @Deprecated
-    // don't require folks to create a collection object
-    public static Tag tag(Tag tag, UserCollection users) throws InvalidException, AuthorizationException {
+    static Tag tag(Tag tag, UserCollection users) throws InvalidException, AuthorizationException {
         TaggableCollection taggableCollection = createTagTypedCollection(tag, users);
         return DataResource.create(taggableCollection, "tags", Tag.class);
     }
 
-    @Deprecated
-    // don't require folks to create a collection object
-    public static Tag tag(Tag tag, CompanyCollection companies) throws InvalidException, AuthorizationException {
+    static Tag tag(Tag tag, CompanyCollection companies) throws InvalidException, AuthorizationException {
         TaggableCollection taggableCollection = createTagTypedCollection(tag, companies);
         return DataResource.create(taggableCollection, "tags", Tag.class);
     }
