@@ -1,6 +1,5 @@
 package io.intercom.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.collect.Lists;
@@ -245,7 +244,7 @@ class HttpClient {
         final long grepCode = getGrepCode();
         final String msg = String.format("could not parse error response: [%s]", e.getLocalizedMessage());
         logger.error(String.format("[%016x] %s", grepCode, msg), e);
-        Error err = new Error("unprocessable_entity", String.format("%s logged with code [%016x]", msg, grepCode)) ;
+        Error err = new Error("unprocessable_entity", String.format("%s logged with code [%016x]", msg, grepCode));
         errors = new ErrorCollection(Lists.newArrayList(err));
         return errors;
     }

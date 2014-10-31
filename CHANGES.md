@@ -1,5 +1,11 @@
 ### Changes
 
+#### 1.0.0
+
+ - removed tag methods requiring collections
+ 
+ - handle non-json error entities from server
+
 #### 0.1.0
 
  - support untag of users and companies

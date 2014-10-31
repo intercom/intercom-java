@@ -2,7 +2,7 @@
 
 # intercom-java
 
-Beta Java bindings for the [Intercom API](https://api.intercom.io/docs)
+Java bindings for the [Intercom API](https://api.intercom.io/docs)
 
  - [Installation](#installation)
  - [Resources](#resources)
@@ -17,7 +17,7 @@ Beta Java bindings for the [Intercom API](https://api.intercom.io/docs)
 [ ![Download](https://api.bintray.com/packages/intercom/intercom-maven/intercom-java/images/download.svg) ](https://bintray.com/intercom/intercom-maven/intercom-java/_latestVersion)
 
 The distribution is hosted on [bintray](https://bintray.com/intercom/intercom-maven/intercom-java/view). 
-To use the client,you can add the jcenter repository to your dependencies. 
+To use the client, you can add the jcenter repository to your dependencies. 
 
 ### maven
 
@@ -38,7 +38,7 @@ and add the project declaration to your `pom.xml`:
 <dependency>
   <groupId>io.intercom</groupId>
   <artifactId>intercom-java</artifactId>
-  <version>0.1.0</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
@@ -56,7 +56,7 @@ and add the project to the `dependencies` block in your `build.gradle`:
 
 ```groovy
 dependencies {
-  compile 'io.intercom:intercom-java:0.1.0'
+  compile 'io.intercom:intercom-java:1.0.0'
 }  
 ```
 

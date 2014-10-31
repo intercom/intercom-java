@@ -1,13 +1,12 @@
 package io.intercom.api;
 
 import com.google.common.collect.Maps;
-import io.intercom.api.UriBuilder;
 import org.junit.Test;
 
 import java.net.URI;
 import java.util.HashMap;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class UriBuilderTest {
 

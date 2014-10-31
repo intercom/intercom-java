@@ -23,7 +23,7 @@ public class UserTest {
     @Test
     public void TestUserUpdate() throws Exception {
 
-        final long now = System.currentTimeMillis()/1000;
+        final long now = System.currentTimeMillis() / 1000;
         final User user = new User()
             .setEmail("wash@serenity.io")
             .setUserId("22")

@@ -2,12 +2,11 @@ package io.intercom.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static io.intercom.api.TestSupport.load;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class ErrorCollectionTest {
 

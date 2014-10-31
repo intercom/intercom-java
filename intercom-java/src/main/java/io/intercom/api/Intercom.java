@@ -14,7 +14,7 @@ public class Intercom {
 
     static final String AUTH_BEARER = "Bearer";
 
-    private static final String VERSION = "0.2.0-SNAPSHOT";
+    private static final String VERSION = "1.0.0";
 
     public static final String USER_AGENT = "intercom-java/" + Intercom.VERSION;
 
@@ -34,6 +34,7 @@ public class Intercom {
         return connectionTimeout;
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public static void setConnectionTimeout(int connectionTimeout) {
         Intercom.connectionTimeout = connectionTimeout;
     }
@@ -42,6 +43,7 @@ public class Intercom {
         return requestTimeout;
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public static void setRequestTimeout(int requestTimeout) {
         Intercom.requestTimeout = requestTimeout;
     }
