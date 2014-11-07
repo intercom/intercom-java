@@ -1,5 +1,11 @@
 ### Changes
 
+#### 1.0.1-SNAPSHOT
+
+ - send custom company attributes on update
+ 
+ - fix NPE when company has no plan on update
+
 #### 1.0.0
 
  - removed tag methods requiring collections
