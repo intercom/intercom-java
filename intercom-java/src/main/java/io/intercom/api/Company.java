@@ -40,7 +40,12 @@ public class Company extends TypedData {
         entity.setSessionCount(company.getSessionCount());
         entity.setMonthlySpend(company.getMonthlySpend());
         entity.setRemoteCreatedAt(company.getRemoteCreatedAt());
-        entity.setPlan(company.getPlan().getName());
+        if(company.getCustomAttributes() != null) {
+            entity.getCustomAttributes().putAll(company.getCustomAttributes());
+        }
+        if(company.getPlan() !=null )  {
+            entity.setPlan(company.getPlan().getName());
+        }
         return DataResource.update(entity, "companies", Company.class);
     }
 
