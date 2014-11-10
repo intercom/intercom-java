@@ -60,6 +60,19 @@ dependencies {
 }  
 ```
 
+### sbt
+
+Add jcenter to your `resolvers` in your `build.sbt`:
+
+```scala
+resolvers += "jcenter" at "http://jcenter.bintray.com"
+```
+
+and add the project to your `libraryDependencies` in your `build.sbt`:
+
+```scala
+libraryDependencies += "io.intercom" % "intercom-java" % "1.0.0"
+```
 
 ## Resources
 
