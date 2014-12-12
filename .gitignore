@@ -11,3 +11,4 @@ build
 *.war
 *.ear
 hs_err_pid*
+.idea
