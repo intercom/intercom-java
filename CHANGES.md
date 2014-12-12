@@ -5,6 +5,8 @@
  - send custom company attributes on update
  
  - fix NPE when company has no plan on update
+ 
+ - invalidate setSessionCount on Company [27](https://github.com/intercom/intercom-java/issues/27) 
 
 #### 1.0.0
 
