@@ -1,6 +1,6 @@
 ### Changes
 
-#### 1.0.1-SNAPSHOT
+#### 1.0.1
 
  - send custom company attributes on update
  
