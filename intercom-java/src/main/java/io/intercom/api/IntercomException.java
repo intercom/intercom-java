@@ -21,8 +21,12 @@ public class IntercomException extends RuntimeException {
     }
 
     public static String getMessage(ErrorCollection errorCollection) {
-        String message = "";
-        if(errorCollection!=null && errorCollection.getErrors() != null && errorCollection.getErrors().size() > 0 && errorCollection.getErrors().get(0) != null){
+        String message = "Could not read error message from server";
+        if(errorCollection!=null
+            && errorCollection.getErrors() != null
+            && errorCollection.getErrors().size() > 0
+            && errorCollection.getErrors().get(0) != null
+            && errorCollection.getErrors().get(0).getMessage() != null){
             message = errorCollection.getErrors().get(0).getMessage();
         }
         return message;
