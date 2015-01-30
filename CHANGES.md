@@ -1,5 +1,9 @@
 ### Changes
 
+#### 1.0.2
+
+- fix NPE when errors have no data [30](https://github.com/intercom/intercom-java/pull/30)
+
 #### 1.0.1
 
  - send custom company attributes on update
