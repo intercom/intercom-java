@@ -16,13 +16,21 @@ public class IntercomException extends RuntimeException {
     }
 
     public IntercomException(ErrorCollection errorCollection) {
-        this(errorCollection.getErrors().get(0).getMessage());
+        this(getMessage(errorCollection));
         this.errorCollection = errorCollection;
+    }
+
+    public static String getMessage(ErrorCollection errorCollection) {
+        String message = "";
+        if(errorCollection!=null && errorCollection.getErrors() != null && errorCollection.getErrors().size() > 0 && errorCollection.getErrors().get(0) != null){
+            message = errorCollection.getErrors().get(0).getMessage();
+        }
+        return message;
     }
 
     @SuppressWarnings("WeakerAccess")
     public IntercomException(ErrorCollection errorCollection, Throwable cause) {
-        this(errorCollection.getErrors().get(0).getMessage(), cause);
+        this(getMessage(errorCollection), cause);
         this.errorCollection = errorCollection;
     }
 
