@@ -3,6 +3,7 @@ package io.intercom.api;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.net.URI;
 
@@ -24,6 +25,7 @@ public class SocialProfile extends TypedData {
     private String username;
 
     @JsonProperty("url")
+    @JsonDeserialize(using = URIDeserializer.class)
     private URI url;
 
     public SocialProfile() {
