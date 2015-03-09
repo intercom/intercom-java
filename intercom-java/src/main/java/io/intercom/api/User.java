@@ -91,7 +91,7 @@ public class User extends TypedData implements Replier {
             final UserUpdate userUpdate = new UserUpdate();
             userUpdate.userId = user.getUserId();
             userUpdate.email = user.getEmail();
-            // userUpdate.id = user.id; // bug: id is treated as custom attribute
+            userUpdate.id = user.getId();
             userUpdate.remoteCreatedAt = user.getRemoteCreatedAt();
             userUpdate.name = user.getName();
             userUpdate.lastSeenIp = user.getLastSeenIp();
@@ -107,6 +107,9 @@ public class User extends TypedData implements Replier {
 
         @JsonProperty("type")
         private final String type = "user";
+
+        @JsonProperty("id")
+        private String id;
 
         @JsonProperty("user_id")
         private String userId;
@@ -165,6 +168,10 @@ public class User extends TypedData implements Replier {
 
         public String getType() {
             return type;
+        }
+
+        public String getId() {
+            return id;
         }
 
         public String getUserId() {

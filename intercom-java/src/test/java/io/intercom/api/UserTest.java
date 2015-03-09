@@ -26,6 +26,7 @@ public class UserTest {
         final long now = System.currentTimeMillis() / 1000;
         final User user = new User()
             .setEmail("wash@serenity.io")
+            .setId("54321")
             .setUserId("22")
             .setRemoteCreatedAt(now)
             .setName("Wash")
@@ -36,6 +37,7 @@ public class UserTest {
 
         final User.UserUpdate userUpdate = User.UserUpdate.buildFrom(user);
 
+        assertEquals("54321", userUpdate.getId());
         assertEquals("wash@serenity.io", userUpdate.getEmail());
         assertEquals("22", userUpdate.getUserId());
         assertEquals(now, userUpdate.getRemoteCreatedAt());
@@ -44,6 +46,20 @@ public class UserTest {
         assertEquals(true, userUpdate.isUpdateLastRequestAt());
         assertEquals(true, userUpdate.isNewSession());
         assertEquals("user-agent", userUpdate.getLastSeenUserAgent());
+    }
+
+    @Test
+    public void TestUserIncludesId() throws Exception {
+        final User user = new User();
+        user.setEmail("a@b.com");
+        user.setUserId("1");
+        user.setId("5432");
+        final String json = mapper.writeValueAsString(user);
+        final Map map = mapper.readValue(json, Map.class);
+        assertTrue(map.size() == 3);
+        assertTrue(map.containsKey("email"));
+        assertTrue(map.containsKey("user_id"));
+        assertTrue(map.containsKey("id"));
     }
 
     @Test
