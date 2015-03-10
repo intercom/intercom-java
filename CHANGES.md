@@ -1,5 +1,9 @@
 ### Changes
 
+#### 1.0.4
+
+allow the intercom user id field to be submitted 
+
 #### 1.0.3
 
 encode social profile urls for user objects
