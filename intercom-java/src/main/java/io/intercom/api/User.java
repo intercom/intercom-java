@@ -99,6 +99,7 @@ public class User extends TypedData implements Replier {
             userUpdate.lastSeenUserAgent = user.getUserAgentData();
             userUpdate.companyCollection = buildUserUpdateCompanies(user);
             userUpdate.lastRequestAt = user.getLastRequestAt();
+            userUpdate.signedUpAt = user.getSignedUpAt();
             userUpdate.unsubscribedFromEmails = user.getUnsubscribedFromEmails();
             userUpdate.updateLastRequestAt = user.isUpdateLastRequestAt();
             userUpdate.newSession = user.isNewSession();
@@ -138,6 +139,9 @@ public class User extends TypedData implements Replier {
 
         @JsonProperty("last_request_at")
         private long lastRequestAt;
+
+        @JsonProperty("signed_up_at")
+        private long signedUpAt;
 
         /**
          * Making this a Boolean allows us to send true or false as set
@@ -210,6 +214,10 @@ public class User extends TypedData implements Replier {
             return lastRequestAt;
         }
 
+        public long getSignedUpAt() {
+            return signedUpAt;
+        }
+
         public Boolean getUnsubscribedFromEmails() {
             return unsubscribedFromEmails;
         }
@@ -258,6 +266,9 @@ public class User extends TypedData implements Replier {
 
     @JsonProperty("last_request_at")
     private long lastRequestAt;
+
+    @JsonProperty("signed_up_at")
+    private long signedUpAt;
 
     @JsonProperty("last_seen_ip")
     private String lastSeenIp;
@@ -392,6 +403,15 @@ public class User extends TypedData implements Replier {
         return this;
     }
 
+    public long getSignedUpAt() {
+        return signedUpAt;
+    }
+
+    public User setSignedUpAt(long signedUpAt) {
+        this.signedUpAt = signedUpAt;
+        return this;
+    }
+
     public String getLastSeenIp() {
         return lastSeenIp;
     }
@@ -483,6 +503,7 @@ public class User extends TypedData implements Replier {
 
         if (createdAt != user.createdAt) return false;
         if (lastRequestAt != user.lastRequestAt) return false;
+        if (signedUpAt != user.signedUpAt) return false;
         if (newSession != user.newSession) return false;
         if (remoteCreatedAt != user.remoteCreatedAt) return false;
         if (sessionCount != user.sessionCount) return false;
@@ -529,6 +550,7 @@ public class User extends TypedData implements Replier {
         result = 31 * result + (unsubscribedFromEmails ? 1 : 0);
         result = 31 * result + sessionCount;
         result = 31 * result + (int) (lastRequestAt ^ (lastRequestAt >>> 32));
+        result = 31 * result + (int) (signedUpAt ^ (signedUpAt >>> 32));
         result = 31 * result + (lastSeenIp != null ? lastSeenIp.hashCode() : 0);
         result = 31 * result + (customAttributes != null ? customAttributes.hashCode() : 0);
         result = 31 * result + (userAgentData != null ? userAgentData.hashCode() : 0);
@@ -557,6 +579,7 @@ public class User extends TypedData implements Replier {
             ", unsubscribedFromEmails=" + unsubscribedFromEmails +
             ", sessionCount=" + sessionCount +
             ", lastRequestAt=" + lastRequestAt +
+            ", signedUpAt=" + signedUpAt +
             ", lastSeenIp='" + lastSeenIp + '\'' +
             ", customAttributes=" + customAttributes +
             ", userAgentData='" + userAgentData + '\'' +
