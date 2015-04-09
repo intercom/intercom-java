@@ -1,5 +1,9 @@
 ### Changes
 
+#### 1.0.6
+
+ - fix user message sending [40](https://github.com/intercom/intercom-java/issues/40)
+
 #### 1.0.5
 
 allow the signed_up_at user field to be submitted
