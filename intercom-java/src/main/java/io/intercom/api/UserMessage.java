@@ -16,7 +16,7 @@ public class UserMessage extends TypedData {
     private final String type = "user_message";
 
     @JsonProperty("message_type")
-    private final String messageType = "inapp";
+    private String messageType;
 
     @JsonProperty("id")
     private String id;

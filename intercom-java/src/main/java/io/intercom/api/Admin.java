@@ -58,6 +58,7 @@ public class Admin extends TypedData implements Replier {
     public Admin() {
     }
 
+    @JsonIgnore
     public String getReplyType() {
         return getType() + "_reply";
     }

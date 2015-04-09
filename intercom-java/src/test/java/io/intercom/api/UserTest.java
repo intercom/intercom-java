@@ -56,10 +56,11 @@ public class UserTest {
         user.setId("5432");
         final String json = mapper.writeValueAsString(user);
         final Map map = mapper.readValue(json, Map.class);
-        assertTrue(map.size() == 3);
+        assertTrue(map.size() == 4);
         assertTrue(map.containsKey("email"));
         assertTrue(map.containsKey("user_id"));
         assertTrue(map.containsKey("id"));
+        assertTrue(map.containsKey("type"));
     }
 
     @Test
@@ -69,9 +70,10 @@ public class UserTest {
         user.setUserId("1");
         final String json = mapper.writeValueAsString(user);
         final Map map = mapper.readValue(json, Map.class);
-        assertTrue(map.size() == 2);
+        assertTrue(map.size() == 3);
         assertTrue(map.containsKey("email"));
         assertTrue(map.containsKey("user_id"));
+        assertTrue(map.containsKey("type"));
     }
 
     @Test

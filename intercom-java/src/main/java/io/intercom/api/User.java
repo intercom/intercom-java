@@ -1,6 +1,7 @@
 package io.intercom.api;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -107,6 +108,7 @@ public class User extends TypedData implements Replier {
         }
 
         @JsonProperty("type")
+        @JsonInclude(JsonInclude.Include.ALWAYS)
         private final String type = "user";
 
         @JsonProperty("id")
@@ -232,6 +234,7 @@ public class User extends TypedData implements Replier {
     }
 
     @JsonProperty("type")
+    @JsonInclude(JsonInclude.Include.ALWAYS)
     private final String type = "user";
 
     @JsonProperty("id")
@@ -316,6 +319,7 @@ public class User extends TypedData implements Replier {
         return untag == null ? false : untag;
     }
 
+    @JsonIgnore
     public String getReplyType() {
         return getType() + "_reply";
     }
