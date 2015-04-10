@@ -26,6 +26,7 @@ public class SocialProfile extends TypedData {
 
     @JsonProperty("url")
     @JsonDeserialize(using = URIDeserializer.class)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private URI url;
 
     public SocialProfile() {
