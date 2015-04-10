@@ -1,5 +1,9 @@
 ### Changes
 
+#### 1.0.7
+
+  - handle more kinds of social urls [35](https://github.com/intercom/intercom-java/issues/35)
+
 #### 1.0.6
 
  - fix user message sending [40](https://github.com/intercom/intercom-java/issues/40)
