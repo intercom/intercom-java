@@ -1,5 +1,11 @@
 ### Changes
 
+#### 1.0.8
+
+ - fix user update regression [45](https://github.com/intercom/intercom-java/issues/45) (caused in [40](https://github.com/intercom/intercom-java/issues/40))
+  
+ - don't send values for `unsubscribed_from_emails`, `update_last_request_at` or `new_session` unless set 
+
 #### 1.0.7
 
   - handle more kinds of social urls [35](https://github.com/intercom/intercom-java/issues/35)
