@@ -6,9 +6,12 @@ import org.junit.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static io.intercom.api.TestSupport.load;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class UserTest {
@@ -46,6 +49,70 @@ public class UserTest {
         assertEquals(true, userUpdate.isUpdateLastRequestAt());
         assertEquals(true, userUpdate.isNewSession());
         assertEquals("user-agent", userUpdate.getLastSeenUserAgent());
+        assertEquals(null, userUpdate.getType());
+    }
+
+    @Test
+    public void testUserUpdateDefaultSerdes() throws Exception {
+        final User user = new User();
+        final User.UserUpdate userUpdate = User.UserUpdate.buildFrom(user);
+
+        /*
+         check we didn't set unsubscribed_from_emails, update_last_request_at, or
+         new_session by default
+         */
+        assertEquals(null, userUpdate.getNewSession());
+        assertEquals(null, userUpdate.getUnsubscribedFromEmails());
+        assertEquals(null, userUpdate.getUnsubscribedFromEmails());
+        assertEquals(null, userUpdate.isNewSession());
+        assertEquals(null, userUpdate.isUpdateLastRequestAt());
+
+        /*
+         https://github.com/intercom/intercom-java/issues/45
+         Workaround for server limitation (not accepting
+         the type field on create/update)
+        */
+        assertEquals(null, userUpdate.getType());
+        final String json = mapper.writeValueAsString(userUpdate);
+
+        assertFalse(json.contains("type"));
+        assertFalse(json.contains("unsubscribed_from_emails"));
+        assertFalse(json.contains("update_last_request_at"));
+        assertFalse(json.contains("new_session"));
+
+        final Map map = mapper.readValue(json, Map.class);
+        assertFalse(map.containsKey("type"));
+        assertFalse(map.containsKey("unsubscribed_from_emails"));
+        assertFalse(map.containsKey("update_last_request_at"));
+        assertFalse(map.containsKey("new_session"));
+    }
+
+    @Test
+    public void testUserUpdateDefaultModifiedSerdes() throws Exception {
+        final User user = new User();
+
+        user.setNewSession(true);
+        user.setUnsubscribedFromEmails(true);
+        user.setUpdateLastRequestAt(true);
+
+        final User.UserUpdate userUpdate = User.UserUpdate.buildFrom(user);
+
+        assertEquals(true, userUpdate.getNewSession());
+        assertEquals(true, userUpdate.getUnsubscribedFromEmails());
+        assertEquals(true, userUpdate.getUnsubscribedFromEmails());
+        assertEquals(true, userUpdate.isNewSession());
+        assertEquals(true, userUpdate.isUpdateLastRequestAt());
+
+        final String json = mapper.writeValueAsString(userUpdate);
+
+        assertTrue(json.contains("unsubscribed_from_emails"));
+        assertTrue(json.contains("update_last_request_at"));
+        assertTrue(json.contains("new_session"));
+
+        final Map map = mapper.readValue(json, Map.class);
+        assertTrue(map.containsKey("unsubscribed_from_emails"));
+        assertTrue(map.containsKey("update_last_request_at"));
+        assertTrue(map.containsKey("new_session"));
     }
 
     @Test

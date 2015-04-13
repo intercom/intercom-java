@@ -108,8 +108,8 @@ public class User extends TypedData implements Replier {
         }
 
         @JsonProperty("type")
-        @JsonInclude(JsonInclude.Include.ALWAYS)
-        private final String type = "user";
+        @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+        private String type;
 
         @JsonProperty("id")
         private String id;
@@ -151,6 +151,7 @@ public class User extends TypedData implements Replier {
          * primitive would result in false not being sent
          */
         @JsonProperty("unsubscribed_from_emails")
+        @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         private Boolean unsubscribedFromEmails;
 
         /**
@@ -159,6 +160,7 @@ public class User extends TypedData implements Replier {
          * primitive would result in false not being sent
          */
         @JsonProperty("update_last_request_at")
+        @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         private Boolean updateLastRequestAt;
 
         /**
@@ -167,6 +169,7 @@ public class User extends TypedData implements Replier {
          * primitive would result in false not being sent
          */
         @JsonProperty("new_session")
+        @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         private Boolean newSession;
 
         public UserUpdate() {
@@ -224,10 +227,20 @@ public class User extends TypedData implements Replier {
             return unsubscribedFromEmails;
         }
 
+        public Boolean getUpdateLastRequestAt() {
+            return updateLastRequestAt;
+        }
+
+        public Boolean getNewSession() {
+            return newSession;
+        }
+
+        @Deprecated
         public Boolean isUpdateLastRequestAt() {
             return updateLastRequestAt;
         }
 
+        @Deprecated
         public Boolean isNewSession() {
             return newSession;
         }
@@ -262,7 +275,7 @@ public class User extends TypedData implements Replier {
     private long remoteCreatedAt;
 
     @JsonProperty("unsubscribed_from_emails")
-    private boolean unsubscribedFromEmails;
+    private Boolean unsubscribedFromEmails;
 
     @JsonProperty("session_count")
     private int sessionCount;
@@ -300,10 +313,10 @@ public class User extends TypedData implements Replier {
     private TagCollection tagCollection = new TagCollection();
 
     @JsonProperty("update_last_request_at")
-    private boolean updateLastRequestAt;
+    private Boolean updateLastRequestAt;
 
     @JsonProperty("new_session")
-    private boolean newSession;
+    private Boolean newSession;
 
     private Boolean untag;
 
@@ -385,7 +398,7 @@ public class User extends TypedData implements Replier {
         return this;
     }
 
-    public boolean getUnsubscribedFromEmails() {
+    public Boolean getUnsubscribedFromEmails() {
         return unsubscribedFromEmails;
     }
 
@@ -480,7 +493,7 @@ public class User extends TypedData implements Replier {
         return tagCollection;
     }
 
-    public boolean isUpdateLastRequestAt() {
+    public Boolean isUpdateLastRequestAt() {
         return updateLastRequestAt;
     }
 
@@ -489,7 +502,7 @@ public class User extends TypedData implements Replier {
         return this;
     }
 
-    public boolean isNewSession() {
+    public Boolean isNewSession() {
         return newSession;
     }
 
@@ -572,28 +585,30 @@ public class User extends TypedData implements Replier {
     @Override
     public String toString() {
         return "User{" +
-            "id='" + id + '\'' +
-            ", name='" + name + '\'' +
-            ", email='" + email + '\'' +
-            ", userId='" + userId + '\'' +
-            ", avatar=" + avatar +
-            ", createdAt=" + createdAt +
-            ", updatedAt=" + updatedAt +
-            ", remoteCreatedAt=" + remoteCreatedAt +
-            ", unsubscribedFromEmails=" + unsubscribedFromEmails +
-            ", sessionCount=" + sessionCount +
-            ", lastRequestAt=" + lastRequestAt +
-            ", signedUpAt=" + signedUpAt +
-            ", lastSeenIp='" + lastSeenIp + '\'' +
-            ", customAttributes=" + customAttributes +
-            ", userAgentData='" + userAgentData + '\'' +
-            ", locationData=" + locationData +
-            ", companyCollection=" + companyCollection +
-            ", socialProfileCollection=" + socialProfileCollection +
-            ", segmentCollection=" + segmentCollection +
-            ", tagCollection=" + tagCollection +
-            ", updateLastRequestAt=" + updateLastRequestAt +
-            ", newSession=" + newSession +
-            "} " + super.toString();
+                "type='" + type + '\'' +
+                ", id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", userId='" + userId + '\'' +
+                ", avatar=" + avatar +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", remoteCreatedAt=" + remoteCreatedAt +
+                ", unsubscribedFromEmails=" + unsubscribedFromEmails +
+                ", sessionCount=" + sessionCount +
+                ", lastRequestAt=" + lastRequestAt +
+                ", signedUpAt=" + signedUpAt +
+                ", lastSeenIp='" + lastSeenIp + '\'' +
+                ", customAttributes=" + customAttributes +
+                ", userAgentData='" + userAgentData + '\'' +
+                ", locationData=" + locationData +
+                ", companyCollection=" + companyCollection +
+                ", socialProfileCollection=" + socialProfileCollection +
+                ", segmentCollection=" + segmentCollection +
+                ", tagCollection=" + tagCollection +
+                ", updateLastRequestAt=" + updateLastRequestAt +
+                ", newSession=" + newSession +
+                ", untag=" + untag +
+                "} " + super.toString();
     }
 }
