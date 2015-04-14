@@ -1,5 +1,9 @@
 ### Changes
 
+#### 1.0.9
+
+- remove secondary getters on user that stop older jackson versions working  [48](https://github.com/intercom/intercom-java/issues/45) (caused in [40](https://github.com/intercom/intercom-java/issues/48)). Doing a bang up job on regression bugs atm. 
+
 #### 1.0.8
 
  - fix user update regression [45](https://github.com/intercom/intercom-java/issues/45) (caused in [40](https://github.com/intercom/intercom-java/issues/40))
