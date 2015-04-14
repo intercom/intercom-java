@@ -227,20 +227,10 @@ public class User extends TypedData implements Replier {
             return unsubscribedFromEmails;
         }
 
-        public Boolean getUpdateLastRequestAt() {
-            return updateLastRequestAt;
-        }
-
-        public Boolean getNewSession() {
-            return newSession;
-        }
-
-        @Deprecated
         public Boolean isUpdateLastRequestAt() {
             return updateLastRequestAt;
         }
 
-        @Deprecated
         public Boolean isNewSession() {
             return newSession;
         }

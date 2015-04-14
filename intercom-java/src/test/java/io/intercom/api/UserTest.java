@@ -6,13 +6,9 @@ import org.junit.Test;
 
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static io.intercom.api.TestSupport.load;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class UserTest {
 
@@ -61,8 +57,6 @@ public class UserTest {
          check we didn't set unsubscribed_from_emails, update_last_request_at, or
          new_session by default
          */
-        assertEquals(null, userUpdate.getNewSession());
-        assertEquals(null, userUpdate.getUnsubscribedFromEmails());
         assertEquals(null, userUpdate.getUnsubscribedFromEmails());
         assertEquals(null, userUpdate.isNewSession());
         assertEquals(null, userUpdate.isUpdateLastRequestAt());
@@ -97,8 +91,6 @@ public class UserTest {
 
         final User.UserUpdate userUpdate = User.UserUpdate.buildFrom(user);
 
-        assertEquals(true, userUpdate.getNewSession());
-        assertEquals(true, userUpdate.getUnsubscribedFromEmails());
         assertEquals(true, userUpdate.getUnsubscribedFromEmails());
         assertEquals(true, userUpdate.isNewSession());
         assertEquals(true, userUpdate.isUpdateLastRequestAt());
