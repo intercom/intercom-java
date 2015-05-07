@@ -1,5 +1,6 @@
 package io.intercom.api;
 
+import java.net.URI;
 import java.util.Map;
 
 abstract class DataResource {
@@ -23,6 +24,11 @@ abstract class DataResource {
     public static <T, R> R update(T entity, String collectionPath, Class<R> response) {
         final HttpClient resource = new HttpClient(UriBuilder.newBuilder().path(collectionPath).build());
         return resource.post(response, entity);
+    }
+
+    public static <T, R> R updatePut(T entity, URI collectionPath, Class<R> response) {
+        final HttpClient resource = new HttpClient(collectionPath);
+        return resource.put(response, entity);
     }
 
     @SuppressWarnings("SameParameterValue")

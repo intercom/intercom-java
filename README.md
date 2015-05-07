@@ -79,6 +79,7 @@ libraryDependencies += "io.intercom" % "intercom-java" % "1.0.9"
 Resources this API supports:
 
 - [Users](#users)
+- [Contacts](#contacts)
 - [Companies](#companies)
 - [Admins](#admins)
 - [Events](#events)
@@ -137,6 +138,41 @@ UserCollection users = User.list();
 while(users.hasNext()) {
     System.out.println(users.next().getUserId());
 }
+```
+
+### Contacts
+
+_Contacts were added in version 1.1 of the client._
+
+```java
+// Create a Contact
+Contact contact = new Contact()
+    .setEmail("fantastic@serenity.io")
+    .addCustomAttribute(newStringAttribute("role", "fence"));
+Contact created = Contact.create(contact);
+
+// Find a single contact by server supplied user id or id
+contact = Contact.findByID("541a144b201ebf2ec5000002");
+contact = Contact.findByUserID("e1a7d875-d83a-46f7-86f4-73be98a98584);
+
+// Update a contact
+contact.setName("Stitch Hessian");
+Contact updated = Contact.update(contact);
+
+// Read a contact list by email
+Contact contacts = Contact.listByEmail("jubal@serenity.io");
+while(contacts.hasNext()) {
+    System.out.println(contacts.next());
+}
+
+// Iterate over all contacts
+Contact allContacts = Contact.list();
+while(allContacts.hasNext()) {
+    System.out.println(allContacts.next());
+}
+
+// Remove a contact
+Contact.delete(contact);
 ```
 
 ### Companies

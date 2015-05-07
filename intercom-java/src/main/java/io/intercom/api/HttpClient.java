@@ -84,6 +84,20 @@ class HttpClient {
         }
     }
 
+    public <T, E> T put(Class<T> reqres, E entity) {
+        headers.put("Content-Type", APPLICATION_JSON);
+        HttpURLConnection conn = null;
+        try {
+            conn = initializeConnection(uri, "PUT");
+            prepareRequestEntity(entity, conn);
+            return runRequest(uri, reqres, conn);
+        } catch (IOException e) {
+            return throwLocalException(e);
+        } finally {
+            IOUtils.disconnectQuietly(conn);
+        }
+    }
+
     public <T, E> T post(Class<T> reqres, E entity) {
         headers.put("Content-Type", APPLICATION_JSON);
         HttpURLConnection conn = null;

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 
 import java.net.URI;
@@ -15,76 +14,74 @@ import java.util.Map;
 @SuppressWarnings("UnusedDeclaration")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-public class User extends TypedData implements Replier {
+public class Contact extends TypedData implements Replier {
 
     private static final Map<String, String> SENTINEL = Maps.newHashMap();
 
-    private static List<CompanyWithStringPlan> buildUserUpdateCompanies(User user) {
-        return CompanyUpdateBuilder.buildUserUpdateCompanies(user.getCompanyCollection());
+    public static Contact findByID(String id)
+            throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        return new HttpClient(contactURI(id)).get(Contact.class);
     }
 
-    public static User find(String id)
-        throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
-        final URI users = UriBuilder.newBuilder().path("users").path(id).build();
-        final HttpClient resource = new HttpClient(users);
-        return resource.get(User.class);
+    public static Contact findByUserID(String userID)
+            throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        final Map<String, String> params = Maps.newHashMap();
+        params.put("user_id", userID);
+        return DataResource.find(params, "contacts", Contact.class);
     }
 
-    public static User find(Map<String, String> params)
-        throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
-        if ((!params.containsKey("email")) && (!params.containsKey("user_id"))) {
-            throw new InvalidException("a user find must include an email or user_id parameter");
-        }
-        return DataResource.find(params, "users", User.class);
+    public static ContactCollection listByEmail(String email)
+            throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        final Map<String, String> params = Maps.newHashMap();
+        params.put("email", email);
+        return list(params);
     }
 
-    public static User create(User user)
-        throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
-        return DataResource.create(UserUpdate.buildFrom(user), "users", User.class);
+    public static ContactCollection list(Map<String, String> params)
+            throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        return DataResource.list(params, "contacts", ContactCollection.class);
     }
 
-    public static User update(User user) throws InvalidException, AuthorizationException {
-        // only send fields the server allows for update
-        return DataResource.update(UserUpdate.buildFrom(user), "users", User.class);
+    public static ContactCollection list()
+            throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        return DataResource.list(SENTINEL, "contacts", ContactCollection.class);
     }
 
-    public static User delete(String id)
-        throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
-        return DataResource.delete(id, "users", User.class);
+    public static Contact create(Contact c)
+            throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        return DataResource.create(ContactUpdate.buildFrom(c), "contacts", Contact.class);
     }
 
-    public static UserCollection list(Map<String, String> params)
-        throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
-        return DataResource.list(params, "users", UserCollection.class);
+    public static Contact update(Contact c)
+            throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        return DataResource.updatePut(ContactUpdate.buildFrom(c), contactURI(c.getID()), Contact.class);
     }
 
-    public static UserCollection list()
-        throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
-        return DataResource.list(SENTINEL, "users", UserCollection.class);
+    public static Contact delete(Contact c)
+            throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        return DataResource.delete(c.getID(), "contacts", Contact.class);
+    }
+
+    private static URI contactURI(String id) {
+        return UriBuilder.newBuilder().path("contacts").path(id).build();
     }
 
     @SuppressWarnings("UnusedDeclaration")
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    static class UserUpdate extends TypedData {
+    static class ContactUpdate extends TypedData {
 
-        static UserUpdate buildFrom(User user) {
-            final UserUpdate userUpdate = new UserUpdate();
-            userUpdate.userId = user.getUserId();
-            userUpdate.email = user.getEmail();
-            userUpdate.id = user.getId();
-            userUpdate.remoteCreatedAt = user.getRemoteCreatedAt();
-            userUpdate.name = user.getName();
-            userUpdate.lastSeenIp = user.getLastSeenIp();
-            userUpdate.customAttributes = user.getCustomAttributes();
-            userUpdate.lastSeenUserAgent = user.getUserAgentData();
-            userUpdate.companyCollection = buildUserUpdateCompanies(user);
-            userUpdate.lastRequestAt = user.getLastRequestAt();
-            userUpdate.signedUpAt = user.getSignedUpAt();
-            userUpdate.unsubscribedFromEmails = user.getUnsubscribedFromEmails();
-            userUpdate.updateLastRequestAt = user.isUpdateLastRequestAt();
-            userUpdate.newSession = user.isNewSession();
-            return userUpdate;
+        static ContactUpdate buildFrom(Contact c) {
+            final ContactUpdate contactUpdate = new ContactUpdate();
+            contactUpdate.id = c.getID(); // propagated, noset
+            contactUpdate.userID = c.getUserID(); // propagated, noset
+            contactUpdate.email = c.getEmail();
+            contactUpdate.name = c.getName();
+            contactUpdate.lastSeenIP = c.getLastSeenIP();
+            contactUpdate.customAttributes = c.getCustomAttributes();
+            contactUpdate.lastRequestAt = c.getLastRequestAt();
+            contactUpdate.unsubscribedFromEmails = c.getUnsubscribedFromEmails();
+            return contactUpdate;
         }
 
         @JsonProperty("type")
@@ -95,19 +92,16 @@ public class User extends TypedData implements Replier {
         private String id;
 
         @JsonProperty("user_id")
-        private String userId;
+        private String userID;
 
         @JsonProperty("email")
         private String email;
-
-        @JsonProperty("remote_created_at")
-        private long remoteCreatedAt;
 
         @JsonProperty("name")
         private String name;
 
         @JsonProperty("last_seen_ip")
-        private String lastSeenIp;
+        private String lastSeenIP;
 
         @JsonIgnoreProperties(ignoreUnknown = false)
         @JsonProperty("custom_attributes")
@@ -125,62 +119,49 @@ public class User extends TypedData implements Replier {
         @JsonProperty("signed_up_at")
         private long signedUpAt;
 
-        /**
-         * Making this a Boolean allows us to send true or false as set
+        /*
+         * Making these Booleans allows us to send true or false as set
          * values leaving null the ignored field for NON_DEFAULT. A
          * primitive would result in false not being sent
          */
+
         @JsonProperty("unsubscribed_from_emails")
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         private Boolean unsubscribedFromEmails;
 
-        /**
-         * Making this a Boolean allows us to send true or false as set
-         * values leaving null the ignored field for NON_DEFAULT. A
-         * primitive would result in false not being sent
-         */
         @JsonProperty("update_last_request_at")
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         private Boolean updateLastRequestAt;
 
-        /**
-         * Making this a Boolean allows us to send true or false as set
-         * values leaving null the ignored field for NON_DEFAULT. A
-         * primitive would result in false not being sent
-         */
         @JsonProperty("new_session")
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
         private Boolean newSession;
 
-        public UserUpdate() {
+        public ContactUpdate() {
         }
 
         public String getType() {
             return type;
         }
 
-        public String getId() {
+        public String getID() {
             return id;
         }
 
-        public String getUserId() {
-            return userId;
+        public String getUserID() {
+            return userID;
         }
 
         public String getEmail() {
             return email;
         }
 
-        public long getRemoteCreatedAt() {
-            return remoteCreatedAt;
-        }
-
         public String getName() {
             return name;
         }
 
-        public String getLastSeenIp() {
-            return lastSeenIp;
+        public String getLastSeenIP() {
+            return lastSeenIP;
         }
 
         public Map<String, CustomAttribute> getCustomAttributes() {
@@ -199,10 +180,6 @@ public class User extends TypedData implements Replier {
             return lastRequestAt;
         }
 
-        public long getSignedUpAt() {
-            return signedUpAt;
-        }
-
         public Boolean getUnsubscribedFromEmails() {
             return unsubscribedFromEmails;
         }
@@ -218,19 +195,19 @@ public class User extends TypedData implements Replier {
 
     @JsonProperty("type")
     @JsonInclude(JsonInclude.Include.ALWAYS)
-    private final String type = "user";
+    private final String type = "contact";
 
     @JsonProperty("id")
     private String id;
 
-    @JsonProperty("name")
-    private String name;
+    @JsonProperty("user_id")
+    private String userID;
 
     @JsonProperty("email")
     private String email;
 
-    @JsonProperty("user_id")
-    private String userId;
+    @JsonProperty("name")
+    private String name;
 
     @JsonProperty("pseudonym")
     private String pseudonym;
@@ -244,9 +221,6 @@ public class User extends TypedData implements Replier {
     @JsonProperty("updated_at")
     private long updatedAt;
 
-    @JsonProperty("remote_created_at")
-    private long remoteCreatedAt;
-
     @JsonProperty("unsubscribed_from_emails")
     private Boolean unsubscribedFromEmails;
 
@@ -256,11 +230,8 @@ public class User extends TypedData implements Replier {
     @JsonProperty("last_request_at")
     private long lastRequestAt;
 
-    @JsonProperty("signed_up_at")
-    private long signedUpAt;
-
     @JsonProperty("last_seen_ip")
-    private String lastSeenIp;
+    private String lastSeenIP;
 
     @JsonIgnoreProperties(ignoreUnknown = false)
     @JsonProperty("custom_attributes")
@@ -293,10 +264,10 @@ public class User extends TypedData implements Replier {
 
     private Boolean untag;
 
-    public User() {
+    public Contact() {
     }
 
-    public User untag() {
+    public Contact untag() {
         untag = Boolean.TRUE;
         return this;
     }
@@ -314,44 +285,34 @@ public class User extends TypedData implements Replier {
         return type;
     }
 
-    public String getId() {
+    public String getID() {
         return id;
-    }
-
-    public User setId(String id) {
-        this.id = id;
-        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public User setName(String name) {
+    public Contact setName(String name) {
         this.name = name;
         return this;
+    }
+
+    public String getPseudonym() {
+        return pseudonym;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public User setEmail(String email) {
+    public Contact setEmail(String email) {
         this.email = email;
         return this;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public User setUserId(String userId) {
-        this.userId = userId;
-        return this;
-    }
-
-    public String getPseudonym() {
-        return pseudonym;
+    public String getUserID() {
+        return userID;
     }
 
     public Avatar getAvatar() {
@@ -366,20 +327,11 @@ public class User extends TypedData implements Replier {
         return updatedAt;
     }
 
-    public long getRemoteCreatedAt() {
-        return remoteCreatedAt;
-    }
-
-    public User setRemoteCreatedAt(long remoteCreatedAt) {
-        this.remoteCreatedAt = remoteCreatedAt;
-        return this;
-    }
-
     public Boolean getUnsubscribedFromEmails() {
         return unsubscribedFromEmails;
     }
 
-    public User setUnsubscribedFromEmails(boolean unsubscribedFromEmails) {
+    public Contact setUnsubscribedFromEmails(boolean unsubscribedFromEmails) {
         this.unsubscribedFromEmails = unsubscribedFromEmails;
         return this;
     }
@@ -392,26 +344,17 @@ public class User extends TypedData implements Replier {
         return lastRequestAt;
     }
 
-    public User setLastRequestAt(long lastRequestAt) {
+    public Contact setLastRequestAt(long lastRequestAt) {
         this.lastRequestAt = lastRequestAt;
         return this;
     }
 
-    public long getSignedUpAt() {
-        return signedUpAt;
+    public String getLastSeenIP() {
+        return lastSeenIP;
     }
 
-    public User setSignedUpAt(long signedUpAt) {
-        this.signedUpAt = signedUpAt;
-        return this;
-    }
-
-    public String getLastSeenIp() {
-        return lastSeenIp;
-    }
-
-    public User setLastSeenIp(String lastSeenIp) {
-        this.lastSeenIp = lastSeenIp;
+    public Contact setLastSeenIP(String lastSeenIP) {
+        this.lastSeenIP = lastSeenIP;
         return this;
     }
 
@@ -419,12 +362,12 @@ public class User extends TypedData implements Replier {
         return customAttributes;
     }
 
-    public User setCustomAttributes(Map<String, CustomAttribute> customAttributes) {
+    public Contact setCustomAttributes(Map<String, CustomAttribute> customAttributes) {
         this.customAttributes = customAttributes;
         return this;
     }
 
-    public User addCustomAttribute(CustomAttribute customAttribute) {
+    public Contact addCustomAttribute(CustomAttribute customAttribute) {
         this.customAttributes.put(customAttribute.getName(), customAttribute);
         return this;
     }
@@ -433,29 +376,12 @@ public class User extends TypedData implements Replier {
         return userAgentData;
     }
 
-    @VisibleForTesting
-    User setUserAgentData(String userAgentData) {
-        this.userAgentData = userAgentData;
-        return this;
-    }
-
     public LocationData getLocationData() {
         return locationData;
     }
 
     public CompanyCollection getCompanyCollection() {
         return companyCollection;
-    }
-
-    public User setCompanyCollection(CompanyCollection companyCollection) {
-        this.companyCollection = companyCollection;
-        return this;
-    }
-
-    public User addCompany(Company company) {
-        // sneak past the immutable list
-        this.companyCollection.addCompany(company);
-        return this;
     }
 
     public SocialProfileCollection getSocialProfileCollection() {
@@ -474,18 +400,8 @@ public class User extends TypedData implements Replier {
         return updateLastRequestAt;
     }
 
-    public User setUpdateLastRequestAt(boolean updateLastRequestAt) {
-        this.updateLastRequestAt = updateLastRequestAt;
-        return this;
-    }
-
     public Boolean isNewSession() {
         return newSession;
-    }
-
-    public User setNewSession(boolean newSession) {
-        this.newSession = newSession;
-        return this;
     }
 
     @Override
@@ -493,41 +409,41 @@ public class User extends TypedData implements Replier {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        User user = (User) o;
+        Contact contact = (Contact) o;
 
-        if (createdAt != user.createdAt) return false;
-        if (lastRequestAt != user.lastRequestAt) return false;
-        if (signedUpAt != user.signedUpAt) return false;
-        if (newSession != user.newSession) return false;
-        if (remoteCreatedAt != user.remoteCreatedAt) return false;
-        if (sessionCount != user.sessionCount) return false;
-        if (unsubscribedFromEmails != user.unsubscribedFromEmails) return false;
-        if (updateLastRequestAt != user.updateLastRequestAt) return false;
-        if (updatedAt != user.updatedAt) return false;
-        if (avatar != null ? !avatar.equals(user.avatar) : user.avatar != null) return false;
-        if (companyCollection != null ? !companyCollection.equals(user.companyCollection) : user.companyCollection != null)
+        if (createdAt != contact.createdAt) return false;
+        if (updatedAt != contact.updatedAt) return false;
+        if (sessionCount != contact.sessionCount) return false;
+        if (lastRequestAt != contact.lastRequestAt) return false;
+        if (!type.equals(contact.type)) return false;
+        if (id != null ? !id.equals(contact.id) : contact.id != null) return false;
+        if (name != null ? !name.equals(contact.name) : contact.name != null) return false;
+        if (email != null ? !email.equals(contact.email) : contact.email != null) return false;
+        if (userID != null ? !userID.equals(contact.userID) : contact.userID != null) return false;
+        if (avatar != null ? !avatar.equals(contact.avatar) : contact.avatar != null) return false;
+        if (unsubscribedFromEmails != null ? !unsubscribedFromEmails.equals(contact.unsubscribedFromEmails) : contact.unsubscribedFromEmails != null)
             return false;
-        if (customAttributes != null ? !customAttributes.equals(user.customAttributes) : user.customAttributes != null)
+        if (lastSeenIP != null ? !lastSeenIP.equals(contact.lastSeenIP) : contact.lastSeenIP != null) return false;
+        if (customAttributes != null ? !customAttributes.equals(contact.customAttributes) : contact.customAttributes != null)
             return false;
-        if (email != null ? !email.equals(user.email) : user.email != null) return false;
-        if (id != null ? !id.equals(user.id) : user.id != null) return false;
-        if (lastSeenIp != null ? !lastSeenIp.equals(user.lastSeenIp) : user.lastSeenIp != null) return false;
-        if (locationData != null ? !locationData.equals(user.locationData) : user.locationData != null) return false;
-        if (name != null ? !name.equals(user.name) : user.name != null) return false;
-        if (segmentCollection != null ? !segmentCollection.equals(user.segmentCollection) : user.segmentCollection != null)
+        if (userAgentData != null ? !userAgentData.equals(contact.userAgentData) : contact.userAgentData != null)
             return false;
-        if (socialProfileCollection != null ? !socialProfileCollection.equals(user.socialProfileCollection) : user.socialProfileCollection != null)
+        if (locationData != null ? !locationData.equals(contact.locationData) : contact.locationData != null)
             return false;
-        if (tagCollection != null ? !tagCollection.equals(user.tagCollection) : user.tagCollection != null)
+        if (companyCollection != null ? !companyCollection.equals(contact.companyCollection) : contact.companyCollection != null)
             return false;
-        if (!type.equals(user.type)) return false;
-        if (untag != null ? !untag.equals(user.untag) : user.untag != null) return false;
-        if (userAgentData != null ? !userAgentData.equals(user.userAgentData) : user.userAgentData != null)
+        if (socialProfileCollection != null ? !socialProfileCollection.equals(contact.socialProfileCollection) : contact.socialProfileCollection != null)
             return false;
-        //noinspection RedundantIfStatement
-        if (userId != null ? !userId.equals(user.userId) : user.userId != null) return false;
+        if (segmentCollection != null ? !segmentCollection.equals(contact.segmentCollection) : contact.segmentCollection != null)
+            return false;
+        if (tagCollection != null ? !tagCollection.equals(contact.tagCollection) : contact.tagCollection != null)
+            return false;
+        if (updateLastRequestAt != null ? !updateLastRequestAt.equals(contact.updateLastRequestAt) : contact.updateLastRequestAt != null)
+            return false;
+        //noinspection SimplifiableIfStatement
+        if (newSession != null ? !newSession.equals(contact.newSession) : contact.newSession != null) return false;
+        return !(untag != null ? !untag.equals(contact.untag) : contact.untag != null);
 
-        return true;
     }
 
     @Override
@@ -536,16 +452,14 @@ public class User extends TypedData implements Replier {
         result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        result = 31 * result + (userID != null ? userID.hashCode() : 0);
         result = 31 * result + (avatar != null ? avatar.hashCode() : 0);
         result = 31 * result + (int) (createdAt ^ (createdAt >>> 32));
         result = 31 * result + (int) (updatedAt ^ (updatedAt >>> 32));
-        result = 31 * result + (int) (remoteCreatedAt ^ (remoteCreatedAt >>> 32));
-        result = 31 * result + (unsubscribedFromEmails ? 1 : 0);
+        result = 31 * result + (unsubscribedFromEmails != null ? unsubscribedFromEmails.hashCode() : 0);
         result = 31 * result + sessionCount;
         result = 31 * result + (int) (lastRequestAt ^ (lastRequestAt >>> 32));
-        result = 31 * result + (int) (signedUpAt ^ (signedUpAt >>> 32));
-        result = 31 * result + (lastSeenIp != null ? lastSeenIp.hashCode() : 0);
+        result = 31 * result + (lastSeenIP != null ? lastSeenIP.hashCode() : 0);
         result = 31 * result + (customAttributes != null ? customAttributes.hashCode() : 0);
         result = 31 * result + (userAgentData != null ? userAgentData.hashCode() : 0);
         result = 31 * result + (locationData != null ? locationData.hashCode() : 0);
@@ -553,29 +467,27 @@ public class User extends TypedData implements Replier {
         result = 31 * result + (socialProfileCollection != null ? socialProfileCollection.hashCode() : 0);
         result = 31 * result + (segmentCollection != null ? segmentCollection.hashCode() : 0);
         result = 31 * result + (tagCollection != null ? tagCollection.hashCode() : 0);
-        result = 31 * result + (updateLastRequestAt ? 1 : 0);
-        result = 31 * result + (newSession ? 1 : 0);
+        result = 31 * result + (updateLastRequestAt != null ? updateLastRequestAt.hashCode() : 0);
+        result = 31 * result + (newSession != null ? newSession.hashCode() : 0);
         result = 31 * result + (untag != null ? untag.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return "User{" +
+        return "Contact{" +
                 "type='" + type + '\'' +
                 ", id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", userId='" + userId + '\'' +
+                ", userID='" + userID + '\'' +
                 ", avatar=" + avatar +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
-                ", remoteCreatedAt=" + remoteCreatedAt +
                 ", unsubscribedFromEmails=" + unsubscribedFromEmails +
                 ", sessionCount=" + sessionCount +
                 ", lastRequestAt=" + lastRequestAt +
-                ", signedUpAt=" + signedUpAt +
-                ", lastSeenIp='" + lastSeenIp + '\'' +
+                ", lastSeenIP='" + lastSeenIP + '\'' +
                 ", customAttributes=" + customAttributes +
                 ", userAgentData='" + userAgentData + '\'' +
                 ", locationData=" + locationData +
