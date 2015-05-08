@@ -160,13 +160,13 @@ contact.setName("Stitch Hessian");
 Contact updated = Contact.update(contact);
 
 // Read a contact list by email
-Contact contacts = Contact.listByEmail("jubal@serenity.io");
+ContactCollection contacts = Contact.listByEmail("jubal@serenity.io");
 while(contacts.hasNext()) {
     System.out.println(contacts.next());
 }
 
 // Iterate over all contacts
-Contact allContacts = Contact.list();
+ContactCollection allContacts = Contact.list();
 while(allContacts.hasNext()) {
     System.out.println(allContacts.next());
 }
