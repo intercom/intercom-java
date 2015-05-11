@@ -352,6 +352,12 @@ UserMessage userMessage = new UserMessage()
     .setUser(user);
 Conversation.create(userMessage);
 
+// send a message from a contact
+ContactMessage contactMessage = new ContactMessage()
+    .setBody("Hey! Is there, is there a reward?")
+    .setUser(contact);
+Conversation.create(contactMessage);
+
 // find admin conversations
 Map<String, String> params = Maps.newHashMap();
 params.put("type", "admin");
