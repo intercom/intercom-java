@@ -5,9 +5,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,8 +64,113 @@ public class Contact extends TypedData implements Replier {
         return DataResource.delete(c.getID(), "contacts", Contact.class);
     }
 
+    public static User convert(Contact c, User u)
+            throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        return DataResource.post(ContactConvertBuilder.buildConvert(c, u), convertURI(), User.class);
+    }
+
     private static URI contactURI(String id) {
         return UriBuilder.newBuilder().path("contacts").path(id).build();
+    }
+
+    private static URI convertURI() {
+        return UriBuilder.newBuilder().path("contacts").path("convert").build();
+    }
+
+    static class ContactConvertBuilder {
+
+        static ContactConvert buildConvert(Contact c, User u) throws InvalidException {
+            return new ContactConvertBuilder().build(c, u);
+        }
+
+        ContactConvert build(Contact c, User u) throws InvalidException {
+            return new ContactConvert(buildConvertContact(c), buildConvertUser(u));
+        }
+
+        HashMap<String, String> buildConvertUser(User u) {
+            final HashMap<String, String> convertUser = Maps.newHashMap();
+
+            if (u.getId() != null) {
+                convertUser.put("id", u.getId());
+            }
+
+            if (u.getUserId() != null) {
+                convertUser.put("user_id", u.getUserId());
+            }
+
+            if (u.getEmail() != null) {
+                convertUser.put("email", u.getEmail());
+            }
+
+            checkValidConvertContact(convertUser);
+
+            return convertUser;
+        }
+
+        void checkValidConvertContact(HashMap<String, String> convertUser) {
+            if ((!convertUser.containsKey("id")) && (!convertUser.containsKey("user_id")) && (!convertUser.containsKey("email"))) {
+                throw new InvalidException("a convert user must include at least one of, an id, user_id or email parameter");
+            }
+        }
+
+        HashMap<String, String> buildConvertContact(Contact c) {
+            final HashMap<String, String> convertContact = Maps.newHashMap();
+
+            if (c.getID() != null) {
+                convertContact.put("id", c.getID());
+            }
+
+            if (c.getUserID() != null) {
+                convertContact.put("user_id", c.getUserID());
+            }
+
+            checkValidConvertUser(convertContact);
+
+            return convertContact;
+        }
+
+        void checkValidConvertUser(HashMap<String, String> convertContact) {
+            if ((!convertContact.containsKey("id")) && (!convertContact.containsKey("user_id"))) {
+                throw new InvalidException("a convert contact must include at least one of, an id or a user_id parameter");
+            }
+        }
+    }
+
+
+    @SuppressWarnings("UnusedDeclaration")
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    static class ContactConvert extends TypedData {
+
+        @JsonProperty("contact")
+        private Map<String, String> contact;
+
+        @JsonProperty("user")
+        private Map<String, String> user;
+
+        public ContactConvert() {
+        }
+
+        public ContactConvert(Map<String, String> contact, Map<String, String> user) {
+            this.contact = contact;
+            this.user = user;
+        }
+
+        public Map<String, String> getContact() {
+            return contact;
+        }
+
+        public void setContact(Map<String, String> contact) {
+            this.contact = contact;
+        }
+
+        public Map<String, String> getUser() {
+            return user;
+        }
+
+        public void setUser(Map<String, String> user) {
+            this.user = user;
+        }
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -287,6 +394,12 @@ public class Contact extends TypedData implements Replier {
 
     public String getID() {
         return id;
+    }
+
+    @VisibleForTesting
+    Contact setID(String id) {
+        this.id = id;
+        return this;
     }
 
     public String getName() {

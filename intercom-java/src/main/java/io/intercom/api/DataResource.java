@@ -26,6 +26,11 @@ abstract class DataResource {
         return resource.post(response, entity);
     }
 
+    public static <T, R> R post(T entity, URI path, Class<R> response) {
+        final HttpClient resource = new HttpClient(path);
+        return resource.post(response, entity);
+    }
+
     public static <T, R> R updatePut(T entity, URI collectionPath, Class<R> response) {
         final HttpClient resource = new HttpClient(collectionPath);
         return resource.put(response, entity);

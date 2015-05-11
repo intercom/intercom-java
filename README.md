@@ -173,6 +173,9 @@ while(allContacts.hasNext()) {
 
 // Remove a contact
 Contact.delete(contact);
+
+// Convert a contact 
+User converted = Contact.convert(contact, user);
 ```
 
 ### Companies

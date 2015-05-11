@@ -530,18 +530,20 @@ public class User extends TypedData implements Replier {
         return true;
     }
 
+
     @Override
     public int hashCode() {
-        int result = type.hashCode();
+        int result = type != null ? type.hashCode() : 0;
         result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        result = 31 * result + (pseudonym != null ? pseudonym.hashCode() : 0);
         result = 31 * result + (avatar != null ? avatar.hashCode() : 0);
         result = 31 * result + (int) (createdAt ^ (createdAt >>> 32));
         result = 31 * result + (int) (updatedAt ^ (updatedAt >>> 32));
         result = 31 * result + (int) (remoteCreatedAt ^ (remoteCreatedAt >>> 32));
-        result = 31 * result + (unsubscribedFromEmails ? 1 : 0);
+        result = 31 * result + (unsubscribedFromEmails != null ? unsubscribedFromEmails.hashCode() : 0);
         result = 31 * result + sessionCount;
         result = 31 * result + (int) (lastRequestAt ^ (lastRequestAt >>> 32));
         result = 31 * result + (int) (signedUpAt ^ (signedUpAt >>> 32));
@@ -553,8 +555,8 @@ public class User extends TypedData implements Replier {
         result = 31 * result + (socialProfileCollection != null ? socialProfileCollection.hashCode() : 0);
         result = 31 * result + (segmentCollection != null ? segmentCollection.hashCode() : 0);
         result = 31 * result + (tagCollection != null ? tagCollection.hashCode() : 0);
-        result = 31 * result + (updateLastRequestAt ? 1 : 0);
-        result = 31 * result + (newSession ? 1 : 0);
+        result = 31 * result + (updateLastRequestAt != null ? updateLastRequestAt.hashCode() : 0);
+        result = 31 * result + (newSession != null ? newSession.hashCode() : 0);
         result = 31 * result + (untag != null ? untag.hashCode() : 0);
         return result;
     }
