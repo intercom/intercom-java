@@ -1,5 +1,9 @@
 ### Changes
 
+#### 1.1.1
+
+ - add support for [Contact Messaging](https://github.com/intercom/intercom-java#conversations)
+
 #### 1.1.0
 
  - add support for [Contacts](https://github.com/intercom/intercom-java#contacts) 
