@@ -71,6 +71,10 @@ public class Conversation extends TypedData {
         return DataResource.create(message, "messages", UserMessage.class);
     }
 
+    public static ContactMessage create(ContactMessage message) {
+        return DataResource.create(message, "messages", ContactMessage.class);
+    }
+
     public static AdminMessage create(AdminMessage message) throws InvalidException {
         if ((!message.getTemplate().equals("plain")) && (!message.getTemplate().equals("personal"))) {
             throw new InvalidException("The template must be either personal or plain");
