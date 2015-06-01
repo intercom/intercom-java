@@ -433,8 +433,7 @@ public class User extends TypedData implements Replier {
         return userAgentData;
     }
 
-    @VisibleForTesting
-    User setUserAgentData(String userAgentData) {
+    public User setUserAgentData(String userAgentData) {
         this.userAgentData = userAgentData;
         return this;
     }
