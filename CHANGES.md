@@ -1,5 +1,9 @@
 ### Changes
 
+#### 1.1.2
+
+ - make setUserAgentData public. Previously this was a protected method.
+
 #### 1.1.1
 
  - add support for [Contact Messaging](https://github.com/intercom/intercom-java#conversations)
