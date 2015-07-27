@@ -3,7 +3,9 @@ package io.intercom.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import java.net.URI;
@@ -16,6 +18,7 @@ import java.util.Map;
 public class Conversation extends TypedData {
 
     private static final HashMap<String, String> SENTINEL = Maps.newHashMap();
+    private static final List<String> DISPLAY_AS_FORMATS = Lists.newArrayList("plaintext", "html");
 
     public static Conversation find(String id) throws InvalidException, AuthorizationException {
         final HttpClient resource = new HttpClient(UriBuilder.newBuilder().path("conversations").path(id).build());
@@ -27,22 +30,7 @@ public class Conversation extends TypedData {
     }
 
     public static ConversationCollection list(Map<String, String> params) throws InvalidException, AuthorizationException {
-        if (!params.containsKey("type")) {
-            throw new InvalidException("a user or admin type must be supplied for a conversation query");
-        }
-
-        if (isAdminQuery(params)
-            && !(params.containsKey("admin_id"))) {
-            throw new InvalidException("an admin_id must be supplied for an admin conversation query");
-        }
-
-        if (isUserQuery(params)
-            && (!params.containsKey("intercom_user_id")
-            && !params.containsKey("user_id")
-            && !params.containsKey("email"))) {
-            throw new InvalidException(
-                "One of intercom_user_id, user_id or email must be supplied for a user conversation query");
-        }
+        validateListRequest(params);
 
         return DataResource.list(params, "conversations", ConversationCollection.class);
     }
@@ -99,6 +87,33 @@ public class Conversation extends TypedData {
         // user returns null
         // response.setUser(adminMessageResponse.getFrom());
         return response;
+    }
+
+    static void validateListRequest(Map<String, String> params) {
+        if (!params.containsKey("type")) {
+            throw new InvalidException("a user or admin type must be supplied for a conversation query");
+        }
+
+        if (isAdminQuery(params)
+                && !(params.containsKey("admin_id"))) {
+            throw new InvalidException("an admin_id must be supplied for an admin conversation query");
+        }
+
+        if (params.containsKey("display_as")) {
+            if (!DISPLAY_AS_FORMATS.contains(params.get("display_as"))) {
+                throw new InvalidException(
+                    "A display_as parameter must have one of the values "
+                        + Joiner.on(", ").join(DISPLAY_AS_FORMATS));
+            }
+        }
+
+        if (isUserQuery(params)
+                && (!params.containsKey("intercom_user_id")
+                && !params.containsKey("user_id")
+                && !params.containsKey("email"))) {
+            throw new InvalidException(
+                    "One of intercom_user_id, user_id or email must be supplied for a user conversation query");
+        }
     }
 
     private static boolean isUserQuery(Map<String, String> params) {

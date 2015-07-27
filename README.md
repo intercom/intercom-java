@@ -390,6 +390,13 @@ ConversationPart part = conversation.getMostRecentConversationPart();
 Admin assignee = conversation.getAssignee();
 User user = conversation.getUser();
 
+// Find all open conversations assigned to an admin and render as plaintext
+params = Maps.newHashMap();
+params.put("type", "admin");
+params.put("admin_id", "7");
+params.put("display_as", "plaintext");
+ConversationCollection openForAdmin = Conversation.list(params);
+
 // admin reply
 Admin admin = new Admin().setId("1");
 AdminReply adminReply = new AdminReply(admin);
