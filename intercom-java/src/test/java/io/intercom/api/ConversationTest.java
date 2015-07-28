@@ -5,10 +5,60 @@ import org.junit.Test;
 
 import java.util.Map;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class ConversationTest {
+
+    @Test
+    public void testIsNullOrBlank() {
+        assertTrue(Conversation.isNullOrBlank(null));
+        assertTrue(Conversation.isNullOrBlank(""));
+        assertTrue(Conversation.isNullOrBlank(" "));
+        assertTrue(Conversation.isNullOrBlank("\n"));
+        assertTrue(Conversation.isNullOrBlank("\r"));
+        assertFalse(Conversation.isNullOrBlank("reply"));
+    }
+
+    @Test
+    public void testAdminReply() {
+
+        AdminReply adminReply = new AdminReply(null);
+        adminReply.setAssigneeID("1");
+        assertEquals("assign", adminReply.getMessageType());
+
+        try {
+            Conversation.validateAdminReplyRequest(adminReply);
+        } catch (InvalidException e) {
+            fail();
+        }
+
+        adminReply = new AdminReply(null);
+        adminReply.setMessageType("comment");
+        try {
+            Conversation.validateAdminReplyRequest(adminReply);
+            fail();
+        } catch (InvalidException e) {
+            assertTrue(e.getMessage()
+                .contains("a comment or note reply must have a body"));
+        }
+
+        adminReply.setBody(" ");
+        try {
+            Conversation.validateAdminReplyRequest(adminReply);
+            fail();
+        } catch (InvalidException e) {
+            assertTrue(e.getMessage()
+                .contains("a comment or note reply must have a body"));
+        }
+
+        adminReply.setBody("Once, in flight school, I was laconic");
+        try {
+            Conversation.validateAdminReplyRequest(adminReply);
+        } catch (InvalidException e) {
+            fail();
+        }
+    }
 
     @Test
     public void testDisplayAs() {

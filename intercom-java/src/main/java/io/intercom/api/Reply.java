@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 class Reply<T extends Replier> extends TypedData {
 
     @JsonProperty("message_type")
-    private final String messageType = "comment";
+    private String messageType = "comment";
 
     @JsonProperty("body")
     private String body;
@@ -42,6 +42,11 @@ class Reply<T extends Replier> extends TypedData {
 
     String getMessageType() {
         return messageType;
+    }
+
+    Reply<T> setMessageReplyType(String messageType) {
+        this.messageType = messageType;
+        return this;
     }
 
     @Override

@@ -41,10 +41,32 @@ public class AdminReply extends Reply<Admin> {
         public String getAdminID() {
             return reply.getFrom().getId();
         }
+
+        @JsonProperty("assignee_id")
+        public String getAssigneeID() {
+            return reply.getAssigneeID();
+        }
     }
+
+    @JsonProperty("assignee_id")
+    private String assigneeID;
 
     public AdminReply(Admin admin) {
         this.from = admin;
+    }
+
+    public Reply<Admin> setMessageType(String messageType) {
+        return setMessageReplyType(messageType);
+    }
+
+    public String getAssigneeID() {
+        return assigneeID;
+    }
+
+    public Reply<Admin> setAssigneeID(String assigneeID) {
+        this.assigneeID = assigneeID;
+        this.setMessageType("assign");
+        return this;
     }
 
     @Override

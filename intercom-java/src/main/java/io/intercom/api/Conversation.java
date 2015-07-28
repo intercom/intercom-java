@@ -19,6 +19,7 @@ public class Conversation extends TypedData {
 
     private static final HashMap<String, String> SENTINEL = Maps.newHashMap();
     private static final List<String> DISPLAY_AS_FORMATS = Lists.newArrayList("plaintext", "html");
+    private static final List<String> MESSAGE_TYPES = Lists.newArrayList("note", "comment", "assign", "open", "close");
 
     public static Conversation find(String id) throws InvalidException, AuthorizationException {
         final HttpClient resource = new HttpClient(UriBuilder.newBuilder().path("conversations").path(id).build());
@@ -36,6 +37,8 @@ public class Conversation extends TypedData {
     }
 
     public static Conversation reply(String id, UserReply reply) {
+        validateUserReplyRequest(reply);
+
         final URI uri = UriBuilder.newBuilder()
             .path("conversations")
             .path(id)
@@ -46,6 +49,8 @@ public class Conversation extends TypedData {
     }
 
     public static Conversation reply(String id, AdminReply reply) {
+        validateAdminReplyRequest(reply);
+
         final URI uri = UriBuilder.newBuilder()
             .path("conversations")
             .path(id)
@@ -87,6 +92,41 @@ public class Conversation extends TypedData {
         // user returns null
         // response.setUser(adminMessageResponse.getFrom());
         return response;
+    }
+
+    static void validateAdminReplyRequest(AdminReply reply) {
+
+        validateMessageType(reply);
+
+        if (reply.getAssigneeID() != null
+            && !"assign".equals(reply.getMessageType())) {
+            throw new InvalidException("an assignee id can be set only for a message type of assign");
+        }
+
+        if (("note".equals(reply.getMessageType()) || "comment".equals(reply.getMessageType()))
+            && (isNullOrBlank(reply.getBody()))
+            ) {
+            throw new InvalidException("a comment or note reply must have a body");
+        }
+    }
+
+    static boolean isNullOrBlank(String s) {
+        return s == null || s.trim().length() == 0;
+
+    }
+
+    static void validateUserReplyRequest(UserReply reply) {
+        if (! "comment".equals(reply.getMessageType())) {
+            throw new InvalidException("a user reply must have a message type of comment");
+        }
+    }
+
+    static void validateMessageType(Reply reply) {
+        if(! MESSAGE_TYPES.contains(reply.getMessageType())) {
+            throw new InvalidException(
+                "A reply message type must be one of "
+                + Joiner.on(", ").join(MESSAGE_TYPES));
+        }
     }
 
     static void validateListRequest(Map<String, String> params) {

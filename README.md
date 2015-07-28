@@ -401,6 +401,12 @@ ConversationCollection openForAdmin = Conversation.list(params);
 Admin admin = new Admin().setId("1");
 AdminReply adminReply = new AdminReply(admin);
 adminReply.setBody("These apples are healthsome");
+Conversation.reply("66", adminReply); 
+
+// admin close
+Admin admin = new Admin().setId("1");
+AdminReply adminReply = new AdminReply(admin);
+adminReply.setMessageType("close");
 Conversation.reply("66", adminReply);
 
 // user reply
