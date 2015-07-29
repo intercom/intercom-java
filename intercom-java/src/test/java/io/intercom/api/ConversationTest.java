@@ -25,7 +25,7 @@ public class ConversationTest {
 
         AdminReply adminReply = new AdminReply(null);
         adminReply.setAssigneeID("1");
-        assertEquals("assign", adminReply.getMessageType());
+        assertEquals(Conversation.MESSAGE_TYPE_ASSIGNMENT, adminReply.getMessageType());
 
         try {
             Conversation.validateAdminReplyRequest(adminReply);

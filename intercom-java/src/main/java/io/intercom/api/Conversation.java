@@ -19,7 +19,18 @@ public class Conversation extends TypedData {
 
     private static final HashMap<String, String> SENTINEL = Maps.newHashMap();
     private static final List<String> DISPLAY_AS_FORMATS = Lists.newArrayList("plaintext", "html");
-    private static final List<String> MESSAGE_TYPES = Lists.newArrayList("note", "comment", "assign", "open", "close");
+    static final String MESSAGE_TYPE_ASSIGNMENT = "assignment";
+    static final String MESSAGE_TYPE_COMMENT = "comment";
+    static final String MESSAGE_TYPE_NOTE = "note";
+    static final String MESSAGE_TYPE_CLOSE = "close";
+    static final String MESSAGE_TYPE_OPEN = "open";
+    static final List<String> MESSAGE_TYPES = Lists.newArrayList(
+        MESSAGE_TYPE_ASSIGNMENT,
+        MESSAGE_TYPE_COMMENT,
+        MESSAGE_TYPE_NOTE,
+        MESSAGE_TYPE_CLOSE,
+        MESSAGE_TYPE_OPEN
+        );
 
     public static Conversation find(String id) throws InvalidException, AuthorizationException {
         final HttpClient resource = new HttpClient(UriBuilder.newBuilder().path("conversations").path(id).build());
@@ -99,8 +110,8 @@ public class Conversation extends TypedData {
         validateMessageType(reply);
 
         if (reply.getAssigneeID() != null
-            && !"assign".equals(reply.getMessageType())) {
-            throw new InvalidException("an assignee id can be set only for a message type of assign");
+            && !"assignment".equals(reply.getMessageType())) {
+            throw new InvalidException("an assignee id can be set only for a message type of assignment");
         }
 
         if (("note".equals(reply.getMessageType()) || "comment".equals(reply.getMessageType()))

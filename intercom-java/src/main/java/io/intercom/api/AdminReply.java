@@ -65,7 +65,7 @@ public class AdminReply extends Reply<Admin> {
 
     public Reply<Admin> setAssigneeID(String assigneeID) {
         this.assigneeID = assigneeID;
-        this.setMessageType("assign");
+        this.setMessageType(Conversation.MESSAGE_TYPE_ASSIGNMENT);
         return this;
     }
 
