@@ -1,5 +1,14 @@
 ### Changes
 
+#### 1.2.0
+
+- Allow conversations to be assigned to others on your team. Conversations 
+are the most beautiful things, and now you can share them with others through 
+the API.    
+
+- Support closing and opening conversations, either directly or with a reply.
+  
+  
 #### 1.1.2
 
  - make setUserAgentData public. Previously this was a protected method.
