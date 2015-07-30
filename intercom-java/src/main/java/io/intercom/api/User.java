@@ -78,7 +78,11 @@ public class User extends TypedData implements Replier {
             userUpdate.lastSeenIp = user.getLastSeenIp();
             userUpdate.customAttributes = user.getCustomAttributes();
             userUpdate.lastSeenUserAgent = user.getUserAgentData();
-            userUpdate.companyCollection = buildUserUpdateCompanies(user);
+
+            if(! buildUserUpdateCompanies(user).isEmpty()) {
+                userUpdate.companyCollection = buildUserUpdateCompanies(user);
+            }
+
             userUpdate.lastRequestAt = user.getLastRequestAt();
             userUpdate.signedUpAt = user.getSignedUpAt();
             userUpdate.unsubscribedFromEmails = user.getUnsubscribedFromEmails();
