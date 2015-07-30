@@ -1,5 +1,9 @@
 ### Changes
 
+#### 1.2.1
+
+- Do not send empty company arrays for user updates. Honestly, what's the point?
+
 #### 1.2.0
 
 - Allow conversations to be assigned to others on your team. Conversations 
