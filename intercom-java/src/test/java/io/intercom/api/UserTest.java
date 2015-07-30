@@ -20,6 +20,13 @@ public class UserTest {
     }
 
     @Test
+    public void TestUserUpdateEmptyCompanies() throws Exception {
+        final User user = new User().setEmail("wash@serenity.io");
+        final User.UserUpdate userUpdate = User.UserUpdate.buildFrom(user);
+        assertEquals(null, userUpdate.getCompanyCollection());
+    }
+
+    @Test
     public void TestUserUpdate() throws Exception {
 
         final long now = System.currentTimeMillis() / 1000;
