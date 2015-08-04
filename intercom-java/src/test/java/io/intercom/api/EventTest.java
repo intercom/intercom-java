@@ -1,11 +1,47 @@
 package io.intercom.api;
 
+import com.google.common.collect.Lists;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class EventTest {
+
+    @Test
+    public void testBulkValidation() {
+
+        Event event = new Event();
+        event.setEmail(null);
+        event.setEventName("bought-hat");
+
+        try {
+            Event.validateJobItems(Lists.newArrayList(new JobItem<Event>("post", event)));
+            fail("bulk event with no user id or email should be invalid");
+        } catch (InvalidException e) {
+            assertTrue(e.getFirstError() != null);
+        }
+
+        event = new Event();
+        event.setEmail("jayne@serenity.io");
+        event.setEventName(null);
+        try {
+            Event.validateJobItems(Lists.newArrayList(new JobItem<Event>("post", event)));
+            fail("bulk event with a blank name should be invalid");
+        } catch (InvalidException e) {
+            assertTrue(e.getFirstError() != null);
+        }
+
+        event = new Event();
+        event.setEmail("jayne@serenity.io");
+        event.setEventName("bought-hat");
+        try {
+            Event.validateJobItems(Lists.newArrayList(new JobItem<Event>("levitate", event)));
+            fail("bulk event with an unknown method");
+        } catch (InvalidException e) {
+            assertTrue(e.getFirstError() != null);
+        }
+    }
 
     @Test
     public void testMissingUser() {

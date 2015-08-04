@@ -140,7 +140,7 @@ public class Contact extends TypedData implements Replier {
     @SuppressWarnings("UnusedDeclaration")
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    static class ContactConvert extends TypedData {
+    static class ContactConvert {
 
         @JsonProperty("contact")
         private Map<String, String> contact;

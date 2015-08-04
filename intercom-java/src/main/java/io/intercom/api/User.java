@@ -5,10 +5,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,12 @@ import java.util.Map;
 public class User extends TypedData implements Replier {
 
     private static final Map<String, String> SENTINEL = Maps.newHashMap();
+    private static final ArrayList<String> BULK_PATHS = Lists.newArrayListWithExpectedSize(2);
+
+    static {
+        BULK_PATHS.add("bulk");
+        BULK_PATHS.add("users");
+    }
 
     private static List<CompanyWithStringPlan> buildUserUpdateCompanies(User user) {
         return CompanyUpdateBuilder.buildUserUpdateCompanies(user.getCompanyCollection());
@@ -63,10 +70,27 @@ public class User extends TypedData implements Replier {
         return DataResource.list(SENTINEL, "users", UserCollection.class);
     }
 
+    public static Job submit(final List<JobItem<User>> items)
+        throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        return submit(items, null);
+    }
+
+    public static Job submit(final List<JobItem<User>> items, Job job)
+        throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        return Job.submit(UserUpdate.validateAndConvertJobItems(items), job, BULK_PATHS);
+    }
+
+    public static JobItemCollection<User> listJobErrorFeed(String jobID)
+        throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        return Job.listJobErrorFeed(jobID, User.class);
+    }
+
     @SuppressWarnings("UnusedDeclaration")
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     static class UserUpdate extends TypedData {
+
+        private static final List<String> BULK_METHODS = Lists.newArrayList("post", "delete");
 
         static UserUpdate buildFrom(User user) {
             final UserUpdate userUpdate = new UserUpdate();
@@ -89,6 +113,18 @@ public class User extends TypedData implements Replier {
             userUpdate.updateLastRequestAt = user.isUpdateLastRequestAt();
             userUpdate.newSession = user.isNewSession();
             return userUpdate;
+        }
+
+        static List<JobItem<UserUpdate>> validateAndConvertJobItems(List<JobItem<User>> items) {
+            final List<JobItem<UserUpdate>> updateItems = Lists.newArrayList();
+            final JobSupport jobSupport = new JobSupport();
+            for (JobItem<User> item : items) {
+                jobSupport.validateJobItem(item, BULK_METHODS);
+                updateItems.add(
+                    new JobItem<UserUpdate>(
+                        item.getMethod(), buildFrom(item.getData())));
+            }
+            return updateItems;
         }
 
         @JsonProperty("type")

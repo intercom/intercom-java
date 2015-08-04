@@ -30,6 +30,10 @@ public class Intercom {
 
     private static volatile HttpConnectorSupplier httpConnectorSupplier = HttpConnectorSupplier.defaultSupplier;
 
+    public static long currentTimestamp() {
+        return System.currentTimeMillis()/1000;
+    }
+
     public static int getConnectionTimeout() {
         return connectionTimeout;
     }

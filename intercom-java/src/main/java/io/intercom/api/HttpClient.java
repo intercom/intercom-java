@@ -1,5 +1,6 @@
 package io.intercom.api;
 
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.collect.Lists;
@@ -73,38 +74,35 @@ class HttpClient {
     }
 
     public <T> T get(Class<T> reqres) throws IntercomException {
-        HttpURLConnection conn = null;
-        try {
-            conn = initializeConnection(uri, "GET");
-            return runRequest(uri, reqres, conn);
-        } catch (IOException e) {
-            return throwLocalException(e);
-        } finally {
-            IOUtils.disconnectQuietly(conn);
-        }
+        return get(getJavaType(reqres));
+    }
+
+    <T> T get(JavaType responseType) throws IntercomException {
+        return executeHttpMethod("GET", null, responseType);
+    }
+
+    public <T> T delete(Class<T> reqres) {
+        return executeHttpMethod("DELETE", null, getJavaType(reqres));
     }
 
     public <T, E> T put(Class<T> reqres, E entity) {
         headers.put("Content-Type", APPLICATION_JSON);
-        HttpURLConnection conn = null;
-        try {
-            conn = initializeConnection(uri, "PUT");
-            prepareRequestEntity(entity, conn);
-            return runRequest(uri, reqres, conn);
-        } catch (IOException e) {
-            return throwLocalException(e);
-        } finally {
-            IOUtils.disconnectQuietly(conn);
-        }
+        return executeHttpMethod("PUT", (E) entity, getJavaType(reqres));
     }
 
     public <T, E> T post(Class<T> reqres, E entity) {
         headers.put("Content-Type", APPLICATION_JSON);
+        return executeHttpMethod("POST", entity, getJavaType(reqres));
+    }
+
+    private <T, E> T executeHttpMethod(String method, E entity, JavaType responseType) {
         HttpURLConnection conn = null;
         try {
-            conn = initializeConnection(uri, "POST");
-            prepareRequestEntity(entity, conn);
-            return runRequest(uri, reqres, conn);
+            conn = initializeConnection(uri, method);
+            if(entity != null) {
+                prepareRequestEntity(entity, conn);
+            }
+            return runRequest(uri, responseType, conn);
         } catch (IOException e) {
             return throwLocalException(e);
         } finally {
@@ -112,16 +110,8 @@ class HttpClient {
         }
     }
 
-    public <T> T delete(Class<T> reqres) {
-        HttpURLConnection conn = null;
-        try {
-            conn = initializeConnection(uri, "DELETE");
-            return runRequest(uri, reqres, conn);
-        } catch (IOException e) {
-            return throwLocalException(e);
-        } finally {
-            IOUtils.disconnectQuietly(conn);
-        }
+    private <T> JavaType getJavaType(Class<T> reqres) {
+        return objectMapper.getTypeFactory().constructType(reqres);
     }
 
     // trick java with a dummy return
@@ -151,13 +141,12 @@ class HttpClient {
         return conn;
     }
 
-    private <T> T runRequest(URI uri, Class<T> response, HttpURLConnection conn) throws IOException {
+    private <T> T runRequest(URI uri, JavaType javaType, HttpURLConnection conn) throws IOException {
         conn.connect();
         final int responseCode = conn.getResponseCode();
         if (responseCode >= 200 && responseCode < 300) {
-            return handleSuccess(response, conn, responseCode);
+            return handleSuccess(javaType, conn, responseCode);
         } else {
-            // errors are redirects for now
             return handleError(uri, conn, responseCode);
         }
     }
@@ -175,23 +164,27 @@ class HttpClient {
         return throwException(responseCode, errors);
     }
 
-    private <T> T handleSuccess(Class<T> response, HttpURLConnection conn, int responseCode) throws IOException {
-        if (responseCode == 202 || responseCode == 204 || Void.class.equals(response)) {
+    private <T> T handleSuccess(JavaType javaType, HttpURLConnection conn, int responseCode) throws IOException {
+        if (shouldSkipResponseEntity(javaType, conn, responseCode)) {
             return null;
         } else {
-            return readEntity(conn, responseCode, response);
+            return readEntity(conn, responseCode, javaType);
         }
     }
 
-    private <T> T readEntity(HttpURLConnection conn, int responseCode, Class<T> entityType) throws IOException {
+    private boolean shouldSkipResponseEntity(JavaType javaType, HttpURLConnection conn, int responseCode) {
+        return responseCode == 202 || responseCode == 204 || Void.class.equals(javaType.getRawClass()) || "DELETE".equals(conn.getRequestMethod());
+    }
+
+    private <T> T readEntity(HttpURLConnection conn, int responseCode, JavaType javaType) throws IOException {
         final InputStream entityStream = conn.getInputStream();
         try {
             if (logger.isDebugEnabled()) {
                 final String text = CharStreams.toString(new InputStreamReader(entityStream));
                 logger.debug("api server response status[{}] --\n{}\n-- ", responseCode, text);
-                return objectMapper.readValue(text, entityType);
+                return objectMapper.readValue(text, javaType);
             } else {
-                return objectMapper.readValue(entityStream, entityType);
+                return objectMapper.readValue(entityStream, javaType);
             }
         } finally {
             IOUtils.closeQuietly(entityStream);

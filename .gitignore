@@ -1,4 +1,4 @@
-*/**/SpikeMain.java
+*/**/Spike*.java
 .gradle
 *.class
 out/*

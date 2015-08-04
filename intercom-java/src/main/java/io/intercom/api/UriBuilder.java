@@ -1,11 +1,14 @@
 package io.intercom.api;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -65,6 +68,15 @@ class UriBuilder {
 
     public UriBuilder path(String path) {
         uri.append("/").append(urlEncode(path));
+        return this;
+    }
+
+    public UriBuilder path(List<String> path) {
+        List<String> urlEncoded =  Lists.newArrayList();
+        for (String s : path) {
+            urlEncoded.add(urlEncode(s));
+        }
+        uri.append("/").append(Joiner.on("/").join(urlEncoded));
         return this;
     }
 

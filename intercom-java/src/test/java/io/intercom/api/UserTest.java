@@ -1,6 +1,7 @@
 package io.intercom.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -231,5 +232,19 @@ public class UserTest {
         // null values are not ignored
         customAttribute = customAttributes.get("nully_typed");
         assertEquals(null, customAttribute);
+    }
+
+    @Test
+    public void testBulkValidation() {
+
+        final User user = new User();
+        user.setEmail("a@b.com");
+        user.setUserId("1");
+        try {
+            User.UserUpdate.validateAndConvertJobItems(Lists.newArrayList(new JobItem<User>("levitate", user)));
+            fail("bulk user with an unknown method");
+        } catch (InvalidException e) {
+            assertTrue(e.getFirstError() != null);
+        }
     }
 }

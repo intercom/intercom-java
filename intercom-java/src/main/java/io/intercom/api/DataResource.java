@@ -1,6 +1,7 @@
 package io.intercom.api;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 abstract class DataResource {
@@ -18,6 +19,11 @@ abstract class DataResource {
 
     public static <T, R> R create(T entity, String collectionPath, Class<R> response) {
         final HttpClient resource = new HttpClient(UriBuilder.newBuilder().path(collectionPath).build());
+        return resource.post(response, entity);
+    }
+
+    public static <T, R> R create(T entity, List<String> paths, Class<R> response) {
+        final HttpClient resource = new HttpClient(UriBuilder.newBuilder().path(paths).build());
         return resource.post(response, entity);
     }
 

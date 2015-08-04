@@ -8,12 +8,22 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("UnusedDeclaration")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class Event extends TypedData {
+
+    private static final List<String> BULK_METHODS = Lists.newArrayList("post");
+    private static final ArrayList<String> BULK_PATHS = Lists.newArrayListWithExpectedSize(2);
+
+    static {
+        BULK_PATHS.add("bulk");
+        BULK_PATHS.add("events");
+    }
 
     public static void create(Event event) throws InvalidException, AuthorizationException {
 
@@ -23,6 +33,32 @@ public class Event extends TypedData {
             event.setCreatedAt(System.currentTimeMillis() / 1000);
         }
         DataResource.create(event, "events", Void.class);
+    }
+
+    public static Job submit(List<JobItem<Event>> items)
+        throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        return submit(items, null);
+    }
+
+    public static Job submit(List<JobItem<Event>> items, Job job)
+        throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        return Job.submit(validateJobItems(items), job, BULK_PATHS);
+    }
+
+    public static JobItemCollection<Event> listJobErrorFeed(String jobID)
+        throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        return Job.listJobErrorFeed(jobID, Event.class);
+    }
+
+    @VisibleForTesting
+    static List<JobItem<Event>> validateJobItems(List<JobItem<Event>> items) {
+        final JobSupport jobSupport = new JobSupport();
+        for (JobItem<Event> item : items) {
+            jobSupport.validateJobItem(item, BULK_METHODS);
+            validateCreateEvent(item.getData());
+        }
+
+        return items;
     }
 
     private static final ErrorCollection INVALID_NAME = new ErrorCollection(
