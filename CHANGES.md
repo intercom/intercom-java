@@ -1,5 +1,13 @@
 ### Changes
 
+#### 1.3.0-b1
+
+- Support bulk user and event submission. Save your request rate limit for 
+a rainy day! You can post and delete users, and post events.  
+
+- Add a currentTimestamp() helper to Intercom. This divides currentTimeMillis 
+by 1000 to produce a second level value.
+
 #### 1.2.1
 
 - Do not send empty company arrays for user updates. Honestly, what's the point?
