@@ -56,7 +56,7 @@ public class Contact extends TypedData implements Replier {
 
     public static Contact update(Contact c)
             throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
-        return DataResource.updatePut(ContactUpdate.buildFrom(c), contactURI(c.getID()), Contact.class);
+        return DataResource.update(ContactUpdate.buildFrom(c), "contacts", Contact.class);
     }
 
     public static Contact delete(Contact c)
