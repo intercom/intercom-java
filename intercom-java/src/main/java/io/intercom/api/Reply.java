@@ -9,6 +9,9 @@ class Reply<T extends Replier> extends TypedData {
 
     @JsonProperty("body")
     private String body;
+    
+    @JsonProperty("attachment_urls")
+    private String[] attachmentUrls;
 
     @JsonProperty("from")
     T from;
@@ -28,6 +31,11 @@ class Reply<T extends Replier> extends TypedData {
     public Reply<T> setBody(String body) {
         this.body = body;
         return this;
+    }
+    
+    public Reply<T> setAttachmentUrls(String[] attachmentUrls) {
+    	this.attachmentUrls = attachmentUrls;
+    	return this;
     }
 
     T getFrom() {
