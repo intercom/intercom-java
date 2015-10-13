@@ -1,5 +1,9 @@
 ### Changes
 
+#### 1.3.0-b2
+
+- Allow users to be removed from companies. 
+
 #### 1.3.0-b1
 
 - Support bulk user and event submission. Save your request rate limit for 
