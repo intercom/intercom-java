@@ -27,7 +27,7 @@ public class User extends TypedData implements Replier {
     }
 
     private static List<CompanyWithStringPlan> buildUserUpdateCompanies(User user) {
-        return CompanyUpdateBuilder.buildUserUpdateCompanies(user.getCompanyCollection());
+        return CompanyUpdateBuilder.buildUserUpdateCompanies(user.getCompanyCollection(), user.getRemoveCompanyCollection());
     }
 
     public static User find(String id)
@@ -333,6 +333,8 @@ public class User extends TypedData implements Replier {
 
     private Boolean untag;
 
+    private CompanyCollection removeCompanyCollection = new CompanyCollection();
+
     public User() {
     }
 
@@ -497,6 +499,11 @@ public class User extends TypedData implements Replier {
         return this;
     }
 
+    public User removeCompany(Company company) {
+        this.removeCompanyCollection.addCompany(company);
+        return this;
+    }
+
     public SocialProfileCollection getSocialProfileCollection() {
         return socialProfileCollection;
     }
@@ -525,6 +532,14 @@ public class User extends TypedData implements Replier {
     public User setNewSession(boolean newSession) {
         this.newSession = newSession;
         return this;
+    }
+
+    CompanyCollection getRemoveCompanyCollection() {
+        return removeCompanyCollection;
+    }
+
+    void setRemoveCompanyCollection(CompanyCollection removeCompanyCollection) {
+        this.removeCompanyCollection = removeCompanyCollection;
     }
 
     @Override
