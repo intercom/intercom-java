@@ -167,7 +167,7 @@ Contact created = Contact.create(contact);
 
 // Find a single contact by server supplied user id or id
 contact = Contact.findByID("541a144b201ebf2ec5000002");
-contact = Contact.findByUserID("e1a7d875-d83a-46f7-86f4-73be98a98584);
+contact = Contact.findByUserID("e1a7d875-d83a-46f7-86f4-73be98a98584");
 
 // Update a contact
 contact.setName("Stitch Hessian");
