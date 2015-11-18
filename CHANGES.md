@@ -1,5 +1,10 @@
 ### Changes
 
+
+#### 1.3.0-b3
+
+- Configure Jackson ObjectMapper once [76](https://github.com/intercom/intercom-java/issues/76)
+
 #### 1.3.0-b2
 
 - Allow users to be removed from companies. 
