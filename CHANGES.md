@@ -1,6 +1,9 @@
 ### Changes
 
+#### 1.3.0
 
+- Is a rollup of the 1.3.0 beta releases.
+  
 #### 1.3.0-b3
 
 - Configure Jackson ObjectMapper once [76](https://github.com/intercom/intercom-java/issues/76)
