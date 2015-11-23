@@ -16,8 +16,8 @@ Java bindings for the [Intercom API](https://api.intercom.io/docs)
 
 [ ![Download](https://api.bintray.com/packages/intercom/intercom-maven/intercom-java/images/download.svg) ](https://bintray.com/intercom/intercom-maven/intercom-java/_latestVersion)
 
-The distribution is hosted on [bintray](https://bintray.com/intercom/intercom-maven/intercom-java/view). 
-To use the client, you can add the jcenter repository to your dependencies. 
+The distribution is hosted on [bintray](https://bintray.com/intercom/intercom-maven/intercom-java/view).
+To use the client, you can add the jcenter repository to your dependencies.
 
 ### maven
 
@@ -31,9 +31,9 @@ Add jcenter to your repositories in `pom.xml` or `settings.xml`:
   </repository>
 </repositories>
 ```  
- 
+
 and add the project declaration to your `pom.xml`:
-  
+
 ```xml
 <dependency>
   <groupId>io.intercom</groupId>
@@ -152,6 +152,9 @@ final List<JobItem<User>> moreItems = Lists.newArrayList();
 items.add(new JobItem<User>("post", user4));
 items.add(new JobItem<User>("delete", user5));
 User.submit(moreItems, job);
+
+//View a bulk job error feed
+User.listJobErrorFeed(jobId)
 ```
 
 ### Contacts
@@ -188,7 +191,7 @@ while(allContacts.hasNext()) {
 // Remove a contact
 Contact.delete(contact);
 
-// Convert a contact 
+// Convert a contact
 User converted = Contact.convert(contact, user);
 ```
 
@@ -272,6 +275,9 @@ final List<JobItem<Event>> moreItems = Lists.newArrayList();
 items.add(new JobItem<Event>("post", event4));
 items.add(new JobItem<Event>("delete", event5));
 Event.submit(moreItems, job);
+
+//View a bulk job error feed
+Event.listJobErrorFeed(jobId)
 ```
 
 
@@ -319,13 +325,13 @@ Segment segment = Segment.find("1");
 // Update a segment
 segment.setName("new name");
 Segment.update(segment);
- 
+
 // Iterate over all segments
 SegmentCollection segments = Segment.list();
 while(segments.hasNext()) {
     System.out.println(segments.next().getId());
 }
-``` 
+```
 
 ### Notes
 
@@ -429,7 +435,7 @@ ConversationCollection openForAdmin = Conversation.list(params);
 Admin admin = new Admin().setId("1");
 AdminReply adminReply = new AdminReply(admin);
 adminReply.setBody("These apples are healthsome");
-Conversation.reply("66", adminReply); 
+Conversation.reply("66", adminReply);
 
 // admin close
 Admin admin = new Admin().setId("1");
@@ -554,40 +560,40 @@ for (Counts.CountItem tag : companyTags) {
 }
 ```
 
-## Idioms 
+## Idioms
 
 ### HTTP requests
 
-To signal local versus remote methods, calls that result in HTTP requests are performed 
-using static methods, for example `User.find()`. The objects returned by static methods 
-are built from server responses. The exception to the static idiom is where the `next()`, 
+To signal local versus remote methods, calls that result in HTTP requests are performed
+using static methods, for example `User.find()`. The objects returned by static methods
+are built from server responses. The exception to the static idiom is where the `next()`,
 `hasNext()` and `nextPage()` methods on Collections are used to abstract over pagination.  
 
 ### Pagination
 
-Some API classes have static `list()` methods that correspond to paginated API responses. 
-These return a Collection object (eg `UserCollection`) which can be iterated in two 
+Some API classes have static `list()` methods that correspond to paginated API responses.
+These return a Collection object (eg `UserCollection`) which can be iterated in two
  ways
- 
+
 - The collection's `getPageItems()`, `hasNextPage()` and `nextPage()` methods - these are useful when you want to fetch one or just a few pages directly.  
 
-- Java's inbuilt iterator methods `next()` and `hasNext()` - these are useful when you want to fetch data without manually handling pagination. 
+- Java's inbuilt iterator methods `next()` and `hasNext()` - these are useful when you want to fetch data without manually handling pagination.
 
 ### Error handling
 
-You do not need to deal with the HTTP response from an API call directly. 
-If there is an unsuccessful response then an IntercomException or a subclass 
-of IntercomException will be thrown. The exception will have Error objects 
- that can be examined via `getErrorCollection` and `getFirstError` for more detail. 
- 
+You do not need to deal with the HTTP response from an API call directly.
+If there is an unsuccessful response then an IntercomException or a subclass
+of IntercomException will be thrown. The exception will have Error objects
+ that can be examined via `getErrorCollection` and `getFirstError` for more detail.
+
 The API throws the following runtime exceptions -
-  
-  - AuthorizationException: for a 401 or 403 response 
-  - InvalidException: for a 422 response or a local validation failure 
+
+  - AuthorizationException: for a 401 or 403 response
+  - InvalidException: for a 422 response or a local validation failure
   - RateLimitException: for a 429 rate limit exceeded response
   - ClientException: for a general 4xx response
   - ServerException: for a 500 or 503 response
-  - IntercomException: general exception 
+  - IntercomException: general exception
 
 
 ## Configuration
@@ -596,12 +602,12 @@ The API throws the following runtime exceptions -
 
 The client can be configured to accept any http stack that implements
 `java.net.HttpURLConnection` by implementing the `HttpConnectorSupplier`
- interface. 
- 
-For example, to use [OkHttp](http://square.github.io/okhttp/) as a connection 
-supplier, create a supplier class - 
- 
-```java 
+ interface.
+
+For example, to use [OkHttp](http://square.github.io/okhttp/) as a connection
+supplier, create a supplier class -
+
+```java
 public class OkHttpSupplier implements HttpConnectorSupplier {
     private final OkUrlFactory urlFactory;
 
@@ -627,7 +633,7 @@ Intercom.setHttpConnectorSupplier(supplier);
 
 #### Timeouts
 
-The default connection and request timeouts can be set in milliseconds using the 
+The default connection and request timeouts can be set in milliseconds using the
 `Intercom.setConnectionTimeout` and `Intercom.setRequestTimeout` methods.
 
 
