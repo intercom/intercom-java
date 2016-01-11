@@ -38,7 +38,7 @@ class CompanyWithStringPlan extends TypedData {
     private Map<String, CustomAttribute> customAttributes = Maps.newHashMap();
 
     @JsonProperty("remove")
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean remove;
 
     public CompanyWithStringPlan() {
