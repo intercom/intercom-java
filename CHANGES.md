@@ -1,5 +1,9 @@
 ### Changes
 
+#### 1.3.1
+
+- Fixes company removal
+
 #### 1.3.0
 
 - Is a rollup of the 1.3.0 beta releases.
