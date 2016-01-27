@@ -17,7 +17,9 @@ class CompanyUpdateBuilder {
         if (add != null) {
             final List<Company> companies = add.getPage();
             for (Company company : companies) {
-                updatableCompanies.add(prepareUpdatableCompany(company));
+                if(remove!=null && !remove.getPage().contains(company)){
+                    updatableCompanies.add(prepareUpdatableCompany(company));
+                }
             }
         }
 
