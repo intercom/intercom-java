@@ -12,6 +12,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 @SuppressWarnings("UnusedDeclaration")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -226,7 +227,7 @@ public class Subscription extends TypedData {
     private List<Topic> topics = Lists.newArrayList();
 
     @JsonProperty("metadata")
-    private Map<String, String> metadata = Maps.newHashMap();
+    private Map<String, ArrayList<String>> metadata = Maps.newHashMap();
 
     @JsonProperty("active")
     private boolean active;
@@ -310,11 +311,11 @@ public class Subscription extends TypedData {
         this.active = active;
     }
 
-    public Map<String, String> getMetadata() {
+    public Map<String, ArrayList<String>> getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(Map<String, String> metadata) {
+    public void setMetadata(Map<String, ArrayList<String>> metadata) {
         this.metadata = metadata;
     }
 
