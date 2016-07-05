@@ -272,8 +272,8 @@ System.out.println(job.getID());
 
 // Bulk submit, add to an existing job
 final List<JobItem<Event>> moreItems = Lists.newArrayList();
-items.add(new JobItem<Event>("post", event4));
-items.add(new JobItem<Event>("delete", event5));
+moreItems.add(new JobItem<Event>("post", event4));
+moreItems.add(new JobItem<Event>("delete", event5));
 Event.submit(moreItems, job);
 
 //View a bulk job error feed
