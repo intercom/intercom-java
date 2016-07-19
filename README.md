@@ -155,6 +155,10 @@ User.submit(moreItems, job);
 
 //View a bulk job error feed
 User.listJobErrorFeed(jobId)
+
+// Delete a user
+User user = User.find("541a144b201ebf2ec5000001");
+User.delete(user.getId());
 ```
 
 ### Contacts
@@ -239,10 +243,6 @@ UserCollection users = Company.listUsers(map);
 User user = User.find("541a144b201ebf2ec5000001");
 user.addCompany(company);
 User.update(user);
-
-// Delete a user
-User user = User.find("541a144b201ebf2ec5000001");
-User.delete(user.getId());
 ```
 
 ### Admins
