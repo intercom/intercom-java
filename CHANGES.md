@@ -1,5 +1,9 @@
 ### Changes
 
+#### 2.1.0
+
+- Dynamically retrieve the parts for a conversation if not present
+
 #### 2.0.0
 
 - Fixes subscription metadata deserialization
