@@ -418,7 +418,7 @@ while (userConversations.hasNext()) {
 final Conversation conversation = Conversation.find("66");
 ConversationMessage conversationMessage = conversation.getConversationMessage();
 ConversationPartCollection parts = conversation.getConversationPartCollection();
-List<ConversationPart> partList = parts.getPageItems();
+List<ConversationPart> partList = parts.getPage();
 for (ConversationPart part : partList) {
     String partType = part.getPartType();
     Author author = part.getAuthor();
@@ -579,7 +579,7 @@ Some API classes have static `list()` methods that correspond to paginated API r
 These return a Collection object (eg `UserCollection`) which can be iterated in two
  ways
 
-- The collection's `getPageItems()`, `hasNextPage()` and `nextPage()` methods - these are useful when you want to fetch one or just a few pages directly.  
+- The collection's `getPage()`, `hasNextPage()` and `nextPage()` methods - these are useful when you want to fetch one or just a few pages directly.  
 
 - Java's inbuilt iterator methods `next()` and `hasNext()` - these are useful when you want to fetch data without manually handling pagination.
 
