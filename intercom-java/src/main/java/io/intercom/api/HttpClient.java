@@ -227,7 +227,7 @@ class HttpClient {
     }
 
     private Map<String, String> createAuthorizationHeaders() {
-        switch (Intercom.getAuthScheme()) {
+        switch (Intercom.getAuthKeyType()) {
             case BEARER:
                 headers.put("Authorization", "Bearer " + Intercom.getApiKey());
                 break;

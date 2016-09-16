@@ -8,9 +8,9 @@ public class Intercom {
 
     private static volatile URI apiBaseURI = API_BASE_URI;
 
-    private static volatile AuthenticationSchemes authenticationScheme = AuthenticationSchemes.API_KEY;
+    private static volatile AuthKeyType authKeyType = AuthKeyType.API_KEY;
 
-    enum AuthenticationSchemes {
+    enum AuthKeyType {
         API_KEY,
         BEARER,
         PERSONAL_ACCESS_TOKEN
@@ -81,7 +81,7 @@ public class Intercom {
     }
 
     public static void setPersonalAccessToken(String personalAccessToken) {
-        authenticationScheme = AuthenticationSchemes.PERSONAL_ACCESS_TOKEN;
+        authKeyType = AuthKeyType.PERSONAL_ACCESS_TOKEN;
         Intercom.personalAccessToken = personalAccessToken;
     }
 
@@ -90,7 +90,7 @@ public class Intercom {
     }
 
     public static void setApiKey(String apiKey) {
-        authenticationScheme = AuthenticationSchemes.API_KEY;
+        authKeyType = AuthKeyType.API_KEY;
         Intercom.apiKey = apiKey;
     }
 
@@ -102,8 +102,8 @@ public class Intercom {
         Intercom.apiBaseURI = apiBaseURI;
     }
 
-    static AuthenticationSchemes getAuthScheme() {
-        return authenticationScheme;
+    static AuthKeyType getAuthKeyType() {
+        return authKeyType;
     }
 
     public static String getPersonalAccessToken() {
