@@ -59,8 +59,6 @@ class HttpClient {
 
     private final Map<String, String> headers;
 
-    private final String apiKey = Intercom.getApiKey();
-
     private final HttpConnectorSupplier connection = Intercom.getHttpConnectorSupplier();
 
     public HttpClient(URI uri) {
@@ -229,13 +227,22 @@ class HttpClient {
     }
 
     private Map<String, String> createAuthorizationHeaders() {
-        if (Intercom.getAuthScheme().equals(Intercom.AUTH_BEARER)) {
-            headers.put("Authorization", "Bearer " + apiKey);
-        } else if (Intercom.getAuthScheme().equals(Intercom.AUTH_BASIC)) {
-            final String authString = Intercom.getAppID() + ":" + Intercom.getApiKey();
-            headers.put("Authorization", "Basic " + Base64.encodeBase64String(authString.getBytes()));
+        switch (Intercom.getAuthScheme()) {
+            case BEARER:
+                headers.put("Authorization", "Bearer " + Intercom.getApiKey());
+                break;
+            case API_KEY:
+                headers.put("Authorization", "Basic " + Base64.encodeBase64String(generateAuthString(Intercom.getAppID(),Intercom.getApiKey()).getBytes()));
+                break;
+            case PERSONAL_ACCESS_TOKEN:
+                headers.put("Authorization", "Basic " + Base64.encodeBase64String(generateAuthString(Intercom.getPersonalAccessToken(),"").getBytes()));
+                break;
         }
         return headers;
+    }
+
+    private String generateAuthString(String username, String password) {
+        return username + ":" + password;
     }
 
     private Map<String, String> createHeaders() {
