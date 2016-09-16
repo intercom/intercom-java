@@ -76,6 +76,11 @@ public class Intercom {
         Intercom.appID = appID;
     }
 
+    public static void setPersonalAccessToken(String personalAccessToken) {
+        Intercom.appID = personalAccessToken;
+        Intercom.apiKey = "";
+    }
+
     public static String getApiKey() {
         return Intercom.apiKey;
     }
