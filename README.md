@@ -102,6 +102,11 @@ Intercom.setAppID("pi3243fa");
 Intercom.setApiKey("da39a3ee5e6b4b0d3255bfef95601890afd80709");
 ```
 
+If you're using a Personal Access Token (PAT) you can just use the following helper method - 
+ 
+```java
+Intercom.setPersonalAccessToken("da39a3ee5e6b4b0d3255bfef95601890afd80709");
+```
 
 ## Usage
 
