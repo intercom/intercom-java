@@ -1,5 +1,9 @@
 ### Changes
 
+#### 2.2.0
+
+- Include company custom attributes when updating a user with an embedded company object
+
 #### 2.1.0
 
 - Dynamically retrieve the parts for a conversation if not present
