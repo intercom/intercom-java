@@ -12,8 +12,7 @@ public class Intercom {
 
     enum AuthKeyType {
         API_KEY,
-        BEARER,
-        PERSONAL_ACCESS_TOKEN
+        TOKEN
     }
 
     private static final String VERSION = "2.1.0";
@@ -22,7 +21,7 @@ public class Intercom {
 
     private static volatile String apiKey;
 
-    private static volatile String personalAccessToken;
+    private static volatile String token;
 
     private static volatile String appID;
 
@@ -80,9 +79,9 @@ public class Intercom {
         Intercom.appID = appID;
     }
 
-    public static void setPersonalAccessToken(String personalAccessToken) {
-        authKeyType = AuthKeyType.PERSONAL_ACCESS_TOKEN;
-        Intercom.personalAccessToken = personalAccessToken;
+    public static void setToken(String token) {
+        authKeyType = AuthKeyType.TOKEN;
+        Intercom.token = token;
     }
 
     public static String getApiKey() {
@@ -106,8 +105,8 @@ public class Intercom {
         return authKeyType;
     }
 
-    public static String getPersonalAccessToken() {
-        return personalAccessToken;
+    public static String getToken() {
+        return token;
     }
 
 
