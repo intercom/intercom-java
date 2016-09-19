@@ -3,6 +3,7 @@
 #### 2.2.0
 
 - Include company custom attributes when updating a user with an embedded company object
+- Include support for Personal Access Token API access
 
 #### 2.1.0
 
