@@ -99,7 +99,7 @@ Resources this API supports:
 If you're using a Personal Access Token (PAT) you can just use the following helper method, which will automatically set up the authentication scheme for you -
 
 ```java
-Intercom.setPersonalAccessToken("da39a3ee5e6b4b0d3255bfef95601890afd80709");
+Intercom.setToken("da39a3ee5e6b4b0d3255bfef95601890afd80709");
 ```
 
 If you're still using API Keys (now deprecated), you can set up your App ID and API Key using the following methods -
