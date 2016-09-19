@@ -95,12 +95,20 @@ Resources this API supports:
 
 ## Authorization
 
-You can set the app's id and api key via the `Intercom` object -  
+
+If you're using a Personal Access Token (PAT) you can just use the following helper method, which will automatically set up the authentication scheme for you -
+
+```java
+Intercom.setToken("da39a3ee5e6b4b0d3255bfef95601890afd80709");
+```
+
+If you're still using API Keys (now deprecated), you can set up your App ID and API Key using the following methods -
 
 ```java
 Intercom.setAppID("pi3243fa");
 Intercom.setApiKey("da39a3ee5e6b4b0d3255bfef95601890afd80709");
 ```
+
 
 
 ## Usage
