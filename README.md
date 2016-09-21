@@ -4,7 +4,7 @@
 
 Java bindings for the [Intercom API](https://api.intercom.io/docs)
 
- - [Installation](#installation)
+ - [Installation](#add-a-dependency)
  - [Resources](#resources)
  - [Authorization](#authorization)
  - [Usage](#usage)
