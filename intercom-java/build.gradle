@@ -44,8 +44,8 @@ publishing {
 bintray {
   // gradle apslodes if the bintray* props aren't found and we never run this task in circle
   if (System.getenv('release') != null) {
-    user = property('user')
-    key = property('key')
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
   }
   publications = ['mavenJava']
   dryRun = false
