@@ -447,6 +447,7 @@ ConversationCollection openForAdmin = Conversation.list(params);
 Admin admin = new Admin().setId("1");
 AdminReply adminReply = new AdminReply(admin);
 adminReply.setBody("These apples are healthsome");
+adminReply.setAttachmentUrls(new String[]{"http://www.example.com/attachment.jpg"}); // optional - list of attachments
 Conversation.reply("66", adminReply);
 
 // admin close
@@ -459,6 +460,7 @@ Conversation.reply("66", adminReply);
 User user1 = new User().setId("5310d8e8598c9a0b24000005");
 UserReply userReply = new UserReply(user1);
 userReply.setBody("Mighty fine shindig");
+userReply.setAttachmentUrls(new String[]{"http://www.example.com/attachment.jpg"}); // optional - list of attachments
 System.out.println(MapperSupport.objectMapper().writeValueAsString(userReply));
 Conversation.reply("66", userReply);
 ```

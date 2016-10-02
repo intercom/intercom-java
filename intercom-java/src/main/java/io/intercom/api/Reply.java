@@ -32,7 +32,11 @@ class Reply<T extends Replier> extends TypedData {
         this.body = body;
         return this;
     }
-    
+
+    public String[] getAttachmentUrls() {
+        return attachmentUrls;
+    }
+
     public Reply<T> setAttachmentUrls(String[] attachmentUrls) {
     	this.attachmentUrls = attachmentUrls;
     	return this;
