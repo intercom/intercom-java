@@ -1,5 +1,18 @@
 ### Changes
 
+#### 2.2.0
+
+- Include company custom attributes when updating a user with an embedded company object
+- Include support for Personal Access Token API access
+
+#### 2.1.0
+
+- Dynamically retrieve the parts for a conversation if not present
+
+#### 2.0.0
+
+- Fixes subscription metadata deserialization
+
 #### 1.3.1
 
 - Fixes company removal
@@ -7,21 +20,21 @@
 #### 1.3.0
 
 - Is a rollup of the 1.3.0 beta releases.
-  
+
 #### 1.3.0-b3
 
 - Configure Jackson ObjectMapper once [76](https://github.com/intercom/intercom-java/issues/76)
 
 #### 1.3.0-b2
 
-- Allow users to be removed from companies. 
+- Allow users to be removed from companies.
 
 #### 1.3.0-b1
 
-- Support bulk user and event submission. Save your request rate limit for 
+- Support bulk user and event submission. Save your request rate limit for
 a rainy day! You can post and delete users, and post events.  
 
-- Add a currentTimestamp() helper to Intercom. This divides currentTimeMillis 
+- Add a currentTimestamp() helper to Intercom. This divides currentTimeMillis
 by 1000 to produce a second level value.
 
 #### 1.2.1
@@ -30,13 +43,13 @@ by 1000 to produce a second level value.
 
 #### 1.2.0
 
-- Allow conversations to be assigned to others on your team. Conversations 
-are the most beautiful things, and now you can share them with others through 
+- Allow conversations to be assigned to others on your team. Conversations
+are the most beautiful things, and now you can share them with others through
 the API.    
 
 - Support closing and opening conversations, either directly or with a reply.
-  
-  
+
+
 #### 1.1.2
 
  - make setUserAgentData public. Previously this was a protected method.
@@ -47,17 +60,17 @@ the API.
 
 #### 1.1.0
 
- - add support for [Contacts](https://github.com/intercom/intercom-java#contacts) 
+ - add support for [Contacts](https://github.com/intercom/intercom-java#contacts)
 
 #### 1.0.9
 
- - remove secondary getters on user that stop older jackson versions working  [48](https://github.com/intercom/intercom-java/issues/45) (caused in [40](https://github.com/intercom/intercom-java/issues/48)). Doing a bang up job on regression bugs atm. 
+ - remove secondary getters on user that stop older jackson versions working  [48](https://github.com/intercom/intercom-java/issues/45) (caused in [40](https://github.com/intercom/intercom-java/issues/48)). Doing a bang up job on regression bugs atm.
 
 #### 1.0.8
 
  - fix user update regression [45](https://github.com/intercom/intercom-java/issues/45) (caused in [40](https://github.com/intercom/intercom-java/issues/40))
-  
- - don't send values for `unsubscribed_from_emails`, `update_last_request_at` or `new_session` unless set 
+
+ - don't send values for `unsubscribed_from_emails`, `update_last_request_at` or `new_session` unless set
 
 #### 1.0.7
 
@@ -73,7 +86,7 @@ allow the signed_up_at user field to be submitted
 
 #### 1.0.4
 
-allow the intercom user id field to be submitted 
+allow the intercom user id field to be submitted
 
 #### 1.0.3
 
@@ -86,21 +99,21 @@ encode social profile urls for user objects
 #### 1.0.1
 
  - send custom company attributes on update
- 
+
  - fix NPE when company has no plan on update
- 
- - invalidate setSessionCount on Company [27](https://github.com/intercom/intercom-java/issues/27) 
+
+ - invalidate setSessionCount on Company [27](https://github.com/intercom/intercom-java/issues/27)
 
 #### 1.0.0
 
  - removed tag methods requiring collections
- 
+
  - handle non-json error entities from server
 
 #### 0.1.0
 
  - support untag of users and companies
- 
+
  - renamed of current page and page methods on collections (breaking)
 
 #### 0.0.5

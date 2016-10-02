@@ -4,7 +4,7 @@
 
 Java bindings for the [Intercom API](https://api.intercom.io/docs)
 
- - [Installation](#installation)
+ - [Installation](#add-a-dependency)
  - [Resources](#resources)
  - [Authorization](#authorization)
  - [Usage](#usage)
@@ -38,7 +38,7 @@ and add the project declaration to your `pom.xml`:
 <dependency>
   <groupId>io.intercom</groupId>
   <artifactId>intercom-java</artifactId>
-  <version>1.3.1</version>
+  <version>2.2.0</version>
 </dependency>
 ```
 
@@ -56,7 +56,7 @@ and add the project to the `dependencies` block in your `build.gradle`:
 
 ```groovy
 dependencies {
-  compile 'io.intercom:intercom-java:1.3.1'
+  compile 'io.intercom:intercom-java:2.2.0'
 }  
 ```
 
@@ -71,7 +71,7 @@ resolvers += "jcenter" at "http://jcenter.bintray.com"
 and add the project to your `libraryDependencies` in your `build.sbt`:
 
 ```scala
-libraryDependencies += "io.intercom" % "intercom-java" % "1.3.1"
+libraryDependencies += "io.intercom" % "intercom-java" % "2.2.0"
 ```
 
 ## Resources
@@ -95,12 +95,20 @@ Resources this API supports:
 
 ## Authorization
 
-You can set the app's id and api key via the `Intercom` object -  
+
+If you're using a Personal Access Token (PAT) you can just use the following helper method, which will automatically set up the authentication scheme for you -
+
+```java
+Intercom.setToken("da39a3ee5e6b4b0d3255bfef95601890afd80709");
+```
+
+If you're still using API Keys (now deprecated), you can set up your App ID and API Key using the following methods -
 
 ```java
 Intercom.setAppID("pi3243fa");
 Intercom.setApiKey("da39a3ee5e6b4b0d3255bfef95601890afd80709");
 ```
+
 
 
 ## Usage
@@ -155,6 +163,10 @@ User.submit(moreItems, job);
 
 //View a bulk job error feed
 User.listJobErrorFeed(jobId)
+
+// Delete a user
+User user = User.find("541a144b201ebf2ec5000001");
+User.delete(user.getId());
 ```
 
 ### Contacts
@@ -272,8 +284,8 @@ System.out.println(job.getID());
 
 // Bulk submit, add to an existing job
 final List<JobItem<Event>> moreItems = Lists.newArrayList();
-items.add(new JobItem<Event>("post", event4));
-items.add(new JobItem<Event>("delete", event5));
+moreItems.add(new JobItem<Event>("post", event4));
+moreItems.add(new JobItem<Event>("delete", event5));
 Event.submit(moreItems, job);
 
 //View a bulk job error feed
@@ -414,7 +426,7 @@ while (userConversations.hasNext()) {
 final Conversation conversation = Conversation.find("66");
 ConversationMessage conversationMessage = conversation.getConversationMessage();
 ConversationPartCollection parts = conversation.getConversationPartCollection();
-List<ConversationPart> partList = parts.getPageItems();
+List<ConversationPart> partList = parts.getPage();
 for (ConversationPart part : partList) {
     String partType = part.getPartType();
     Author author = part.getAuthor();
@@ -435,6 +447,7 @@ ConversationCollection openForAdmin = Conversation.list(params);
 Admin admin = new Admin().setId("1");
 AdminReply adminReply = new AdminReply(admin);
 adminReply.setBody("These apples are healthsome");
+adminReply.setAttachmentUrls(new String[]{"http://www.example.com/attachment.jpg"}); // optional - list of attachments
 Conversation.reply("66", adminReply);
 
 // admin close
@@ -447,6 +460,7 @@ Conversation.reply("66", adminReply);
 User user1 = new User().setId("5310d8e8598c9a0b24000005");
 UserReply userReply = new UserReply(user1);
 userReply.setBody("Mighty fine shindig");
+userReply.setAttachmentUrls(new String[]{"http://www.example.com/attachment.jpg"}); // optional - list of attachments
 System.out.println(MapperSupport.objectMapper().writeValueAsString(userReply));
 Conversation.reply("66", userReply);
 ```
@@ -575,7 +589,7 @@ Some API classes have static `list()` methods that correspond to paginated API r
 These return a Collection object (eg `UserCollection`) which can be iterated in two
  ways
 
-- The collection's `getPageItems()`, `hasNextPage()` and `nextPage()` methods - these are useful when you want to fetch one or just a few pages directly.  
+- The collection's `getPage()`, `hasNextPage()` and `nextPage()` methods - these are useful when you want to fetch one or just a few pages directly.  
 
 - Java's inbuilt iterator methods `next()` and `hasNext()` - these are useful when you want to fetch data without manually handling pagination.
 

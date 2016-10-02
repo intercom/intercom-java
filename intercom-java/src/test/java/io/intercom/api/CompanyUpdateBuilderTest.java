@@ -6,6 +6,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -56,6 +57,36 @@ public class CompanyUpdateBuilderTest {
         final String baconJson = mapper.writeValueAsString(baconCo);
         assertTrue(baconJson.contains("remove"));
         assertTrue(baconJson.contains("true"));
+
+    }
+
+    @Test
+    public void shouldIncludeCustomAttributes() throws Exception {
+
+        final Company withCustomAttributes = new Company().setName("Weyland Corp").setCompanyID("2093");
+
+        withCustomAttributes.addCustomAttribute(CustomAttribute.newIntegerAttribute("foodstuff-items", 246));
+        withCustomAttributes.addCustomAttribute(CustomAttribute.newStringAttribute("bestseller", "fruity oaty bar"));
+
+        final List<CompanyWithStringPlan> updatedCompanies = CompanyUpdateBuilder.buildUserUpdateCompanies(new CompanyCollection(Lists.newArrayList(withCustomAttributes)), null);
+
+        CompanyWithStringPlan weylandCorp = null;
+
+        for (CompanyWithStringPlan updatedCompany : updatedCompanies) {
+            if (updatedCompany.getCompanyID().equals("2093")) {
+                weylandCorp = updatedCompany;
+            }
+        }
+
+        assertNotNull(weylandCorp);
+        assertNotNull(weylandCorp.getCustomAttributes());
+        Map<String, CustomAttribute> retrievedAttributes = weylandCorp.getCustomAttributes();
+
+        assertNotNull(retrievedAttributes.get("foodstuff-items"));
+        assertTrue(retrievedAttributes.get("foodstuff-items").getValue().equals(246));
+        assertNotNull(retrievedAttributes.get("bestseller"));
+        assertTrue(retrievedAttributes.get("bestseller").getValue().equals("fruity oaty bar"));
+
 
     }
 

@@ -51,6 +51,11 @@ public class UserReply extends Reply<User> {
         public String getEmail() {
             return reply.getFrom().getEmail();
         }
+
+        @JsonProperty("attachment_urls")
+        private String[] getAttachmentUrls() {
+            return reply.getAttachmentUrls();
+        }
     }
 
     public UserReply(User user) {

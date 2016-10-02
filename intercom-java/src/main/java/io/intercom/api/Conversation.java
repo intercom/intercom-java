@@ -265,6 +265,10 @@ public class Conversation extends TypedData {
     }
 
     public ConversationPartCollection getConversationPartCollection() {
+        if (conversationPartCollection == null || conversationPartCollection.getPage().isEmpty()) {
+            this.conversationPartCollection = find(this.getId()).getConversationPartCollection();
+        }
+
         return conversationPartCollection;
     }
 

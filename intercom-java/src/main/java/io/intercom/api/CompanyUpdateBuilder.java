@@ -58,6 +58,9 @@ class CompanyUpdateBuilder {
         updatableCompany.setSessionCount(company.getSessionCount());
         updatableCompany.setMonthlySpend(company.getMonthlySpend());
         updatableCompany.setRemoteCreatedAt(company.getRemoteCreatedAt());
+        if(company.getCustomAttributes() != null) {
+            updatableCompany.getCustomAttributes().putAll(company.getCustomAttributes());
+        }
         if (company.getPlan() != null) {
             updatableCompany.setPlan(company.getPlan().getName());
         }

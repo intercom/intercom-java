@@ -46,6 +46,11 @@ public class AdminReply extends Reply<Admin> {
         public String getAssigneeID() {
             return reply.getAssigneeID();
         }
+
+        @JsonProperty("attachment_urls")
+        private String[] getAttachmentUrls() {
+            return reply.getAttachmentUrls();
+        }
     }
 
     @JsonProperty("assignee_id")

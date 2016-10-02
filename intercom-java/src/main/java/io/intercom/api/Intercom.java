@@ -8,17 +8,20 @@ public class Intercom {
 
     private static volatile URI apiBaseURI = API_BASE_URI;
 
-    static final String AUTH_BASIC = "Basic";
+    private static volatile AuthKeyType authKeyType = AuthKeyType.API_KEY;
 
-    private static final String AUTH_SCHEME = AUTH_BASIC;
+    enum AuthKeyType {
+        API_KEY,
+        TOKEN
+    }
 
-    static final String AUTH_BEARER = "Bearer";
-
-    private static final String VERSION = "1.3.1";
+    private static final String VERSION = "2.2.0";
 
     public static final String USER_AGENT = "intercom-java/" + Intercom.VERSION;
 
     private static volatile String apiKey;
+
+    private static volatile String token;
 
     private static volatile String appID;
 
@@ -76,11 +79,17 @@ public class Intercom {
         Intercom.appID = appID;
     }
 
+    public static void setToken(String token) {
+        authKeyType = AuthKeyType.TOKEN;
+        Intercom.token = token;
+    }
+
     public static String getApiKey() {
         return Intercom.apiKey;
     }
 
     public static void setApiKey(String apiKey) {
+        authKeyType = AuthKeyType.API_KEY;
         Intercom.apiKey = apiKey;
     }
 
@@ -92,8 +101,13 @@ public class Intercom {
         Intercom.apiBaseURI = apiBaseURI;
     }
 
-    static String getAuthScheme() {
-        return AUTH_SCHEME;
+    static AuthKeyType getAuthKeyType() {
+        return authKeyType;
     }
+
+    public static String getToken() {
+        return token;
+    }
+
 
 }
