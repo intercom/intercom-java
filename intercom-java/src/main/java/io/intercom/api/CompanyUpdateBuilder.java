@@ -1,8 +1,10 @@
 package io.intercom.api;
 
+import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import java.util.Iterator;
 import java.util.List;
 
 class CompanyUpdateBuilder {
@@ -16,7 +18,7 @@ class CompanyUpdateBuilder {
         if (add != null) {
             final List<Company> companies = add.getPage();
             for (Company company : companies) {
-                if(remove!=null && !remove.getPage().contains(company)){
+                if (!isCompanyInList(company, remove)) {
                     updatableCompanies.add(prepareUpdatableCompany(company));
                 }
             }
@@ -24,9 +26,7 @@ class CompanyUpdateBuilder {
 
         if (remove != null) {
             final List<Company> companies = remove.getPage();
-
             for (Company company : companies) {
-                removeCompanyFromAddedList(updatableCompanies, company);
                 updatableCompanies.add(prepareUpdatableCompany(company).setRemove(Boolean.TRUE));
             }
         }
@@ -34,22 +34,18 @@ class CompanyUpdateBuilder {
         return updatableCompanies;
     }
 
-    private static void removeCompanyFromAddedList(List<CompanyWithStringPlan> companies, Company company) {
-        Iterator<CompanyWithStringPlan> companyIterator = companies.iterator();
-
-        while (companyIterator.hasNext()) {
-            CompanyWithStringPlan companyWithStringPlan = companyIterator.next();
-            // TODO add equals and toHash methods to CompanyWithStringPlan and use it here
-            if (companyWithStringPlan.getId() != null && company.getId() != null && companyWithStringPlan.getId().equals(company.getId())) {
-                companyIterator.remove();
-                break;
-            }
-
-            if (companyWithStringPlan.getCompanyID() != null && company.getCompanyID() != null && companyWithStringPlan.getCompanyID().equals(company.getCompanyID())) {
-                companyIterator.remove();
-                break;
-            }
+    private static boolean isCompanyInList(final Company company, CompanyCollection companyCollection) {
+        if (companyCollection == null) {
+            return false;
         }
+
+        return Iterables.any(companyCollection.getPage(), new Predicate<Company>() {
+            @Override
+            public boolean apply(Company e) {
+                return Objects.equal(company.getCompanyID(), e.getCompanyID())
+                        || Objects.equal(company.getId(), e.getId());
+            }
+        });
     }
 
     private static CompanyWithStringPlan prepareUpdatableCompany(Company company) {
@@ -60,7 +56,7 @@ class CompanyUpdateBuilder {
         updatableCompany.setSessionCount(company.getSessionCount());
         updatableCompany.setMonthlySpend(company.getMonthlySpend());
         updatableCompany.setRemoteCreatedAt(company.getRemoteCreatedAt());
-        if(company.getCustomAttributes() != null) {
+        if (company.getCustomAttributes() != null) {
             updatableCompany.getCustomAttributes().putAll(company.getCustomAttributes());
         }
         if (company.getPlan() != null) {
