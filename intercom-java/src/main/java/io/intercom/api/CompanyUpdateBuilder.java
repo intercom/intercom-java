@@ -1,9 +1,10 @@
 package io.intercom.api;
 
-
+import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import java.util.ArrayList;
 import java.util.List;
 
 class CompanyUpdateBuilder {
@@ -13,11 +14,13 @@ class CompanyUpdateBuilder {
      */
     static List<CompanyWithStringPlan> buildUserUpdateCompanies(CompanyCollection add, CompanyCollection remove) {
 
-        final ArrayList<CompanyWithStringPlan> updatableCompanies = Lists.newArrayList();
+        final List<CompanyWithStringPlan> updatableCompanies = Lists.newArrayList();
         if (add != null) {
             final List<Company> companies = add.getPage();
             for (Company company : companies) {
-                updatableCompanies.add(prepareUpdatableCompany(company));
+                if (!isCompanyInList(company, remove)) {
+                    updatableCompanies.add(prepareUpdatableCompany(company));
+                }
             }
         }
 
@@ -31,14 +34,29 @@ class CompanyUpdateBuilder {
         return updatableCompanies;
     }
 
+    private static boolean isCompanyInList(final Company company, CompanyCollection companyCollection) {
+        if (companyCollection == null) {
+            return false;
+        }
+
+        return Iterables.any(companyCollection.getPage(), new Predicate<Company>() {
+            @Override
+            public boolean apply(Company e) {
+                return Objects.equal(company.getCompanyID(), e.getCompanyID())
+                        || Objects.equal(company.getId(), e.getId());
+            }
+        });
+    }
+
     private static CompanyWithStringPlan prepareUpdatableCompany(Company company) {
         final CompanyWithStringPlan updatableCompany = new CompanyWithStringPlan();
+        updatableCompany.setId(company.getId());
         updatableCompany.setCompanyID(company.getCompanyID());
         updatableCompany.setName(company.getName());
         updatableCompany.setSessionCount(company.getSessionCount());
         updatableCompany.setMonthlySpend(company.getMonthlySpend());
         updatableCompany.setRemoteCreatedAt(company.getRemoteCreatedAt());
-        if(company.getCustomAttributes() != null) {
+        if (company.getCustomAttributes() != null) {
             updatableCompany.getCustomAttributes().putAll(company.getCustomAttributes());
         }
         if (company.getPlan() != null) {

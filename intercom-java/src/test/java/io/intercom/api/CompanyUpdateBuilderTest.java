@@ -19,7 +19,6 @@ public class CompanyUpdateBuilderTest {
         mapper = MapperSupport.objectMapper();
     }
 
-
     @Test
     public void testRemove() throws Exception {
 
@@ -27,9 +26,8 @@ public class CompanyUpdateBuilderTest {
         final Company pancake = new Company().setCompanyID("pancake");
 
         final List<CompanyWithStringPlan> cos = CompanyUpdateBuilder.buildUserUpdateCompanies(
-            new CompanyCollection(Lists.newArrayList(pancake)),
-            new CompanyCollection(Lists.newArrayList(bacon))
-        );
+                new CompanyCollection(Lists.newArrayList(bacon, pancake)),
+                new CompanyCollection(Lists.newArrayList(bacon)));
 
         Boolean baconIsRemoved = null;
         Boolean pancakeIsRemoved = null;
@@ -59,6 +57,7 @@ public class CompanyUpdateBuilderTest {
         final String baconJson = mapper.writeValueAsString(baconCo);
         assertTrue(baconJson.contains("remove"));
         assertTrue(baconJson.contains("true"));
+
     }
 
     @Test
