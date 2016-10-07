@@ -1,5 +1,10 @@
 ### Changes
 
+#### 2.2.1
+
+- Add attachment support for replies
+- Fix remove user from company bug
+
 #### 2.2.0
 
 - Include company custom attributes when updating a user with an embedded company object
