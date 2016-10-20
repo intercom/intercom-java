@@ -108,7 +108,7 @@ If you're still using API Keys (now deprecated), you can set up your App ID and 
 Intercom.setAppID("pi3243fa");
 Intercom.setApiKey("da39a3ee5e6b4b0d3255bfef95601890afd80709");
 ```
-
+> Warning: API Keys are being deprecated - you should use a [personal access token](https://app.intercom.io/a/apps/_/settings/personal-access-token) instead. [Learn more](https://developers.intercom.io/docs/personal-access-tokens) about API Keys deprecation
 
 
 ## Usage
