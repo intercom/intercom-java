@@ -35,15 +35,19 @@ public class JobItem<T extends TypedData> extends TypedData {
     }
 
     public JobItem(String method, T data) {
-        checkNotNull(method, data);
-        this.method = method;
-        this.data = data;
-        this.dataType = data.getType();
+        this(method, data, null);
     }
 
-    private void checkNotNull(String method, T data) {
+    JobItem(String method, T data, String dataType) {
         Conditions.checkNotNull(method, "item method must be supplied");
         Conditions.checkNotNull(data, "item data must be supplied");
+        this.method = method;
+        this.data = data;
+        this.dataType = dataType;
+        if (dataType == null) {
+            this.dataType = data.getType();
+        }
+        Conditions.checkNotNull(data, "item dataType must be supplied");
     }
 
     public String getType() {
