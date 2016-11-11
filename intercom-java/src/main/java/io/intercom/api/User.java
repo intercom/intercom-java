@@ -120,9 +120,8 @@ public class User extends TypedData implements Replier {
             final JobSupport jobSupport = new JobSupport();
             for (JobItem<User> item : items) {
                 jobSupport.validateJobItem(item, BULK_METHODS);
-                updateItems.add(
-                    new JobItem<UserUpdate>(
-                        item.getMethod(), buildFrom(item.getData())));
+                final JobItem<UserUpdate> jobItem = new JobItem<UserUpdate>(item.getMethod(), buildFrom(item.getData()), item.getData().getType());
+                updateItems.add(jobItem);
             }
             return updateItems;
         }
