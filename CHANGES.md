@@ -1,5 +1,9 @@
 ### Changes
 
+#### 2.2.2
+
+- Add data_type for bulk user actions
+
 #### 2.2.1
 
 - Add attachment support for replies

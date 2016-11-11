@@ -15,7 +15,7 @@ public class Intercom {
         TOKEN
     }
 
-    private static final String VERSION = "2.2.1";
+    private static final String VERSION = "2.2.2";
 
     public static final String USER_AGENT = "intercom-java/" + Intercom.VERSION;
 
