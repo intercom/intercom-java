@@ -18,6 +18,11 @@ class TypedDataCollectionIterator<T extends TypedData> implements Iterator<T> {
             if (rollingCollection.hasNextPage()) {
                 rollingCollection = rollingCollection.nextPage();
                 pos = 0;
+
+                if (rollingCollection.getPage().size() == 0) {
+                    // if new page is empty
+                    return false;
+                }
                 return true;
             } else {
                 return false;
