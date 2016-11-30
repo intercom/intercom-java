@@ -1,5 +1,9 @@
 ### Changes
 
+#### 2.2.3
+
+- Add next page size check for pagination
+
 #### 2.2.2
 
 - Add data_type for bulk user actions
