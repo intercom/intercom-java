@@ -183,6 +183,7 @@ public class Contact extends TypedData implements Replier {
             contactUpdate.id = c.getID(); // propagated, noset
             contactUpdate.userID = c.getUserID(); // propagated, noset
             contactUpdate.email = c.getEmail();
+            contactUpdate.phone = c.getPhone();
             contactUpdate.name = c.getName();
             contactUpdate.lastSeenIP = c.getLastSeenIP();
             contactUpdate.customAttributes = c.getCustomAttributes();
@@ -203,6 +204,9 @@ public class Contact extends TypedData implements Replier {
 
         @JsonProperty("email")
         private String email;
+
+        @JsonProperty("phone")
+        private String phone;
 
         @JsonProperty("name")
         private String name;
@@ -263,6 +267,10 @@ public class Contact extends TypedData implements Replier {
             return email;
         }
 
+        public String getPhone() {
+            return phone;
+        }
+
         public String getName() {
             return name;
         }
@@ -312,6 +320,9 @@ public class Contact extends TypedData implements Replier {
 
     @JsonProperty("email")
     private String email;
+
+    @JsonProperty("phone")
+    private String phone;
 
     @JsonProperty("name")
     private String name;
@@ -424,6 +435,15 @@ public class Contact extends TypedData implements Replier {
         return this;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public Contact setPhone(String phone) {
+        this.phone = phone;
+        return this;
+    }
+
     public String getUserID() {
         return userID;
     }
@@ -532,6 +552,7 @@ public class Contact extends TypedData implements Replier {
         if (id != null ? !id.equals(contact.id) : contact.id != null) return false;
         if (name != null ? !name.equals(contact.name) : contact.name != null) return false;
         if (email != null ? !email.equals(contact.email) : contact.email != null) return false;
+        if (phone != null ? !phone.equals(contact.phone) : contact.phone != null) return false;
         if (userID != null ? !userID.equals(contact.userID) : contact.userID != null) return false;
         if (avatar != null ? !avatar.equals(contact.avatar) : contact.avatar != null) return false;
         if (unsubscribedFromEmails != null ? !unsubscribedFromEmails.equals(contact.unsubscribedFromEmails) : contact.unsubscribedFromEmails != null)
@@ -565,6 +586,7 @@ public class Contact extends TypedData implements Replier {
         result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + (userID != null ? userID.hashCode() : 0);
         result = 31 * result + (avatar != null ? avatar.hashCode() : 0);
         result = 31 * result + (int) (createdAt ^ (createdAt >>> 32));
@@ -593,6 +615,7 @@ public class Contact extends TypedData implements Replier {
                 ", id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
                 ", userID='" + userID + '\'' +
                 ", avatar=" + avatar +
                 ", createdAt=" + createdAt +

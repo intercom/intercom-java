@@ -33,6 +33,7 @@ public class UserTest {
         final long now = System.currentTimeMillis() / 1000;
         final User user = new User()
             .setEmail("wash@serenity.io")
+            .setPhone("+1234567890")
             .setId("54321")
             .setUserId("22")
             .setRemoteCreatedAt(now)
@@ -46,6 +47,7 @@ public class UserTest {
 
         assertEquals("54321", userUpdate.getId());
         assertEquals("wash@serenity.io", userUpdate.getEmail());
+        assertEquals("+1234567890", userUpdate.getPhone());
         assertEquals("22", userUpdate.getUserId());
         assertEquals(now, userUpdate.getRemoteCreatedAt());
         assertEquals("Wash", userUpdate.getName());
@@ -169,6 +171,7 @@ public class UserTest {
         assertEquals("530370b477ad7120001d", user.getId());
         assertEquals("25", user.getUserId());
         assertEquals("wash@serenity.io", user.getEmail());
+        assertEquals("+1234567890", user.getPhone());
         assertEquals("Hoban Washburne", user.getName());
         assertEquals(0, user.getSessionCount());
         assertEquals("1.2.3.4", user.getLastSeenIp());
