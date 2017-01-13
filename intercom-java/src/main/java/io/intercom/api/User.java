@@ -96,6 +96,7 @@ public class User extends TypedData implements Replier {
             final UserUpdate userUpdate = new UserUpdate();
             userUpdate.userId = user.getUserId();
             userUpdate.email = user.getEmail();
+            userUpdate.phone = user.getPhone();
             userUpdate.id = user.getId();
             userUpdate.remoteCreatedAt = user.getRemoteCreatedAt();
             userUpdate.name = user.getName();
@@ -138,6 +139,9 @@ public class User extends TypedData implements Replier {
 
         @JsonProperty("email")
         private String email;
+
+        @JsonProperty("phone")
+        private String phone;
 
         @JsonProperty("remote_created_at")
         private long remoteCreatedAt;
@@ -210,6 +214,10 @@ public class User extends TypedData implements Replier {
             return email;
         }
 
+        public String getPhone() {
+            return phone;
+        }
+
         public long getRemoteCreatedAt() {
             return remoteCreatedAt;
         }
@@ -267,6 +275,9 @@ public class User extends TypedData implements Replier {
 
     @JsonProperty("email")
     private String email;
+
+    @JsonProperty("phone")
+    private String phone;
 
     @JsonProperty("user_id")
     private String userId;
@@ -379,6 +390,15 @@ public class User extends TypedData implements Replier {
 
     public User setEmail(String email) {
         this.email = email;
+        return this;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public User setPhone(String phone) {
+        this.phone = phone;
         return this;
     }
 
@@ -563,6 +583,7 @@ public class User extends TypedData implements Replier {
         if (customAttributes != null ? !customAttributes.equals(user.customAttributes) : user.customAttributes != null)
             return false;
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
+        if (phone != null ? !phone.equals(user.phone) : user.phone != null) return false;
         if (id != null ? !id.equals(user.id) : user.id != null) return false;
         if (lastSeenIp != null ? !lastSeenIp.equals(user.lastSeenIp) : user.lastSeenIp != null) return false;
         if (locationData != null ? !locationData.equals(user.locationData) : user.locationData != null) return false;
@@ -590,6 +611,7 @@ public class User extends TypedData implements Replier {
         result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         result = 31 * result + (pseudonym != null ? pseudonym.hashCode() : 0);
         result = 31 * result + (avatar != null ? avatar.hashCode() : 0);
@@ -621,6 +643,7 @@ public class User extends TypedData implements Replier {
                 ", id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
                 ", userId='" + userId + '\'' +
                 ", avatar=" + avatar +
                 ", createdAt=" + createdAt +
