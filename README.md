@@ -95,20 +95,13 @@ Resources this API supports:
 
 ## Authorization
 
-
-If you're using a Personal Access Token (PAT) you can just use the following helper method, which will automatically set up the authentication scheme for you -
+> If you already have an access token you can find it [here](https://app.intercom.com/developers/_). If you want to create or learn more about access tokens then you can find more info [here](https://developers.intercom.io/docs/personal-access-tokens).
 
 ```java
+# With an OAuth or Access token:
 Intercom.setToken("da39a3ee5e6b4b0d3255bfef95601890afd80709");
 ```
-
-If you're still using API Keys (now deprecated), you can set up your App ID and API Key using the following methods -
-
-```java
-Intercom.setAppID("pi3243fa");
-Intercom.setApiKey("da39a3ee5e6b4b0d3255bfef95601890afd80709");
-```
-> Warning: API Keys are being deprecated - you should use a [personal access token](https://app.intercom.io/a/apps/_/settings/personal-access-token) instead. [Learn more](https://developers.intercom.io/docs/personal-access-tokens) about API Keys deprecation
+If you are building a third party application you can get your OAuth token by [setting-up-oauth](https://developers.intercom.io/page/setting-up-oauth) for Intercom.
 
 
 ## Usage
