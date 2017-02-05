@@ -134,11 +134,15 @@ user = User.find(params);
 user.addCustomAttribute(CustomAttribute.newStringAttribute("role", "captain"));
 User.update(user);
 
-// Iterate over all users
+// Iterate over all users (up to 10k records, to read all use Scroll API)
 UserCollection users = User.list();
 while(users.hasNext()) {
     System.out.println(users.next().getUserId());
 }
+
+// Retrieve users via Scroll API
+UserCollection users = User.scroll(null);
+users = User.scroll(users.getScrollParam());
 
 // Bulk submit users
 final List<JobItem<User>> items = Lists.newArrayList();
@@ -187,11 +191,15 @@ while(contacts.hasNext()) {
     System.out.println(contacts.next());
 }
 
-// Iterate over all contacts
+// Iterate over all contacts (up to 10k records, to read all use Scroll API)
 ContactCollection allContacts = Contact.list();
 while(allContacts.hasNext()) {
     System.out.println(allContacts.next());
 }
+
+// Retrieve contacts via Scroll API
+ContactCollection contacts = Contact.scroll(null);
+contacts = Contact.scroll(contacts.getScrollParam());
 
 // Remove a contact
 Contact.delete(contact);
@@ -585,6 +593,8 @@ These return a Collection object (eg `UserCollection`) which can be iterated in 
 - The collection's `getPage()`, `hasNextPage()` and `nextPage()` methods - these are useful when you want to fetch one or just a few pages directly.  
 
 - Java's inbuilt iterator methods `next()` and `hasNext()` - these are useful when you want to fetch data without manually handling pagination.
+
+- User and Contact listing only works up to 10k records. To retrieve all records use the Scroll API via `scroll()`
 
 ### Error handling
 

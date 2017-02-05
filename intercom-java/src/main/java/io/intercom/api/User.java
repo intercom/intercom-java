@@ -70,6 +70,15 @@ public class User extends TypedData implements Replier {
         return DataResource.list(SENTINEL, "users", UserCollection.class);
     }
 
+    public static UserCollection scroll(String scrollParam)
+            throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        Map<String, String> params = Maps.newHashMap();
+        if(scrollParam != null && scrollParam.trim() != ""){
+            params.put("scroll_param", scrollParam);
+        }
+        return DataResource.list(params, "users/scroll", UserCollection.class);
+    }
+
     public static Job submit(final List<JobItem<User>> items)
         throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
         return submit(items, null);

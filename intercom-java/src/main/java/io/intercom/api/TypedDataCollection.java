@@ -27,6 +27,9 @@ public abstract class TypedDataCollection<T extends TypedData> extends TypedData
     @JsonProperty("type")
     protected String type;
 
+    @JsonProperty("scroll_param")
+    protected String scrollParam;
+
     public abstract TypedDataCollection<T> nextPage();
 
     public boolean hasNextPage() {
@@ -53,6 +56,10 @@ public abstract class TypedDataCollection<T extends TypedData> extends TypedData
 
     public String getType() {
         return type;
+    }
+
+    public String getScrollParam() {
+        return scrollParam;
     }
 
     @Override
