@@ -1,0 +1,96 @@
+{
+  "type": "conversation.list",
+  "pages": {
+    "type": "pages",
+    "next": null,
+    "page": 1,
+    "per_page": 20,
+    "total_pages": 1
+  },
+  "conversations": [
+    {
+      "type": "conversation",
+      "id": "5680931777",
+      "created_at": 1471438637,
+      "updated_at": 1471438637,
+      "user": {
+        "type": "user",
+        "id": "57b45f16d1aad7e69e011111"
+      },
+      "assignee": {
+        "type": "nobody_admin",
+        "id": null
+      },
+      "conversation_message": {
+        "type": "conversation_message",
+        "id": "41111111",
+        "subject": "",
+        "body": "<p>Hey2</p>",
+        "author": {
+          "type": "user",
+          "id": "57b45f16d1aad7e69e011111"
+        },
+        "attachments": [],
+        "url": null
+      },
+      "open": true,
+      "read": true
+    },
+    {
+      "type": "conversation",
+      "id": "5680912811",
+      "created_at": 1471438151,
+      "updated_at": 1471438151,
+      "user": {
+        "type": "user",
+        "id": "57b45bfef436c8d78611111"
+      },
+      "assignee": {
+        "type": "nobody_admin",
+        "id": null
+      },
+      "conversation_message": {
+        "type": "conversation_message",
+        "id": "41141111",
+        "subject": "",
+        "body": "<p>Hey</p>",
+        "author": {
+          "type": "user",
+          "id": "57b45bfef436c8d786000111"
+        },
+        "attachments": [],
+        "url": null
+      },
+      "open": true,
+      "read": true
+    },
+    {
+      "type": "conversation",
+      "id": "5143511111",
+      "created_at": 1466703132,
+      "updated_at": 1468236397,
+      "user": {
+        "type": "lead",
+        "id": "576c1a139d0baad101001111"
+      },
+      "assignee": {
+        "type": "admin",
+        "id": "358111"
+      },
+      "conversation_message": {
+        "type": "conversation_message",
+        "id": "33954838",
+        "subject": "",
+        "body": "<p>test</p>",
+        "author": {
+          "type": "lead",
+          "id": "576c1a139d0baad101001111"
+        },
+        "attachments": [],
+        "url": null
+      },
+      "open": true,
+      "read": false
+    }
+  ]
+}
