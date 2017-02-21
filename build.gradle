@@ -50,6 +50,8 @@ subprojects {
     compile 'org.slf4j:slf4j-api:1.7.7'
     compile 'commons-codec:commons-codec:1.9'
     testCompile 'junit:junit:4.11'
+    testCompile 'org.powermock:powermock-module-junit4:1.6.6'
+    testCompile 'org.powermock:powermock-api-mockito:1.6.6'
   }
 }
 

@@ -1,14 +1,32 @@
 package io.intercom.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.IOException;
 import java.util.Map;
 
+import static io.intercom.api.TestSupport.load;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest( { Conversation.class })
 public class ConversationTest {
+
+    private static ObjectMapper objectMapper;
+
+    @BeforeClass
+    public static void beforeClass() {
+        objectMapper = MapperSupport.objectMapper();
+    }
 
     @Test
     public void testIsNullOrBlank() {
@@ -89,6 +107,52 @@ public class ConversationTest {
         } catch (InvalidException e) {
             fail();
         }
+    }
+
+    @Test
+    public void testGetConversationsPartFromConversation() throws IOException {
+        PowerMockito.mockStatic(Conversation.class);
+
+        String json = load("conversation.json");
+        final Conversation conversation = objectMapper.readValue(json, Conversation.class);
+        assertEquals(2, conversation.getConversationPartCollection().getPage().size());
+
+        PowerMockito.verifyStatic(Mockito.never());
+        Conversation.find(conversation.getId());
+    }
+
+    @Test
+    public void testGetConversationsPartFromConversationCollection() throws IOException {
+        PowerMockito.mockStatic(Conversation.class);
+
+        String conversationsJson = load("conversations.json");
+        final ConversationCollection conversationCollection = objectMapper.readValue(conversationsJson, ConversationCollection.class);
+        final Conversation conversation = conversationCollection.getPage().get(0);
+
+        String conversationJson = load("conversation.json");
+        final Conversation conversationWithParts = objectMapper.readValue(conversationJson, Conversation.class);
+        Mockito.when(Conversation.find(conversation.getId())).thenReturn(conversationWithParts);
+        assertEquals(2, conversation.getConversationPartCollection().getPage().size());
+
+        PowerMockito.verifyStatic(Mockito.times(1));
+        Conversation.find(conversation.getId());
+    }
+
+    @Test
+    public void testGetEmptyConversationsPartFromConversationCollection() throws IOException {
+        PowerMockito.mockStatic(Conversation.class);
+
+        String conversationsJson = load("conversations.json");
+        final ConversationCollection conversationCollection = objectMapper.readValue(conversationsJson, ConversationCollection.class);
+        final Conversation conversation = conversationCollection.getPage().get(0);
+
+        String conversationJson = load("conversation_no_parts.json");
+        final Conversation conversationWithParts = objectMapper.readValue(conversationJson, Conversation.class);
+        Mockito.when(Conversation.find(conversation.getId())).thenReturn(conversationWithParts);
+        assertEquals(0, conversation.getConversationPartCollection().getPage().size());
+
+        PowerMockito.verifyStatic(Mockito.times(1));
+        Conversation.find(conversation.getId());
     }
 
     private Map<String, String> buildRequestParameters(String html) {
