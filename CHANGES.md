@@ -1,5 +1,10 @@
 ### Changes
 
+#### 2.2.4
+
+- Add phone attribute
+- Fix infinite recursive call on get conversation parts
+
 #### 2.2.3
 
 - Add next page size check for pagination
