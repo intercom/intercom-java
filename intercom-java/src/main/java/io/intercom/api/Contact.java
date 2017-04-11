@@ -49,6 +49,11 @@ public class Contact extends TypedData implements Replier {
         return DataResource.list(SENTINEL, "contacts", ContactCollection.class);
     }
 
+    public static ScrollableContactCollection scroll()
+            throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        return DataResource.scroll(null, "contacts", ScrollableContactCollection.class);
+    }
+
     public static Contact create(Contact c)
             throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
         return DataResource.create(ContactUpdate.buildFrom(c), "contacts", Contact.class);
