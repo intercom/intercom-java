@@ -1,5 +1,8 @@
 package io.intercom.api;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
+
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +58,15 @@ abstract class DataResource {
 
     public static <C> C list(Map<String, String> params, String collectionPath, Class<C> c) {
         final HttpClient resource = new HttpClient(UriBuilder.newBuilder().path(collectionPath).query(params).build());
+        return resource.get(c);
+    }
+
+    public static <C> C scroll(String scrollParam, String collectionPath, Class<C> c) {
+        Map<String, String> params = Maps.newHashMap();
+        if (!Strings.isNullOrEmpty(scrollParam)) {
+            params.put("scroll_param", scrollParam);
+        }
+        final HttpClient resource = new HttpClient(UriBuilder.newBuilder().path(collectionPath + "/scroll").query(params).build());
         return resource.get(c);
     }
 
