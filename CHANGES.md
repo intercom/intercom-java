@@ -1,5 +1,8 @@
 ### Changes
 
+#### 2.2.5
+- Add scroll to contacts and users
+
 #### 2.2.4
 
 - Add phone attribute
