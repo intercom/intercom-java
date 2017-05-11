@@ -145,23 +145,6 @@ ScrollableUserCollection usersScroll = User.scroll();
 List<User> users = usersScroll.getPage();
 usersScroll = usersScroll.scroll();
 
-// Bulk submit users
-final List<JobItem<User>> items = Lists.newArrayList();
-items.add(new JobItem<User>("post", user1));
-items.add(new JobItem<User>("post", user2));
-items.add(new JobItem<User>("delete", user3));
-final Job job = User.submit(items);
-System.out.println(job.getID());
-
-// Bulk submit, add to an existing job
-final List<JobItem<User>> moreItems = Lists.newArrayList();
-items.add(new JobItem<User>("post", user4));
-items.add(new JobItem<User>("delete", user5));
-User.submit(moreItems, job);
-
-//View a bulk job error feed
-User.listJobErrorFeed(jobId)
-
 // Delete a user
 User user = User.find("541a144b201ebf2ec5000001");
 User.delete(user.getId());
@@ -277,23 +260,6 @@ Event event = new Event().setEventName("bought-hat")
     .putMetadata("found_date", System.currentTimeMillis())
     .putMetadata("new_signup", true);
 Event.create(event);
-
-// Bulk submit events
-final List<JobItem<Event>> items = Lists.newArrayList();
-items.add(new JobItem<Event>("post", event1));
-items.add(new JobItem<Event>("post", event2));
-items.add(new JobItem<Event>("post", event3));
-final Job job = Event.submit(items);
-System.out.println(job.getID());
-
-// Bulk submit, add to an existing job
-final List<JobItem<Event>> moreItems = Lists.newArrayList();
-moreItems.add(new JobItem<Event>("post", event4));
-moreItems.add(new JobItem<Event>("delete", event5));
-Event.submit(moreItems, job);
-
-//View a bulk job error feed
-Event.listJobErrorFeed(jobId)
 ```
 
 
