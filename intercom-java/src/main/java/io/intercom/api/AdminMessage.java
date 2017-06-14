@@ -22,13 +22,13 @@ public class AdminMessage extends TypedData {
     private String messageType;
 
     @JsonProperty("subject")
-    private String subject;
+    private String subject="";    // Set default to blank string so null pointer exception won't thrown if messageType = inapp and subject not set
 
     @JsonProperty("body")
     private String body;
 
     @JsonProperty("template")
-    private String template;
+    private String template="plain";  // Set default to plain so null pointer exception won't thrown if messageType = inapp and template not set
 
     @JsonProperty("created_at")
     private long createdAt;

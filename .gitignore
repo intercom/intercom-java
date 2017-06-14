@@ -12,3 +12,4 @@ build
 *.ear
 hs_err_pid*
 .idea
+/bin/
