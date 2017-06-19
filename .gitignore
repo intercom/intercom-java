@@ -13,3 +13,7 @@ build
 hs_err_pid*
 .idea
 /bin/
+
+intercom-java/.project
+
+.project
