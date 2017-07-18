@@ -1,5 +1,8 @@
 ### Changes
 
+#### 2.2.6
+- Add rate limit fields to `RateLimitException` (submitted by @loonydevil)
+
 #### 2.2.5
 - Add scroll to contacts and users
 
