@@ -6,6 +6,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.CharStreams;
+import com.google.common.primitives.Ints;
+import com.google.common.primitives.Longs;
+
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +36,10 @@ class HttpClient {
     private static final String UTF_8 = "UTF-8";
 
     private static final String APPLICATION_JSON = "application/json";
+
+    public static final String RATE_LIMIT_HEADER = "X-RateLimit-Limit";
+    public static final String RATE_LIMIT_REMAINING_HEADER = "X-RateLimit-Remaining";
+    public static final String RATE_LIMIT_RESET_HEADER = "X-RateLimit-Reset";
 
     private static String clientAgentDetails() {
         final HashMap<String, String> map = Maps.newHashMap();
@@ -159,7 +166,7 @@ class HttpClient {
         if (logger.isDebugEnabled()) {
             logger.debug("error json follows --\n{}\n-- ", objectMapper.writeValueAsString(errors));
         }
-        return throwException(responseCode, errors);
+        return throwException(responseCode, errors, conn);
     }
 
     private <T> T handleSuccess(JavaType javaType, HttpURLConnection conn, int responseCode) throws IOException {
@@ -189,12 +196,14 @@ class HttpClient {
         }
     }
 
-    private <T> T throwException(int responseCode, ErrorCollection errors) {
+    private <T> T throwException(int responseCode, ErrorCollection errors, HttpURLConnection conn) {
         // bind some well known response codes to exceptions
         if (responseCode == 403 || responseCode == 401) {
             throw new AuthorizationException(errors);
         } else if (responseCode == 429) {
-            throw new RateLimitException(errors);
+            throw new RateLimitException(errors, Ints.tryParse(conn.getHeaderField(RATE_LIMIT_HEADER)),
+                    Ints.tryParse(conn.getHeaderField(RATE_LIMIT_REMAINING_HEADER)),
+                    Longs.tryParse(conn.getHeaderField(RATE_LIMIT_RESET_HEADER)));
         } else if (responseCode == 404) {
             throw new NotFoundException(errors);
         } else if (responseCode == 422) {
