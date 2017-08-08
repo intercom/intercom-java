@@ -61,6 +61,11 @@ public class Company extends TypedData {
         return DataResource.list(SENTINEL, "companies", CompanyCollection.class);
     }
 
+    public static ScrollableCompanyCollection scroll()
+            throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        return DataResource.scroll(null, "companies", ScrollableCompanyCollection.class);
+    }
+
     public static UserCollection listUsers(Map<String, String> params) throws InvalidException, AuthorizationException {
         URI usersURI;
         if (params.containsKey("company_id")) {
