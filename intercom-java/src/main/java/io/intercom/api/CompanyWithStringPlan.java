@@ -12,13 +12,12 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 class CompanyWithStringPlan extends TypedData {
 
-    @JsonProperty("id")
     private String id;
 
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty("company_id")
+    @JsonProperty("id")
     private String companyID;
 
     @JsonProperty("session_count")
