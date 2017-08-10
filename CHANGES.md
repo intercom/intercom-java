@@ -1,5 +1,8 @@
 ### Changes
 
+#### 2.2.7
+- Add scroll to companies
+
 #### 2.2.6
 - Add rate limit fields to `RateLimitException` (submitted by @loonydevil)
 
