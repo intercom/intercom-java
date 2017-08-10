@@ -228,6 +228,11 @@ while(companies.hasNext()) {
     System.out.println(companies.next().getName());
 }
 
+// Retrieve companies via Scroll API
+ScrollableCompanyCollection companiesScroll = Company.scroll();
+List<Company> companies = companiesScroll.getPage();
+companiesScroll = companiesScroll.scroll();
+
 // Get a list of users in a company
 map = Maps.newHashMap();
 map.put("company_id", "6");
