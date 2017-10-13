@@ -76,6 +76,7 @@ public class Event extends TypedData {
         }
 
         if (Strings.isNullOrEmpty(event.getUserID())
+            && Strings.isNullOrEmpty(event.getId())
             && Strings.isNullOrEmpty(event.getEmail())) {
             throw new InvalidException(INVALID_USER);
         }
@@ -93,6 +94,9 @@ public class Event extends TypedData {
 
     @JsonProperty("email")
     private String email;
+
+    @JsonProperty("id")
+    private String id;
 
     @JsonProperty("user_id")
     private String userID;
@@ -132,6 +136,15 @@ public class Event extends TypedData {
 
     public Event setEmail(String email) {
         this.email = email;
+        return this;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public Event setId(String id) {
+        this.id = id;
         return this;
     }
 
@@ -197,6 +210,7 @@ public class Event extends TypedData {
         if (!type.equals(event.type)) return false;
         //noinspection RedundantIfStatement
         if (userID != null ? !userID.equals(event.userID) : event.userID != null) return false;
+        if (id != null ? !id.equals(event.id) : event.id != null) return false;
 
         return true;
     }
@@ -208,6 +222,7 @@ public class Event extends TypedData {
         result = 31 * result + (int) (createdAt ^ (createdAt >>> 32));
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (userID != null ? userID.hashCode() : 0);
+        result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (metadata != null ? metadata.hashCode() : 0);
         return result;
     }
@@ -219,6 +234,7 @@ public class Event extends TypedData {
             ", eventName='" + eventName + '\'' +
             ", createdAt=" + createdAt +
             ", email='" + email + '\'' +
+            ", id='" + id + '\'' +
             ", userID='" + userID + '\'' +
             ", metadata=" + metadata +
             "} " + super.toString();
