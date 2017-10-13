@@ -1,6 +1,6 @@
 ### Changes
 
-#### 2.2.9
+#### 2.2.10
 - Add option to create events with ID
 - Fix issues with README headers
 
