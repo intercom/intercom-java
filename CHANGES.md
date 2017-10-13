@@ -1,5 +1,9 @@
 ### Changes
 
+#### 2.2.8
+- Add option to create events with ID
+- Fix issues with README headers
+
 #### 2.2.7
 - Add scroll to companies
 
