@@ -98,6 +98,39 @@ public class EventTest {
     }
 
     @Test
+    public void testMissingId() {
+        final Event event1 = new Event().setEventName("test-id");
+        try {
+            Event.create(event1);
+            fail("an event with no id or email should be invalid");
+        } catch (InvalidException e) {
+            assertTrue(e.getFirstError() != null);
+        }
+
+        final Event event2 = new Event()
+                .setEventName("test-id")
+                .setId("")
+                .putMetadata("invitee_email", "jayne@serenity.io");
+        try {
+            Event.create(event2);
+            fail("an event with an empty id should be invalid");
+        } catch (InvalidException e) {
+            assertTrue(e.getFirstError() != null);
+        }
+
+        final Event event3 = new Event()
+                .setId("49bf6b081d661db4408a51e1")
+                .setEmail("");
+        try {
+            Event.create(event3);
+            fail("an event with an empty email should be invalid");
+        } catch (InvalidException e) {
+            assertTrue(e.getFirstError() != null);
+        }
+
+    }
+
+    @Test
     public void testValid() {
         Event event1 = new Event()
             .setEmail("jayne@serenity.io")
@@ -126,7 +159,25 @@ public class EventTest {
         } catch (InvalidException e) {
             fail("an event with a user id, email and a name should be valid");
         }
+
+        Event event4 = new Event()
+                .setId("49bf6b081d661db4408a51e1")
+                .setEventName("test-id");
+        try {
+            Event.validateCreateEvent(event4);
+        } catch (InvalidException e) {
+            fail("an event with an id and a name should be valid");
+        }
+
+        Event event5 = new Event()
+                .setId("49bf6b081d661db4408a51e1")
+                .setEmail("jayne@serenity.io")
+                .setEventName("test-id");
+        try {
+            Event.validateCreateEvent(event5);
+        } catch (InvalidException e) {
+            fail("an event with an id, email and a name should be valid");
+        }
+
     }
-
-
 }

@@ -258,13 +258,29 @@ while(admins.hasNext()) {
 ### Events
 
 ```java
-Event event = new Event().setEventName("bought-hat")
+// Create an event with a user ID
+// This is only valid for users
+Event event = new Event()
+    .setEventName("bought-hat")
     .setUserID("1")
     .putMetadata("invitee_email", "jayne@serenity.io")
     .putMetadata("found_date", System.currentTimeMillis())
     .putMetadata("new_signup", true);
 Event.create(event);
 
+// Create an event with an email
+// This is only valid for users
+Event event = new Event()
+    .setEventName("bought-hat")
+    .setEmail("test@example.com");
+Event.create(event);
+
+// Create an event with an ID
+// This is valid for both users and leads
+Event event = new Event()
+        .setEventName("bought-hat")
+        .setId("599d6aeeda850883ed8ba7c2");
+Event.create(event);
 ```
 
 
