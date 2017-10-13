@@ -19,7 +19,7 @@ Java bindings for the [Intercom API](https://api.intercom.io/docs)
 The distribution is hosted on [bintray](https://bintray.com/intercom/intercom-maven/intercom-java/view).
 To use the client, you can add the jcenter repository to your dependencies.
 
-### maven
+### Maven
 
 Add jcenter to your repositories in `pom.xml` or `settings.xml`:
 
@@ -42,7 +42,7 @@ and add the project declaration to your `pom.xml`:
 </dependency>
 ```
 
-### gradle
+### Gradle
 
 Add jcenter to your `repositories` block:
 
@@ -60,7 +60,7 @@ dependencies {
 }  
 ```
 
-### sbt
+### SBT
 
 Add jcenter to your `resolvers` in your `build.sbt`:
 
@@ -551,14 +551,14 @@ for (Counts.CountItem tag : companyTags) {
 
 ## Idioms
 
-### HTTP requests
+### HTTP requests
 
 To signal local versus remote methods, calls that result in HTTP requests are performed
 using static methods, for example `User.find()`. The objects returned by static methods
 are built from server responses. The exception to the static idiom is where the `next()`,
 `hasNext()` and `nextPage()` methods on Collections are used to abstract over pagination.  
 
-### Pagination
+### Pagination
 
 Some API classes have static `list()` methods that correspond to paginated API responses.
 These return a Collection object (eg `UserCollection`) which can be iterated in two
