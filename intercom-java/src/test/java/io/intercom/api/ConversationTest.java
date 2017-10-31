@@ -155,6 +155,51 @@ public class ConversationTest {
         Conversation.find(conversation.getId());
     }
 
+    @Test
+    public void testGetTagsFromConversation() throws IOException {
+        PowerMockito.mockStatic(Conversation.class);
+
+        String json = load("conversation.json");
+        final Conversation conversation = objectMapper.readValue(json, Conversation.class);
+        assertEquals(2, conversation.getTagCollection().getPage().size());
+
+        PowerMockito.verifyStatic(Mockito.never());
+        Conversation.find(conversation.getId());
+    }
+
+    @Test
+    public void testGetTagFromTagCollection() throws IOException {
+        PowerMockito.mockStatic(Conversation.class);
+
+        String conversationsJson = load("conversations.json");
+        final ConversationCollection conversationCollection = objectMapper.readValue(conversationsJson, ConversationCollection.class);
+        final Conversation conversation = conversationCollection.getPage().get(0);
+
+        String conversationJson = load("conversation.json");
+        final Conversation conversationWithTags = objectMapper.readValue(conversationJson, Conversation.class);
+        Mockito.when(Conversation.find(conversation.getId())).thenReturn(conversationWithTags);
+        assertEquals(2, conversation.getTagCollection().getPage().size());
+
+        PowerMockito.verifyStatic(Mockito.times(1));
+        Conversation.find(conversation.getId());
+    }
+
+    @Test
+    public void testGetEmptyTagFromTagCollection() throws IOException {
+        PowerMockito.mockStatic(Conversation.class);
+
+        String conversationsJson = load("conversations.json");
+        final ConversationCollection conversationCollection = objectMapper.readValue(conversationsJson, ConversationCollection.class);
+        final Conversation conversation = conversationCollection.getPage().get(0);
+
+        String conversationJson = load("conversation_no_tags.json");
+        final Conversation conversationWithTags= objectMapper.readValue(conversationJson, Conversation.class);
+        Mockito.when(Conversation.find(conversation.getId())).thenReturn(conversationWithTags);
+        assertEquals(0, conversation.getConversationPartCollection().getPage().size());
+
+        PowerMockito.verifyStatic(Mockito.times(1));
+        Conversation.find(conversation.getId());
+    }
     private Map<String, String> buildRequestParameters(String html) {
         Map<String, String> params2 = Maps.newHashMap();
         params2.put("type", "admin");
