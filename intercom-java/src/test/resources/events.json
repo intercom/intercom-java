@@ -1,0 +1,32 @@
+{
+  "type": "event.list",
+  "events": [
+    {
+      "type": "event",
+      "id": "cc7e2992-e6f1-11e7-9f85-25b0a92374f6",
+      "created_at": 1513931185,
+      "event_name": "test-event",
+      "user_id": "25",
+      "email": "wash@serenity.io",
+      "intercom_user_id": "530370b477ad7120001d",
+      "metadata": {}
+    },
+    {
+      "type": "event",
+      "id": "9a096a26-b8c5-11e7-b012-3f043042e6d0",
+      "created_at": 1508854449,
+      "event_name": "invited-friend",
+      "user_id": "25",
+      "email": "wash@serenity.io",
+      "intercom_user_id": "530370b477ad7120001d",
+      "metadata": {
+        "invitee_email": "pi@example.org",
+        "invite_code": "ADDAFRIEND"
+      }
+    }
+  ],
+  "pages": {
+    "since": "https://api.intercom.io/events?intercom_user_id=530370b477ad7120001d&type=user&since=1513931185041"
+  }
+}
+

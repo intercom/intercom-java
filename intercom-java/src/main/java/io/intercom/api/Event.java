@@ -8,7 +8,10 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +51,13 @@ public class Event extends TypedData {
     public static JobItemCollection<Event> listJobErrorFeed(String jobID)
         throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
         return Job.listJobErrorFeed(jobID, Event.class);
+    }
+
+    public static EventCollection list(Map<String, String> params) throws InvalidException, AuthorizationException {
+        if ((!params.containsKey("email")) && (!params.containsKey("user_id")) && (!params.containsKey("intercom_user_id"))) {
+            throw new InvalidException("an event query must include an email, user_id or intercom_user_id parameter");
+        }
+        return DataResource.list(params, "events", EventCollection.class);
     }
 
     @VisibleForTesting
@@ -100,6 +110,9 @@ public class Event extends TypedData {
 
     @JsonProperty("user_id")
     private String userID;
+
+    @JsonProperty("intercom_user_id")
+    private String intercomUserID;
 
     @JsonProperty("metadata")
     private Map<String, Object> metadata = Maps.newHashMap();
@@ -154,6 +167,15 @@ public class Event extends TypedData {
 
     public Event setUserID(String userID) {
         this.userID = userID;
+        return this;
+    }
+
+    public String getIntercomUserID() {
+        return intercomUserID ;
+    }
+
+    public Event setIntercomUserID(String intercomUserID ) {
+        this.intercomUserID = intercomUserID ;
         return this;
     }
 

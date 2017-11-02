@@ -281,8 +281,21 @@ Event event = new Event()
         .setEventName("bought-hat")
         .setId("599d6aeeda850883ed8ba7c2");
 Event.create(event);
-```
 
+
+// List events of a user
+Map<String, String> params = Maps.newHashMap();
+params.put("type", "user");
+params.put("user_id", "1");
+// Alternatively list by Intercom ID
+// params.put("intercom_user_id", "541a144b201ebf2ec5000001");
+// Or by email
+// params.put("email", "river@serenity.io");
+EventCollection events = Event.list(params);
+while (events.hasNext()) {
+    System.out.println(events.next().getEventName());
+}
+```
 
 ### Tags
 

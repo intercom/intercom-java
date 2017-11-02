@@ -1,12 +1,20 @@
 package io.intercom.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static io.intercom.api.TestSupport.load;
+import static org.junit.Assert.*;
 
 public class EventTest {
+    private static ObjectMapper mapper;
+
+    @BeforeClass
+    public static void beforeClass() {
+        mapper = MapperSupport.objectMapper();
+    }
 
     @Test
     public void testBulkValidation() {
@@ -180,4 +188,31 @@ public class EventTest {
         }
 
     }
+    @Test
+    public void testListing() throws Exception {
+        String json = load("events.json");
+        final EventCollection eventCollection = mapper.readValue(json, EventCollection.class);
+        assertEquals(2, eventCollection.getPage().size());
+
+        final Event eventWithNoMetadata = eventCollection.getPage().get(0);
+        assertEquals("cc7e2992-e6f1-11e7-9f85-25b0a92374f6", eventWithNoMetadata.getId());
+        assertEquals(1513931185, eventWithNoMetadata.getCreatedAt());
+        assertEquals("test-event", eventWithNoMetadata.getEventName());
+        assertEquals("25", eventWithNoMetadata.getUserID());
+        assertEquals("530370b477ad7120001d", eventWithNoMetadata.getIntercomUserID());
+        assertEquals(0, eventWithNoMetadata.getMetadata().size());
+
+        final Event eventWithMetadata = eventCollection.getPage().get(1);
+        assertEquals("9a096a26-b8c5-11e7-b012-3f043042e6d0", eventWithMetadata.getId());
+        assertEquals(1508854449, eventWithMetadata.getCreatedAt());
+        assertEquals("invited-friend", eventWithMetadata.getEventName());
+        assertEquals("25", eventWithMetadata.getUserID());
+        assertEquals("530370b477ad7120001d", eventWithMetadata.getIntercomUserID());
+        assertNotEquals(null, eventWithMetadata.getMetadata());
+        assertEquals(2, eventWithMetadata.getMetadata().size());
+        assertEquals("pi@example.org", eventWithMetadata.getMetadata().get("invitee_email"));
+        assertEquals("ADDAFRIEND", eventWithMetadata.getMetadata().get("invite_code"));
+        assertEquals(null, eventWithMetadata.getMetadata().get("non_existing_key"));
+    }
 }
+
