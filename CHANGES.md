@@ -1,5 +1,8 @@
 ### Changes
 
+#### 2.2.11
+- Add support for retrieving conversation tags
+
 #### 2.2.10
 - Add option to create events with ID
 - Fix issues with README headers
