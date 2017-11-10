@@ -1,0 +1,37 @@
+{
+  "type": "conversation",
+  "id": "5143511111",
+  "created_at": 1466703132,
+  "updated_at": 1468236397,
+  "conversation_message": {
+    "type": "conversation_message",
+    "id": "33954111",
+    "subject": "",
+    "body": "<p>test</p>",
+    "author": {
+      "type": "lead",
+      "id": "576c1a139d0baad1010011111"
+    },
+    "attachments": [],
+    "url": null
+  },
+  "user": {
+    "type": "user",
+    "id": "576c1a139d0baad1010001111"
+  },
+  "assignee": {
+    "type": "admin",
+    "id": "358111"
+  },
+  "conversation_parts": {
+    "type": "conversation_part.list",
+    "conversation_parts": [],
+    "total_count": 0
+  },
+  "open": true,
+  "read": false,
+  "tags": {
+    "type": "tag.list",
+    "tags": []
+  }
+}

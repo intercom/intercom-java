@@ -199,6 +199,9 @@ public class Conversation extends TypedData {
     @JsonProperty("conversation_parts")
     private ConversationPartCollection conversationPartCollection;
 
+    @JsonProperty("tags")
+    private TagCollection tagCollection;
+
     @JsonProperty("open")
     private boolean open;
 
@@ -272,6 +275,14 @@ public class Conversation extends TypedData {
         return conversationPartCollection;
     }
 
+    public TagCollection getTagCollection() {
+        if (tagCollection == null) {
+            tagCollection = find(this.getId()).getTagCollection();
+        }
+
+        return tagCollection;
+    }
+
     public boolean getOpen() {
         return open;
     }
@@ -296,6 +307,8 @@ public class Conversation extends TypedData {
             return false;
         if (conversationPartCollection != null ? !conversationPartCollection.equals(that.conversationPartCollection) : that.conversationPartCollection != null)
             return false;
+        if (tagCollection != null ? !tagCollection.equals(that.tagCollection) : that.tagCollection != null)
+            return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (links != null ? !links.equals(that.links) : that.links != null) return false;
         if (!type.equals(that.type)) return false;
@@ -315,6 +328,7 @@ public class Conversation extends TypedData {
         result = 31 * result + (int) (createdAt ^ (createdAt >>> 32));
         result = 31 * result + (int) (updatedAt ^ (updatedAt >>> 32));
         result = 31 * result + (conversationPartCollection != null ? conversationPartCollection.hashCode() : 0);
+        result = 31 * result + (tagCollection != null ? tagCollection.hashCode() : 0);
         result = 31 * result + (open ? 1 : 0);
         result = 31 * result + (read ? 1 : 0);
         result = 31 * result + (links != null ? links.hashCode() : 0);
@@ -332,6 +346,7 @@ public class Conversation extends TypedData {
             ", createdAt=" + createdAt +
             ", updatedAt=" + updatedAt +
             ", conversationPartCollection=" + conversationPartCollection +
+            ", tagCollection=" + tagCollection +
             ", open=" + open +
             ", read=" + read +
             ", links=" + links +

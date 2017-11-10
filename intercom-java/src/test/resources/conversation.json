@@ -65,6 +65,17 @@
   "read": false,
   "tags": {
     "type": "tag.list",
-    "tags": []
+    "tags": [
+      {
+        "type": "tag",
+        "id": "123",
+        "name": "Tag 1"
+      },
+      {
+        "type": "tag",
+        "id": "456",
+        "name": "Tag 2"
+      }
+    ]
   }
 }
