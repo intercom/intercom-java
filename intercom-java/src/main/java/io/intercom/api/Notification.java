@@ -35,6 +35,9 @@ public class Notification extends TypedData {
     @JsonProperty("id")
     private String id;
 
+    @JsonProperty("subscription_id")
+    private String subscriptionID;
+
     @JsonProperty("topic")
     private String topic;
 
@@ -78,6 +81,14 @@ public class Notification extends TypedData {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getSubscriptionID() {
+        return subscriptionID;
+    }
+
+    public void setSubscriptionID(String subscriptionID) {
+        this.subscriptionID = subscriptionID;
     }
 
     public String getTopic() {
@@ -162,6 +173,7 @@ public class Notification extends TypedData {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (topic != null ? topic.hashCode() : 0);
         result = 31 * result + (appID != null ? appID.hashCode() : 0);
+        result = 31 * result + (subscriptionID != null ? subscriptionID.hashCode() : 0);
         result = 31 * result + (data != null ? data.hashCode() : 0);
         result = 31 * result + (deliveryStatus != null ? deliveryStatus.hashCode() : 0);
         result = 31 * result + deliveryAttempts;
@@ -185,6 +197,7 @@ public class Notification extends TypedData {
         if (deliveryAttempts != that.deliveryAttempts) return false;
         if (firstSentAt != that.firstSentAt) return false;
         if (appID != null ? !appID.equals(that.appID) : that.appID != null) return false;
+        if (subscriptionID != null ? !subscriptionID.equals(that.subscriptionID) : that.subscriptionID != null) return false;
         if (data != null ? !data.equals(that.data) : that.data != null) return false;
         if (deliveryStatus != null ? !deliveryStatus.equals(that.deliveryStatus) : that.deliveryStatus != null)
             return false;
@@ -202,6 +215,7 @@ public class Notification extends TypedData {
         return "Notification{" +
             "type='" + type + '\'' +
             ", id='" + id + '\'' +
+            ", subscriptionID='" + subscriptionID + '\'' +
             ", topic='" + topic + '\'' +
             ", appID='" + appID + '\'' +
             ", data=" + data +
