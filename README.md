@@ -139,6 +139,27 @@ while(users.hasNext()) {
     System.out.println(users.next().getUserId());
 }
 
+// List users (sorting)
+Map<String, String> params = Maps.newHashMap();
+params.put("sort", "updated_at");
+params.put("order", "asc");
+UserCollection users = User.list(params);
+
+// List users (created within the past X days)
+Map<String, String> params = Maps.newHashMap();
+params.put("created_since", "2");
+UserCollection users = User.list(params);
+
+// List users by tag
+Map<String, String> params = Maps.newHashMap();
+params.put("tag_id", "12345");
+UserCollection users = User.list(params);
+
+// List users by segment
+Map<String, String> params = Maps.newHashMap();
+params.put("segment_id", "1234567890abcdef12345678");
+UserCollection users = User.list(params);
+
 // Retrieve users via Scroll API
 ScrollableUserCollection usersScroll = User.scroll();
 List<User> users = usersScroll.getPage();
