@@ -200,6 +200,7 @@ User converted = Contact.convert(contact, user);
 Company company = new Company();
     company.setName("Blue Sun");
     company.setCompanyID("1");
+    company.setMonthlySpend(123.10f);
     company.setPlan(new Company.Plan("premium"));
     company.addCustomAttribute(CustomAttribute.newIntegerAttribute("foddstuff-items", 246));
     company.addCustomAttribute(CustomAttribute.newStringAttribute("bestseller", "fruity oaty bar"));
