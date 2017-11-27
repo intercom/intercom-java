@@ -3,6 +3,7 @@
   "id": "5143511111",
   "created_at": 1466703132,
   "updated_at": 1468236397,
+  "waiting_since": 1468236397,
   "conversation_message": {
     "type": "conversation_message",
     "id": "33954111",
