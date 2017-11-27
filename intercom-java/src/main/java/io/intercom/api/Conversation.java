@@ -196,6 +196,9 @@ public class Conversation extends TypedData {
     @JsonProperty("updated_at")
     private long updatedAt;
 
+    @JsonProperty("waiting_since")
+    private long waitingSince;
+
     @JsonProperty("conversation_parts")
     private ConversationPartCollection conversationPartCollection;
 
@@ -267,6 +270,10 @@ public class Conversation extends TypedData {
         return updatedAt;
     }
 
+    public long getWaitingSince() {
+        return waitingSince;
+    }
+
     public ConversationPartCollection getConversationPartCollection() {
         if (conversationPartCollection == null) {
             conversationPartCollection = find(this.getId()).getConversationPartCollection();
@@ -302,6 +309,7 @@ public class Conversation extends TypedData {
         if (open != that.open) return false;
         if (read != that.read) return false;
         if (updatedAt != that.updatedAt) return false;
+        if (waitingSince != that.waitingSince) return false;
         if (assignee != null ? !assignee.equals(that.assignee) : that.assignee != null) return false;
         if (conversationMessage != null ? !conversationMessage.equals(that.conversationMessage) : that.conversationMessage != null)
             return false;
@@ -327,6 +335,7 @@ public class Conversation extends TypedData {
         result = 31 * result + (assignee != null ? assignee.hashCode() : 0);
         result = 31 * result + (int) (createdAt ^ (createdAt >>> 32));
         result = 31 * result + (int) (updatedAt ^ (updatedAt >>> 32));
+        result = 31 * result + (int) (waitingSince ^ (waitingSince >>> 32));
         result = 31 * result + (conversationPartCollection != null ? conversationPartCollection.hashCode() : 0);
         result = 31 * result + (tagCollection != null ? tagCollection.hashCode() : 0);
         result = 31 * result + (open ? 1 : 0);
@@ -345,6 +354,7 @@ public class Conversation extends TypedData {
             ", assignee=" + assignee +
             ", createdAt=" + createdAt +
             ", updatedAt=" + updatedAt +
+            ", waitingSince=" + waitingSince +
             ", conversationPartCollection=" + conversationPartCollection +
             ", tagCollection=" + tagCollection +
             ", open=" + open +

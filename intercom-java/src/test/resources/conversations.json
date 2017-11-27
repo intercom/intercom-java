@@ -13,6 +13,7 @@
       "id": "5680931777",
       "created_at": 1471438637,
       "updated_at": 1471438637,
+      "waiting_since": 1468236397,
       "user": {
         "type": "user",
         "id": "57b45f16d1aad7e69e011111"
@@ -41,6 +42,7 @@
       "id": "5680912811",
       "created_at": 1471438151,
       "updated_at": 1471438151,
+      "waiting_since": 1468236397,
       "user": {
         "type": "user",
         "id": "57b45bfef436c8d78611111"
@@ -69,6 +71,7 @@
       "id": "5143511111",
       "created_at": 1466703132,
       "updated_at": 1468236397,
+      "waiting_since": 1468236397,
       "user": {
         "type": "lead",
         "id": "576c1a139d0baad101001111"
