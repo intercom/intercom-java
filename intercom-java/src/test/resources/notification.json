@@ -1,0 +1,72 @@
+{
+    "type" : "notification_event",
+    "app_id" : "a86dr8yl",
+    "data" : {
+        "type" : "notification_event_data",
+        "item" : {
+            "type" : "user",
+            "id" : "5a1bf31767893985752b4041",
+            "user_id" : "test1234",
+            "anonymous" : false,
+            "email" : "wash@serenity.io",
+            "phone" : "1234567890",
+            "name" : "name1",
+            "pseudonym" : null,
+            "avatar" : {
+                "type" : "avatar",
+                "image_url" : "http://example.org/128Wash.jpg"
+            },
+            "app_id" : "a86dr8yl",
+            "companies" : {
+                "type" : "company.list",
+                "companies" : [ ]
+            },
+            "location_data": {
+                "type": "location_data",
+                "city_name": "Dublin",
+                "continent_code": "EU",
+                "country_code": "IRL",
+                "country_name": "Ireland",
+                "latitude": 53.159233,
+                "longitude": -6.723,
+                "postal_code": null,
+                "region_name": "Dublin",
+                "timezone": "Europe/Dublin"
+            },
+            "last_request_at" : "2017-10-17T12:38:46.000Z",
+            "last_seen_ip" : "1.2.3.4",
+            "created_at" : "2017-11-27T11:12:24.000Z",
+            "remote_created_at" : "2017-10-17T12:38:47.000Z",
+            "signed_up_at" : "2017-10-17T12:38:47.000Z",
+            "updated_at" : "2017-11-27T11:12:24.713Z",
+            "session_count" : 0,
+            "social_profiles" : {
+                "type" : "social_profile.list",
+                "social_profiles" : [ ]
+            },
+            "unsubscribed_from_emails" : false,
+            "marked_email_as_spam" : false,
+            "has_hard_bounced" : false,
+            "user_agent_data" : "abc",
+            "tags" : {
+                "type" : "tag.list",
+                "tags" : [ ]
+            },
+            "segments" : {
+                "type" : "segment.list",
+                "segments" : [ ]
+            },
+            "custom_attributes" : { }
+        }
+    },
+    "links" : { },
+    "id" : "notif_d9697680-d363-11e7-9ccb-d3a7f70c358c",
+    "topic" : "user.created",
+    "delivery_status" : "pending",
+    "delivery_attempts" : 1,
+    "delivered_at" : 0,
+    "first_sent_at" : 1511781146,
+    "created_at" : 1511781145,
+    "self" : null,
+    "test_unknown_property" : "1234"
+}

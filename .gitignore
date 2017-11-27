@@ -6,6 +6,7 @@ out/*
 *.ipr
 *.iws
 build
+out
 */build/*
 */build/**/*.jar
 *.war
