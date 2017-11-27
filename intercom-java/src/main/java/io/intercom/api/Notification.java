@@ -10,7 +10,7 @@ import java.net.URI;
 import java.util.Map;
 
 @SuppressWarnings("UnusedDeclaration")
-@JsonIgnoreProperties({"intercom"})
+@JsonIgnoreProperties(value = {"intercom"}, ignoreUnknown = true)
 public class Notification extends TypedData {
 
     public static Notification readJSON(String json) throws InvalidException {
@@ -200,18 +200,18 @@ public class Notification extends TypedData {
     @Override
     public String toString() {
         return "Notification{" +
-            "type='" + type + '\'' +
-            ", id='" + id + '\'' +
-            ", topic='" + topic + '\'' +
-            ", appID='" + appID + '\'' +
-            ", data=" + data +
-            ", deliveryStatus='" + deliveryStatus + '\'' +
-            ", deliveryAttempts=" + deliveryAttempts +
-            ", deliveredAt=" + deliveredAt +
-            ", firstSentAt=" + firstSentAt +
-            ", createdAt=" + createdAt +
-            ", links=" + links +
-            ", self=" + self +
-            "} " + super.toString();
+                "type='" + type + '\'' +
+                ", id='" + id + '\'' +
+                ", topic='" + topic + '\'' +
+                ", appID='" + appID + '\'' +
+                ", data=" + data +
+                ", deliveryStatus='" + deliveryStatus + '\'' +
+                ", deliveryAttempts=" + deliveryAttempts +
+                ", deliveredAt=" + deliveredAt +
+                ", firstSentAt=" + firstSentAt +
+                ", createdAt=" + createdAt +
+                ", links=" + links +
+                ", self=" + self +
+                "} " + super.toString();
     }
 }

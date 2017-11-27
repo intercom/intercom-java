@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("UnusedDeclaration")
-@JsonIgnoreProperties({"page"})
+@JsonIgnoreProperties(value={"page"}, ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public abstract class TypedDataCollection<T extends TypedData> extends TypedData {
 

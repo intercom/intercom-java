@@ -1,7 +1,9 @@
 package io.intercom.api;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 class Reply<T extends Replier> extends TypedData {
 
     @JsonProperty("message_type")
