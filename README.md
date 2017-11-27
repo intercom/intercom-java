@@ -396,6 +396,12 @@ ContactMessage contactMessage = new ContactMessage()
     .setUser(contact);
 Conversation.create(contactMessage);
 
+//list all conversations
+ConversationCollection conversations = Conversation.list();
+while (conversations.hasNext()) {
+    Conversation conversation = conversations.next();
+}
+
 // find admin conversations
 Map<String, String> params = Maps.newHashMap();
 params.put("type", "admin");
