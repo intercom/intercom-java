@@ -141,9 +141,6 @@ public class Conversation extends TypedData {
     }
 
     static void validateListRequest(Map<String, String> params) {
-        if (!params.containsKey("type")) {
-            throw new InvalidException("a user or admin type must be supplied for a conversation query");
-        }
 
         if (isAdminQuery(params)
                 && !(params.containsKey("admin_id"))) {
