@@ -1,5 +1,9 @@
 ### Changes
 
+#### 2.2.12
+- Update readme with more list examples (#165)
+- Remove restrictions on listing conversations via user and admin (#171)
+
 #### 2.2.11
 - Add support for retrieving conversation tags
 
