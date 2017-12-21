@@ -8,7 +8,10 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +51,23 @@ public class Event extends TypedData {
     public static JobItemCollection<Event> listJobErrorFeed(String jobID)
         throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
         return Job.listJobErrorFeed(jobID, Event.class);
+    }
+
+    public static EventCollection listBy(String type, String parameterName, String parameterValue) {
+        if (type.isEmpty() || parameterName.isEmpty() || parameterValue.isEmpty()) {
+            throw new IllegalArgumentException("The parameters are required.");
+        }
+        if (!type.equalsIgnoreCase("user")) {
+            throw new IllegalArgumentException("The type parameter must be 'user'.");
+        }
+        List<String> possibleParameterNames = Arrays.asList("user_id", "email", "intercom_user_id");
+        if (!possibleParameterNames.contains(parameterName)) {
+            throw new IllegalArgumentException("The parameterName must be one of:" + possibleParameterNames);
+        }
+        HashMap<String, String> params = Maps.newHashMap();
+        params.put("type", type);
+        params.put(parameterName, parameterValue);
+        return DataResource.list(params, "events", EventCollection.class);
     }
 
     @VisibleForTesting
