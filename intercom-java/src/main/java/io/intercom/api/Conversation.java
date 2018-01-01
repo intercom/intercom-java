@@ -295,6 +295,10 @@ public class Conversation extends TypedData {
         return read;
     }
 
+    public Map<String, URI> getLinks() {
+        return links;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
