@@ -192,6 +192,7 @@ public class Contact extends TypedData implements Replier {
             contactUpdate.name = c.getName();
             contactUpdate.lastSeenIP = c.getLastSeenIP();
             contactUpdate.customAttributes = c.getCustomAttributes();
+            contactUpdate.avatar = c.getAvatar();
             contactUpdate.lastRequestAt = c.getLastRequestAt();
             contactUpdate.unsubscribedFromEmails = c.getUnsubscribedFromEmails();
             return contactUpdate;
@@ -218,6 +219,9 @@ public class Contact extends TypedData implements Replier {
 
         @JsonProperty("last_seen_ip")
         private String lastSeenIP;
+
+        @JsonProperty("avatar")
+        private Avatar avatar;
 
         @JsonIgnoreProperties(ignoreUnknown = false)
         @JsonProperty("custom_attributes")
@@ -455,6 +459,11 @@ public class Contact extends TypedData implements Replier {
 
     public Avatar getAvatar() {
         return avatar;
+    }
+
+    public Contact setAvatar(Avatar avatar) {
+        this.avatar = avatar;
+        return this;
     }
 
     public long getCreatedAt() {

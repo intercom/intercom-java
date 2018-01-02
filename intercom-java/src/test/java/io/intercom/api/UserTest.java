@@ -29,6 +29,8 @@ public class UserTest {
 
     @Test
     public void TestUserUpdate() throws Exception {
+        final Avatar avatar = new Avatar()
+            .setImageURL("http://example.com/256Wash.jpg");
 
         final long now = System.currentTimeMillis() / 1000;
         final User user = new User()
@@ -41,7 +43,8 @@ public class UserTest {
             .setUnsubscribedFromEmails(true)
             .setUpdateLastRequestAt(true)
             .setNewSession(true)
-            .setUserAgentData("user-agent");
+            .setUserAgentData("user-agent")
+            .setAvatar(avatar);
 
         final User.UserUpdate userUpdate = User.UserUpdate.buildFrom(user);
 
@@ -56,6 +59,7 @@ public class UserTest {
         assertEquals(true, userUpdate.isNewSession());
         assertEquals("user-agent", userUpdate.getLastSeenUserAgent());
         assertEquals(null, userUpdate.getType());
+        assertEquals("http://example.com/256Wash.jpg", userUpdate.getAvatar().getImageURL().toString());
     }
 
     @Test
@@ -179,8 +183,13 @@ public class UserTest {
         assertEquals("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9", user.getUserAgentData());
         assertEquals(1397574667L, user.getLastRequestAt());
         assertEquals(1392731331L, user.getRemoteCreatedAt());
+        assertEquals(1392731331L, user.getSignedUpAt());
         assertEquals(1392734388L, user.getCreatedAt());
         assertEquals(1392734388L, user.getUpdatedAt());
+
+        final Avatar avatar = user.getAvatar();
+        assertEquals("avatar", avatar.getType());
+        assertEquals("http://example.org/128Wash.jpg", avatar.getImageURL().toString());
 
         final SegmentCollection segmentCollection = user.getSegmentCollection();
         assertEquals("segment.list", segmentCollection.getType());

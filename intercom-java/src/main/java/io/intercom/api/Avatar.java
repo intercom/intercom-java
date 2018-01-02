@@ -18,7 +18,7 @@ public class Avatar extends TypedData {
     @JsonProperty("image_url")
     private URI imageURL;
 
-    Avatar() {
+    public Avatar() {
     }
 
     public String getType() {
@@ -27,6 +27,11 @@ public class Avatar extends TypedData {
 
     public URI getImageURL() {
         return imageURL;
+    }
+
+    public Avatar setImageURL(String imageURL) {
+        this.imageURL = URI.create(imageURL);
+        return this;
     }
 
     @Override

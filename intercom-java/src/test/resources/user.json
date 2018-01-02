@@ -6,6 +6,7 @@
     "phone": "+1234567890",
     "name": "Hoban Washburne",
     "remote_created_at": 1392731331,
+    "signed_up_at": 1392731331,
     "updated_at": 1392734388,
     "session_count": 0,
     "last_seen_ip": "1.2.3.4",
