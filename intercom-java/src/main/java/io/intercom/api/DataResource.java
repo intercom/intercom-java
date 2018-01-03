@@ -56,6 +56,11 @@ abstract class DataResource {
         return resource.delete(c);
     }
 
+    public static <T> T delete(Map<String, String> params, String collectionPath, Class<T> c) {
+        final HttpClient resource = new HttpClient(UriBuilder.newBuilder().path(collectionPath).query(params).build());
+        return resource.delete(c);
+    }
+
     public static <C> C list(Map<String, String> params, String collectionPath, Class<C> c) {
         final HttpClient resource = new HttpClient(UriBuilder.newBuilder().path(collectionPath).query(params).build());
         return resource.get(c);

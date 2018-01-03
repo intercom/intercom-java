@@ -165,9 +165,19 @@ ScrollableUserCollection usersScroll = User.scroll();
 List<User> users = usersScroll.getPage();
 usersScroll = usersScroll.scroll();
 
-// Delete a user
+// Delete a user by Intercom ID
 User user = User.find("541a144b201ebf2ec5000001");
 User.delete(user.getId());
+
+// Delete a user by user_id
+Map<String, String> params = Maps.newHashMap();
+params.put("user_id", "1");
+User.delete(params);
+
+// Delete a user by email
+Map<String, String> params = Maps.newHashMap();
+params.put("email", "malcolm@serenity.io");
+User.delete(params);
 ```
 
 ### Contacts
