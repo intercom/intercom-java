@@ -60,6 +60,11 @@ public class User extends TypedData implements Replier {
         return DataResource.delete(id, "users", User.class);
     }
 
+    public static User delete(Map<String, String> params)
+        throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        return DataResource.delete(params, "users", User.class);
+    }
+
     public static UserCollection list(Map<String, String> params)
         throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
         return DataResource.list(params, "users", UserCollection.class);
