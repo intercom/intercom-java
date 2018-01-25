@@ -118,6 +118,7 @@ public class User extends TypedData implements Replier {
                 userUpdate.companyCollection = buildUserUpdateCompanies(user);
             }
 
+            userUpdate.avatar = user.getAvatar();
             userUpdate.lastRequestAt = user.getLastRequestAt();
             userUpdate.signedUpAt = user.getSignedUpAt();
             userUpdate.unsubscribedFromEmails = user.getUnsubscribedFromEmails();
@@ -161,6 +162,9 @@ public class User extends TypedData implements Replier {
 
         @JsonProperty("last_seen_ip")
         private String lastSeenIp;
+
+        @JsonProperty("avatar")
+        private Avatar avatar;
 
         @JsonIgnoreProperties(ignoreUnknown = false)
         @JsonProperty("custom_attributes")
@@ -271,6 +275,11 @@ public class User extends TypedData implements Replier {
         public Boolean isNewSession() {
             return newSession;
         }
+
+        public Avatar getAvatar() {
+            return avatar;
+        }
+
     }
 
     @JsonProperty("type")
@@ -427,6 +436,11 @@ public class User extends TypedData implements Replier {
 
     public Avatar getAvatar() {
         return avatar;
+    }
+
+    public User setAvatar(Avatar avatar) {
+        this.avatar = avatar;
+        return this;
     }
 
     public long getCreatedAt() {
