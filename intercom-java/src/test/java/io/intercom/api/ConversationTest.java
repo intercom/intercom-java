@@ -110,6 +110,68 @@ public class ConversationTest {
     }
 
     @Test
+    public void testGetConversationMessageDetailsFromConversation() throws IOException {
+        PowerMockito.mockStatic(Conversation.class);
+
+        String json = load("conversation.json");
+        final Conversation conversation = objectMapper.readValue(json, Conversation.class);
+        final ConversationMessage conversationMessage = conversation.getConversationMessage();
+
+        assertEquals("33954111", conversationMessage.getId());
+        assertEquals("<p>test</p>", conversationMessage.getBody());
+        assertEquals("Email subject", conversationMessage.getSubject());
+        assertEquals("https://intercom.com/", conversationMessage.getUrl());
+
+        assertEquals("lead", conversationMessage.getAuthor().getType());
+        assertEquals("576c1a139d0baad1010011111", conversationMessage.getAuthor().getId());
+
+        assertEquals(2, conversationMessage.getAttachments().size());
+
+        final Attachment firstAttachment = conversationMessage.getAttachments().get(0);
+        final Attachment lastAttachment = conversationMessage.getAttachments().get(1);
+        assertEquals("upload", firstAttachment.getType());
+        assertEquals("123.csv", firstAttachment.getName());
+        assertEquals("https://downloads.intercomcdn.com/123.csv", firstAttachment.getUrl());
+        assertEquals("text/csv", firstAttachment.getContentType());
+        assertEquals(147, firstAttachment.getFilesize());
+        assertEquals(0, firstAttachment.getWidth());
+        assertEquals(0, firstAttachment.getHeight());
+
+        assertEquals("upload", lastAttachment.getType());
+        assertEquals("abc.txt", lastAttachment.getName());
+        assertEquals("https://downloads.intercomcdn.com/txt", lastAttachment.getUrl());
+        assertEquals("text/csv", lastAttachment.getContentType());
+        assertEquals(100, lastAttachment.getFilesize());
+        assertEquals(1, lastAttachment.getWidth());
+        assertEquals(2, lastAttachment.getHeight());
+
+        PowerMockito.verifyStatic(Mockito.never());
+        Conversation.find(conversation.getId());
+    }
+
+    @Test
+    public void testGetConversationMessageDetailsFromConversationNoAttachments() throws IOException {
+        PowerMockito.mockStatic(Conversation.class);
+
+        String json = load("conversation_no_attachments.json");
+        final Conversation conversation = objectMapper.readValue(json, Conversation.class);
+        final ConversationMessage conversationMessage = conversation.getConversationMessage();
+
+        assertEquals("33954111", conversationMessage.getId());
+        assertEquals("<p>test</p>", conversationMessage.getBody());
+        assertEquals("Email subject", conversationMessage.getSubject());
+        assertEquals("https://intercom.com/", conversationMessage.getUrl());
+
+        assertEquals("lead", conversationMessage.getAuthor().getType());
+        assertEquals("576c1a139d0baad1010011111", conversationMessage.getAuthor().getId());
+
+        assertEquals(0, conversationMessage.getAttachments().size());
+
+        PowerMockito.verifyStatic(Mockito.never());
+        Conversation.find(conversation.getId());
+    }
+
+    @Test
     public void testGetConversationsPartFromConversation() throws IOException {
         PowerMockito.mockStatic(Conversation.class);
 
