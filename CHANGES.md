@@ -1,5 +1,12 @@
 ### Changes
 
+#### 2.3.1
+- Updating release versions due to number of new features ebing added
+- Add support for deletion by user_id or email (#175)
+- Add support for listing events (#173)
+- Add support for updating avatars for Users and Contacts/Leads (#174)
+- Add support for more message attributes: url, id and attachments (#177)
+
 #### 2.2.12
 - Update readme with more list examples (#165)
 - Remove restrictions on listing conversations via user and admin (#171)
