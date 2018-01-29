@@ -13,23 +13,7 @@
       "type": "lead",
       "id": "576c1a139d0baad1010011111"
     },
-    "attachments": [{
-      "type": "upload",
-      "name": "123.csv",
-      "url": "https://downloads.intercomcdn.com/123.csv",
-      "content_type": "text/csv",
-      "filesize": 147,
-      "width": null,
-      "height": null
-    },{
-      "type": "upload",
-      "name": "abc.txt",
-      "url": "https://downloads.intercomcdn.com/txt",
-      "content_type": "text/csv",
-      "filesize": 100,
-      "width": 1,
-      "height": 2
-    }],
+    "attachments": [],
     "url": "https://intercom.com/"
   },
   "user": {
