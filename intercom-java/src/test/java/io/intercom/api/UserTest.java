@@ -247,6 +247,13 @@ public class UserTest {
     }
 
     @Test
+    public void TestSerdesNoAvatar() throws Exception {
+        String json = load("user_no_avatar.json");
+        final User user = mapper.readValue(json, User.class);
+        assertEquals(null, user.getAvatar().getImageURL());
+    }
+
+    @Test
     public void testBulkValidation() {
 
         final User user = new User();

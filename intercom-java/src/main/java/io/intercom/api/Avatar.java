@@ -30,7 +30,9 @@ public class Avatar extends TypedData {
     }
 
     public Avatar setImageURL(String imageURL) {
-        this.imageURL = URI.create(imageURL);
+        if(imageURL != null) {
+            this.imageURL = URI.create(imageURL);
+        }
         return this;
     }
 
