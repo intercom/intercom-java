@@ -1,5 +1,8 @@
 ### Changes
 
+#### 2.3.2
+- fix for #(174) to Handle records with no avatars (#181)
+
 #### 2.3.1
 - Updating release versions due to number of new features ebing added
 - Add support for deletion by user_id or email (#175)
