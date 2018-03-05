@@ -71,7 +71,7 @@ abstract class DataResource {
         if (!Strings.isNullOrEmpty(scrollParam)) {
             params.put("scroll_param", scrollParam);
         }
-        final HttpClient resource = new HttpClient(UriBuilder.newBuilder().path(collectionPath + "/scroll").query(params).build());
+        final HttpClient resource = new HttpClient(UriBuilder.newBuilder().path(collectionPath).path("scroll").query(params).build());
         return resource.get(c);
     }
 
