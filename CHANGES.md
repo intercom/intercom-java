@@ -1,5 +1,8 @@
 ### Changes
 
+#### 2.3.3
+- Fix for #185: scroll issue where requests not reaching endpoint (PR #186)
+
 #### 2.3.2
 - fix for #(174) to Handle records with no avatars (#181)
 

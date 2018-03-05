@@ -38,7 +38,7 @@ and add the project declaration to your `pom.xml`:
 <dependency>
   <groupId>io.intercom</groupId>
   <artifactId>intercom-java</artifactId>
-  <version>2.3.2</version>
+  <version>2.3.3</version>
 </dependency>
 ```
 
@@ -56,7 +56,7 @@ and add the project to the `dependencies` block in your `build.gradle`:
 
 ```groovy
 dependencies {
-  compile 'io.intercom:intercom-java:2.3.2'
+  compile 'io.intercom:intercom-java:2.3.3'
 }  
 ```
 
@@ -71,7 +71,7 @@ resolvers += "jcenter" at "http://jcenter.bintray.com"
 and add the project to your `libraryDependencies` in your `build.sbt`:
 
 ```scala
-libraryDependencies += "io.intercom" % "intercom-java" % "2.3.2"
+libraryDependencies += "io.intercom" % "intercom-java" % "2.3.3"
 ```
 
 ## Resources
