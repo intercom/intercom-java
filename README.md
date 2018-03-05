@@ -347,6 +347,11 @@ User.create(one);
 User.create(two);
 Tag.tag(tag, one, two);
 
+// tag and untag contacts
+Contact contact1 = Contact.findByID("5ab313046e4997e35bc13e7c");
+Contact contact2 = Contact.findByUserID("697ea3e0-227d-4d70-b776-1652e94f9583").untag();
+Tag.tag(tag, contact1, contact2);
+
 // iterate over all tags
 final TagCollection tags = Tag.list();
 while (tags.hasNext()) {

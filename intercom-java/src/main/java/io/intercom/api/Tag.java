@@ -26,12 +26,21 @@ public class Tag extends TypedData {
         return tag(tag, new UserCollection(Lists.newArrayList(users)));
     }
 
+    public static Tag tag(Tag tag, Contact... contacts) throws InvalidException, AuthorizationException {
+        return tag(tag, new ContactCollection(Lists.newArrayList(contacts)));
+    }
+
     public static Tag tag(Tag tag, Company... companies) throws InvalidException, AuthorizationException {
         return tag(tag, new CompanyCollection(Lists.newArrayList(companies)));
     }
 
     static Tag tag(Tag tag, UserCollection users) throws InvalidException, AuthorizationException {
         TaggableCollection taggableCollection = createTagTypedCollection(tag, users);
+        return DataResource.create(taggableCollection, "tags", Tag.class);
+    }
+
+    static Tag tag(Tag tag, ContactCollection contacts) throws InvalidException, AuthorizationException {
+        TaggableCollection taggableCollection = createTagTypedCollection(tag, contacts);
         return DataResource.create(taggableCollection, "tags", Tag.class);
     }
 
@@ -94,6 +103,32 @@ public class Tag extends TypedData {
             }
         }
         taggableCollection.setUsers(usersLite);
+        return taggableCollection;
+    }
+
+    @VisibleForTesting
+    static TaggableCollection createTagTypedCollection(Tag tag, ContactCollection contacts) {
+        TaggableCollection taggableCollection = new TaggableCollection();
+        taggableCollection.setName(tag.getName());
+        taggableCollection.setId(tag.getId());
+        final List<Map<String, Object>> contactsLite = Lists.newArrayList();
+        final List<Contact> pageItems = contacts.getPage();
+        for (Contact contact: pageItems) {
+            Map<String, Object> contactMap = Maps.newHashMap();
+            final String id = contact.getID();
+
+            if (contact.isUntag()) {
+                contactMap.put("untag", true);
+            }
+
+            if (!Strings.isNullOrEmpty(id)) {
+                contactMap.put("id", id);
+                contactsLite.add(contactMap);
+            } else {
+                logger.warn("no identifiers found for user tag target, skipping [" + tag + "] [" + contact.toString() + "]");
+            }
+        }
+        taggableCollection.setUsers(contactsLite);
         return taggableCollection;
     }
 
