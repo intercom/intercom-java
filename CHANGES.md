@@ -1,8 +1,5 @@
 ### Changes
 
-#### 2.3.4
-duplicate -- same as previous release
-
 #### 2.3.3
 - Fix for #185: scroll issue where requests not reaching endpoint (PR #186)
 
