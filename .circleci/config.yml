@@ -1,0 +1,12 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/openjdk
+
+    working_directory: ~/intercom-java
+
+    steps:
+      - checkout
+      - run: TERM="dumb" ./gradlew dependencies
+      - run: TERM="dumb" ./gradlew test
