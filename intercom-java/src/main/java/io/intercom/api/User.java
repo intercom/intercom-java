@@ -55,13 +55,39 @@ public class User extends TypedData implements Replier {
         return DataResource.update(UserUpdate.buildFrom(user), "users", User.class);
     }
 
-    public static User delete(String id)
+    /**
+     * @deprecated  Replaced by {@link #archive(String)}. Renamed for consistency with API language
+     */
+    public static User delete(String id) {
+        return archive(id);
+    }
+
+    public static User archive(String id)
         throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
         return DataResource.delete(id, "users", User.class);
     }
 
-    public static User delete(Map<String, String> params)
+    public static UserPermanentDeleteResponse permanentDelete(String id)
         throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+
+        final URI uri = UriBuilder.newBuilder()
+                .path("user_delete_requests")
+                .build();
+        return new HttpClient(uri)
+                .post(UserPermanentDeleteResponse.class, new UserPermanentDeleteRequest(id));
+    }
+
+    /**
+     * @deprecated  Replaced by {@link #archive(Map)}. Renamed for consistency with API language
+     */
+    @Deprecated
+    public static User delete(Map<String, String> params)
+            throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        return archive(params);
+    }
+
+    public static User archive(Map<String, String> params)
+            throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
         return DataResource.delete(params, "users", User.class);
     }
 
