@@ -1,0 +1,16 @@
+{
+	"type": "admin",
+	"id": "123456",
+	"name": "Admin Name",
+	"email": "admin@domain.com",
+	"away_mode_enabled": true,
+	"away_mode_reassign": false,
+	"avatar": {
+		"image_url": "https://avatarurl.com/image.jpg"
+	},
+	"team_ids": [
+		123,
+		456,
+		789
+	]
+}
