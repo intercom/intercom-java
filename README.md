@@ -199,6 +199,14 @@ contact = Contact.findByUserID("e1a7d875-d83a-46f7-86f4-73be98a98584");
 contact.setName("Stitch Hessian");
 Contact updated = Contact.update(contact);
 
+// Update a contact by ID
+Contact contact = new Contact().setID("541a144b201ebf2ec5000002").setName("Stitch Hessian");
+Contact updated = Contact.update(contact);
+
+// Update a contact by User ID
+Contact contact = new Contact().setUserID("e1a7d875-d83a-46f7-86f4-73be98a98584").setName("Stitch Hessian");
+Contact updated = Contact.update(contact);
+
 // Read a contact list by email
 ContactCollection contacts = Contact.listByEmail("jubal@serenity.io");
 while(contacts.hasNext()) {
@@ -216,9 +224,20 @@ ScrollableContactCollection contactsScroll = Contact.scroll();
 List<Contact> contacts = contactsScroll.getPage();
 contactsScroll = contactsScroll.scroll();
 
+// List contacts (sorting)
+Map<String, String> params = Maps.newHashMap();
+params.put("sort", "created_at");
+params.put("order", "asc");
+ContactCollection contacts = Contact.list(params);
 
 // Remove a contact
 Contact.delete(contact);
+
+// Remove a contact by id
+Contact.delete(contact.getID());
+
+// Remove a contact by user_id
+Contact.deleteByUserID(contact.getUserID());
 
 // Convert a contact
 User converted = Contact.convert(contact, user);
