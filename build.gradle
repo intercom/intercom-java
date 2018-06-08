@@ -6,7 +6,7 @@ buildscript {
   //noinspection GroovyAssignabilityCheck
   dependencies {
     classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.6'
-    classpath 'org.ajoberstar:gradle-git:0.10.0'
+    classpath 'org.ajoberstar:grgit:1.9.3'
   }
 }
 
@@ -24,7 +24,7 @@ subprojects {
     //noinspection GroovyAssignabilityCheck
     dependencies {
       classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.6'
-      classpath 'org.ajoberstar:gradle-git:0.10.0'
+      classpath 'org.ajoberstar:grgit:1.9.3'
     }
   }
 
