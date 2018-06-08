@@ -266,4 +266,11 @@ public class UserTest {
             assertTrue(e.getFirstError() != null);
         }
     }
+
+    @Test
+    public void TestPermanentDelete() throws Exception{
+        String json = load("permanent_delete_response.json");
+        final UserPermanentDeleteResponse userPermanentDeleteResponse= mapper.readValue(json, UserPermanentDeleteResponse.class);
+        assertEquals("123456", userPermanentDeleteResponse.getId());
+    }
 }
