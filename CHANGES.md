@@ -1,5 +1,9 @@
 ### Changes
 
+#### 2.4.0
+- Fix for gradle release issue #192
+- Update related to API user archive and permanent delete option #195
+
 #### 2.3.3
 - Fix for #185: scroll issue where requests not reaching endpoint (PR #186)
 
