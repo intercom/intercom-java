@@ -96,6 +96,7 @@ public class Intercom {
         Context context = getContext();
         context.authKeyType = AuthKeyType.TOKEN;
         context.token = token;
+        context.apiKey = null;
     }
 
     public static String getApiKey() {
@@ -106,6 +107,7 @@ public class Intercom {
         Context context = getContext();
         context.authKeyType = AuthKeyType.API_KEY;
         context.apiKey = apiKey;
+        context.token = null;
     }
 
     public static URI getApiBaseURI() {
