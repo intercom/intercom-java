@@ -17,9 +17,15 @@ public class IntercomTest {
     @Test
     public void testUseThreadLocal() {
         Intercom.setUseThreadLocal(false);
+        Intercom.setToken("tx");
         assertFalse(Intercom.usesThreadLocal());
+        assertEquals("tx", Intercom.getToken());
         Intercom.setUseThreadLocal(true);
         assertTrue(Intercom.usesThreadLocal());
+        assertNotEquals("tx", Intercom.getToken());
+        Intercom.setUseThreadLocal(false);
+        assertFalse(Intercom.usesThreadLocal());
+        assertEquals("tx", Intercom.getToken());
     }
 
     @Test
