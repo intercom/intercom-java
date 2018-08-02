@@ -49,6 +49,10 @@ public class Company extends TypedData {
         return DataResource.update(entity, "companies", Company.class);
     }
 
+    public static Company delete(String id) throws InvalidException, AuthorizationException {
+        return DataResource.delete(id, "companies", Company.class);
+    }
+
     public static CompanyCollection list(Map<String, String> params) throws InvalidException, AuthorizationException {
         return DataResource.list(params, "companies", CompanyCollection.class);
     }
