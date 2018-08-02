@@ -83,11 +83,11 @@ public class Tag extends TypedData {
             if (!Strings.isNullOrEmpty(id)) {
                 userMap.put("id", id);
                 usersLite.add(userMap);
-            } else if (!Strings.isNullOrEmpty(userId)) {
-                userMap.put("user_id", userId);
-                usersLite.add(userMap);
             } else if (!Strings.isNullOrEmpty(email)) {
                 userMap.put("email", email);
+                usersLite.add(userMap);
+            } else if (!Strings.isNullOrEmpty(userId)) {
+                userMap.put("user_id", userId);
                 usersLite.add(userMap);
             } else {
                 logger.warn("no identifiers found for user tag target, skipping [" + tag + "] [" + user.toString() + "]");
