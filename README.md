@@ -431,13 +431,13 @@ Conversation.create(adminMessage);
 // send a message from a user
 UserMessage userMessage = new UserMessage()
     .setBody("Hey! Is there, is there a reward?")
-    .setUser(user);
+    .setFrom(user);
 Conversation.create(userMessage);
 
 // send a message from a contact
 ContactMessage contactMessage = new ContactMessage()
     .setBody("Hey! Is there, is there a reward?")
-    .setUser(contact);
+    .setFrom(contact);
 Conversation.create(contactMessage);
 
 //list all conversations
