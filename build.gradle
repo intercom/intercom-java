@@ -35,7 +35,6 @@ subprojects {
 
   ext {
     jacksonVersion = '2.9.6'
-    powermockVersion = '1.6.6'
   }
 
   apply plugin: 'maven'
@@ -51,14 +50,15 @@ subprojects {
     compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
     compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-    compile "com.google.guava:guava:17.0"
-    compile "org.slf4j:slf4j-api:1.7.25"
-    compile "commons-codec:commons-codec:1.9"
-    testCompile "junit:junit:4.12"
-    testCompile "org.powermock:powermock-module-junit4:$powermockVersion"
-    testCompile "org.powermock:powermock-api-mockito:$powermockVersion"
+    compile 'com.google.guava:guava:17.0'
+    compile 'org.slf4j:slf4j-api:1.7.25'
+    compile 'commons-codec:commons-codec:1.9'
+    testCompile 'junit:junit:4.11'
+    testCompile 'org.powermock:powermock-module-junit4:1.6.6'
+    testCompile 'org.powermock:powermock-api-mockito:1.6.6'
   }
 }
+
 
 task wrapper(type: Wrapper) {
   gradleVersion = '2.0'
