@@ -253,19 +253,6 @@ public class Company extends TypedData {
         return sessionCount;
     }
 
-    /**
-     * Deprecated. The Intercom API does not support changing the
-     * session value for a company. Calling this method has no
-     * effect.
-     *
-     * @param sessionCount this value is ignored
-     * @return the company object
-     */
-    @Deprecated
-    public Company setSessionCount(int sessionCount) {
-        return this;
-    }
-
     public long getRemoteCreatedAt() {
         return remoteCreatedAt;
     }
