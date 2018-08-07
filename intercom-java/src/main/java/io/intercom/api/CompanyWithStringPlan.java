@@ -33,6 +33,15 @@ class CompanyWithStringPlan extends TypedData {
     @JsonProperty("plan")
     private String plan;
 
+    @JsonProperty("size")
+    private int size;
+
+    @JsonProperty("website")
+    private String website;
+
+    @JsonProperty("industry")
+    private String industry;
+
     @JsonIgnoreProperties(ignoreUnknown = false)
     @JsonProperty("custom_attributes")
     private Map<String, CustomAttribute> customAttributes = Maps.newHashMap();
@@ -94,6 +103,30 @@ class CompanyWithStringPlan extends TypedData {
 
     public void setRemoteCreatedAt(long remoteCreatedAt) {
         this.remoteCreatedAt = remoteCreatedAt;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public String getIndustry() {
+        return industry;
+    }
+
+    public void setIndustry(String industry) {
+        this.industry = industry;
     }
 
     public String getPlan() {
