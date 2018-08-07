@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/openjdk
+      - image: circleci/openjdk:8-jdk-stretch-node-browsers
 
     working_directory: ~/intercom-java
 
