@@ -76,7 +76,7 @@ public class ConversationTest {
         } catch (InvalidException e) {
             fail();
         }
-        
+
         adminReply.setAttachmentUrls(new String[]{"http://www.example.com/attachment.jpg"});
         try {
             Conversation.validateAdminReplyRequest(adminReply);
