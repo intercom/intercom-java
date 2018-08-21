@@ -1,5 +1,8 @@
 ### Changes
 
+#### 2.5.2
+- Fixing issues with previous releases.
+
 #### 2.5.1
 - Adding new release due to issues with previous.
 
