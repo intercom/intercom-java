@@ -1,5 +1,8 @@
 ### Changes
 
+#### 2.5.1
+- Adding new release due to issues with previous.
+
 #### 2.5.0
 - Fix for #207 to remove a non-existent API call (PR #211)
 - Fix for #197 to prioritise user_id when tagging users (PR #199)
