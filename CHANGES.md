@@ -1,5 +1,18 @@
 ### Changes
 
+#### 2.5.1
+- Adding new release due to issues with previous.
+
+#### 2.5.0
+- Fix for #207 to remove a non-existent API call (PR #211)
+- Fix for #197 to prioritise user_id when tagging users (PR #199)
+- Update of Jackson dependencies (PR #203)
+- Fix for #197 to prioritise user_id when tagging users (PR #199)
+- Fix for #202 to enable retrieving company session count (PR #213)
+- Update Gradle (PR #216)
+- Add template for Pull Requests (PR #217)
+- Removal of Travis (PR #219)
+
 #### 2.4.0
 - Fix for gradle release issue #192
 - Update related to API user archive and permanent delete option #195
