@@ -29,11 +29,7 @@ public class Intercom {
 
     public static final String USER_AGENT = "intercom-java/" + Intercom.VERSION;
 
-    private static final ThreadLocal<Context> threadContext = new ThreadLocal<Context>() {
-        @Override protected Context initialValue() {
-            return new Context();
-        }
-    };
+    private static ThreadLocal<Context> threadContext = newThreadLocalContext();
 
     private static final Context staticContext = new Context();
 
@@ -132,5 +128,17 @@ public class Intercom {
 
     public static void setUseThreadLocal(boolean useThreadLocal) {
         Intercom.useThreadLocal = useThreadLocal;
+    }
+
+    public static void clearThreadLocalContexts() {
+        threadContext = newThreadLocalContext();
+    }
+
+    private static ThreadLocal<Context> newThreadLocalContext() {
+        return new ThreadLocal<Context>() {
+            @Override protected Context initialValue() {
+                return new Context();
+            }
+        };
     }
 }

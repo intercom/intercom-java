@@ -107,6 +107,17 @@ public class IntercomTest {
         assertEquals(tt2.localRequestUsingCaches, tt2.requestUsingCaches);
     }
 
+    @Test
+    public void testClearThreadLocalContexts() throws Exception {
+        Intercom.setUseThreadLocal(true);
+
+        Intercom.setApiKey("testKey");
+        assertEquals("testKey", Intercom.getApiKey());
+
+        Intercom.clearThreadLocalContexts();
+        assertNull(Intercom.getApiKey());
+    }
+
     class ThreadTester implements Runnable {
         String apiKey, appId, token;
         Intercom.AuthKeyType authKeyType;
