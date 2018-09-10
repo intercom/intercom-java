@@ -1,5 +1,8 @@
 ### Changes
 
+#### 2.5.2
+- Adding tagging abilities to Contacts.
+
 #### 2.5.1
 - Adding new release due to issues with previous.
 

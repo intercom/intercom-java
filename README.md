@@ -21,6 +21,7 @@ To use the client, you can add the jcenter repository to your dependencies.
 
 ### Maven
 
+
 Add jcenter to your repositories in `pom.xml` or `settings.xml`:
 
 ```xml
@@ -38,7 +39,7 @@ and add the project declaration to your `pom.xml`:
 <dependency>
   <groupId>io.intercom</groupId>
   <artifactId>intercom-java</artifactId>
-  <version>2.5.1</version>
+  <version>2.5.2</version>
 </dependency>
 ```
 
@@ -56,7 +57,7 @@ and add the project to the `dependencies` block in your `build.gradle`:
 
 ```groovy
 dependencies {
-  compile 'io.intercom:intercom-java:2.5.1'
+  compile 'io.intercom:intercom-java:2.5.2'
 }  
 ```
 
@@ -71,8 +72,9 @@ resolvers += "jcenter" at "http://jcenter.bintray.com"
 and add the project to your `libraryDependencies` in your `build.sbt`:
 
 ```scala
-libraryDependencies += "io.intercom" % "intercom-java" % "2.5.1"
+libraryDependencies += "io.intercom" % "intercom-java" % "2.5.2"
 ```
+
 
 ## Resources
 
