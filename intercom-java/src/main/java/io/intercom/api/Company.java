@@ -49,10 +49,6 @@ public class Company extends TypedData {
         return DataResource.update(entity, "companies", Company.class);
     }
 
-    public static Company delete(String id) throws InvalidException, AuthorizationException {
-        return DataResource.delete(id, "companies", Company.class);
-    }
-
     public static CompanyCollection list(Map<String, String> params) throws InvalidException, AuthorizationException {
         return DataResource.list(params, "companies", CompanyCollection.class);
     }
@@ -255,19 +251,6 @@ public class Company extends TypedData {
 
     public int getSessionCount() {
         return sessionCount;
-    }
-
-    /**
-     * Deprecated. The Intercom API does not support changing the
-     * session value for a company. Calling this method has no
-     * effect.
-     *
-     * @param sessionCount this value is ignored
-     * @return the company object
-     */
-    @Deprecated
-    public Company setSessionCount(int sessionCount) {
-        return this;
     }
 
     public long getRemoteCreatedAt() {
