@@ -130,6 +130,10 @@ public class Intercom {
         Intercom.useThreadLocal = useThreadLocal;
     }
 
+    public static void clearThreadLocalContext() {
+        threadContext.remove();
+    }
+
     public static void clearThreadLocalContexts() {
         threadContext = newThreadLocalContext();
     }

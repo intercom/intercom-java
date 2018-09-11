@@ -116,6 +116,23 @@ public class IntercomTest {
 
         Intercom.clearThreadLocalContexts();
         assertNull(Intercom.getApiKey());
+
+        Intercom.setApiKey("testKey2");
+        assertEquals("testKey2", Intercom.getApiKey());
+    }
+
+    @Test
+    public void testClearThreadLocalContext() throws Exception {
+        Intercom.setUseThreadLocal(true);
+
+        Intercom.setApiKey("testKey");
+        assertEquals("testKey", Intercom.getApiKey());
+
+        Intercom.clearThreadLocalContext();
+        assertNull(Intercom.getApiKey());
+
+        Intercom.setApiKey("testKey2");
+        assertEquals("testKey2", Intercom.getApiKey());
     }
 
     class ThreadTester implements Runnable {
@@ -160,6 +177,7 @@ public class IntercomTest {
 
         @Override
         public void run() {
+            Intercom.clearThreadLocalContext();
             Intercom.setToken(localToken);
             Intercom.setAppID(localAppId);
             Intercom.setConnectionTimeout(localConnectionTimeout);
@@ -179,6 +197,7 @@ public class IntercomTest {
 
         @Override
         public void run() {
+            Intercom.clearThreadLocalContext();
             Intercom.setApiKey(localApiKey);
             Intercom.setAppID(localAppId);
             Intercom.setConnectionTimeout(localConnectionTimeout);
