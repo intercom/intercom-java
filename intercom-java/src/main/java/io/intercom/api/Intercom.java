@@ -4,11 +4,21 @@ import java.net.URI;
 
 public class Intercom {
 
+    static class Context {
+        private volatile AuthKeyType authKeyType = AuthKeyType.API_KEY;
+        private volatile String apiKey;
+        private volatile String token;
+        private volatile String appID;
+        private volatile int connectionTimeout = 3 * 1000;
+        private volatile int requestTimeout = 60 * 1000;
+        private volatile boolean requestUsingCaches = false;
+    }
+
     private static final URI API_BASE_URI = URI.create("https://api.intercom.io/");
 
-    private static volatile URI apiBaseURI = API_BASE_URI;
+    private static volatile boolean useThreadLocal = false;
 
-    private static volatile AuthKeyType authKeyType = AuthKeyType.API_KEY;
+    private static volatile URI apiBaseURI = API_BASE_URI;
 
     enum AuthKeyType {
         API_KEY,
@@ -19,17 +29,16 @@ public class Intercom {
 
     public static final String USER_AGENT = "intercom-java/" + Intercom.VERSION;
 
-    private static volatile String apiKey;
+    private static ThreadLocal<Context> threadContext = newThreadLocalContext();
 
-    private static volatile String token;
+    private static final Context staticContext = new Context();
 
-    private static volatile String appID;
-
-    private static volatile int connectionTimeout = 3 * 1000;
-
-    private static volatile int requestTimeout = 60 * 1000;
-
-    private static volatile boolean requestUsingCaches = false;
+    private static Context getContext() {
+        if (useThreadLocal) {
+            return threadContext.get();
+        }
+        return staticContext;
+    }
 
     private static volatile HttpConnectorSupplier httpConnectorSupplier = HttpConnectorSupplier.defaultSupplier;
 
@@ -38,29 +47,29 @@ public class Intercom {
     }
 
     public static int getConnectionTimeout() {
-        return connectionTimeout;
+        return getContext().connectionTimeout;
     }
 
     @SuppressWarnings("UnusedDeclaration")
     public static void setConnectionTimeout(int connectionTimeout) {
-        Intercom.connectionTimeout = connectionTimeout;
+        getContext().connectionTimeout = connectionTimeout;
     }
 
     public static int getRequestTimeout() {
-        return requestTimeout;
+        return getContext().requestTimeout;
     }
 
     @SuppressWarnings("UnusedDeclaration")
     public static void setRequestTimeout(int requestTimeout) {
-        Intercom.requestTimeout = requestTimeout;
+        getContext().requestTimeout = requestTimeout;
     }
 
     public static boolean isRequestUsingCaches() {
-        return requestUsingCaches;
+        return getContext().requestUsingCaches;
     }
 
     public static void setRequestUsingCaches(boolean requestUsingCaches) {
-        Intercom.requestUsingCaches = requestUsingCaches;
+        getContext().requestUsingCaches = requestUsingCaches;
     }
 
     public static HttpConnectorSupplier getHttpConnectorSupplier() {
@@ -72,25 +81,29 @@ public class Intercom {
     }
 
     public static String getAppID() {
-        return appID;
+        return getContext().appID;
     }
 
     public static void setAppID(String appID) {
-        Intercom.appID = appID;
+        getContext().appID = appID;
     }
 
     public static void setToken(String token) {
-        authKeyType = AuthKeyType.TOKEN;
-        Intercom.token = token;
+        Context context = getContext();
+        context.authKeyType = AuthKeyType.TOKEN;
+        context.token = token;
+        context.apiKey = null;
     }
 
     public static String getApiKey() {
-        return Intercom.apiKey;
+        return getContext().apiKey;
     }
 
     public static void setApiKey(String apiKey) {
-        authKeyType = AuthKeyType.API_KEY;
-        Intercom.apiKey = apiKey;
+        Context context = getContext();
+        context.authKeyType = AuthKeyType.API_KEY;
+        context.apiKey = apiKey;
+        context.token = null;
     }
 
     public static URI getApiBaseURI() {
@@ -102,12 +115,34 @@ public class Intercom {
     }
 
     static AuthKeyType getAuthKeyType() {
-        return authKeyType;
+        return getContext().authKeyType;
     }
 
     public static String getToken() {
-        return token;
+        return getContext().token;
     }
 
+    public static boolean usesThreadLocal() {
+        return Intercom.useThreadLocal;
+    }
 
+    public static void setUseThreadLocal(boolean useThreadLocal) {
+        Intercom.useThreadLocal = useThreadLocal;
+    }
+
+    public static void clearThreadLocalContext() {
+        threadContext.remove();
+    }
+
+    public static void clearThreadLocalContexts() {
+        threadContext = newThreadLocalContext();
+    }
+
+    private static ThreadLocal<Context> newThreadLocalContext() {
+        return new ThreadLocal<Context>() {
+            @Override protected Context initialValue() {
+                return new Context();
+            }
+        };
+    }
 }
