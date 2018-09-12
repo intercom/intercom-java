@@ -63,6 +63,33 @@ public class TagTest {
     }
 
     @Test
+    public void testTagContacts() throws Exception {
+        String json = load("tag.json");
+        final Tag tag = mapper.readValue(json, Tag.class);
+
+        final Contact contact1 = new Contact().setID("3434");
+        final Contact contact2 = new Contact().setID("3435").untag();
+        final Contact contact3 = new Contact().setEmail("malcolm@serenity.io");
+        final Contact contact4 = new Contact().setEmail("wash@serenity.io").untag();
+        final ContactCollection contactCollection = new ContactCollection(Lists.newArrayList(contact1, contact2, contact3, contact4));
+        final Tag.TaggableCollection taggableCollection = Tag.createTagTypedCollection(tag, contactCollection);
+        final List<Map<String, Object>> contacts = taggableCollection.getUsers();
+
+        int match = 0;
+        for (Map<String, Object> contact : contacts) {
+            if (contact.containsKey("id") && contact.get("id").equals("3434")) {
+                match += 1;
+                assertTrue(!contact.containsKey("untag"));
+            }
+            if (contact.containsKey("id") && contact.get("id").equals("3435")) {
+                match += 1;
+                assertTrue(contact.containsKey("untag") && contact.get("untag") == Boolean.TRUE);
+            }
+        }
+        assertEquals(2, match);
+    }
+
+    @Test
     public void testTagCompanies() throws Exception {
         String json = load("tag.json");
         final Tag tag = mapper.readValue(json, Tag.class);
