@@ -21,6 +21,7 @@ To use the client, you can add the jcenter repository to your dependencies.
 
 ### Maven
 
+
 Add jcenter to your repositories in `pom.xml` or `settings.xml`:
 
 ```xml
@@ -38,7 +39,7 @@ and add the project declaration to your `pom.xml`:
 <dependency>
   <groupId>io.intercom</groupId>
   <artifactId>intercom-java</artifactId>
-  <version>2.4.0</version>
+  <version>2.5.2</version>
 </dependency>
 ```
 
@@ -56,7 +57,7 @@ and add the project to the `dependencies` block in your `build.gradle`:
 
 ```groovy
 dependencies {
-  compile 'io.intercom:intercom-java:2.4.0'
+  compile 'io.intercom:intercom-java:2.5.2'
 }  
 ```
 
@@ -71,8 +72,9 @@ resolvers += "jcenter" at "http://jcenter.bintray.com"
 and add the project to your `libraryDependencies` in your `build.sbt`:
 
 ```scala
-libraryDependencies += "io.intercom" % "intercom-java" % "2.4.0"
+libraryDependencies += "io.intercom" % "intercom-java" % "2.5.2"
 ```
+
 
 ## Resources
 
@@ -365,6 +367,11 @@ User two = new User().setEmail("simon@serenity.io").untag();
 User.create(one);
 User.create(two);
 Tag.tag(tag, one, two);
+
+// tag and untag contacts
+Contact contact1 = Contact.findByID("5ab313046e4997e35bc13e7c");
+Contact contact2 = Contact.findByUserID("697ea3e0-227d-4d70-b776-1652e94f9583").untag();
+Tag.tag(tag, contact1, contact2);
 
 // iterate over all tags
 final TagCollection tags = Tag.list();
