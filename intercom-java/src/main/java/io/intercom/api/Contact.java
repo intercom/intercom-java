@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 
 import java.net.URI;
@@ -66,7 +67,27 @@ public class Contact extends TypedData implements Replier {
 
     public static Contact delete(Contact c)
             throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
-        return DataResource.delete(c.getID(), "contacts", Contact.class);
+        if(!Strings.isNullOrEmpty(c.getID())) {
+            return delete(c.getID());
+        }
+        else if(!Strings.isNullOrEmpty(c.getUserID())) {
+            return deleteByUserID(c.getUserID());
+        }
+        else {
+            throw new InvalidException("to delete a contact you must provide a id or user_id value");
+        }
+    }
+
+    public static Contact delete(String id)
+            throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        return DataResource.delete(id, "contacts", Contact.class);
+    }
+
+    public static Contact deleteByUserID(String user_id)
+            throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        Map<String, String> params = new HashMap<String,String>();
+        params.put("user_id", user_id);
+        return DataResource.delete(params, "contacts", Contact.class);
     }
 
     public static User convert(Contact c, User u)
@@ -416,8 +437,7 @@ public class Contact extends TypedData implements Replier {
         return id;
     }
 
-    @VisibleForTesting
-    Contact setID(String id) {
+    public Contact setID(String id) {
         this.id = id;
         return this;
     }
@@ -455,6 +475,11 @@ public class Contact extends TypedData implements Replier {
 
     public String getUserID() {
         return userID;
+    }
+
+    public Contact setUserID(String userID) {
+        this.userID = userID;
+        return this;
     }
 
     public Avatar getAvatar() {
