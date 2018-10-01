@@ -1,5 +1,16 @@
 ### Changes
 
+#### 2.6.0
+There a number of changed in this version so updating to 2.6
+Highlights are adding more attributes to the company resource and new features on admin resource.
+For more info see the specific PR or issue noted here and/or the updated readme
+- use thread local (optionally) for context setting (#204)
+- Add support for more company attributes (#183)
+- Add deletion by ID and User ID (#200)
+- Add support for new Admin endpoints and attributes (#198)
+- Add tests for companies (#215)
+- Update readme to document permanent deletion and rename old delete method to archive (#228)
+
 #### 2.5.2
 - Adding tagging abilities to Contacts.
 
