@@ -167,19 +167,22 @@ ScrollableUserCollection usersScroll = User.scroll();
 List<User> users = usersScroll.getPage();
 usersScroll = usersScroll.scroll();
 
-// Delete a user by Intercom ID
+// Archive a user by Intercom ID
 User user = User.find("541a144b201ebf2ec5000001");
-User.delete(user.getId());
+User.archive(user.getId());
 
-// Delete a user by user_id
+// Archive a user by user_id
 Map<String, String> params = Maps.newHashMap();
 params.put("user_id", "1");
-User.delete(params);
+User.archive(params);
 
-// Delete a user by email
+// Archive a user by email
 Map<String, String> params = Maps.newHashMap();
 params.put("email", "malcolm@serenity.io");
-User.delete(params);
+User.archive(params);
+
+// Permanently delete a user by Intercom ID
+User.permanentDelete("541a144b201ebf2ec5000001");
 ```
 
 ### Contacts
@@ -305,6 +308,12 @@ AdminCollection admins = Admin.list();
 while(admins.hasNext()) {
     System.out.println(admins.next().getName());
 }
+
+// Find admin by ID
+Admin admin = Admin.find("123456");
+
+// Set admin as away and enable away mode reassignment
+Admin admin = Admin.setAwayMode("123456", true, true);
 ```
 
 
