@@ -308,6 +308,12 @@ AdminCollection admins = Admin.list();
 while(admins.hasNext()) {
     System.out.println(admins.next().getName());
 }
+
+// Find admin by ID
+Admin admin = Admin.find("123456");
+
+// Set admin as away and enable away mode reassignment
+Admin admin = Admin.setAwayMode("123456", true, true);
 ```
 
 

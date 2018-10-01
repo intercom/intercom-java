@@ -1,0 +1,86 @@
+{
+	"type": "admin.list",
+	"admins": [
+		{
+			"type": "admin",
+			"id": "123456",
+			"name": "Admin Name",
+			"email": "admin@domain.com",
+			"away_mode_enabled": true,
+			"away_mode_reassign": false,
+			"avatar": {
+				"image_url": "https://avatarurl.com/image.jpg"
+			},
+			"team_ids": [
+				123,
+				456,
+				789
+			]
+		},
+		{
+			"type": "admin",
+			"id": "234567",
+			"name": "Admin2 Name",
+			"email": "admin2@domain.com",
+			"away_mode_enabled": false,
+			"away_mode_reassign": false,
+			"avatar": {
+				"image_url": "https://avatarurl.com/image2.jpg"
+			},
+			"team_ids": [
+				456,
+				789
+			]
+		},
+		{
+			"type": "team",
+			"id": "123",
+			"name": "A Team",
+			"email": "team-email@teams.intercom.io",
+			"away_mode_enabled": false,
+			"away_mode_reassign": false,
+			"avatar": {
+				"image_url": "https://domain.com/avatar"
+			},
+			"admin_ids": [
+				123456,
+				234567
+			]
+		},
+		{
+			"type": "team",
+			"id": "456",
+			"name": "B Team",
+			"email": "team-email2@teams.intercom.io",
+			"away_mode_enabled": false,
+			"away_mode_reassign": false,
+			"avatar": {
+				"image_url": "https://domain.com/avatar2"
+			},
+			"admin_ids": [
+				123456
+			]
+		},
+		{
+			"type": "team",
+			"id": "789",
+			"name": "C Team",
+			"email": "team-email3@teams.intercom.io",
+			"away_mode_enabled": false,
+			"away_mode_reassign": false,
+			"avatar": {
+				"image_url": "https://domain.com/avatar3"
+			},
+			"admin_ids": [
+			]
+		},
+		{
+			"type": "admin",
+			"email": "bot-123123123@bots.intercom.io",
+			"id": "807",
+			"name": "A bot",
+			"away_mode_enabled": false,
+			"away_mode_reassign": false
+		}
+	]
+}

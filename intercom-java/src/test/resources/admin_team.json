@@ -1,0 +1,16 @@
+{
+	"type": "team",
+	"id": "654321",
+	"name": "A Team",
+	"email": "team-email@teams.intercom.io",
+	"away_mode_enabled": false,
+	"away_mode_reassign": false,
+	"avatar": {
+		"image_url": "https://domain.com/avatar"
+	},
+	"admin_ids": [
+		987,
+		654,
+		321
+	]
+}

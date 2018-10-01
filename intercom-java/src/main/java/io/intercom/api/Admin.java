@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Maps;
 
+import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 
@@ -30,9 +32,25 @@ public class Admin extends TypedData implements Replier {
         return DataResource.list(SENTINEL, "admins", AdminCollection.class);
     }
 
+    public static Admin find(String id)
+        throws AuthorizationException, ClientException, ServerException, InvalidException, RateLimitException {
+        final HttpClient resource = new HttpClient(UriBuilder.newBuilder().path("admins").path(id).build());
+        return resource.get(Admin.class);
+    }
+
+    public static Admin setAwayMode(String id, boolean away_mode_enabled, boolean away_mode_reassign) {
+        final URI uri = UriBuilder.newBuilder()
+                .path("admins")
+                .path(id)
+                .path("away")
+                .build();
+        return new HttpClient(uri)
+                .put(Admin.class, new AdminAwayMode(id, away_mode_enabled, away_mode_reassign));
+    }
+
     @SuppressWarnings("FieldCanBeLocal")
     @JsonProperty("type")
-    private final String type = "admin";
+    private String type = "admin";
 
     @JsonProperty("id")
     private String id;
@@ -54,6 +72,21 @@ public class Admin extends TypedData implements Replier {
 
     @JsonProperty("closed")
     private long closed;
+
+    @JsonProperty("away_mode_enabled")
+    private boolean awayModeEnabled;
+
+    @JsonProperty("away_mode_reassign")
+    private boolean awayModeReassign;
+
+    @JsonProperty("avatar")
+    private Avatar avatar;
+
+    @JsonProperty("team_ids")
+    private List<String> teamIds;
+
+    @JsonProperty("admin_ids")
+    private List<String> adminIds;
 
     public Admin() {
     }
@@ -110,6 +143,26 @@ public class Admin extends TypedData implements Replier {
         return closed;
     }
 
+    public boolean getAwayModeEnabled(){
+        return awayModeEnabled;
+    }
+
+    public boolean getAwayModeReassign(){
+        return awayModeReassign;
+    }
+
+    public Avatar getAvatar(){
+        return avatar;
+    }
+
+    public List getTeamIds(){
+        return teamIds;
+    }
+    public List getAdminIds(){
+        return adminIds;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -124,6 +177,12 @@ public class Admin extends TypedData implements Replier {
         if (email != null ? !email.equals(admin.email) : admin.email != null) return false;
         if (id != null ? !id.equals(admin.id) : admin.id != null) return false;
         if (name != null ? !name.equals(admin.name) : admin.name != null) return false;
+        if (awayModeEnabled != admin.awayModeEnabled) return false;
+        if (awayModeReassign != admin.awayModeReassign) return false;
+        if (avatar != null ? !avatar.equals(admin.avatar) : admin.avatar != null) return false;
+        if (teamIds != null ? !teamIds.equals(admin.teamIds) : admin.teamIds != null) return false;
+        if (adminIds != null ? !adminIds.equals(admin.adminIds) : admin.adminIds != null) return false;
+
         //noinspection RedundantIfStatement
         if (!type.equals(admin.type)) return false;
 
@@ -140,6 +199,11 @@ public class Admin extends TypedData implements Replier {
         result = 31 * result + (int) (updatedAt ^ (updatedAt >>> 32));
         result = 31 * result + (int) (open ^ (open >>> 32));
         result = 31 * result + (int) (closed ^ (closed >>> 32));
+        result = 31 * result + (awayModeEnabled ? 1 : 0);
+        result = 31 * result + (awayModeReassign ? 1 : 0);
+        result = 31 * result + (avatar != null ? avatar.hashCode() : 0);
+        result = 31 * result + (teamIds != null ? teamIds.hashCode() : 0);
+        result = 31 * result + (adminIds != null ? adminIds.hashCode() : 0);
         return result;
     }
 
@@ -151,6 +215,11 @@ public class Admin extends TypedData implements Replier {
             ", email='" + email + '\'' +
             ", createdAt=" + createdAt +
             ", updatedAt=" + updatedAt +
+            ", awayModeEnabled=" + awayModeEnabled +
+            ", awayModeReassign=" + awayModeReassign +
+            ", teamIds=" + teamIds +
+            ", adminIds=" + adminIds+
+            ", avatar=" + avatar+
             "} " + super.toString();
     }
 
