@@ -1,0 +1,21 @@
+{
+  "type": "company",
+  "company_id": "6",
+  "id": "5694b58371b5025a2a0003e6",
+  "created_at": 1452586372,
+  "updated_at": 1517835268,
+  "monthly_spend": 0,
+  "session_count": 0,
+  "user_count": 0,
+  "tags": {
+    "type": "tag.list",
+    "tags": []
+  },
+  "segments": {
+    "type": "segment.list",
+    "segments": []
+  },
+  "plan": {},
+  "custom_attributes": {
+  }
+}
