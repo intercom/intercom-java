@@ -5,10 +5,7 @@ import java.net.URI;
 public class Intercom {
 
     static class Context {
-        private volatile AuthKeyType authKeyType = AuthKeyType.API_KEY;
-        private volatile String apiKey;
         private volatile String token;
-        private volatile String appID;
         private volatile int connectionTimeout = 3 * 1000;
         private volatile int requestTimeout = 60 * 1000;
         private volatile boolean requestUsingCaches = false;
@@ -19,11 +16,6 @@ public class Intercom {
     private static volatile boolean useThreadLocal = false;
 
     private static volatile URI apiBaseURI = API_BASE_URI;
-
-    enum AuthKeyType {
-        API_KEY,
-        TOKEN
-    }
 
     private static final String VERSION = "2.7.0";
 
@@ -80,30 +72,9 @@ public class Intercom {
         Intercom.httpConnectorSupplier = supplier;
     }
 
-    public static String getAppID() {
-        return getContext().appID;
-    }
-
-    public static void setAppID(String appID) {
-        getContext().appID = appID;
-    }
-
     public static void setToken(String token) {
         Context context = getContext();
-        context.authKeyType = AuthKeyType.TOKEN;
         context.token = token;
-        context.apiKey = null;
-    }
-
-    public static String getApiKey() {
-        return getContext().apiKey;
-    }
-
-    public static void setApiKey(String apiKey) {
-        Context context = getContext();
-        context.authKeyType = AuthKeyType.API_KEY;
-        context.apiKey = apiKey;
-        context.token = null;
     }
 
     public static URI getApiBaseURI() {
@@ -112,10 +83,6 @@ public class Intercom {
 
     public static void setApiBaseURI(URI apiBaseURI) {
         Intercom.apiBaseURI = apiBaseURI;
-    }
-
-    static AuthKeyType getAuthKeyType() {
-        return getContext().authKeyType;
     }
 
     public static String getToken() {
