@@ -53,7 +53,6 @@ class CompanyUpdateBuilder {
         updatableCompany.setId(company.getId());
         updatableCompany.setCompanyID(company.getCompanyID());
         updatableCompany.setName(company.getName());
-        updatableCompany.setSessionCount(company.getSessionCount());
         updatableCompany.setMonthlySpend(company.getMonthlySpend());
         updatableCompany.setRemoteCreatedAt(company.getRemoteCreatedAt());
         updatableCompany.setIndustry(company.getIndustry());
