@@ -1,0 +1,61 @@
+{
+  "type": "visitor",
+  "id": "5b69565fa737210d1c2127f1",
+  "user_id": "6a347bc9-0b96-4925-bbbc-1f8b11f94c50",
+  "anonymous": true,
+  "email": "visitor@example.com",
+  "phone": "123456789",
+  "name": "A Visitor",
+  "pseudonym": "Violet Star from Singapore",
+  "avatar": {
+    "type": "avatar",
+    "image_url": "https://static.intercomassets.com/app/pseudonym_avatars_2018/violet-star.png"
+  },
+  "app_id": "qji82zks",
+  "companies": {
+    "type": "company.list",
+    "companies": []
+  },
+  "location_data": {
+    "type": "location_data",
+    "city_name": "Bandar Seri Begawan",
+    "continent_code": "AS",
+    "country_name": "Brunei Darussalam",
+    "latitude": 4.88,
+    "longitude": 114.93,
+    "postal_code": "1234",
+    "region_name": "a region",
+    "timezone": "Asia/Brunei",
+    "country_code": "BRN"
+  },
+  "last_request_at": 1533636256,
+  "last_seen_ip": "61.6.236.243",
+  "created_at": 1533630047,
+  "remote_created_at": null,
+  "signed_up_at": null,
+  "updated_at": 1533636257,
+  "session_count": 0,
+  "social_profiles": {
+    "type": "social_profile.list",
+    "social_profiles": []
+  },
+  "unsubscribed_from_emails": false,
+  "marked_email_as_spam": false,
+  "has_hard_bounced": false,
+  "user_agent_data": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.84 Safari/537.36",
+  "tags": {
+    "type": "tag.list",
+    "tags": []
+  },
+  "segments": {
+    "type": "segment.list",
+    "segments": []
+  },
+  "custom_attributes": {"test_string": "visitor string", "test_integer": 123},
+  "referrer": "the referrer",
+  "utm_campaign": "utm campaign",
+  "utm_content": "utm content",
+  "utm_medium": "utm medium",
+  "utm_source": "utm source",
+  "utm_term": "utm term"
+}

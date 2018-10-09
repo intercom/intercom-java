@@ -82,6 +82,7 @@ Resources this API supports:
 
 - [Users](#users)
 - [Contacts](#contacts)
+- [Visitors](#visitors)
 - [Companies](#companies)
 - [Admins](#admins)
 - [Events](#events)
@@ -246,6 +247,37 @@ Contact.deleteByUserID(contact.getUserID());
 
 // Convert a contact
 User converted = Contact.convert(contact, user);
+```
+
+### Visitors
+```java
+// Find visitor by ID
+Visitor visitor = Visitor.findByID("5b69565fa737210d1c2127f1");
+
+// Find visitor by User ID
+Visitor visitor = Visitor.findByUserID("6a347bc9-0b96-4925-bbbc-1f8b11f94c50");
+
+// Update a visitor
+Visitor visitor = Visitor.findByID("5b69565fa737210d1c2127f1");
+visitor.setName("Visitor's Name");
+Visitor.update(visitor);
+
+// Delete a visitor by ID
+Visitor.delete("5b69565fa737210d1c2127f1");
+
+// Delete a visitor
+Visitor visitor = Visitor.findByUserID("6a347bc9-0b96-4925-bbbc-1f8b11f94c50");
+Visitor.delete(visitor);
+
+// Convert a visitor to a lead
+Visitor visitor = Visitor.findByUserID("6a347bc9-0b96-4925-bbbc-1f8b11f94c50");
+Contact contact = Visitor.convertToContact(visitor);
+
+// Convert a visitor to a user
+Visitor visitor = Visitor.findByUserID("6a347bc9-0b96-4925-bbbc-1f8b11f94c50");
+User user = new User();
+user.setUserId("1");
+User convertUser = Visitor.convertToUser(visitor, user);
 ```
 
 ### Companies
