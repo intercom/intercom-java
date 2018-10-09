@@ -17,6 +17,18 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Conversation extends TypedData {
 
+    @SuppressWarnings("UnusedDeclaration")
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private static class ConversationRead extends TypedData {
+
+        @JsonProperty("read")
+        private boolean read;
+
+        public ConversationRead() {
+            this.read = true;
+        }
+    }
+
     private static final HashMap<String, String> SENTINEL = Maps.newHashMap();
     private static final List<String> DISPLAY_AS_FORMATS = Lists.newArrayList("plaintext", "html");
     static final String MESSAGE_TYPE_ASSIGNMENT = "assignment";
@@ -69,6 +81,16 @@ public class Conversation extends TypedData {
             .build();
         return new HttpClient(uri)
             .post(Conversation.class, new AdminReply.AdminStringReply(reply));
+    }
+
+    public static Conversation markAsRead(String id) {
+        final URI uri = UriBuilder.newBuilder()
+                .path("conversations")
+                .path(id)
+                .build();
+
+        return new HttpClient(uri)
+                .put(Conversation.class, new ConversationRead());
     }
 
     public static UserMessage create(UserMessage message) {
