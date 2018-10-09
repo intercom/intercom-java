@@ -37,7 +37,6 @@ public class Company extends TypedData {
         final CompanyWithStringPlan entity = new CompanyWithStringPlan();
         entity.setCompanyID(company.getCompanyID());
         entity.setName(company.getName());
-        entity.setSessionCount(company.getSessionCount());
         entity.setMonthlySpend(company.getMonthlySpend());
         entity.setRemoteCreatedAt(company.getRemoteCreatedAt());
         entity.setIndustry(company.getIndustry());
