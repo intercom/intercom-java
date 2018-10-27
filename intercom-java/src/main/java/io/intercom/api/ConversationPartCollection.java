@@ -23,4 +23,8 @@ public class ConversationPartCollection extends TypedDataCollection<Conversation
     public ConversationPartCollection nextPage() {
         return new ConversationPartCollection();
     }
+
+    @JsonProperty("total_count")
+    public int total_count;
+
 }

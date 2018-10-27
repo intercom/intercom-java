@@ -211,6 +211,9 @@ public class Conversation extends TypedData {
     @JsonProperty("links")
     private Map<String, URI> links;
 
+    @JsonProperty("customers")
+    private List<Customer> customers;
+
     public Conversation() {
     }
 
@@ -295,6 +298,14 @@ public class Conversation extends TypedData {
         return read;
     }
 
+    public List<Customer> getCustomers() {
+        if (customers == null) {
+            customers= find(this.getId()).getCustomers();
+        }
+
+        return customers;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -316,6 +327,8 @@ public class Conversation extends TypedData {
             return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (links != null ? !links.equals(that.links) : that.links != null) return false;
+        if (customers != null ? !customers.equals(that.customers) : that.customers != null)
+            return false;
         if (!type.equals(that.type)) return false;
         //noinspection RedundantIfStatement
         if (user != null ? !user.equals(that.user) : that.user != null) return false;
@@ -338,6 +351,7 @@ public class Conversation extends TypedData {
         result = 31 * result + (open ? 1 : 0);
         result = 31 * result + (read ? 1 : 0);
         result = 31 * result + (links != null ? links.hashCode() : 0);
+        result = 31 * result + (customers != null ? customers.hashCode() : 0);
         return result;
     }
 
@@ -357,6 +371,7 @@ public class Conversation extends TypedData {
             ", open=" + open +
             ", read=" + read +
             ", links=" + links +
+            ", customers=" + customers +
             "} " + super.toString();
     }
 }
