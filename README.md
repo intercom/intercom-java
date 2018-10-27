@@ -572,6 +572,9 @@ userReply.setBody("Mighty fine shindig");
 userReply.setAttachmentUrls(new String[]{"http://www.example.com/attachment.jpg"}); // optional - list of attachments
 System.out.println(MapperSupport.objectMapper().writeValueAsString(userReply));
 Conversation.reply("66", userReply);
+
+// run assignment rules
+Conversation.runAssignmentRules("19240007891");
 ```
 
 ### Webhooks
