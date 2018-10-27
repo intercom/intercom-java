@@ -572,6 +572,23 @@ userReply.setBody("Mighty fine shindig");
 userReply.setAttachmentUrls(new String[]{"http://www.example.com/attachment.jpg"}); // optional - list of attachments
 System.out.println(MapperSupport.objectMapper().writeValueAsString(userReply));
 Conversation.reply("66", userReply);
+
+// reply to last users' conversation as an admin
+ReplyToLastReply replyToLastReplay = new ReplyToLastReply();
+replyToLastReplay.setIntercomUserID("5310d8e8598c9a0b24000005");
+replyToLastReplay.setAdminId("1");
+replyToLastReplay.setBody("These apples are healthsome");
+replyToLastReplay.setMessageType("comment");
+replyToLastReplay.setType("admin");
+Conversation.replyToLastConversation(replyToLastReplay);
+
+// reply to last users' conversation as a user
+ReplyToLastReply replyToLastReplay = new ReplyToLastReply();
+replyToLastReplay.setIntercomUserID("5310d8e8598c9a0b24000005");
+replyToLastReplay.setBody("Mighty fine shindig");
+replyToLastReplay.setMessageType("comment");
+replyToLastReplay.setType("user");
+Conversation.replyToLastConversation(replyToLastReplay);
 ```
 
 ### Webhooks
