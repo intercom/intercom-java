@@ -485,10 +485,16 @@ while(notes.hasNext()) {
 ```java
 // send a message to a user
 User user = new User().setId("5310d8e8598c9a0b24000005");
+// Alternatively identify user by user_id or email
+//   User user = new User().setUserId("1")
+//   User user = new User().setEmail("malcolm@serenity.io")
+Contact contact = new Contact().setId("5ab313046e4997e35bc13e7c");
+// Alternatively identify contact by user_id
+//   Contact contact = new Contact().setUserId("697ea3e0-227d-4d70-b776-1652e94f9583");
 Admin admin = new Admin().setId("1");
 AdminMessage adminMessage = new AdminMessage()
     .setAdmin(admin)
-    .setUser(user)
+    .setUser(user) // or .setContact(contact)
     .setSubject("This Land")
     .setBody("Har har har! Mine is an evil laugh!")
     .setMessageType("email")
