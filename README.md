@@ -603,6 +603,29 @@ Conversation.runAssignmentRules("19240007891");
 
 // mark conversation as read
 Conversation.markAsRead("66");
+
+// admin adding participant to conversation
+AdminAddParticipant adminAddParticipant = new AdminAddParticipant();
+adminAddParticipant.setAdminId("248698");
+Participant participant = new Participant();
+participant.setIntercomUserId("5310d8e8598c9a0b24000005");
+// participant.setUserId("2"); // or find by user_id
+// participant.setEmail("fantastic@serenity.io"); // or find by user_id
+adminAddParticipant.setParticipant(participant);
+ParticipantResponse participantResponse = Conversation.addParticipant("19240007891", adminAddParticipant);
+
+// user adding participant to conversation
+UserAddParticipant userAddParticipant = new UserAddParticipant();
+userAddParticipant.setIntercomUserId("575b4dbbd7f9c87f240008c5");
+Participant participant = new Participant();
+participant.setIntercomUserId("5310d8e8598c9a0b24000005");
+// participant.setUserId("2"); // or find by user_id
+// participant.setEmail("fantastic@serenity.io"); // or find by user_id
+userAddParticipant.setParticipant(participant);
+ParticipantResponse participantResponse = Conversation.addParticipant("19240007891", userAddParticipant);
+
+// removing participant from conversation
+ParticipantResponse participantResponse = Conversation.removeParticipant("19240007891", "248698", "564320845c88872b60000012");
 ```
 
 ### Webhooks
