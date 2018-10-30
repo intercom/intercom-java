@@ -236,14 +236,7 @@ class HttpClient {
     }
 
     private Map<String, String> createAuthorizationHeaders() {
-        switch (Intercom.getAuthKeyType()) {
-            case API_KEY:
-                headers.put("Authorization", "Basic " + generateAuthString(Intercom.getAppID(),Intercom.getApiKey()));
-                break;
-            case TOKEN:
-                headers.put("Authorization", "Basic " + generateAuthString(Intercom.getToken(),""));
-                break;
-        }
+        headers.put("Authorization", "Basic " + generateAuthString(Intercom.getToken(),""));
         return headers;
     }
 

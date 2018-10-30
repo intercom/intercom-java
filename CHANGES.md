@@ -1,5 +1,13 @@
 ### Changes
 
+### 2.7.0
+This update includes the removal of an option which is not possible viua the API.
+There was an option in the SDK to manually update the company sessions account but this is not possible vai the API.
+It is doubbtful that it was being used but just in case we will make this release 2.7.0
+
+#232 - Add the visitor endpoint functionality for the java SDK.
+#233 - Remove option to set company session count since it returns error as it is not possible to set it
+
 #### 2.6.0
 There a number of changed in this version so updating to 2.6
 Highlights are adding more attributes to the company resource and new features on admin resource.
