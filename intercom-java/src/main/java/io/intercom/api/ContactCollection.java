@@ -8,12 +8,10 @@ import java.util.List;
 
 @SuppressWarnings("UnusedDeclaration")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ContactCollection extends TypedDataCollection<Contact> implements Iterator<Contact> {
+public class ContactCollection extends TypedDataCollection<Contact> {
 
-    protected TypedDataCollectionIterator<Contact> iterator;
 
     public ContactCollection() {
-        iterator = new TypedDataCollectionIterator<Contact>(this);
     }
 
     public ContactCollection(List<Contact> contacts) {
@@ -32,17 +30,4 @@ public class ContactCollection extends TypedDataCollection<Contact> implements I
     public ContactCollection nextPage() {
         return fetchNextPage(ContactCollection.class);
     }
-
-    public boolean hasNext() {
-        return iterator.hasNext();
-    }
-
-    public Contact next() {
-        return iterator.next();
-    }
-
-    public void remove() {
-        iterator.remove();
-    }
-
 }

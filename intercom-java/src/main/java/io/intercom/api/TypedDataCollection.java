@@ -9,13 +9,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import java.net.URI;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("UnusedDeclaration")
 @JsonIgnoreProperties(value={"page"}, ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public abstract class TypedDataCollection<T extends TypedData> extends TypedData {
+public abstract class TypedDataCollection<T extends TypedData> extends TypedData implements Iterator<T> {
 
     public static final String NEXT_PAGE_REL = "next";
 
@@ -26,6 +27,12 @@ public abstract class TypedDataCollection<T extends TypedData> extends TypedData
 
     @JsonProperty("type")
     protected String type;
+
+    private TypedDataCollectionIterator<T> iterator;
+
+    public TypedDataCollection() {
+        iterator = new TypedDataCollectionIterator<>(this);
+    }
 
     public abstract TypedDataCollection<T> nextPage();
 
@@ -53,6 +60,21 @@ public abstract class TypedDataCollection<T extends TypedData> extends TypedData
 
     public String getType() {
         return type;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return iterator.hasNext();
+    }
+
+    @Override
+    public T next() {
+        return iterator.next();
+    }
+
+    @Override
+    public void remove() {
+        iterator.remove();
     }
 
     @Override
