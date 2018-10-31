@@ -30,7 +30,7 @@ public abstract class TypedDataCollection<T extends TypedData> extends TypedData
 
     private TypedDataCollectionIterator<T> iterator;
 
-    public TypedDataCollection() {
+    {
         iterator = new TypedDataCollectionIterator<>(this);
     }
 
