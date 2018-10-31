@@ -183,6 +183,9 @@ public class Conversation extends TypedData {
     @JsonProperty("conversation_message")
     private ConversationMessage conversationMessage;
 
+    @JsonProperty("conversation_rating")
+    private ConversationRating conversationRating;
+
     @JsonProperty("user")
     private User user;
 
@@ -259,6 +262,10 @@ public class Conversation extends TypedData {
         return conversationMessage;
     }
 
+    public ConversationRating getConversationRating() {
+        return conversationRating;
+    }
+
     public User getUser() {
         return user;
     }
@@ -327,6 +334,8 @@ public class Conversation extends TypedData {
         if (assignee != null ? !assignee.equals(that.assignee) : that.assignee != null) return false;
         if (conversationMessage != null ? !conversationMessage.equals(that.conversationMessage) : that.conversationMessage != null)
             return false;
+        if (conversationRating != null ? !conversationRating.equals(that.conversationRating) : that.conversationRating != null)
+            return false;
         if (conversationPartCollection != null ? !conversationPartCollection.equals(that.conversationPartCollection) : that.conversationPartCollection != null)
             return false;
         if (tagCollection != null ? !tagCollection.equals(that.tagCollection) : that.tagCollection != null)
@@ -347,6 +356,7 @@ public class Conversation extends TypedData {
         result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (state != null ? state.hashCode() : 0);
         result = 31 * result + (conversationMessage != null ? conversationMessage.hashCode() : 0);
+        result = 31 * result + (conversationRating != null ? conversationRating.hashCode() : 0);
         result = 31 * result + (user != null ? user.hashCode() : 0);
         result = 31 * result + (assignee != null ? assignee.hashCode() : 0);
         result = 31 * result + (int) (createdAt ^ (createdAt >>> 32));
@@ -379,6 +389,7 @@ public class Conversation extends TypedData {
             ", state=" + state +
             ", read=" + read +
             ", links=" + links +
+            ", conversationRating=" + conversationRating +
             "} " + super.toString();
     }
 }
