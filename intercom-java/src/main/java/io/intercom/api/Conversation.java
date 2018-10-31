@@ -24,12 +24,14 @@ public class Conversation extends TypedData {
     static final String MESSAGE_TYPE_NOTE = "note";
     static final String MESSAGE_TYPE_CLOSE = "close";
     static final String MESSAGE_TYPE_OPEN = "open";
+    static final String MESSAGE_TYPE_SNOOZED = "snoozed";
     static final List<String> MESSAGE_TYPES = Lists.newArrayList(
         MESSAGE_TYPE_ASSIGNMENT,
         MESSAGE_TYPE_COMMENT,
         MESSAGE_TYPE_NOTE,
         MESSAGE_TYPE_CLOSE,
-        MESSAGE_TYPE_OPEN
+        MESSAGE_TYPE_OPEN,
+        MESSAGE_TYPE_SNOOZED
         );
 
     public static Conversation find(String id) throws InvalidException, AuthorizationException {
@@ -199,6 +201,9 @@ public class Conversation extends TypedData {
     @JsonProperty("waiting_since")
     private long waitingSince;
 
+    @JsonProperty("snoozed_until")
+    private long snoozedUntil;
+
     @JsonProperty("conversation_parts")
     private ConversationPartCollection conversationPartCollection;
 
@@ -210,6 +215,9 @@ public class Conversation extends TypedData {
 
     @JsonProperty("read")
     private boolean read;
+
+    @JsonProperty("state")
+    private String state;
 
     @JsonProperty("links")
     private Map<String, URI> links;
@@ -278,6 +286,10 @@ public class Conversation extends TypedData {
         return waitingSince;
     }
 
+    public long getSnoozedUntil() {
+        return snoozedUntil;
+    }
+
     public ConversationPartCollection getConversationPartCollection() {
         if (conversationPartCollection == null) {
             conversationPartCollection = find(this.getId()).getConversationPartCollection();
@@ -302,6 +314,10 @@ public class Conversation extends TypedData {
         return read;
     }
 
+    public String getState() {
+        return state;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -314,6 +330,7 @@ public class Conversation extends TypedData {
         if (read != that.read) return false;
         if (updatedAt != that.updatedAt) return false;
         if (waitingSince != that.waitingSince) return false;
+        if (snoozedUntil != that.snoozedUntil) return false;
         if (assignee != null ? !assignee.equals(that.assignee) : that.assignee != null) return false;
         if (conversationMessage != null ? !conversationMessage.equals(that.conversationMessage) : that.conversationMessage != null)
             return false;
@@ -325,6 +342,7 @@ public class Conversation extends TypedData {
             return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (links != null ? !links.equals(that.links) : that.links != null) return false;
+        if (!state.equals(that.state)) return false;
         if (!type.equals(that.type)) return false;
         //noinspection RedundantIfStatement
         if (user != null ? !user.equals(that.user) : that.user != null) return false;
@@ -336,6 +354,7 @@ public class Conversation extends TypedData {
     public int hashCode() {
         int result = type.hashCode();
         result = 31 * result + (id != null ? id.hashCode() : 0);
+        result = 31 * result + (state != null ? state.hashCode() : 0);
         result = 31 * result + (conversationMessage != null ? conversationMessage.hashCode() : 0);
         result = 31 * result + (conversationRating != null ? conversationRating.hashCode() : 0);
         result = 31 * result + (user != null ? user.hashCode() : 0);
@@ -343,6 +362,7 @@ public class Conversation extends TypedData {
         result = 31 * result + (int) (createdAt ^ (createdAt >>> 32));
         result = 31 * result + (int) (updatedAt ^ (updatedAt >>> 32));
         result = 31 * result + (int) (waitingSince ^ (waitingSince >>> 32));
+        result = 31 * result + (int) (snoozedUntil ^ (snoozedUntil >>> 32));
         result = 31 * result + (conversationPartCollection != null ? conversationPartCollection.hashCode() : 0);
         result = 31 * result + (tagCollection != null ? tagCollection.hashCode() : 0);
         result = 31 * result + (open ? 1 : 0);
@@ -362,9 +382,11 @@ public class Conversation extends TypedData {
             ", createdAt=" + createdAt +
             ", updatedAt=" + updatedAt +
             ", waitingSince=" + waitingSince +
+            ", snoozedUntil=" + snoozedUntil +
             ", conversationPartCollection=" + conversationPartCollection +
             ", tagCollection=" + tagCollection +
             ", open=" + open +
+            ", state=" + state +
             ", read=" + read +
             ", links=" + links +
             ", conversationRating=" + conversationRating +
