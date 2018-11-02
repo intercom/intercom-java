@@ -8,11 +8,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @SuppressWarnings("UnusedDeclaration")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EventCollection  extends TypedDataCollection<Event> implements Iterator<Event> {
-  protected TypedDataCollectionIterator<Event> iterator;
+public class EventCollection  extends TypedDataCollection<Event> {
 
   public EventCollection() {
-    iterator = new TypedDataCollectionIterator<Event>(this);
   }
 
   public EventCollection(List<Event> events) {
@@ -30,17 +28,5 @@ public class EventCollection  extends TypedDataCollection<Event> implements Iter
   @Override
   public EventCollection nextPage() {
     return fetchNextPage(EventCollection.class);
-  }
-
-  public boolean hasNext() {
-    return iterator.hasNext();
-  }
-
-  public Event next() {
-    return iterator.next();
-  }
-
-  public void remove() {
-    iterator.remove();
   }
 }
