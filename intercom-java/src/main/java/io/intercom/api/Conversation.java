@@ -134,6 +134,11 @@ public class Conversation extends TypedData {
         return response;
     }
 
+    public static Conversation runAssignmentRules(String id) {
+        final HttpClient resource = new HttpClient(UriBuilder.newBuilder().path("conversations").path(id).path("run_assignment_rules").build());
+        return resource.post(Conversation.class, null);
+    }
+
     static void validateAdminReplyRequest(AdminReply reply) {
 
         validateMessageType(reply);
