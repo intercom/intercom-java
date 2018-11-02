@@ -578,6 +578,18 @@ AdminReply adminReply = new AdminReply(admin);
 adminReply.setMessageType("close");
 Conversation.reply("66", adminReply);
 
+// admin snooze
+Admin admin = new Admin().setId("1");
+AdminReply adminReply = new AdminReply(admin);
+adminReply.setSnoozedUntil(1549092382);
+Conversation.reply("66", adminReply);
+
+// admin open / unsnooze
+Admin admin = new Admin().setId("1");
+AdminReply adminReply = new AdminReply(admin);
+adminReply.setMessageType("open");
+Conversation.reply("66", adminReply);
+
 // user reply
 User user1 = new User().setId("5310d8e8598c9a0b24000005");
 UserReply userReply = new UserReply(user1);
@@ -585,6 +597,12 @@ userReply.setBody("Mighty fine shindig");
 userReply.setAttachmentUrls(new String[]{"http://www.example.com/attachment.jpg"}); // optional - list of attachments
 System.out.println(MapperSupport.objectMapper().writeValueAsString(userReply));
 Conversation.reply("66", userReply);
+
+// run assignment rules
+Conversation.runAssignmentRules("19240007891");
+
+// mark conversation as read
+Conversation.markAsRead("66");
 ```
 
 ### Webhooks
