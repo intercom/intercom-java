@@ -51,6 +51,11 @@ public class Conversation extends TypedData {
         return resource.get(Conversation.class);
     }
 
+    public static Conversation find(String id, Map<String, String> params) throws InvalidException, AuthorizationException {
+        final HttpClient resource = new HttpClient(UriBuilder.newBuilder().path("conversations").path(id).query(params).build());
+        return resource.get(Conversation.class);
+    }
+
     public static ConversationCollection list() throws InvalidException, AuthorizationException {
         return DataResource.list(SENTINEL, "conversations", ConversationCollection.class);
     }
@@ -127,6 +132,11 @@ public class Conversation extends TypedData {
         // user returns null
         // response.setUser(adminMessageResponse.getFrom());
         return response;
+    }
+
+    public static Conversation runAssignmentRules(String id) {
+        final HttpClient resource = new HttpClient(UriBuilder.newBuilder().path("conversations").path(id).path("run_assignment_rules").build());
+        return resource.post(Conversation.class, null);
     }
 
     static void validateAdminReplyRequest(AdminReply reply) {

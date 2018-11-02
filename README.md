@@ -389,6 +389,19 @@ EventCollection events = Event.list(params);
 while (events.hasNext()) {
     System.out.println(events.next().getEventName());
 }
+
+// List event summaries of a user
+Map<String, String> params = Maps.newHashMap();
+params.put("type", "user");
+params.put("user_id", "1");
+// Alternatively list by Intercom ID
+// params.put("intercom_user_id", "541a144b201ebf2ec5000001");
+// Or by email
+// params.put("email", "river@serenity.io");
+EventSummaryCollection eventSummaryCollection = Event.listSummary(params);
+for(EventSummary eventSummary : eventSummaryCollection.getEventSummaries()){
+    System.out.println(eventSummary);
+}
 ```
 
 ### Tags
@@ -584,6 +597,9 @@ userReply.setBody("Mighty fine shindig");
 userReply.setAttachmentUrls(new String[]{"http://www.example.com/attachment.jpg"}); // optional - list of attachments
 System.out.println(MapperSupport.objectMapper().writeValueAsString(userReply));
 Conversation.reply("66", userReply);
+
+// run assignment rules
+Conversation.runAssignmentRules("19240007891");
 
 // mark conversation as read
 Conversation.markAsRead("66");
