@@ -5,6 +5,8 @@ import com.google.common.collect.Lists;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.List;
+
 import static io.intercom.api.TestSupport.load;
 import static org.junit.Assert.*;
 
@@ -213,6 +215,30 @@ public class EventTest {
         assertEquals("pi@example.org", eventWithMetadata.getMetadata().get("invitee_email"));
         assertEquals("ADDAFRIEND", eventWithMetadata.getMetadata().get("invite_code"));
         assertEquals(null, eventWithMetadata.getMetadata().get("non_existing_key"));
+    }
+
+    @Test
+    public void testEventSummaryParsing() throws Exception {
+        String json = load("event_summary.json");
+        final EventSummaryCollection eventSummaryCollection = mapper.readValue(json, EventSummaryCollection.class);
+        assertEquals("event.summary", eventSummaryCollection.getType());
+        assertEquals("wash@serenity.io", eventSummaryCollection.getEmail());
+        assertEquals("530370b477ad7120001d", eventSummaryCollection.getIntercomUserID());
+        assertEquals("25",eventSummaryCollection.getUserID());
+        List<EventSummary> eventSummaries = eventSummaryCollection.getEventSummaries();
+        assertEquals(3, eventSummaries.size());
+
+        assertEquals("test-event", eventSummaries.get(0).getName());
+        assertEquals("2016-12-22T03:54:57.000Z", eventSummaries.get(0).getFirstOccurredAtString());
+        assertEquals("2018-10-10T06:51:02.000Z", eventSummaries.get(0).getLastOccurredAtString());
+        assertEquals(8, eventSummaries.get(0).getCount());
+        assertEquals(null, eventSummaries.get(0).getDescription());
+
+        assertEquals("clicked-button", eventSummaries.get(1).getName());
+        assertEquals("2018-02-20T06:40:16.000Z", eventSummaries.get(1).getFirstOccurredAtString());
+        assertEquals("2018-02-20T06:40:16.000Z", eventSummaries.get(1).getLastOccurredAtString());
+        assertEquals(1, eventSummaries.get(1).getCount());
+        assertEquals("Clicking home page button", eventSummaries.get(1).getDescription());
     }
 }
 
