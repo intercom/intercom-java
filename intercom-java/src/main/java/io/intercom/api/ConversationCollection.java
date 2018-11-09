@@ -8,13 +8,11 @@ import java.util.List;
 
 @SuppressWarnings("UnusedDeclaration")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ConversationCollection extends TypedDataCollection<Conversation> implements Iterator<Conversation> {
+public class ConversationCollection extends TypedDataCollection<Conversation> {
 
-    protected TypedDataCollectionIterator<Conversation> iterator;
 
     public ConversationCollection() {
         type = "conversation.list";
-        iterator = new TypedDataCollectionIterator<Conversation>(this);
     }
 
     @SuppressWarnings("EmptyMethod")
@@ -27,18 +25,4 @@ public class ConversationCollection extends TypedDataCollection<Conversation> im
     public ConversationCollection nextPage() {
         return fetchNextPage(ConversationCollection.class);
     }
-
-
-    public boolean hasNext() {
-        return iterator.hasNext();
-    }
-
-    public Conversation next() {
-        return iterator.next();
-    }
-
-    public void remove() {
-        iterator.remove();
-    }
-
 }

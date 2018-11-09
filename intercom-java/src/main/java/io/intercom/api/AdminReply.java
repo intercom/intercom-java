@@ -32,6 +32,11 @@ public class AdminReply extends Reply<Admin> {
             return reply.getMessageType();
         }
 
+        @JsonProperty("snoozed_until")
+        public long getSnoozedUntil() {
+            return reply.getSnoozedUntil();
+        }
+
         @JsonProperty("body")
         public String getBody() {
             return reply.getBody();
@@ -56,6 +61,9 @@ public class AdminReply extends Reply<Admin> {
     @JsonProperty("assignee_id")
     private String assigneeID;
 
+    @JsonProperty("snoozed_until")
+    private long snoozedUntil;
+
     public AdminReply(Admin admin) {
         this.from = admin;
     }
@@ -71,6 +79,16 @@ public class AdminReply extends Reply<Admin> {
     public Reply<Admin> setAssigneeID(String assigneeID) {
         this.assigneeID = assigneeID;
         this.setMessageType(Conversation.MESSAGE_TYPE_ASSIGNMENT);
+        return this;
+    }
+
+    public long getSnoozedUntil() {
+        return snoozedUntil;
+    }
+
+    public Reply<Admin> setSnoozedUntil(long snoozedUntil) {
+        this.snoozedUntil = snoozedUntil;
+        this.setMessageType(Conversation.MESSAGE_TYPE_SNOOZED);
         return this;
     }
 
