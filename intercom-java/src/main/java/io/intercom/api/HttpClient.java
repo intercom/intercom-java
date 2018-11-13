@@ -178,19 +178,18 @@ class HttpClient {
     }
 
     private boolean shouldSkipResponseEntity(JavaType javaType, HttpURLConnection conn, int responseCode) {
-        return responseCode == 204 || Void.class.equals(javaType.getRawClass()) || "DELETE".equals(conn.getRequestMethod());
+        return responseCode == 204 || Void.class.equals(javaType.getRawClass());
     }
 
     private <T> T readEntity(HttpURLConnection conn, int responseCode, JavaType javaType) throws IOException {
         final InputStream entityStream = conn.getInputStream();
         try {
+            final String text = CharStreams.toString(new InputStreamReader(entityStream));
             if (logger.isDebugEnabled()) {
-                final String text = CharStreams.toString(new InputStreamReader(entityStream));
                 logger.debug("api server response status[{}] --\n{}\n-- ", responseCode, text);
-                return objectMapper.readValue(text, javaType);
-            } else {
-                return objectMapper.readValue(entityStream, javaType);
             }
+            if (text.isEmpty()) return null;
+            return objectMapper.readValue(text, javaType);
         } finally {
             IOUtils.closeQuietly(entityStream);
         }
