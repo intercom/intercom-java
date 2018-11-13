@@ -42,6 +42,15 @@ public class Subscription extends TypedData {
         return DataResource.list(SENTINEL, "subscriptions", SubscriptionCollection.class);
     }
 
+    public static Subscription ping(String id) throws InvalidException, AuthorizationException {
+        final HttpClient resource = new HttpClient(UriBuilder.newBuilder().path("subscriptions").path(id).path("ping").build());
+        return resource.post(Subscription.class, null);
+    }
+
+    public static Subscription ping(Subscription subscription) throws InvalidException, AuthorizationException {
+        return ping(subscription.getId());
+    }
+
     public static NotificationCollection sentFeed(String id) throws InvalidException, AuthorizationException {
         final URI feedURI = UriBuilder.newBuilder()
             .path("subscriptions")
@@ -72,7 +81,15 @@ public class Subscription extends TypedData {
 
         private final static String CONVERSATION_NAME = "conversation";
 
+        private final static String CONVERSATION_PART_NAME = "conversation_part";
+
         private static final String USER_NAME = "user";
+
+        private static final String CONTACT_NAME = "contact";
+
+        private static final String VISITOR_NAME = "visitor";
+
+        private static final String EVENT_NAME = "event";
 
         public static final Topic PING = new Topic("ping", SUBTYPE_WILDCARD);
 
@@ -92,19 +109,41 @@ public class Subscription extends TypedData {
 
         public static final Topic CONVERSATION_ADMIN_CLOSED = new Topic(CONVERSATION_NAME, "admin.closed");
 
-        public static final Topic CONVERSATION_ADMIN_OPEN = new Topic(CONVERSATION_NAME, "admin.open");
+        public static final Topic CONVERSATION_ADMIN_OPEN = new Topic(CONVERSATION_NAME, "admin.opened");
 
         public static final Topic CONVERSATION_ADMIN_NOTED = new Topic(CONVERSATION_NAME, "admin.noted");
+
+        public static final Topic CONVERSATION_ADMIN_SINGLE_CREATED = new Topic(CONVERSATION_NAME, "admin.single.created");
+
+        public static final Topic CONVERSATION_PART_TAG_CREATED= new Topic(CONVERSATION_PART_NAME, "tag.created");
 
         public static final Topic USER = new Topic(USER_NAME, SUBTYPE_WILDCARD);
 
         public static final Topic USER_CREATED = new Topic(USER_NAME, "created");
+
+        public static final Topic USER_DELETED = new Topic(USER_NAME, "deleted");
+
+        public static final Topic USER_EMAIL_UPDATED = new Topic(USER_NAME, "email.updated");
 
         public static final Topic USER_UNSUBSCRIBED = new Topic(USER_NAME, "unsubscribed");
 
         public static final Topic USER_TAG_CREATED = new Topic(USER_NAME, "tag.created");
 
         public static final Topic USER_TAG_DELETED = new Topic(USER_NAME, "tag.deleted");
+
+        public static final Topic CONTACT = new Topic(CONTACT_NAME, SUBTYPE_WILDCARD);
+
+        public static final Topic CONTACT_ADDED_EMAIL = new Topic(CONTACT_NAME, "added_email");
+
+        public static final Topic CONTACT_CREATED= new Topic(CONTACT_NAME, "created");
+
+        public static final Topic CONTACT_SIGNED_UP = new Topic(CONTACT_NAME, "signed_up");
+
+        public static final Topic VISITOR = new Topic(VISITOR_NAME, SUBTYPE_WILDCARD);
+
+        public static final Topic VISITOR_SIGNED_UP = new Topic(VISITOR_NAME, "signed_up");
+
+        public static final Topic EVENT_CREATED = new Topic(EVENT_NAME, "created");
 
         public static final Topic ALL_TOPIC = valueOf("all");
 

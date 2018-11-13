@@ -389,6 +389,19 @@ EventCollection events = Event.list(params);
 while (events.hasNext()) {
     System.out.println(events.next().getEventName());
 }
+
+// List event summaries of a user
+Map<String, String> params = Maps.newHashMap();
+params.put("type", "user");
+params.put("user_id", "1");
+// Alternatively list by Intercom ID
+// params.put("intercom_user_id", "541a144b201ebf2ec5000001");
+// Or by email
+// params.put("email", "river@serenity.io");
+EventSummaryCollection eventSummaryCollection = Event.listSummary(params);
+for(EventSummary eventSummary : eventSummaryCollection.getEventSummaries()){
+    System.out.println(eventSummary);
+}
 ```
 
 ### Tags
@@ -585,6 +598,9 @@ userReply.setAttachmentUrls(new String[]{"http://www.example.com/attachment.jpg"
 System.out.println(MapperSupport.objectMapper().writeValueAsString(userReply));
 Conversation.reply("66", userReply);
 
+// run assignment rules
+Conversation.runAssignmentRules("19240007891");
+
 // mark conversation as read
 Conversation.markAsRead("66");
 ```
@@ -597,12 +613,36 @@ Subscription subscription = new Subscription();
 subscription.setUrl(new URI("https://example.org/webhooks/1"));
 subscription.addTopic(Subscription.Topic.USER_CREATED);
 subscription.addTopic(Subscription.Topic.USER_TAG_CREATED);
-subscription.addTopic(Subscription.Topic.COMPANY);
-subscription.setAppID("pi3243fa");
 Subscription.create(subscription);
+
+// create a subscribtion and subscribe to events
+Subscription subscription = new Subscription();
+subscription.addTopic(Subscription.Topic.EVENT_CREATED);
+Map<String,ArrayList<String>> metadata = new HashMap<String, ArrayList<String>>();
+ArrayList<String> events = new ArrayList<String>(Arrays.asList("cart"));
+metadata.put("event_names", events);
+subscription.setMetadata(metadata);
+subscription.setMetadata(metadata);
+Subscription.create(subscription);
+
+// update a subscription
+Subscription subscription = Subscription.find("nsub_60ca7690-4020-11e4-b789-4961958e51bd");
+subscription.addTopic(Subscription.Topic.COMPANY_CREATED);
+Subscription updatedSubscription = Subscription.update(subscription);
+
+// delete a subscription
+Subscription subscription = new Subscription();
+subscription.setId("nsub_83793feb-8394-4cb6-91d6-68ef4dd08a8e");
+Subscription deletedSubscription = Subscription.delete(subscription);
 
 // find a subscription
 subscription = Subscription.find("nsub_60ca7690-4020-11e4-b789-4961958e51bd");
+
+// ping a subscription by ID
+Subscription.ping("nsub_60ca7690-4020-11e4-b789-4961958e51bd");
+// ping a subscription by subscription object
+subscription = Subscription.find("nsub_60ca7690-4020-11e4-b789-4961958e51bd");
+Subscription.ping(subscription);
 
 // list subscriptions
 SubscriptionCollection list = Subscription.list();

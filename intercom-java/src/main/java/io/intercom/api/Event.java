@@ -8,10 +8,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,6 +55,14 @@ public class Event extends TypedData {
             throw new InvalidException("an event query must include an email, user_id or intercom_user_id parameter");
         }
         return DataResource.list(params, "events", EventCollection.class);
+    }
+
+    public static EventSummaryCollection listSummary(Map<String, String> params) throws InvalidException, AuthorizationException {
+        if ((!params.containsKey("email")) && (!params.containsKey("user_id")) && (!params.containsKey("intercom_user_id"))) {
+            throw new InvalidException("an event query must include an email, user_id or intercom_user_id parameter");
+        }
+        params.put("summary", "true");
+        return DataResource.list(params, "events", EventSummaryCollection.class);
     }
 
     @VisibleForTesting

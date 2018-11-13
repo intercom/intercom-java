@@ -3,21 +3,17 @@ package io.intercom.api;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Iterator;
 import java.util.List;
 
 @SuppressWarnings("UnusedDeclaration")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CompanyCollection extends TypedDataCollection<Company> implements Iterator<Company> {
-
-    protected TypedDataCollectionIterator<Company> iterator;
+public class CompanyCollection extends TypedDataCollection<Company> {
 
     @JsonProperty("total_count")
     private long totalCount;
 
     public CompanyCollection() {
         type = "company.list";
-        iterator = new TypedDataCollectionIterator<Company>(this);
     }
 
     public CompanyCollection(List<Company> companies) {
@@ -39,18 +35,6 @@ public class CompanyCollection extends TypedDataCollection<Company> implements I
     @Override
     public CompanyCollection nextPage() {
         return fetchNextPage(CompanyCollection.class);
-    }
-
-    public boolean hasNext() {
-        return iterator.hasNext();
-    }
-
-    public Company next() {
-        return iterator.next();
-    }
-
-    public void remove() {
-        iterator.remove();
     }
 
     @Override

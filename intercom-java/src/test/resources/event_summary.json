@@ -1,0 +1,29 @@
+{
+  "type": "event.summary",
+  "email": "wash@serenity.io",
+  "intercom_user_id": "530370b477ad7120001d",
+  "user_id": "25",
+  "events": [
+    {
+      "name": "test-event",
+      "first": "2016-12-22T03:54:57.000Z",
+      "last": "2018-10-10T06:51:02.000Z",
+      "count": 8,
+      "description": null
+    },
+    {
+      "name": "clicked-button",
+      "first": "2018-02-20T06:40:16.000Z",
+      "last": "2018-02-20T06:40:16.000Z",
+      "count": 1,
+      "description": "Clicking home page button"
+    },
+    {
+      "name": "completed purchase",
+      "first": "2018-03-13T02:52:53.000Z",
+      "last": "2018-03-13T02:58:31.000Z",
+      "count": 4,
+      "description": null
+    }
+  ]
+}
