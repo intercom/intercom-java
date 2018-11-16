@@ -1,5 +1,47 @@
 ### Changes
 
+### 2.8.0
+There are a number of new features and changes in this release so will move to version 2.8.
+The most important one from a breaking change point of view is that the use of API keys is no longer allowed.
+You should now be using Access Tokens to access the API
+For more information on any of the changes please see the README.
+We have added examples for all of the new features
+
+#### Remove API Key references (#230)
+API Keys are no longer valid. We now use Acces tokens.
+So removing reference to use API keys in the SDK
+
+#### Add support for snooze (#236)
+Added appropriate code to be able to snooze conversation and to read the conversation model for snooze attributes
+
+#### Add conversation ratings (#235)
+Add extra code to support reading conversation ratings
+
+#### Add support for marking conversation as read (#234)
+Add ability to make a conversation as read
+
+#### Add support for display_as when finding conversation (#239)
+Add a new find that allows extra parameters
+
+#### Support running assignment rules (#243)
+Build support for recent API feature to allow running assignment rules on a conversation 
+https://developers.intercom.com/intercom-api-reference/reference#run-conversation-assignment-rules
+
+#### Support Event Summaries (#244)
+List event summaries of a user
+https://developers.intercom.com/intercom-api-reference/reference#view-user-events-summaries
+
+#### Extract Iterator implementation into TypedDataCollection (#247) 
+First thing, TypedDataCollection now implements Iterator, it is delegating the hasNext(), next() and remove() methods to a TypedDataCollectionIterator instance. 
+Second, I have removed all specific implementations of Iterator from all Collection classes, which were just copy-paste.
+
+#### Update webhook topics and add ping (#245)
+Added support for more topics
+
+#### Allow parsing of responses from DELETE requests (#248)
+Now we check if DELETE response has data if it does proceed to process it as any other normal data
+If there is no data just return null
+
 ### 2.7.0
 This update includes the removal of an option which is not possible viua the API.
 There was an option in the SDK to manually update the company sessions account but this is not possible vai the API.

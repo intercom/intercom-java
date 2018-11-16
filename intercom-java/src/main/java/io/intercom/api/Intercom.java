@@ -17,7 +17,7 @@ public class Intercom {
 
     private static volatile URI apiBaseURI = API_BASE_URI;
 
-    private static final String VERSION = "2.7.0";
+    private static final String VERSION = "2.8.0";
 
     public static final String USER_AGENT = "intercom-java/" + Intercom.VERSION;
 
