@@ -25,6 +25,9 @@ public class ConversationMessage extends TypedData {
     @JsonProperty
     private Author author;
 
+    @JsonProperty("delivered_as")
+    private String deliveredAs;
+
     @JsonProperty
     private String url;
 
@@ -52,6 +55,13 @@ public class ConversationMessage extends TypedData {
 
     public Author getAuthor() {
         return author;
+    }
+
+    /**
+     * Requires API 1.1
+     */
+    public String getDeliveredAs() {
+        return deliveredAs;
     }
 
     public String getUrl() {
@@ -100,6 +110,7 @@ public class ConversationMessage extends TypedData {
             ", subject='" + subject + '\'' +
             ", body='" + body + '\'' +
             ", author=" + author +
+            ", deliveredAs=" + deliveredAs +
             ", url=" + url +
             ", attachments=" + attachments +
             "} " + super.toString();
