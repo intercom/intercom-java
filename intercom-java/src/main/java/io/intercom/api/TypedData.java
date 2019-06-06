@@ -1,9 +1,7 @@
 package io.intercom.api;
 
-public interface TypedData {
-
-    default String getType() {
+public class TypedData {
+    public String getType() {
         throw new UnsupportedOperationException();
     }
-
 }
