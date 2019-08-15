@@ -1,0 +1,35 @@
+{
+  "type": "conversation_part",
+  "id": "142533411",
+  "part_type": "comment",
+  "body": "<p>dm-9187dba8-fb3b-cb99-da05-37a932d3d678</p>",
+  "created_at": 1468031160,
+  "updated_at": 1468031160,
+  "notified_at": 1468031160,
+  "assigned_to": null,
+  "author": {
+    "type": "user",
+    "id": "576c1a139d0baad1010001111"
+  },
+  "attachments": [
+    {
+      "type": "upload",
+      "name": "Attachment.pdf",
+      "url": "https://api.example.com/uploads/111222333",
+      "content_type": "application/pdf",
+      "filesize": 8388608,
+      "width": 1024,
+      "height": 8192
+    },
+    {
+      "type": "upload",
+      "name": "Attachment.txt",
+      "url": "https://api.example.com/uploads/222333444",
+      "content_type": "text/plain",
+      "filesize": 16000,
+      "width": 40,
+      "height": 400
+    }
+  ],
+  "external_id": null
+}

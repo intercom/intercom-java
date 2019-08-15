@@ -3,6 +3,8 @@ package io.intercom.api;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 @SuppressWarnings("UnusedDeclaration")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ConversationPart extends TypedData {
@@ -24,6 +26,9 @@ public class ConversationPart extends TypedData {
 
     @JsonProperty("assigned_to")
     private Admin assignedTo;
+
+    @JsonProperty("attachments")
+    private List<Attachment> attachments;
 
     @JsonProperty("created_at")
     private long createdAt;
@@ -60,6 +65,8 @@ public class ConversationPart extends TypedData {
     public Admin getAssignedTo() {
         return assignedTo;
     }
+
+    public List<Attachment> getAttachments() { return attachments; }
 
     public long getCreatedAt() {
         return createdAt;
