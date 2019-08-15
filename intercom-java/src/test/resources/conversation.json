@@ -78,6 +78,16 @@
     ],
     "total_count": 2
   },
+  "customers": [
+    {
+      "id": "cce765411111",
+      "type": "lead"
+    },
+    {
+      "id": "ee88370001110101",
+      "type": "user"
+    }
+  ],
   "open": true,
   "read": false,
   "tags": {

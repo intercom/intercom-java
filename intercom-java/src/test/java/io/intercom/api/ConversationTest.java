@@ -262,6 +262,19 @@ public class ConversationTest {
         PowerMockito.verifyStatic(Mockito.times(1));
         Conversation.find(conversation.getId());
     }
+
+    @Test
+    public void testGetCustomersFromConversation() throws IOException {
+        PowerMockito.mockStatic(Conversation.class);
+
+        String json = load("conversation.json");
+        final Conversation conversation = objectMapper.readValue(json, Conversation.class);
+        assertEquals(2, conversation.getCustomers().size());
+
+        PowerMockito.verifyStatic(Mockito.never());
+        Conversation.find(conversation.getId());
+    }
+
     private Map<String, String> buildRequestParameters(String html) {
         Map<String, String> params2 = Maps.newHashMap();
         params2.put("type", "admin");
