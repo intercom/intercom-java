@@ -9,6 +9,7 @@
     "id": "33954111",
     "subject": "Email subject",
     "body": "<p>test</p>",
+    "delivered_as": "customer_initiated",
     "author": {
       "type": "lead",
       "id": "576c1a139d0baad1010011111"

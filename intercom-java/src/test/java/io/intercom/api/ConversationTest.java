@@ -121,6 +121,7 @@ public class ConversationTest {
         assertEquals("<p>test</p>", conversationMessage.getBody());
         assertEquals("Email subject", conversationMessage.getSubject());
         assertEquals("https://intercom.com/", conversationMessage.getUrl());
+        assertEquals("customer_initiated", conversationMessage.getDeliveredAs());
 
         assertEquals("lead", conversationMessage.getAuthor().getType());
         assertEquals("576c1a139d0baad1010011111", conversationMessage.getAuthor().getId());
@@ -161,6 +162,7 @@ public class ConversationTest {
         assertEquals("<p>test</p>", conversationMessage.getBody());
         assertEquals("Email subject", conversationMessage.getSubject());
         assertEquals("https://intercom.com/", conversationMessage.getUrl());
+        assertEquals("customer_initiated", conversationMessage.getDeliveredAs());
 
         assertEquals("lead", conversationMessage.getAuthor().getType());
         assertEquals("576c1a139d0baad1010011111", conversationMessage.getAuthor().getId());
