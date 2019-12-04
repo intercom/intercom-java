@@ -214,6 +214,9 @@ public class Conversation extends TypedData {
 
     @JsonProperty("conversation_message")
     private ConversationMessage conversationMessage;
+    
+    @JsonProperty("customer_first_reply")
+    private CustomerFirstReply customerFirstReply;
 
     @JsonProperty("conversation_rating")
     private ConversationRating conversationRating;
