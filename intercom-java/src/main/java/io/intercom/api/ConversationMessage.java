@@ -28,6 +28,9 @@ public class ConversationMessage extends TypedData {
     @JsonProperty
     private String url;
 
+    @JsonProperty("delivered_as")
+    private String deliveredAs;
+
     @JsonProperty("attachments")
     private List<Attachment> attachments;
 
@@ -58,6 +61,10 @@ public class ConversationMessage extends TypedData {
         return url;
     }
 
+    public String getDeliveredAs() {
+        return deliveredAs;
+    }
+
     public List<Attachment> getAttachments() {
         return attachments;
     }
@@ -67,6 +74,7 @@ public class ConversationMessage extends TypedData {
         int result = subject != null ? subject.hashCode() : 0;
         result = 31 * result + (body != null ? body.hashCode() : 0);
         result = 31 * result + (author != null ? author.hashCode() : 0);
+        result = 31 * result + (deliveredAs != null ? deliveredAs.hashCode() : 0);
         result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (url != null ? url.hashCode() : 0);
         result = 31 * result + (attachments != null ? attachments.hashCode() : 0);
@@ -87,6 +95,7 @@ public class ConversationMessage extends TypedData {
         if (subject != null ? !subject.equals(that.subject) : that.subject != null) return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (url != null ? !url.equals(that.url) : that.url != null) return false;
+        if (deliveredAs != null ? !deliveredAs.equals(that.deliveredAs) : that.deliveredAs != null) return false;
         if (attachments != null ? !attachments.equals(that.attachments) : that.attachments != null) return false;
 
         return true;
@@ -101,6 +110,7 @@ public class ConversationMessage extends TypedData {
             ", body='" + body + '\'' +
             ", author=" + author +
             ", url=" + url +
+            ", deliveredAs=" + deliveredAs +
             ", attachments=" + attachments +
             "} " + super.toString();
     }
