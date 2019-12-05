@@ -27,6 +27,7 @@
         "id": "41111111",
         "subject": "",
         "body": "<p>Hey2</p>",
+        "delivered_as": "customer_initiated",
         "author": {
           "type": "user",
           "id": "57b45f16d1aad7e69e011111"
@@ -56,6 +57,7 @@
         "id": "41141111",
         "subject": "",
         "body": "<p>Hey</p>",
+        "delivered_as": "customer_initiated",
         "author": {
           "type": "user",
           "id": "57b45bfef436c8d786000111"
@@ -85,6 +87,7 @@
         "id": "33954838",
         "subject": "",
         "body": "<p>test</p>",
+        "delivered_as": "customer_initiated",
         "author": {
           "type": "lead",
           "id": "576c1a139d0baad101001111"
