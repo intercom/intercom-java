@@ -79,7 +79,6 @@ public class CustomerFirstReply extends TypedData {
 
 	@Override
 	public String toString() {
-		return "CustomerFirstReply{" + "type='" + type + '\'' + ", url='" + url + '\'' + ", created_at='" + createdAt
-				+ '\'' + "} " + super.toString();
+		return "CustomerFirstReply{" + "type='" + type + '\'' + ", url='" + url + '\'' + ", created_at='" + createdAt + '\'' + "} " + super.toString();
 	}
 }
