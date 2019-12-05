@@ -271,4 +271,16 @@ public class ConversationTest {
         params2.put("display_as", html);
         return params2;
     }
+
+    @Test
+    public void testGetConversationCustomerFirstReply() throws IOException {
+        PowerMockito.mockStatic(Conversation.class);
+
+        String json = load("conversation.json");
+        final Conversation conversation = objectMapper.readValue(json, Conversation.class);
+        assertNotNull(conversation.getCustomerFirstReply());
+        assertEquals(1468236397, conversation.getCustomerFirstReply().getCreatedAt());
+        assertEquals("conversation", conversation.getCustomerFirstReply().getType());
+        assertEquals("https://someurl", conversation.getCustomerFirstReply().getUrl());
+    }
 }

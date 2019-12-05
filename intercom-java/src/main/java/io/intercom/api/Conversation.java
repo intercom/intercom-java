@@ -296,6 +296,10 @@ public class Conversation extends TypedData {
     public ConversationMessage getConversationMessage() {
         return conversationMessage;
     }
+    
+    public CustomerFirstReply getCustomerFirstReply() {
+    	return customerFirstReply;
+    }
 
     public ConversationRating getConversationRating() {
         return conversationRating;
