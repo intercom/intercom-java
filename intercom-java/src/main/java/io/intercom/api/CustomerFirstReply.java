@@ -7,19 +7,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomerFirstReply extends TypedData {
 
-    @JsonProperty
-    private String type;
+	@JsonProperty
+	private String type;
 
-    @JsonProperty
-    private String url;
-    
-    @JsonProperty("created_at")
-    private long createdAt;
+	@JsonProperty
+	private String url;
 
-    public CustomerFirstReply() {
-    }
+	@JsonProperty("created_at")
+	private long createdAt;
 
-    public String getType() {
+	public CustomerFirstReply() {
+	}
+
+	public String getType() {
 		return type;
 	}
 
@@ -41,9 +41,9 @@ public class CustomerFirstReply extends TypedData {
 
 	public void setCreatedAt(long createdAt) {
 		this.createdAt = createdAt;
-	}
+    }
 
-    @Override
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -78,11 +78,8 @@ public class CustomerFirstReply extends TypedData {
 	}
 
 	@Override
-    public String toString() {
-        return "CustomerFirstReply{" +
-            "type='" + type + '\'' +
-            ", url='" + url + '\'' +
-            ", created_at='" + createdAt + '\'' +
-            "} " + super.toString();
-    }
+	public String toString() {
+		return "CustomerFirstReply{" + "type='" + type + '\'' + ", url='" + url + '\'' + ", created_at='" + createdAt
+				+ '\'' + "} " + super.toString();
+	}
 }
