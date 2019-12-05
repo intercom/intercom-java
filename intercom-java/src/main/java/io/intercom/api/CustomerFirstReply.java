@@ -41,7 +41,7 @@ public class CustomerFirstReply extends TypedData {
 
 	public void setCreatedAt(long createdAt) {
 		this.createdAt = createdAt;
-    }
+	}
 
 	@Override
 	public int hashCode() {
@@ -77,6 +77,7 @@ public class CustomerFirstReply extends TypedData {
 		return true;
 	}
 
+	
 	@Override
 	public String toString() {
 		return "CustomerFirstReply{" + "type='" + type + '\'' + ", url='" + url + '\'' + ", created_at='" + createdAt + '\'' + "} " + super.toString();
