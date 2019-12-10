@@ -1,5 +1,13 @@
 ### Changes
 
+### 2.8.1
+
+#### Add support for delivered_as field (#264)
+Added mapping for the delivered_as field on the Conversation model.
+
+#### Add support for customer_first_reply field (#263)
+Added mapping for the customer_first_reply field on the Conversation model.
+
 ### 2.8.0
 There are a number of new features and changes in this release so will move to version 2.8.
 The most important one from a breaking change point of view is that the use of API keys is no longer allowed.
