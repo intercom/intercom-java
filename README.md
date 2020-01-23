@@ -28,7 +28,7 @@ Add jcenter to your repositories in `pom.xml` or `settings.xml`:
 <repositories>
   <repository>
     <id>jcenter</id>
-    <url>http://jcenter.bintray.com</url>
+    <url>https://jcenter.bintray.com</url>
   </repository>
 </repositories>
 ```  
