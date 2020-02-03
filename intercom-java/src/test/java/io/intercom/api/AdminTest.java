@@ -30,6 +30,7 @@ public class AdminTest {
         assertEquals("admin@domain.com", admin.getEmail());
         assertTrue(admin.getAwayModeEnabled());
         assertFalse(admin.getAwayModeReassign());
+        assertTrue(admin.getHasInboxSeat());
         assertEquals( "https://avatarurl.com/image.jpg", admin.getAvatar().getImageURL().toString());
         assertNotNull(admin.getTeamIds());
         assertEquals(3, admin.getTeamIds().size());
@@ -48,6 +49,7 @@ public class AdminTest {
         assertEquals("team-email@teams.intercom.io", admin.getEmail());
         assertFalse(admin.getAwayModeEnabled());
         assertFalse(admin.getAwayModeReassign());
+        assertTrue(admin.getHasInboxSeat());
         assertEquals("https://domain.com/avatar", admin.getAvatar().getImageURL().toString());
         assertNotNull(admin.getAdminIds());
         assertEquals(3, admin.getAdminIds().size());
