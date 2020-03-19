@@ -28,7 +28,7 @@ Add jcenter to your repositories in `pom.xml` or `settings.xml`:
 <repositories>
   <repository>
     <id>jcenter</id>
-    <url>http://jcenter.bintray.com</url>
+    <url>https://jcenter.bintray.com</url>
   </repository>
 </repositories>
 ```  
@@ -66,7 +66,7 @@ dependencies {
 Add jcenter to your `resolvers` in your `build.sbt`:
 
 ```scala
-resolvers += "jcenter" at "http://jcenter.bintray.com"
+resolvers += "jcenter" at "https://jcenter.bintray.com"
 ```
 
 and add the project to your `libraryDependencies` in your `build.sbt`:
@@ -784,7 +784,7 @@ The client can be configured to accept any http stack that implements
 `java.net.HttpURLConnection` by implementing the `HttpConnectorSupplier`
  interface.
 
-For example, to use [OkHttp](http://square.github.io/okhttp/) as a connection
+For example, to use [OkHttp](https://square.github.io/okhttp/) as a connection
 supplier, create a supplier class -
 
 ```java
