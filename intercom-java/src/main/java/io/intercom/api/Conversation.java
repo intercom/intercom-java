@@ -233,6 +233,9 @@ public class Conversation extends TypedData {
     @JsonProperty("updated_at")
     private long updatedAt;
 
+    @JsonProperty("customers")
+    private List<Customer> customers;
+
     @JsonProperty("waiting_since")
     private long waitingSince;
 
@@ -320,6 +323,8 @@ public class Conversation extends TypedData {
     public long getUpdatedAt() {
         return updatedAt;
     }
+
+    public List<Customer> getCustomers() { return customers; }
 
     public long getWaitingSince() {
         return waitingSince;
