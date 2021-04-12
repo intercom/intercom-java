@@ -34,7 +34,7 @@ subprojects {
   }
 
   ext {
-    jacksonVersion = '2.9.6'
+    jacksonVersion = '2.9.10'
     powermockVersion = '1.6.6'
   }
 
