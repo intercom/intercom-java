@@ -8,6 +8,7 @@
 			"email": "admin@domain.com",
 			"away_mode_enabled": true,
 			"away_mode_reassign": false,
+			"has_inbox_seat": true,
 			"avatar": {
 				"image_url": "https://avatarurl.com/image.jpg"
 			},
@@ -24,6 +25,7 @@
 			"email": "admin2@domain.com",
 			"away_mode_enabled": false,
 			"away_mode_reassign": false,
+			"has_inbox_seat": false,
 			"avatar": {
 				"image_url": "https://avatarurl.com/image2.jpg"
 			},
@@ -39,6 +41,7 @@
 			"email": "team-email@teams.intercom.io",
 			"away_mode_enabled": false,
 			"away_mode_reassign": false,
+			"has_inbox_seat": true,
 			"avatar": {
 				"image_url": "https://domain.com/avatar"
 			},
@@ -54,6 +57,7 @@
 			"email": "team-email2@teams.intercom.io",
 			"away_mode_enabled": false,
 			"away_mode_reassign": false,
+			"has_inbox_seat": true,
 			"avatar": {
 				"image_url": "https://domain.com/avatar2"
 			},
@@ -68,6 +72,7 @@
 			"email": "team-email3@teams.intercom.io",
 			"away_mode_enabled": false,
 			"away_mode_reassign": false,
+			"has_inbox_seat": false,
 			"avatar": {
 				"image_url": "https://domain.com/avatar3"
 			},

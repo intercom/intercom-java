@@ -5,6 +5,7 @@
 	"email": "team-email@teams.intercom.io",
 	"away_mode_enabled": false,
 	"away_mode_reassign": false,
+	"has_inbox_seat": true,
 	"avatar": {
 		"image_url": "https://domain.com/avatar"
 	},

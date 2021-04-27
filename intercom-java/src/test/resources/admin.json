@@ -5,6 +5,7 @@
 	"email": "admin@domain.com",
 	"away_mode_enabled": true,
 	"away_mode_reassign": false,
+	"has_inbox_seat": true,
 	"avatar": {
 		"image_url": "https://avatarurl.com/image.jpg"
 	},

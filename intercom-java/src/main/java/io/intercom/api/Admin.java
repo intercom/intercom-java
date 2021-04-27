@@ -78,6 +78,9 @@ public class Admin extends TypedData implements Replier {
 
     @JsonProperty("away_mode_reassign")
     private boolean awayModeReassign;
+    
+    @JsonProperty("has_inbox_seat")
+    private boolean hasInboxSeat;
 
     @JsonProperty("avatar")
     private Avatar avatar;
@@ -149,6 +152,10 @@ public class Admin extends TypedData implements Replier {
 
     public boolean getAwayModeReassign(){
         return awayModeReassign;
+    }
+
+    public boolean getHasInboxSeat(){
+        return hasInboxSeat;
     }
 
     public Avatar getAvatar(){
