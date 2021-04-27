@@ -34,7 +34,8 @@ subprojects {
   }
 
   ext {
-    jacksonVersion = '2.9.6'
+    jacksonVersion = '2.9.10'
+    jacksonDatabindVersion = "$jacksonVersion.8"
     powermockVersion = '1.6.6'
   }
 
@@ -50,7 +51,7 @@ subprojects {
   dependencies {
     compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
     compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
-    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
     compile "com.google.guava:guava:17.0"
     compile "org.slf4j:slf4j-api:1.7.25"
     compile "commons-codec:commons-codec:1.9"
