@@ -69,6 +69,14 @@ bintray {
   }
 }
 
+signing {
+    String keyId = System.getenv('keyId');
+    String gpgPassword = System.getenv('gpgPassword');
+    if (project.hasProperty('signing.keyId') != null  && gpgPassword != null && project.hasProperty('signing.secretKeyRingFile')) {
+      sign configurations.archives
+    }
+}
+
 ext.repo = Grgit.open(project.file('..'))
 
 task printVersion << {
