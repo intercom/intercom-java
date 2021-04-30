@@ -1,39 +1,34 @@
-[![Circle CI](https://circleci.com/gh/intercom/intercom-java.png?style=badge)](https://circleci.com/gh/intercom/intercom-java)
-
 # intercom-java
+
+[![Circle CI](https://circleci.com/gh/intercom/intercom-java.svg?style=shield)](https://circleci.com/gh/intercom/intercom-java)
+[![Maven Central](https://img.shields.io/maven-central/v/io.intercom/intercom-java.svg?label=Maven%20Central)](https://search.maven.org/artifact/io.intercom/intercom-java)
+![Intercom API Version](https://img.shields.io/badge/Intercom%20API%20Version-1.3-blue)
 
 Java bindings for the [Intercom API](https://api.intercom.io/docs)
 
- - [Installation](#add-a-dependency)
- - [Resources](#resources)
- - [Authorization](#authorization)
- - [Usage](#usage)
- - [Idioms](#idioms)
- - [Configuration](#configuration)
+## Project Updates
 
+### Retirement of Bintray/JCenter
+
+This project was previously publishing releases to JCenter, which is being retired by JFrog on May 1st 2021.
+
+To allow continued access to past versions, we've migrated them to Maven Central.
+
+- [Installation](#add-a-dependency)
+- [Resources](#resources)
+- [Authorization](#authorization)
+- [Usage](#usage)
+- [Idioms](#idioms)
+- [Configuration](#configuration)
 
 ## Add a dependency
 
-[ ![Download](https://api.bintray.com/packages/intercom/intercom-maven/intercom-java/images/download.svg) ](https://bintray.com/intercom/intercom-maven/intercom-java/_latestVersion)
-
-The distribution is hosted on [bintray](https://bintray.com/intercom/intercom-maven/intercom-java/view).
-To use the client, you can add the jcenter repository to your dependencies.
+The distribution is hosted on [mavenCentral](https://search.maven.org/artifact/io.intercom/intercom-java).
+To use the client, you can add the mavenCentral repository to your dependencies.
 
 ### Maven
 
-
-Add jcenter to your repositories in `pom.xml` or `settings.xml`:
-
-```xml
-<repositories>
-  <repository>
-    <id>jcenter</id>
-    <url>https://jcenter.bintray.com</url>
-  </repository>
-</repositories>
-```  
-
-and add the project declaration to your `pom.xml`:
+Add the project declaration to your `pom.xml`:
 
 ```xml
 <dependency>
@@ -45,11 +40,11 @@ and add the project declaration to your `pom.xml`:
 
 ### Gradle
 
-Add jcenter to your `repositories` block:
+Add mavenCentral to your `repositories` block:
 
 ```groovy
 repositories {
- jcenter()
+ mavenCentral()
 }
 ```
 
@@ -57,16 +52,16 @@ and add the project to the `dependencies` block in your `build.gradle`:
 
 ```groovy
 dependencies {
-  compile 'io.intercom:intercom-java:2.8.1'
+  implementation 'io.intercom:intercom-java:2.8.1'
 }  
 ```
 
 ### SBT
 
-Add jcenter to your `resolvers` in your `build.sbt`:
+Add mavenCentral to your `resolvers` in your `build.sbt`:
 
 ```scala
-resolvers += "jcenter" at "https://jcenter.bintray.com"
+resolvers += "mavenCentral" at "https://repo1.maven.org/maven2"
 ```
 
 and add the project to your `libraryDependencies` in your `build.sbt`:
@@ -74,7 +69,6 @@ and add the project to your `libraryDependencies` in your `build.sbt`:
 ```scala
 libraryDependencies += "io.intercom" % "intercom-java" % "2.8.1"
 ```
-
 
 ## Resources
 
@@ -90,10 +84,8 @@ Resources this API supports:
 - [Segments](#segments)
 - [Notes](#notes)
 - [Conversations](#conversations)
-- [Counts](#counts)
 - [Webhooks](#webhooks)
-
-
+- [Counts](#counts)
 
 ## Authorization
 
@@ -103,8 +95,8 @@ Resources this API supports:
 # With an OAuth or Access token:
 Intercom.setToken("da39a3ee5e6b4b0d3255bfef95601890afd80709");
 ```
-If you are building a third party application you can get your OAuth token by [setting-up-oauth](https://developers.intercom.io/page/setting-up-oauth) for Intercom.
 
+If you are building a third party application you can get your OAuth token by [setting-up-oauth](https://developers.intercom.io/page/setting-up-oauth) for Intercom.
 
 ## Usage
 
@@ -250,6 +242,7 @@ User converted = Contact.convert(contact, user);
 ```
 
 ### Visitors
+
 ```java
 // Find visitor by ID
 Visitor visitor = Visitor.findByID("5b69565fa737210d1c2127f1");
@@ -347,7 +340,6 @@ Admin admin = Admin.find("123456");
 // Set admin as away and enable away mode reassignment
 Admin admin = Admin.setAwayMode("123456", true, true);
 ```
-
 
 ### Events
 
@@ -768,13 +760,12 @@ of IntercomException will be thrown. The exception will have Error objects
 
 The API throws the following runtime exceptions -
 
-  - AuthorizationException: for a 401 or 403 response
-  - InvalidException: for a 422 response or a local validation failure
-  - RateLimitException: for a 429 rate limit exceeded response
-  - ClientException: for a general 4xx response
-  - ServerException: for a 500 or 503 response
-  - IntercomException: general exception
-
+- AuthorizationException: for a 401 or 403 response
+- InvalidException: for a 422 response or a local validation failure
+- RateLimitException: for a 429 rate limit exceeded response
+- ClientException: for a general 4xx response
+- ServerException: for a 500 or 503 response
+- IntercomException: general exception
 
 ## Configuration
 
@@ -804,18 +795,17 @@ public class OkHttpSupplier implements HttpConnectorSupplier {
 
 and hand a supplier to the Intercom object -
 
-```
+```java
 final OkHttpClient client = new OkHttpClient();
 final OkUrlFactory factory = new OkUrlFactory(client);
 final OkHttpSupplier supplier = new OkHttpSupplier(factory);
 Intercom.setHttpConnectorSupplier(supplier);
-```            
+```
 
 #### Timeouts
 
 The default connection and request timeouts can be set in milliseconds using the
 `Intercom.setConnectionTimeout` and `Intercom.setRequestTimeout` methods.
-
 
 ### Target API Server
 
