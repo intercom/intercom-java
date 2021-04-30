@@ -1,39 +1,10 @@
-buildscript {
-  repositories {
-    jcenter()
-    mavenCentral()
-  }
-  //noinspection GroovyAssignabilityCheck
-  dependencies {
-    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.+'
-    classpath 'org.ajoberstar:grgit:1.9.3'
-  }
-}
-
 plugins {
-    id 'signing'
-}
-
-allprojects {
-  apply plugin: 'idea'
+  id 'idea'
+  id 'signing'
 }
 
 subprojects {
-
-  buildscript {
-    repositories {
-      jcenter()
-      mavenCentral()
-    }
-    //noinspection GroovyAssignabilityCheck
-    dependencies {
-      classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.+'
-      classpath 'org.ajoberstar:grgit:1.9.3'
-    }
-  }
-
   repositories {
-    jcenter()
     mavenCentral()
   }
 
@@ -46,7 +17,7 @@ subprojects {
   apply plugin: 'maven'
   apply plugin: 'maven-publish'
   apply plugin: 'java'
-  apply plugin: 'com.jfrog.bintray'
+  apply plugin: 'signing'
 
   sourceCompatibility = 1.7
   targetCompatibility = 1.7
@@ -65,6 +36,6 @@ subprojects {
   }
 }
 
-task wrapper(type: Wrapper) {
+wrapper {
   gradleVersion = '4.9'
 }
