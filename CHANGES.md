@@ -1,5 +1,9 @@
 ### Changes
 
+### 2.8.2
+
+#### Add support for has_inbox_seat field (#272)
+Added mapping for the has_inbox_seat field to the Admin user model.
 ### 2.8.1
 
 #### Add support for delivered_as field (#264)

@@ -4,7 +4,7 @@
 [![Maven Central](https://img.shields.io/maven-central/v/io.intercom/intercom-java.svg?label=Maven%20Central)](https://search.maven.org/artifact/io.intercom/intercom-java)
 ![Intercom API Version](https://img.shields.io/badge/Intercom%20API%20Version-1.3-blue)
 
-Java bindings for the [Intercom API](https://api.intercom.io/docs)
+> Java bindings for the [Intercom API](https://api.intercom.io/docs)
 
 ## Project Updates
 
@@ -13,6 +13,14 @@ Java bindings for the [Intercom API](https://api.intercom.io/docs)
 This project was previously publishing releases to JCenter, which is being retired by JFrog on May 1st 2021.
 
 To allow continued access to past versions, we've migrated them to Maven Central.
+
+### Maintenance
+
+We're currently building a new team to provide in-depth and dedicated SDK support.
+
+In the meantime, we'll be operating on limited capacity, meaning all pull requests will be evaluated on a best effort basis and will be limited to critical issues.
+
+We'll communicate all relevant updates as we build this new team and support strategy in the coming months.
 
 - [Installation](#add-a-dependency)
 - [Resources](#resources)
@@ -34,7 +42,7 @@ Add the project declaration to your `pom.xml`:
 <dependency>
   <groupId>io.intercom</groupId>
   <artifactId>intercom-java</artifactId>
-  <version>2.8.1</version>
+  <version>2.8.2</version>
 </dependency>
 ```
 
@@ -52,7 +60,7 @@ and add the project to the `dependencies` block in your `build.gradle`:
 
 ```groovy
 dependencies {
-  implementation 'io.intercom:intercom-java:2.8.1'
+  implementation 'io.intercom:intercom-java:2.8.2'
 }  
 ```
 
@@ -67,7 +75,7 @@ resolvers += "mavenCentral" at "https://repo1.maven.org/maven2"
 and add the project to your `libraryDependencies` in your `build.sbt`:
 
 ```scala
-libraryDependencies += "io.intercom" % "intercom-java" % "2.8.1"
+libraryDependencies += "io.intercom" % "intercom-java" % "2.8.2"
 ```
 
 ## Resources
