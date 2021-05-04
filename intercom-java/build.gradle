@@ -74,10 +74,22 @@ uploadArchives {
       description 'Java bindings for the Intercom API'
       url 'https://github.com/intercom/intercom-java'
 
+      scm {
+        url 'http://github.com/intercom/intercom-java/tree/master'
+      }
+
       licenses {
         license {
           name 'The Apache License, Version 2.0'
           url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+        }
+      }
+
+      developers {
+        developer {
+          id 'intercom'
+          name 'Intercom'
+          email 'team-dp@intercom.io'
         }
       }
     }
