@@ -100,6 +100,38 @@ public class Conversation extends TypedData {
                 .put(Conversation.class, new ConversationRead());
     }
 
+    public static ParticipantResponse addParticipant(String id, AdminAddParticipant adminAddParticipant) {
+        final URI uri = UriBuilder.newBuilder()
+                .path("conversations")
+                .path(id)
+                .path("customers")
+                .build();
+        return new HttpClient(uri)
+                .post(ParticipantResponse.class, adminAddParticipant);
+    }
+
+    public static ParticipantResponse addParticipant(String id, UserAddParticipant userAddParticipant) {
+        final URI uri = UriBuilder.newBuilder()
+                .path("conversations")
+                .path(id)
+                .path("customers")
+                .build();
+        return new HttpClient(uri)
+                .post(ParticipantResponse.class, userAddParticipant);
+    }
+
+    public static ParticipantResponse removeParticipant(String id, String admin_id, String participantIntercomId) {
+        Map<String, String> params = new HashMap<String,String>();
+        params.put("admin_id", admin_id);
+        final URI uri = UriBuilder.newBuilder()
+                .path("conversations")
+                .path(id)
+                .path("customers")
+                .path(participantIntercomId)
+                .build();
+        return DataResource.delete(params, uri, ParticipantResponse.class);
+    }
+
     public static UserMessage create(UserMessage message) {
         return DataResource.create(message, "messages", UserMessage.class);
     }
