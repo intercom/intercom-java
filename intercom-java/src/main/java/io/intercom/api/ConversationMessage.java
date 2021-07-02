@@ -1,5 +1,6 @@
 package io.intercom.api;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -10,8 +11,10 @@ import java.util.List;
 public class ConversationMessage extends TypedData {
 
     @SuppressWarnings("FieldCanBeLocal")
+    private String type = "conversation_message";
+
     @JsonProperty("type")
-    private final String type = "conversation_message";
+    private String realType;
 
     @JsonProperty
     private String id;
@@ -25,6 +28,9 @@ public class ConversationMessage extends TypedData {
     @JsonProperty
     private Author author;
 
+    @JsonProperty("delivered_as")
+    private String deliveredAs;
+
     @JsonProperty
     private String url;
 
@@ -37,8 +43,18 @@ public class ConversationMessage extends TypedData {
     public ConversationMessage() {
     }
 
+    @JsonIgnore
     public String getType() {
         return type;
+    }
+
+    /**
+     * Returns type of the conversation message conversation (one of [push, facebook, twitter and email])
+     * "type" property returns "conversation_message" all the time which is confusing but can not be changed
+     * without breaking backward compatibility
+     */
+    public String getRealType() {
+        return realType;
     }
 
     public String getId() {
@@ -55,6 +71,13 @@ public class ConversationMessage extends TypedData {
 
     public Author getAuthor() {
         return author;
+    }
+
+    /**
+     * Requires API 1.1
+     */
+    public String getDeliveredAs() {
+        return deliveredAs;
     }
 
     public String getUrl() {
@@ -109,6 +132,7 @@ public class ConversationMessage extends TypedData {
             ", subject='" + subject + '\'' +
             ", body='" + body + '\'' +
             ", author=" + author +
+            ", deliveredAs=" + deliveredAs +
             ", url=" + url +
             ", deliveredAs=" + deliveredAs +
             ", attachments=" + attachments +
