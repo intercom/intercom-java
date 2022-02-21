@@ -5,7 +5,10 @@ name: FOSSA License Scan
 on:
   push:
     branches:
-      - master
+      - fossa-fix
+
+env:
+  JAVA_VERSION: 11
 
 jobs:
   fossa:
@@ -13,9 +16,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Attempt build
-        uses: intercom/attempt-build-action@main
-        continue-on-error: true
+      - name: Setup JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: adopt
+          cache: 'gradle'
+      - run: |
+          TERM="dumb" ./gradlew dependencies
       - name: Run FOSSA
         uses: intercom/fossa-action@main
         with:
