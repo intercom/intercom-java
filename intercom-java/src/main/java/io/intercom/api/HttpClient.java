@@ -235,12 +235,8 @@ class HttpClient {
     }
 
     private Map<String, String> createAuthorizationHeaders() {
-        headers.put("Authorization", "Basic " + generateAuthString(Intercom.getToken(),""));
+        headers.put("Authorization", "Bearer " + Intercom.getToken());
         return headers;
-    }
-
-    private String generateAuthString(String username, String password) {
-        return Base64.encodeBase64String((username + ":" + password).getBytes());
     }
 
     private Map<String, String> createHeaders() {
