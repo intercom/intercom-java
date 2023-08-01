@@ -6,7 +6,7 @@
 
 > Java bindings for the [Intercom API](https://api.intercom.io/docs)
 
-## Project Updates
+## Project Update
 
 ### Retirement of Bintray/JCenter
 
