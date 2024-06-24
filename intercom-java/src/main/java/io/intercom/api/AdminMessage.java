@@ -37,7 +37,15 @@ public class AdminMessage extends TypedData {
     private Admin admin;
 
     @JsonProperty("to")
+    private TypedData to(){
+        if(user != null) return user;
+        if(contact != null) return contact;
+        return null;
+    };
+
     private User user;
+
+    private Contact contact;
 
     public AdminMessage() {
     }
@@ -121,6 +129,15 @@ public class AdminMessage extends TypedData {
         return this;
     }
 
+    public Contact getContact() {
+        return contact;
+    }
+
+    public AdminMessage setContact(Contact contact) {
+        this.contact = contact;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -138,6 +155,7 @@ public class AdminMessage extends TypedData {
         if (!type.equals(message.type)) return false;
         //noinspection RedundantIfStatement
         if (user != null ? !user.equals(message.user) : message.user != null) return false;
+        if (contact != null ? !contact.equals(message.contact) : message.contact != null) return false;
 
         return true;
     }
@@ -153,6 +171,7 @@ public class AdminMessage extends TypedData {
         result = 31 * result + (int) (createdAt ^ (createdAt >>> 32));
         result = 31 * result + (admin != null ? admin.hashCode() : 0);
         result = 31 * result + (user != null ? user.hashCode() : 0);
+        result = 31 * result + (contact != null ? contact.hashCode() : 0);
         return result;
     }
 
@@ -167,6 +186,7 @@ public class AdminMessage extends TypedData {
             ", createdAt=" + createdAt +
             ", admin=" + admin +
             ", user=" + user +
+            ", contact=" + contact +
             "} " + super.toString();
     }
 
