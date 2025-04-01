@@ -29,7 +29,7 @@ subprojects {
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
     compile "com.google.guava:guava:17.0"
     compile "org.slf4j:slf4j-api:2.0.17"
-    compile "commons-codec:commons-codec:1.9"
+    compile "commons-codec:commons-codec:1.18.0"
     testCompile "junit:junit:4.12"
     testCompile "org.powermock:powermock-module-junit4:$powermockVersion"
     testCompile "org.powermock:powermock-api-mockito:$powermockVersion"
