@@ -1,41 +1,51 @@
 plugins {
-  id 'idea'
-  id 'signing'
+    id 'java-library'
+    id 'maven-publish'
+    id 'com.diffplug.spotless' version '6.11.0'
 }
 
-subprojects {
-  repositories {
+repositories {
     mavenCentral()
-  }
-
-  ext {
-    jacksonVersion = '2.9.10'
-    jacksonDatabindVersion = "$jacksonVersion.8"
-    powermockVersion = '1.6.6'
-  }
-
-  apply plugin: 'maven'
-  apply plugin: 'maven-publish'
-  apply plugin: 'java'
-  apply plugin: 'signing'
-
-  sourceCompatibility = 1.7
-  targetCompatibility = 1.7
-
-  //noinspection GroovyAssignabilityCheck
-  dependencies {
-    compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
-    compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
-    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
-    compile "com.google.guava:guava:17.0"
-    compile "org.slf4j:slf4j-api:2.0.17"
-    compile "commons-codec:commons-codec:1.18.0"
-    testCompile "junit:junit:4.13.2"
-    testCompile "org.powermock:powermock-module-junit4:$powermockVersion"
-    testCompile "org.powermock:powermock-api-mockito:$powermockVersion"
-  }
+    maven {
+        url 'https://s01.oss.sonatype.org/content/repositories/releases/'
+    }
 }
 
-wrapper {
-  gradleVersion = '4.9'
+dependencies {
+    api 'com.squareup.okhttp3:okhttp:4.12.0'
+    api 'com.fasterxml.jackson.core:jackson-databind:2.17.2'
+    api 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.17.2'
+    api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+tasks.withType(Javadoc) {
+    failOnError false
+    options.addStringOption('Xdoclint:none', '-quiet')
+}
+
+spotless {
+    java {
+        palantirJavaFormat()
+    }
+}
+
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        showStandardStreams = true
+    }
+}
+
