@@ -1,10 +1,8 @@
-# intercom-java
+# Intercom Java Library
 
-[![Circle CI](https://circleci.com/gh/intercom/intercom-java.svg?style=shield)](https://circleci.com/gh/intercom/intercom-java)
-[![Maven Central](https://img.shields.io/maven-central/v/io.intercom/intercom-java.svg?label=Maven%20Central)](https://search.maven.org/artifact/io.intercom/intercom-java)
-![Intercom API Version](https://img.shields.io/badge/Intercom%20API%20Version-1.3-blue)
+[![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fintercom%2Fintercom-java)
 
-> Java bindings for the [Intercom API](https://api.intercom.io/docs)
+The Intercom Java library provides convenient access to the Intercom API from Java.
 
 ## Project Updates
 
@@ -108,634 +106,144 @@ If you are building a third party application you can get your OAuth token by [s
 
 ## Usage
 
-### Users
+Instantiate and use the client with the following:
 
 ```java
-// Create a user
-User user = new User()
-    .setEmail("malcolm@serenity.io")
-    .setUserId("1")
-    .addCustomAttribute(CustomAttribute.newStringAttribute("role", "sergeant"))
-    .addCustomAttribute(CustomAttribute.newBooleanAttribute("browncoat", true));
-User created = User.create(user);
+package com.example.usage;
 
-// Find user by id
-user = User.find("541a144b201ebf2ec5000001");
+import com.intercom.api.Intercom;
+import com.intercom.api.resources.articles.requests.CreateArticleRequest;
+import com.intercom.api.resources.articles.types.CreateArticleRequestState;
 
-// Find user by email
-Map<String, String> params = Maps.newHashMap();
-params.put("email", "malcolm@serenity.io");
-user = User.find(params);
+public class Example {
+    public static void main(String[] args) {
+        Intercom client = Intercom
+            .builder()
+            .token("<token>")
+            .build();
 
-// Find user by user_id
-params = Maps.newHashMap();
-params.put("user_id", "1");
-user = User.find(params);
-
-// Update custom_attributes for a user
-user.addCustomAttribute(CustomAttribute.newStringAttribute("role", "captain"));
-User.update(user);
-
-// Iterate over all users (up to 10k records, to read all use Scroll API)
-UserCollection users = User.list();
-while(users.hasNext()) {
-    System.out.println(users.next().getUserId());
-}
-
-// List users (sorting)
-Map<String, String> params = Maps.newHashMap();
-params.put("sort", "updated_at");
-params.put("order", "asc");
-UserCollection users = User.list(params);
-
-// List users (created within the past X days)
-Map<String, String> params = Maps.newHashMap();
-params.put("created_since", "2");
-UserCollection users = User.list(params);
-
-// List users by tag
-Map<String, String> params = Maps.newHashMap();
-params.put("tag_id", "12345");
-UserCollection users = User.list(params);
-
-// List users by segment
-Map<String, String> params = Maps.newHashMap();
-params.put("segment_id", "1234567890abcdef12345678");
-UserCollection users = User.list(params);
-
-// Retrieve users via Scroll API
-ScrollableUserCollection usersScroll = User.scroll();
-List<User> users = usersScroll.getPage();
-usersScroll = usersScroll.scroll();
-
-// Archive a user by Intercom ID
-User user = User.find("541a144b201ebf2ec5000001");
-User.archive(user.getId());
-
-// Archive a user by user_id
-Map<String, String> params = Maps.newHashMap();
-params.put("user_id", "1");
-User.archive(params);
-
-// Archive a user by email
-Map<String, String> params = Maps.newHashMap();
-params.put("email", "malcolm@serenity.io");
-User.archive(params);
-
-// Permanently delete a user by Intercom ID
-User.permanentDelete("541a144b201ebf2ec5000001");
-```
-
-### Contacts
-
-_Contacts were added in version 1.1 of the client._
-
-```java
-// Create a Contact
-Contact contact = new Contact()
-    .setEmail("fantastic@serenity.io")
-    .addCustomAttribute(newStringAttribute("role", "fence"));
-Contact created = Contact.create(contact);
-
-// Find a single contact by server supplied user id or id
-contact = Contact.findByID("541a144b201ebf2ec5000002");
-contact = Contact.findByUserID("e1a7d875-d83a-46f7-86f4-73be98a98584");
-
-// Update a contact
-contact.setName("Stitch Hessian");
-Contact updated = Contact.update(contact);
-
-// Update a contact by ID
-Contact contact = new Contact().setID("541a144b201ebf2ec5000002").setName("Stitch Hessian");
-Contact updated = Contact.update(contact);
-
-// Update a contact by User ID
-Contact contact = new Contact().setUserID("e1a7d875-d83a-46f7-86f4-73be98a98584").setName("Stitch Hessian");
-Contact updated = Contact.update(contact);
-
-// Read a contact list by email
-ContactCollection contacts = Contact.listByEmail("jubal@serenity.io");
-while(contacts.hasNext()) {
-    System.out.println(contacts.next());
-}
-
-// Iterate over all contacts (up to 10k records, to read all use Scroll API)
-ContactCollection allContacts = Contact.list();
-while(allContacts.hasNext()) {
-    System.out.println(allContacts.next());
-}
-
-// Retrieve contacts via Scroll API
-ScrollableContactCollection contactsScroll = Contact.scroll();
-List<Contact> contacts = contactsScroll.getPage();
-contactsScroll = contactsScroll.scroll();
-
-// List contacts (sorting)
-Map<String, String> params = Maps.newHashMap();
-params.put("sort", "created_at");
-params.put("order", "asc");
-ContactCollection contacts = Contact.list(params);
-
-// Remove a contact
-Contact.delete(contact);
-
-// Remove a contact by id
-Contact.delete(contact.getID());
-
-// Remove a contact by user_id
-Contact.deleteByUserID(contact.getUserID());
-
-// Convert a contact
-User converted = Contact.convert(contact, user);
-```
-
-### Visitors
-
-```java
-// Find visitor by ID
-Visitor visitor = Visitor.findByID("5b69565fa737210d1c2127f1");
-
-// Find visitor by User ID
-Visitor visitor = Visitor.findByUserID("6a347bc9-0b96-4925-bbbc-1f8b11f94c50");
-
-// Update a visitor
-Visitor visitor = Visitor.findByID("5b69565fa737210d1c2127f1");
-visitor.setName("Visitor's Name");
-Visitor.update(visitor);
-
-// Delete a visitor by ID
-Visitor.delete("5b69565fa737210d1c2127f1");
-
-// Delete a visitor
-Visitor visitor = Visitor.findByUserID("6a347bc9-0b96-4925-bbbc-1f8b11f94c50");
-Visitor.delete(visitor);
-
-// Convert a visitor to a lead
-Visitor visitor = Visitor.findByUserID("6a347bc9-0b96-4925-bbbc-1f8b11f94c50");
-Contact contact = Visitor.convertToContact(visitor);
-
-// Convert a visitor to a user
-Visitor visitor = Visitor.findByUserID("6a347bc9-0b96-4925-bbbc-1f8b11f94c50");
-User user = new User();
-user.setUserId("1");
-User convertUser = Visitor.convertToUser(visitor, user);
-```
-
-### Companies
-
-```java
-// Create a company
-Company company = new Company();
-    company.setName("Blue Sun");
-    company.setCompanyID("1");
-    company.setMonthlySpend(123.10f);
-    company.setPlan(new Company.Plan("premium"));
-    company.addCustomAttribute(CustomAttribute.newIntegerAttribute("foddstuff-items", 246));
-    company.addCustomAttribute(CustomAttribute.newStringAttribute("bestseller", "fruity oaty bar"));
-Company.create(company);
-
-// Find a company by company_id
-map = Maps.newHashMap();
-map.put("company_id", "1");
-Company company = Company.find(map);
-
-// Find a company by name
-map = Maps.newHashMap();
-map.put("name", "Blue Sun");
-Company company = Company.find(map);
-
-// Find a company by id
-Company company = Company.find("541a144b201ebf2ec5000001");
-
-// Update a company
-company.setName("Blue Sun Corporation");
-Company.update(company);
-
-// Iterate over all companies
-CompanyCollection companies = Company.list();
-while(companies.hasNext()) {
-    System.out.println(companies.next().getName());
-}
-
-// Retrieve companies via Scroll API
-ScrollableCompanyCollection companiesScroll = Company.scroll();
-List<Company> companies = companiesScroll.getPage();
-companiesScroll = companiesScroll.scroll();
-
-// Get a list of users in a company
-map = Maps.newHashMap();
-map.put("company_id", "6");
-UserCollection users = Company.listUsers(map);
-
-// Add a user to one or more companies
-User user = User.find("541a144b201ebf2ec5000001");
-user.addCompany(company);
-User.update(user);
-```
-
-### Admins
-
-```java
-// Iterate over all admins
-AdminCollection admins = Admin.list();
-while(admins.hasNext()) {
-    System.out.println(admins.next().getName());
-}
-
-// Find admin by ID
-Admin admin = Admin.find("123456");
-
-// Set admin as away and enable away mode reassignment
-Admin admin = Admin.setAwayMode("123456", true, true);
-```
-
-### Events
-
-```java
-// Create an event with a user ID
-// This is only valid for users
-Event event = new Event()
-    .setEventName("bought-hat")
-    .setUserID("1")
-    .putMetadata("invitee_email", "jayne@serenity.io")
-    .putMetadata("found_date", System.currentTimeMillis())
-    .putMetadata("new_signup", true);
-Event.create(event);
-
-// Create an event with an email
-// This is only valid for users
-Event event = new Event()
-    .setEventName("bought-hat")
-    .setEmail("test@example.com");
-Event.create(event);
-
-// Create an event with an ID
-// This is valid for both users and leads
-Event event = new Event()
-        .setEventName("bought-hat")
-        .setId("599d6aeeda850883ed8ba7c2");
-Event.create(event);
-
-
-// List events of a user
-Map<String, String> params = Maps.newHashMap();
-params.put("type", "user");
-params.put("user_id", "1");
-// Alternatively list by Intercom ID
-// params.put("intercom_user_id", "541a144b201ebf2ec5000001");
-// Or by email
-// params.put("email", "river@serenity.io");
-EventCollection events = Event.list(params);
-while (events.hasNext()) {
-    System.out.println(events.next().getEventName());
-}
-
-// List event summaries of a user
-Map<String, String> params = Maps.newHashMap();
-params.put("type", "user");
-params.put("user_id", "1");
-// Alternatively list by Intercom ID
-// params.put("intercom_user_id", "541a144b201ebf2ec5000001");
-// Or by email
-// params.put("email", "river@serenity.io");
-EventSummaryCollection eventSummaryCollection = Event.listSummary(params);
-for(EventSummary eventSummary : eventSummaryCollection.getEventSummaries()){
-    System.out.println(eventSummary);
+        client.articles().create(
+            CreateArticleRequest
+                .builder()
+                .title("Thanks for everything")
+                .authorId(1295)
+                .description("Description of the Article")
+                .body("Body of the Article")
+                .state(CreateArticleRequestState.PUBLISHED)
+                .build()
+        );
+    }
 }
 ```
 
-### Tags
+## Environments
+
+This SDK allows you to configure different environments for API requests.
 
 ```java
-// create a tag
-Tag tag = new Tag().setName("alliance");
-tag = Tag.create(tag);
+import com.intercom.api.Intercom;
+import com.intercom.api.core.Environment;
 
-// update a tag
-tag.setName("independent");
-tag = Tag.update(tag);
-
-// tag and untag users
-User one = new User().setEmail("river@serenity.io");
-User two = new User().setEmail("simon@serenity.io").untag();
-User.create(one);
-User.create(two);
-Tag.tag(tag, one, two);
-
-// tag and untag contacts
-Contact contact1 = Contact.findByID("5ab313046e4997e35bc13e7c");
-Contact contact2 = Contact.findByUserID("697ea3e0-227d-4d70-b776-1652e94f9583").untag();
-Tag.tag(tag, contact1, contact2);
-
-// iterate over all tags
-final TagCollection tags = Tag.list();
-while (tags.hasNext()) {
-    System.out.println(tags.next().getId());
-}
-
-// tag and untag companies
-Company c1 = new Company().setCompanyID("1");
-Company c2 = new Company().setCompanyID("2").untag();
-Company.create(c1);
-Company.create(c2);
-Tag.tag(tag, c1, c2);
-
-// delete a tag
-Tag.delete(tag);
+Intercom client = Intercom
+    .builder()
+    .environment(Environment.USProduction)
+    .build();
 ```
 
-### Segments
+## Base Url
+
+You can set a custom base URL when constructing the client.
 
 ```java
-// Find a segment
-Segment segment = Segment.find("1");
+import com.intercom.api.Intercom;
 
-// Update a segment
-segment.setName("new name");
-Segment.update(segment);
+Intercom client = Intercom
+    .builder()
+    .url("https://example.com")
+    .build();
+```
 
-// Iterate over all segments
-SegmentCollection segments = Segment.list();
-while(segments.hasNext()) {
-    System.out.println(segments.next().getId());
+## Exception Handling
+
+When the API returns a non-success status code (4xx or 5xx response), an API exception will be thrown.
+
+```java
+import com.intercom.api.core.IntercomApiApiException;
+
+try {
+    client.articles().create(...);
+} catch (IntercomApiApiException e) {
+    // Do something with the API exception...
 }
 ```
 
-### Notes
+## Advanced
+
+### Custom Client
+
+This SDK is built to work with any instance of `OkHttpClient`. By default, if no client is provided, the SDK will construct one. 
+However, you can pass your own client like so:
 
 ```java
-// create a user note
-User user = new User().setId("5310d8e8598c9a0b24000005");
-Author author = new Author().setId("1");
-Note note = new Note()
-    .setUser(user)
-    .setAuthor(author)
-    .setBody("The note");
-Note.create(note);
+import com.intercom.api.Intercom;
+import okhttp3.OkHttpClient;
 
-// Find a note by id
-note = Note.find("1");
+OkHttpClient customClient = ...;
 
-// Iterate over all notes for a user via their user_id
-Map<String, String> params = Maps.newHashMap();
-params.put("user_id", "1");
-NoteCollection notes = Note.list(params);
-while(notes.hasNext()) {
-    System.out.println(notes.next().getBody());
-}
-
-// Iterate over all notes for a user via their email address
-params = Maps.newHashMap();
-params.put("email", "malcolm@serenity.io");
-notes = Note.list(params);
-while(notes.hasNext()) {
-    System.out.println(notes.next().getBody());
-}
+Intercom client = Intercom
+    .builder()
+    .httpClient(customClient)
+    .build();
 ```
 
-### Conversations
+### Retries
+
+The SDK is instrumented with automatic retries with exponential backoff. A request will be retried as long
+as the request is deemed retriable and the number of retry attempts has not grown larger than the configured
+retry limit (default: 2).
+
+A request is deemed retriable when any of the following HTTP status codes is returned:
+
+- [408](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/408) (Timeout)
+- [429](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429) (Too Many Requests)
+- [5XX](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500) (Internal Server Errors)
+
+Use the `maxRetries` request option to configure this behavior.
 
 ```java
-// send a message to a user
-User user = new User().setId("5310d8e8598c9a0b24000005");
-Admin admin = new Admin().setId("1");
-AdminMessage adminMessage = new AdminMessage()
-    .setAdmin(admin)
-    .setUser(user)
-    .setSubject("This Land")
-    .setBody("Har har har! Mine is an evil laugh!")
-    .setMessageType("email")
-    .setTemplate("plain");
-Conversation.create(adminMessage);
+import com.intercom.api.core.RequestOptions;
 
-// send a message from a user
-UserMessage userMessage = new UserMessage()
-    .setBody("Hey! Is there, is there a reward?")
-    .setFrom(user);
-Conversation.create(userMessage);
-
-// send a message from a contact
-ContactMessage contactMessage = new ContactMessage()
-    .setBody("Hey! Is there, is there a reward?")
-    .setFrom(contact);
-Conversation.create(contactMessage);
-
-//list all conversations
-ConversationCollection conversations = Conversation.list();
-while (conversations.hasNext()) {
-    Conversation conversation = conversations.next();
-}
-
-// find admin conversations
-Map<String, String> params = Maps.newHashMap();
-params.put("type", "admin");
-params.put("admin_id", "1");
-ConversationCollection adminConversations = Conversation.list(params);
-while (adminConversations.hasNext()) {
-    Conversation conversation = adminConversations.next();
-}
-
-// find user conversations
-params = Maps.newHashMap();
-params.put("type", "user");
-params.put("user_id", "1");
-ConversationCollection userConversations = Conversation.list(params);
-while (userConversations.hasNext()) {
-    Conversation conversation = userConversations.next();
-}
-
-// find a conversation by id
-final Conversation conversation = Conversation.find("66");
-ConversationMessage conversationMessage = conversation.getConversationMessage();
-ConversationPartCollection parts = conversation.getConversationPartCollection();
-List<ConversationPart> partList = parts.getPage();
-for (ConversationPart part : partList) {
-    String partType = part.getPartType();
-    Author author = part.getAuthor();
-    String body = part.getBody();
-}
-ConversationPart part = conversation.getMostRecentConversationPart();
-Admin assignee = conversation.getAssignee();
-User user = conversation.getUser();
-
-// Find all open conversations assigned to an admin and render as plaintext
-params = Maps.newHashMap();
-params.put("type", "admin");
-params.put("admin_id", "7");
-params.put("display_as", "plaintext");
-ConversationCollection openForAdmin = Conversation.list(params);
-
-// admin reply
-Admin admin = new Admin().setId("1");
-AdminReply adminReply = new AdminReply(admin);
-adminReply.setBody("These apples are healthsome");
-adminReply.setAttachmentUrls(new String[]{"http://www.example.com/attachment.jpg"}); // optional - list of attachments
-Conversation.reply("66", adminReply);
-
-// admin close
-Admin admin = new Admin().setId("1");
-AdminReply adminReply = new AdminReply(admin);
-adminReply.setMessageType("close");
-Conversation.reply("66", adminReply);
-
-// admin snooze
-Admin admin = new Admin().setId("1");
-AdminReply adminReply = new AdminReply(admin);
-adminReply.setSnoozedUntil(1549092382);
-Conversation.reply("66", adminReply);
-
-// admin open / unsnooze
-Admin admin = new Admin().setId("1");
-AdminReply adminReply = new AdminReply(admin);
-adminReply.setMessageType("open");
-Conversation.reply("66", adminReply);
-
-// user reply
-User user1 = new User().setId("5310d8e8598c9a0b24000005");
-UserReply userReply = new UserReply(user1);
-userReply.setBody("Mighty fine shindig");
-userReply.setAttachmentUrls(new String[]{"http://www.example.com/attachment.jpg"}); // optional - list of attachments
-System.out.println(MapperSupport.objectMapper().writeValueAsString(userReply));
-Conversation.reply("66", userReply);
-
-// run assignment rules
-Conversation.runAssignmentRules("19240007891");
-
-// mark conversation as read
-Conversation.markAsRead("66");
+client.articles().create(
+    ...,
+    RequestOptions
+        .builder()
+        .maxRetries(1)
+        .build()
+);
 ```
 
-### Webhooks
+### Timeouts
+
+The SDK defaults to a 60 second timeout. You can configure this with a timeout option at the client or request level.
 
 ```java
-// create a subscription
-Subscription subscription = new Subscription();
-subscription.setUrl(new URI("https://example.org/webhooks/1"));
-subscription.addTopic(Subscription.Topic.USER_CREATED);
-subscription.addTopic(Subscription.Topic.USER_TAG_CREATED);
-Subscription.create(subscription);
+import com.intercom.api.Intercom;
+import com.intercom.api.core.RequestOptions;
 
-// create a subscribtion and subscribe to events
-Subscription subscription = new Subscription();
-subscription.addTopic(Subscription.Topic.EVENT_CREATED);
-Map<String,ArrayList<String>> metadata = new HashMap<String, ArrayList<String>>();
-ArrayList<String> events = new ArrayList<String>(Arrays.asList("cart"));
-metadata.put("event_names", events);
-subscription.setMetadata(metadata);
-subscription.setMetadata(metadata);
-Subscription.create(subscription);
+// Client level
+Intercom client = Intercom
+    .builder()
+    .timeout(10)
+    .build();
 
-// update a subscription
-Subscription subscription = Subscription.find("nsub_60ca7690-4020-11e4-b789-4961958e51bd");
-subscription.addTopic(Subscription.Topic.COMPANY_CREATED);
-Subscription updatedSubscription = Subscription.update(subscription);
-
-// delete a subscription
-Subscription subscription = new Subscription();
-subscription.setId("nsub_83793feb-8394-4cb6-91d6-68ef4dd08a8e");
-Subscription deletedSubscription = Subscription.delete(subscription);
-
-// find a subscription
-subscription = Subscription.find("nsub_60ca7690-4020-11e4-b789-4961958e51bd");
-
-// ping a subscription by ID
-Subscription.ping("nsub_60ca7690-4020-11e4-b789-4961958e51bd");
-// ping a subscription by subscription object
-subscription = Subscription.find("nsub_60ca7690-4020-11e4-b789-4961958e51bd");
-Subscription.ping(subscription);
-
-// list subscriptions
-SubscriptionCollection list = Subscription.list();
-while(list.hasNext()) {
-    Subscription sub = list.next();
-    String appID = sub.getAppID();
-    String serviceType = sub.getServiceType();
-    List<Subscription.Topic> topics = sub.getTopics();
-    String hubSecret = sub.getHubSecret();
-}
-
-// notification sent feed
-NotificationCollection sent = Subscription.sentFeed(subscription.getId());
-while(sent.hasNext()) {
-    Notification notification = sent.next();
-    String id = notification.getId();
-    String topic = notification.getTopic();
-    NotificationData data = notification.getData();
-    String type = data.getType();
-    // raw map representation of the payload
-    Map item = data.getItem();
-}
-
-// notification error feed
-NotificationErrorCollection errors = Subscription.errorFeed(subscription.getId());
-while (errors.hasNext()) {
-    NotificationError notificationError = errors.next();
-    RequestResponseCapture capture = notificationError.getCapture();
-    URI requestURI = capture.getRequestURI();
-    String requestMethod = capture.getRequestMethod();
-    Map<String, String> requestHeaders = capture.getRequestHeaders();
-    String requestEntity = capture.getRequestEntity();
-    int statusCode = capture.getResponseStatusCode();
-    Map<String, String> responseHeaders = capture.getResponseHeaders();
-    String responseEntity = capture.getResponseEntity();
-}
-
-// consume a webhook notification
-InputStream jsonStream = ...;
-final Notification notification = Notification.readJSON(jsonStream);
-
-String jsonString = ...;
-final Notification notification = Notification.readJSON(jsonString);
-```
-
-### Counts
-
-```java
-// app totals
-Counts.Totals totals = Counts.appTotals();
-System.out.println("companies: " + totals.getCompany().getValue());
-System.out.println("segments: :" + totals.getSegment().getValue());
-System.out.println("tags: :" + totals.getTag().getValue());
-System.out.println("users: :" + totals.getUser().getValue());
-
-// conversation totals
-Counts.Conversation conversationTotals = Counts.conversationTotals();
-System.out.println("assigned: " + conversationTotals.getAssigned());
-System.out.println("closed: :" + conversationTotals.getClosed());
-System.out.println("open: :" + conversationTotals.getOpen());
-System.out.println("unassigned: :" + conversationTotals.getUnassigned());
-
-// admin open/close counts
-Counts.Conversation adminCounts = Counts.conversationAdmins();
-List<Admin> admins = adminCounts.getAdmins();
-for (Admin admin : admins) {
-    System.out.println(admin.getName() + ": " + admin.getClosed() + ", " + admin.getOpen());
-}
-
-// tag user counts
-System.out.println("tag user counts: ");
-List<Counts.CountItem> tags = Counts.userTags();
-for (Counts.CountItem tag : tags) {
-    System.out.println(tag.getName()+": " +tag.getValue());
-}
-
-// segment user counts
-List<Counts.CountItem> segments = Counts.userSegments();
-for (Counts.CountItem segment : segments) {
-    System.out.println(segment.getName()+": " +segment.getValue());
-}
-
-// company user counts
-List<Counts.CountItem> companyUsers = Counts.companyUsers();
-for (Counts.CountItem company : companyUsers) {
-    System.out.println(company.getName()+": " +company.getValue());
-}
-
-// company tag counts
-List<Counts.CountItem> companyTags = Counts.companyTags();
-for (Counts.CountItem tag : companyTags) {
-    System.out.println(tag.getName()+": " +tag.getValue());
-}
+// Request level
+client.articles().create(
+    ...,
+    RequestOptions
+        .builder()
+        .timeout(10)
+        .build()
+);
 ```
 
 ## Idioms
@@ -775,51 +283,12 @@ The API throws the following runtime exceptions -
 - ServerException: for a 500 or 503 response
 - IntercomException: general exception
 
-## Configuration
+## Contributing
 
-### HTTP
+While we value open-source contributions to this SDK, this library is generated programmatically.
+Additions made directly to this library would have to be moved over to our generation code,
+otherwise they would be overwritten upon the next generated release. Feel free to open a PR as
+a proof of concept, but know that we will not be able to merge it as-is. We suggest opening
+an issue first to discuss with us!
 
-The client can be configured to accept any http stack that implements
-`java.net.HttpURLConnection` by implementing the `HttpConnectorSupplier`
- interface.
-
-For example, to use [OkHttp](https://square.github.io/okhttp/) as a connection
-supplier, create a supplier class -
-
-```java
-public class OkHttpSupplier implements HttpConnectorSupplier {
-    private final OkUrlFactory urlFactory;
-
-    public OkHttpSupplier(OkUrlFactory urlFactory) {
-        this.urlFactory = urlFactory;
-    }
-
-    @Override
-    public HttpURLConnection connect(URI uri) throws IOException {
-        return urlFactory.open(uri.toURL());
-    }
-}
-```
-
-and hand a supplier to the Intercom object -
-
-```java
-final OkHttpClient client = new OkHttpClient();
-final OkUrlFactory factory = new OkUrlFactory(client);
-final OkHttpSupplier supplier = new OkHttpSupplier(factory);
-Intercom.setHttpConnectorSupplier(supplier);
-```
-
-#### Timeouts
-
-The default connection and request timeouts can be set in milliseconds using the
-`Intercom.setConnectionTimeout` and `Intercom.setRequestTimeout` methods.
-
-### Target API Server
-
-The base URI to target can be changed for testing purposes
-
-```java
-URI baseURI = new URI("https://example.org/server");
-Intercom.setApiBaseURI(baseURI);
-```
+On the other hand, contributions to the README are always very welcome!
