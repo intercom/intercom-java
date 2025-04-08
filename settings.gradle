@@ -1,1 +1,1 @@
-modules.split(',').each { include it }
+include 'sample-app'
