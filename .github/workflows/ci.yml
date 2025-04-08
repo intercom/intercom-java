@@ -36,6 +36,9 @@ jobs:
 
       - name: Test
         run: ./gradlew test
+        env:
+          INTERCOM_API_KEY: ${{ secrets.INTERCOM_API_KEY }}
+          
   publish:
     needs: [ compile, test ]
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
