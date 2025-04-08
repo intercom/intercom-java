@@ -3,17 +3,9 @@
  */
 package com.intercom.api.resources.contacts;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.intercom.api.core.ClientOptions;
-import com.intercom.api.core.IntercomApiException;
-import com.intercom.api.core.IntercomException;
-import com.intercom.api.core.MediaTypes;
-import com.intercom.api.core.ObjectMappers;
-import com.intercom.api.core.QueryStringMapper;
 import com.intercom.api.core.RequestOptions;
 import com.intercom.api.core.pagination.SyncPagingIterable;
-import com.intercom.api.errors.NotFoundError;
-import com.intercom.api.errors.UnauthorizedError;
 import com.intercom.api.resources.companies.types.Company;
 import com.intercom.api.resources.contacts.requests.ArchiveContactRequest;
 import com.intercom.api.resources.contacts.requests.AttachSubscriptionToContactRequest;
@@ -31,46 +23,37 @@ import com.intercom.api.resources.contacts.requests.UpdateContactRequest;
 import com.intercom.api.resources.contacts.types.Contact;
 import com.intercom.api.resources.subscriptiontypes.types.SubscriptionType;
 import com.intercom.api.types.ContactArchived;
-import com.intercom.api.types.ContactAttachedCompanies;
 import com.intercom.api.types.ContactDeleted;
-import com.intercom.api.types.ContactList;
 import com.intercom.api.types.ContactSegments;
 import com.intercom.api.types.ContactUnarchived;
 import com.intercom.api.types.CreateContactRequest;
-import com.intercom.api.types.CursorPages;
-import com.intercom.api.types.Error;
 import com.intercom.api.types.SearchRequest;
-import com.intercom.api.types.StartingAfterPaging;
 import com.intercom.api.types.SubscriptionTypeList;
 import com.intercom.api.types.TagList;
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Headers;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-import org.jetbrains.annotations.NotNull;
 
 public class AsyncContactsClient {
     protected final ClientOptions clientOptions;
 
+    private final AsyncRawContactsClient rawClient;
+
     public AsyncContactsClient(ClientOptions clientOptions) {
         this.clientOptions = clientOptions;
+        this.rawClient = new AsyncRawContactsClient(clientOptions);
+    }
+
+    /**
+     * Get responses with HTTP metadata like headers
+     */
+    public AsyncRawContactsClient withRawResponse() {
+        return this.rawClient;
     }
 
     /**
      * You can fetch a list of companies that are associated to a contact.
      */
     public CompletableFuture<SyncPagingIterable<Company>> listAttachedCompanies(ListAttachedCompaniesRequest request) {
-        return listAttachedCompanies(request, null);
+        return this.rawClient.listAttachedCompanies(request).thenApply(response -> response.body());
     }
 
     /**
@@ -78,93 +61,14 @@ public class AsyncContactsClient {
      */
     public CompletableFuture<SyncPagingIterable<Company>> listAttachedCompanies(
             ListAttachedCompaniesRequest request, RequestOptions requestOptions) {
-        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("contacts")
-                .addPathSegment(request.getContactId())
-                .addPathSegments("companies");
-        if (request.getPage().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "page", request.getPage().get().toString(), false);
-        }
-        if (request.getPerPage().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "per_page", request.getPerPage().get().toString(), false);
-        }
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl.build())
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<SyncPagingIterable<Company>> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        ContactAttachedCompanies parsedResponse = ObjectMappers.JSON_MAPPER.readValue(
-                                responseBody.string(), ContactAttachedCompanies.class);
-                        int newPageNumber =
-                                request.getPage().map(page -> page + 1).orElse(1);
-                        ListAttachedCompaniesRequest nextRequest = ListAttachedCompaniesRequest.builder()
-                                .from(request)
-                                .page(newPageNumber)
-                                .build();
-                        List<Company> result = parsedResponse.getCompanies();
-                        future.complete(new SyncPagingIterable<Company>(true, result, () -> {
-                            try {
-                                return listAttachedCompanies(nextRequest, requestOptions)
-                                        .get();
-                            } catch (InterruptedException | ExecutionException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        switch (response.code()) {
-                            case 401:
-                                future.completeExceptionally(new UnauthorizedError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 404:
-                                future.completeExceptionally(new NotFoundError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                                return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.listAttachedCompanies(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
      * You can fetch a list of segments that are associated to a contact.
      */
     public CompletableFuture<ContactSegments> listAttachedSegments(ListSegmentsAttachedToContactRequest request) {
-        return listAttachedSegments(request, null);
+        return this.rawClient.listAttachedSegments(request).thenApply(response -> response.body());
     }
 
     /**
@@ -172,64 +76,7 @@ public class AsyncContactsClient {
      */
     public CompletableFuture<ContactSegments> listAttachedSegments(
             ListSegmentsAttachedToContactRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("contacts")
-                .addPathSegment(request.getContactId())
-                .addPathSegments("segments")
-                .build();
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl)
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<ContactSegments> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), ContactSegments.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        switch (response.code()) {
-                            case 401:
-                                future.completeExceptionally(new UnauthorizedError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 404:
-                                future.completeExceptionally(new NotFoundError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                                return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.listAttachedSegments(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
@@ -240,7 +87,7 @@ public class AsyncContactsClient {
      * 2.Opt-in subscription types that the user has opted-in to receiving.</p>
      */
     public CompletableFuture<SubscriptionTypeList> listAttachedSubscriptions(ListAttachedSubscriptionsRequest request) {
-        return listAttachedSubscriptions(request, null);
+        return this.rawClient.listAttachedSubscriptions(request).thenApply(response -> response.body());
     }
 
     /**
@@ -252,64 +99,7 @@ public class AsyncContactsClient {
      */
     public CompletableFuture<SubscriptionTypeList> listAttachedSubscriptions(
             ListAttachedSubscriptionsRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("contacts")
-                .addPathSegment(request.getContactId())
-                .addPathSegments("subscriptions")
-                .build();
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl)
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<SubscriptionTypeList> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), SubscriptionTypeList.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        switch (response.code()) {
-                            case 401:
-                                future.completeExceptionally(new UnauthorizedError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 404:
-                                future.completeExceptionally(new NotFoundError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                                return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.listAttachedSubscriptions(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
@@ -319,7 +109,7 @@ public class AsyncContactsClient {
      * <p>This will return a subscription type model for the subscription type that was added to the contact.</p>
      */
     public CompletableFuture<SubscriptionType> attachSubscription(AttachSubscriptionToContactRequest request) {
-        return attachSubscription(request, null);
+        return this.rawClient.attachSubscription(request).thenApply(response -> response.body());
     }
 
     /**
@@ -330,78 +120,14 @@ public class AsyncContactsClient {
      */
     public CompletableFuture<SubscriptionType> attachSubscription(
             AttachSubscriptionToContactRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("contacts")
-                .addPathSegment(request.getContactId())
-                .addPathSegments("subscriptions")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<SubscriptionType> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), SubscriptionType.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        switch (response.code()) {
-                            case 401:
-                                future.completeExceptionally(new UnauthorizedError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 404:
-                                future.completeExceptionally(new NotFoundError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                                return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.attachSubscription(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
      * You can remove a specific subscription from a contact. This will return a subscription type model for the subscription type that was removed from the contact.
      */
     public CompletableFuture<SubscriptionType> detachSubscription(DetachSubscriptionFromContactRequest request) {
-        return detachSubscription(request, null);
+        return this.rawClient.detachSubscription(request).thenApply(response -> response.body());
     }
 
     /**
@@ -409,72 +135,14 @@ public class AsyncContactsClient {
      */
     public CompletableFuture<SubscriptionType> detachSubscription(
             DetachSubscriptionFromContactRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("contacts")
-                .addPathSegment(request.getContactId())
-                .addPathSegments("subscriptions")
-                .addPathSegment(request.getSubscriptionId())
-                .build();
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl)
-                .method("DELETE", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<SubscriptionType> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), SubscriptionType.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        switch (response.code()) {
-                            case 401:
-                                future.completeExceptionally(new UnauthorizedError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 404:
-                                future.completeExceptionally(new NotFoundError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                                return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.detachSubscription(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
      * You can fetch a list of all tags that are attached to a specific contact.
      */
     public CompletableFuture<TagList> listAttachedTags(ListTagsAttachedToContactRequest request) {
-        return listAttachedTags(request, null);
+        return this.rawClient.listAttachedTags(request).thenApply(response -> response.body());
     }
 
     /**
@@ -482,333 +150,63 @@ public class AsyncContactsClient {
      */
     public CompletableFuture<TagList> listAttachedTags(
             ListTagsAttachedToContactRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("contacts")
-                .addPathSegment(request.getContactId())
-                .addPathSegments("tags")
-                .build();
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl)
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<TagList> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), TagList.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        switch (response.code()) {
-                            case 401:
-                                future.completeExceptionally(new UnauthorizedError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 404:
-                                future.completeExceptionally(new NotFoundError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                                return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.listAttachedTags(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
      * You can fetch the details of a single contact.
      */
     public CompletableFuture<Contact> find(FindContactRequest request) {
-        return find(request, null);
+        return this.rawClient.find(request).thenApply(response -> response.body());
     }
 
     /**
      * You can fetch the details of a single contact.
      */
     public CompletableFuture<Contact> find(FindContactRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("contacts")
-                .addPathSegment(request.getContactId())
-                .build();
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl)
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<Contact> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Contact.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        if (response.code() == 401) {
-                            future.completeExceptionally(new UnauthorizedError(
-                                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                            return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.find(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
      * You can update an existing contact (ie. user or lead).
      */
     public CompletableFuture<Contact> update(UpdateContactRequest request) {
-        return update(request, null);
+        return this.rawClient.update(request).thenApply(response -> response.body());
     }
 
     /**
      * You can update an existing contact (ie. user or lead).
      */
     public CompletableFuture<Contact> update(UpdateContactRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("contacts")
-                .addPathSegment(request.getContactId())
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("PUT", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<Contact> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Contact.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        if (response.code() == 401) {
-                            future.completeExceptionally(new UnauthorizedError(
-                                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                            return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.update(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
      * You can delete a single contact.
      */
     public CompletableFuture<ContactDeleted> delete(DeleteContactRequest request) {
-        return delete(request, null);
+        return this.rawClient.delete(request).thenApply(response -> response.body());
     }
 
     /**
      * You can delete a single contact.
      */
     public CompletableFuture<ContactDeleted> delete(DeleteContactRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("contacts")
-                .addPathSegment(request.getContactId())
-                .build();
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl)
-                .method("DELETE", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<ContactDeleted> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), ContactDeleted.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        if (response.code() == 401) {
-                            future.completeExceptionally(new UnauthorizedError(
-                                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                            return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.delete(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
      * You can merge a contact with a <code>role</code> of <code>lead</code> into a contact with a <code>role</code> of <code>user</code>.
      */
     public CompletableFuture<Contact> mergeLeadInUser(MergeContactsRequest request) {
-        return mergeLeadInUser(request, null);
+        return this.rawClient.mergeLeadInUser(request).thenApply(response -> response.body());
     }
 
     /**
      * You can merge a contact with a <code>role</code> of <code>lead</code> into a contact with a <code>role</code> of <code>user</code>.
      */
     public CompletableFuture<Contact> mergeLeadInUser(MergeContactsRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("contacts/merge")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<Contact> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Contact.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        if (response.code() == 401) {
-                            future.completeExceptionally(new UnauthorizedError(
-                                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                            return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.mergeLeadInUser(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
@@ -900,7 +298,7 @@ public class AsyncContactsClient {
      * | $        | String                           | Ends With                                                        |</p>
      */
     public CompletableFuture<SyncPagingIterable<Contact>> search(SearchRequest request) {
-        return search(request, null);
+        return this.rawClient.search(request).thenApply(response -> response.body());
     }
 
     /**
@@ -992,85 +390,7 @@ public class AsyncContactsClient {
      * | $        | String                           | Ends With                                                        |</p>
      */
     public CompletableFuture<SyncPagingIterable<Contact>> search(SearchRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("contacts/search")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<SyncPagingIterable<Contact>> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        ContactList parsedResponse =
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), ContactList.class);
-                        Optional<String> startingAfter = parsedResponse
-                                .getPages()
-                                .flatMap(CursorPages::getNext)
-                                .flatMap(StartingAfterPaging::getStartingAfter);
-                        Optional<StartingAfterPaging> pagination = request.getPagination()
-                                .map(pagination_ -> StartingAfterPaging.builder()
-                                        .from(pagination_)
-                                        .startingAfter(startingAfter)
-                                        .build());
-                        SearchRequest nextRequest = SearchRequest.builder()
-                                .from(request)
-                                .pagination(pagination)
-                                .build();
-                        List<Contact> result = parsedResponse.getData();
-                        future.complete(new SyncPagingIterable<Contact>(startingAfter.isPresent(), result, () -> {
-                            try {
-                                return search(nextRequest, requestOptions).get();
-                            } catch (InterruptedException | ExecutionException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        if (response.code() == 401) {
-                            future.completeExceptionally(new UnauthorizedError(
-                                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                            return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.search(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
@@ -1081,7 +401,7 @@ public class AsyncContactsClient {
      * {% /admonition %}
      */
     public CompletableFuture<SyncPagingIterable<Contact>> list() {
-        return list(ListContactsRequest.builder().build());
+        return this.rawClient.list().thenApply(response -> response.body());
     }
 
     /**
@@ -1092,7 +412,7 @@ public class AsyncContactsClient {
      * {% /admonition %}
      */
     public CompletableFuture<SyncPagingIterable<Contact>> list(ListContactsRequest request) {
-        return list(request, null);
+        return this.rawClient.list(request).thenApply(response -> response.body());
     }
 
     /**
@@ -1104,218 +424,42 @@ public class AsyncContactsClient {
      */
     public CompletableFuture<SyncPagingIterable<Contact>> list(
             ListContactsRequest request, RequestOptions requestOptions) {
-        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("contacts");
-        if (request.getPage().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "page", request.getPage().get().toString(), false);
-        }
-        if (request.getPerPage().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "per_page", request.getPerPage().get().toString(), false);
-        }
-        if (request.getStartingAfter().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "starting_after", request.getStartingAfter().get(), false);
-        }
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl.build())
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<SyncPagingIterable<Contact>> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        ContactList parsedResponse =
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), ContactList.class);
-                        Optional<String> startingAfter = parsedResponse
-                                .getPages()
-                                .flatMap(CursorPages::getNext)
-                                .flatMap(StartingAfterPaging::getStartingAfter);
-                        ListContactsRequest nextRequest = ListContactsRequest.builder()
-                                .from(request)
-                                .startingAfter(startingAfter)
-                                .build();
-                        List<Contact> result = parsedResponse.getData();
-                        future.complete(new SyncPagingIterable<Contact>(startingAfter.isPresent(), result, () -> {
-                            try {
-                                return list(nextRequest, requestOptions).get();
-                            } catch (InterruptedException | ExecutionException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        if (response.code() == 401) {
-                            future.completeExceptionally(new UnauthorizedError(
-                                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                            return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.list(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
      * You can create a new contact (ie. user or lead).
      */
     public CompletableFuture<Contact> create(CreateContactRequest request) {
-        return create(request, null);
+        return this.rawClient.create(request).thenApply(response -> response.body());
     }
 
     /**
      * You can create a new contact (ie. user or lead).
      */
     public CompletableFuture<Contact> create(CreateContactRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("contacts")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<Contact> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Contact.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        if (response.code() == 401) {
-                            future.completeExceptionally(new UnauthorizedError(
-                                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                            return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.create(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
      * You can archive a single contact.
      */
     public CompletableFuture<ContactArchived> archive(ArchiveContactRequest request) {
-        return archive(request, null);
+        return this.rawClient.archive(request).thenApply(response -> response.body());
     }
 
     /**
      * You can archive a single contact.
      */
     public CompletableFuture<ContactArchived> archive(ArchiveContactRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("contacts")
-                .addPathSegment(request.getContactId())
-                .addPathSegments("archive")
-                .build();
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", RequestBody.create("", null))
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<ContactArchived> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), ContactArchived.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.archive(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
      * You can unarchive a single contact.
      */
     public CompletableFuture<ContactUnarchived> unarchive(UnarchiveContactRequest request) {
-        return unarchive(request, null);
+        return this.rawClient.unarchive(request).thenApply(response -> response.body());
     }
 
     /**
@@ -1323,49 +467,6 @@ public class AsyncContactsClient {
      */
     public CompletableFuture<ContactUnarchived> unarchive(
             UnarchiveContactRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("contacts")
-                .addPathSegment(request.getContactId())
-                .addPathSegments("unarchive")
-                .build();
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", RequestBody.create("", null))
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<ContactUnarchived> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), ContactUnarchived.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.unarchive(request, requestOptions).thenApply(response -> response.body());
     }
 }

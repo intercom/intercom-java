@@ -3,20 +3,9 @@
  */
 package com.intercom.api.resources.conversations;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.intercom.api.core.ClientOptions;
-import com.intercom.api.core.IntercomApiException;
-import com.intercom.api.core.IntercomException;
-import com.intercom.api.core.MediaTypes;
-import com.intercom.api.core.ObjectMappers;
-import com.intercom.api.core.QueryStringMapper;
 import com.intercom.api.core.RequestOptions;
 import com.intercom.api.core.pagination.SyncPagingIterable;
-import com.intercom.api.errors.BadRequestError;
-import com.intercom.api.errors.ForbiddenError;
-import com.intercom.api.errors.NotFoundError;
-import com.intercom.api.errors.UnauthorizedError;
-import com.intercom.api.errors.UnprocessableEntityError;
 import com.intercom.api.resources.conversations.requests.AttachContactToConversationRequest;
 import com.intercom.api.resources.conversations.requests.AutoAssignConversationRequest;
 import com.intercom.api.resources.conversations.requests.ConvertConversationToTicketRequest;
@@ -30,35 +19,25 @@ import com.intercom.api.resources.conversations.requests.UpdateConversationReque
 import com.intercom.api.resources.conversations.types.Conversation;
 import com.intercom.api.resources.messages.types.Message;
 import com.intercom.api.resources.tickets.types.Ticket;
-import com.intercom.api.types.CursorPages;
-import com.intercom.api.types.Error;
-import com.intercom.api.types.PaginatedConversationResponse;
 import com.intercom.api.types.RedactConversationRequest;
 import com.intercom.api.types.SearchRequest;
-import com.intercom.api.types.StartingAfterPaging;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Headers;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-import org.jetbrains.annotations.NotNull;
 
 public class AsyncConversationsClient {
     protected final ClientOptions clientOptions;
 
+    private final AsyncRawConversationsClient rawClient;
+
     public AsyncConversationsClient(ClientOptions clientOptions) {
         this.clientOptions = clientOptions;
+        this.rawClient = new AsyncRawConversationsClient(clientOptions);
+    }
+
+    /**
+     * Get responses with HTTP metadata like headers
+     */
+    public AsyncRawConversationsClient withRawResponse() {
+        return this.rawClient;
     }
 
     /**
@@ -70,7 +49,7 @@ public class AsyncConversationsClient {
      * {% /admonition %}</p>
      */
     public CompletableFuture<SyncPagingIterable<Conversation>> list() {
-        return list(ListConversationsRequest.builder().build());
+        return this.rawClient.list().thenApply(response -> response.body());
     }
 
     /**
@@ -82,7 +61,7 @@ public class AsyncConversationsClient {
      * {% /admonition %}</p>
      */
     public CompletableFuture<SyncPagingIterable<Conversation>> list(ListConversationsRequest request) {
-        return list(request, null);
+        return this.rawClient.list(request).thenApply(response -> response.body());
     }
 
     /**
@@ -95,85 +74,7 @@ public class AsyncConversationsClient {
      */
     public CompletableFuture<SyncPagingIterable<Conversation>> list(
             ListConversationsRequest request, RequestOptions requestOptions) {
-        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations");
-        if (request.getPerPage().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "per_page", request.getPerPage().get().toString(), false);
-        }
-        if (request.getStartingAfter().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "starting_after", request.getStartingAfter().get(), false);
-        }
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl.build())
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<SyncPagingIterable<Conversation>> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        PaginatedConversationResponse parsedResponse = ObjectMappers.JSON_MAPPER.readValue(
-                                responseBody.string(), PaginatedConversationResponse.class);
-                        Optional<String> startingAfter = parsedResponse
-                                .getPages()
-                                .flatMap(CursorPages::getNext)
-                                .flatMap(StartingAfterPaging::getStartingAfter);
-                        ListConversationsRequest nextRequest = ListConversationsRequest.builder()
-                                .from(request)
-                                .startingAfter(startingAfter)
-                                .build();
-                        List<Conversation> result = parsedResponse.getConversations();
-                        future.complete(new SyncPagingIterable<Conversation>(startingAfter.isPresent(), result, () -> {
-                            try {
-                                return list(nextRequest, requestOptions).get();
-                            } catch (InterruptedException | ExecutionException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        switch (response.code()) {
-                            case 401:
-                                future.completeExceptionally(new UnauthorizedError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 403:
-                                future.completeExceptionally(new ForbiddenError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.list(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
@@ -186,7 +87,7 @@ public class AsyncConversationsClient {
      * <p>This will return the Message model that has been created.</p>
      */
     public CompletableFuture<Message> create(CreateConversationRequest request) {
-        return create(request, null);
+        return this.rawClient.create(request).thenApply(response -> response.body());
     }
 
     /**
@@ -199,72 +100,7 @@ public class AsyncConversationsClient {
      * <p>This will return the Message model that has been created.</p>
      */
     public CompletableFuture<Message> create(CreateConversationRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<Message> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Message.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        switch (response.code()) {
-                            case 401:
-                                future.completeExceptionally(new UnauthorizedError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 403:
-                                future.completeExceptionally(new ForbiddenError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 404:
-                                future.completeExceptionally(new NotFoundError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                                return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.create(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
@@ -276,7 +112,7 @@ public class AsyncConversationsClient {
      * <p>For AI agent conversation metadata, please note that you need to have the agent enabled in your workspace, which is a <a href="https://www.intercom.com/help/en/articles/8205718-fin-resolutions#h_97f8c2e671">paid feature</a>.</p>
      */
     public CompletableFuture<Conversation> find(FindConversationRequest request) {
-        return find(request, null);
+        return this.rawClient.find(request).thenApply(response -> response.body());
     }
 
     /**
@@ -288,69 +124,7 @@ public class AsyncConversationsClient {
      * <p>For AI agent conversation metadata, please note that you need to have the agent enabled in your workspace, which is a <a href="https://www.intercom.com/help/en/articles/8205718-fin-resolutions#h_97f8c2e671">paid feature</a>.</p>
      */
     public CompletableFuture<Conversation> find(FindConversationRequest request, RequestOptions requestOptions) {
-        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations")
-                .addPathSegment(request.getConversationId());
-        if (request.getDisplayAs().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "display_as", request.getDisplayAs().get(), false);
-        }
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl.build())
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<Conversation> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        switch (response.code()) {
-                            case 401:
-                                future.completeExceptionally(new UnauthorizedError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 403:
-                                future.completeExceptionally(new ForbiddenError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 404:
-                                future.completeExceptionally(new NotFoundError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                                return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.find(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
@@ -360,7 +134,7 @@ public class AsyncConversationsClient {
      * {% /admonition %}</p>
      */
     public CompletableFuture<Conversation> update(UpdateConversationRequest request) {
-        return update(request, null);
+        return this.rawClient.update(request).thenApply(response -> response.body());
     }
 
     /**
@@ -370,83 +144,7 @@ public class AsyncConversationsClient {
      * {% /admonition %}</p>
      */
     public CompletableFuture<Conversation> update(UpdateConversationRequest request, RequestOptions requestOptions) {
-        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations")
-                .addPathSegment(request.getConversationId());
-        if (request.getDisplayAs().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "display_as", request.getDisplayAs().get(), false);
-        }
-        Map<String, Object> properties = new HashMap<>();
-        if (request.getRead().isPresent()) {
-            properties.put("read", request.getRead());
-        }
-        if (request.getCustomAttributes().isPresent()) {
-            properties.put("custom_attributes", request.getCustomAttributes());
-        }
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(properties), MediaTypes.APPLICATION_JSON);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl.build())
-                .method("PUT", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<Conversation> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        switch (response.code()) {
-                            case 401:
-                                future.completeExceptionally(new UnauthorizedError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 403:
-                                future.completeExceptionally(new ForbiddenError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 404:
-                                future.completeExceptionally(new NotFoundError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                                return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.update(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
@@ -543,7 +241,7 @@ public class AsyncConversationsClient {
      * | $        | String                         | Ends With                                                    |</p>
      */
     public CompletableFuture<SyncPagingIterable<Conversation>> search(SearchRequest request) {
-        return search(request, null);
+        return this.rawClient.search(request).thenApply(response -> response.body());
     }
 
     /**
@@ -641,157 +339,21 @@ public class AsyncConversationsClient {
      */
     public CompletableFuture<SyncPagingIterable<Conversation>> search(
             SearchRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations/search")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<SyncPagingIterable<Conversation>> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        PaginatedConversationResponse parsedResponse = ObjectMappers.JSON_MAPPER.readValue(
-                                responseBody.string(), PaginatedConversationResponse.class);
-                        Optional<String> startingAfter = parsedResponse
-                                .getPages()
-                                .flatMap(CursorPages::getNext)
-                                .flatMap(StartingAfterPaging::getStartingAfter);
-                        Optional<StartingAfterPaging> pagination = request.getPagination()
-                                .map(pagination_ -> StartingAfterPaging.builder()
-                                        .from(pagination_)
-                                        .startingAfter(startingAfter)
-                                        .build());
-                        SearchRequest nextRequest = SearchRequest.builder()
-                                .from(request)
-                                .pagination(pagination)
-                                .build();
-                        List<Conversation> result = parsedResponse.getConversations();
-                        future.complete(new SyncPagingIterable<Conversation>(startingAfter.isPresent(), result, () -> {
-                            try {
-                                return search(nextRequest, requestOptions).get();
-                            } catch (InterruptedException | ExecutionException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.search(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
      * You can reply to a conversation with a message from an admin or on behalf of a contact, or with a note for admins.
      */
     public CompletableFuture<Conversation> reply(ReplyToConversationRequest request) {
-        return reply(request, null);
+        return this.rawClient.reply(request).thenApply(response -> response.body());
     }
 
     /**
      * You can reply to a conversation with a message from an admin or on behalf of a contact, or with a note for admins.
      */
     public CompletableFuture<Conversation> reply(ReplyToConversationRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations")
-                .addPathSegment(request.getConversationId())
-                .addPathSegments("reply")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request.getBody()), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<Conversation> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        switch (response.code()) {
-                            case 401:
-                                future.completeExceptionally(new UnauthorizedError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 403:
-                                future.completeExceptionally(new ForbiddenError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 404:
-                                future.completeExceptionally(new NotFoundError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                                return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.reply(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
@@ -804,7 +366,7 @@ public class AsyncConversationsClient {
      * </ul>
      */
     public CompletableFuture<Conversation> manage(ManageConversationPartsRequest request) {
-        return manage(request, null);
+        return this.rawClient.manage(request).thenApply(response -> response.body());
     }
 
     /**
@@ -818,74 +380,7 @@ public class AsyncConversationsClient {
      */
     public CompletableFuture<Conversation> manage(
             ManageConversationPartsRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations")
-                .addPathSegment(request.getConversationId())
-                .addPathSegments("parts")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request.getBody()), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<Conversation> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        switch (response.code()) {
-                            case 401:
-                                future.completeExceptionally(new UnauthorizedError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 403:
-                                future.completeExceptionally(new ForbiddenError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 404:
-                                future.completeExceptionally(new NotFoundError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                                return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.manage(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
@@ -898,7 +393,7 @@ public class AsyncConversationsClient {
      * {% /admonition %}
      */
     public CompletableFuture<Conversation> runAssignmentRules(AutoAssignConversationRequest request) {
-        return runAssignmentRules(request, null);
+        return this.rawClient.runAssignmentRules(request).thenApply(response -> response.body());
     }
 
     /**
@@ -912,67 +407,7 @@ public class AsyncConversationsClient {
      */
     public CompletableFuture<Conversation> runAssignmentRules(
             AutoAssignConversationRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations")
-                .addPathSegment(request.getConversationId())
-                .addPathSegments("run_assignment_rules")
-                .build();
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", RequestBody.create("", null))
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<Conversation> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        switch (response.code()) {
-                            case 401:
-                                future.completeExceptionally(new UnauthorizedError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 403:
-                                future.completeExceptionally(new ForbiddenError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 404:
-                                future.completeExceptionally(new NotFoundError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                                return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.runAssignmentRules(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
@@ -982,7 +417,7 @@ public class AsyncConversationsClient {
      * {% /admonition %}</p>
      */
     public CompletableFuture<Conversation> attachContactAsAdmin(AttachContactToConversationRequest request) {
-        return attachContactAsAdmin(request, null);
+        return this.rawClient.attachContactAsAdmin(request).thenApply(response -> response.body());
     }
 
     /**
@@ -993,74 +428,7 @@ public class AsyncConversationsClient {
      */
     public CompletableFuture<Conversation> attachContactAsAdmin(
             AttachContactToConversationRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations")
-                .addPathSegment(request.getConversationId())
-                .addPathSegments("customers")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<Conversation> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        switch (response.code()) {
-                            case 401:
-                                future.completeExceptionally(new UnauthorizedError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 403:
-                                future.completeExceptionally(new ForbiddenError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 404:
-                                future.completeExceptionally(new NotFoundError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                                return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.attachContactAsAdmin(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
@@ -1070,7 +438,7 @@ public class AsyncConversationsClient {
      * {% /admonition %}</p>
      */
     public CompletableFuture<Conversation> detachContactAsAdmin(DetachContactFromConversationRequest request) {
-        return detachContactAsAdmin(request, null);
+        return this.rawClient.detachContactAsAdmin(request).thenApply(response -> response.body());
     }
 
     /**
@@ -1081,79 +449,7 @@ public class AsyncConversationsClient {
      */
     public CompletableFuture<Conversation> detachContactAsAdmin(
             DetachContactFromConversationRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations")
-                .addPathSegment(request.getConversationId())
-                .addPathSegments("customers")
-                .addPathSegment(request.getContactId())
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("DELETE", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<Conversation> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        switch (response.code()) {
-                            case 401:
-                                future.completeExceptionally(new UnauthorizedError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 403:
-                                future.completeExceptionally(new ForbiddenError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 404:
-                                future.completeExceptionally(new NotFoundError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                                return;
-                            case 422:
-                                future.completeExceptionally(new UnprocessableEntityError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                                return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.detachContactAsAdmin(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
@@ -1163,7 +459,7 @@ public class AsyncConversationsClient {
      * {% /admonition %}</p>
      */
     public CompletableFuture<Conversation> redactConversationPart(RedactConversationRequest request) {
-        return redactConversationPart(request, null);
+        return this.rawClient.redactConversationPart(request).thenApply(response -> response.body());
     }
 
     /**
@@ -1174,75 +470,14 @@ public class AsyncConversationsClient {
      */
     public CompletableFuture<Conversation> redactConversationPart(
             RedactConversationRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations/redact")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<Conversation> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        switch (response.code()) {
-                            case 401:
-                                future.completeExceptionally(new UnauthorizedError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                                return;
-                            case 404:
-                                future.completeExceptionally(new NotFoundError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                                return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.redactConversationPart(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
      * You can convert a conversation to a ticket.
      */
     public CompletableFuture<Ticket> convertToTicket(ConvertConversationToTicketRequest request) {
-        return convertToTicket(request, null);
+        return this.rawClient.convertToTicket(request).thenApply(response -> response.body());
     }
 
     /**
@@ -1250,64 +485,6 @@ public class AsyncConversationsClient {
      */
     public CompletableFuture<Ticket> convertToTicket(
             ConvertConversationToTicketRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations")
-                .addPathSegment(request.getConversationId())
-                .addPathSegments("convert")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<Ticket> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Ticket.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        if (response.code() == 400) {
-                            future.completeExceptionally(new BadRequestError(
-                                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                            return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.convertToTicket(request, requestOptions).thenApply(response -> response.body());
     }
 }

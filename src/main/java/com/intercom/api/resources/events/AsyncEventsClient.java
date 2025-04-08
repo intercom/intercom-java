@@ -3,38 +3,29 @@
  */
 package com.intercom.api.resources.events;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.intercom.api.core.ClientOptions;
-import com.intercom.api.core.IntercomApiException;
-import com.intercom.api.core.IntercomException;
-import com.intercom.api.core.MediaTypes;
-import com.intercom.api.core.ObjectMappers;
-import com.intercom.api.core.QueryStringMapper;
 import com.intercom.api.core.RequestOptions;
-import com.intercom.api.errors.UnauthorizedError;
 import com.intercom.api.resources.events.requests.ListEventSummariesRequest;
 import com.intercom.api.resources.events.requests.ListEventsRequest;
 import com.intercom.api.types.CreateDataEventRequest;
 import com.intercom.api.types.DataEventSummary;
-import com.intercom.api.types.Error;
-import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Headers;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-import org.jetbrains.annotations.NotNull;
 
 public class AsyncEventsClient {
     protected final ClientOptions clientOptions;
 
+    private final AsyncRawEventsClient rawClient;
+
     public AsyncEventsClient(ClientOptions clientOptions) {
         this.clientOptions = clientOptions;
+        this.rawClient = new AsyncRawEventsClient(clientOptions);
+    }
+
+    /**
+     * Get responses with HTTP metadata like headers
+     */
+    public AsyncRawEventsClient withRawResponse() {
+        return this.rawClient;
     }
 
     /**
@@ -52,7 +43,7 @@ public class AsyncEventsClient {
      * <p>You can optionally define the result page size as well with the <code>per_page</code> parameter.</p>
      */
     public CompletableFuture<DataEventSummary> list(ListEventsRequest request) {
-        return list(request, null);
+        return this.rawClient.list(request).thenApply(response -> response.body());
     }
 
     /**
@@ -70,77 +61,7 @@ public class AsyncEventsClient {
      * <p>You can optionally define the result page size as well with the <code>per_page</code> parameter.</p>
      */
     public CompletableFuture<DataEventSummary> list(ListEventsRequest request, RequestOptions requestOptions) {
-        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("events");
-        if (request.getUserId().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "user_id", request.getUserId().get(), false);
-        }
-        if (request.getIntercomUserId().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "intercom_user_id", request.getIntercomUserId().get(), false);
-        }
-        if (request.getEmail().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "email", request.getEmail().get(), false);
-        }
-        QueryStringMapper.addQueryParameter(httpUrl, "type", request.getType(), false);
-        if (request.getSummary().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "summary", request.getSummary().get().toString(), false);
-        }
-        if (request.getPerPage().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "per_page", request.getPerPage().get().toString(), false);
-        }
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl.build())
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<DataEventSummary> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), DataEventSummary.class));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        if (response.code() == 401) {
-                            future.completeExceptionally(new UnauthorizedError(
-                                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                            return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.list(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
@@ -177,7 +98,7 @@ public class AsyncEventsClient {
      * </ul>
      */
     public CompletableFuture<Void> create(CreateDataEventRequest request) {
-        return create(request, null);
+        return this.rawClient.create(request).thenApply(response -> response.body());
     }
 
     /**
@@ -214,139 +135,27 @@ public class AsyncEventsClient {
      * </ul>
      */
     public CompletableFuture<Void> create(CreateDataEventRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("events")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<Void> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(null);
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        if (response.code() == 401) {
-                            future.completeExceptionally(new UnauthorizedError(
-                                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                            return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.create(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
      * Create event summaries for a user. Event summaries are used to track the number of times an event has occurred, the first time it occurred and the last time it occurred.
      */
     public CompletableFuture<Void> summaries() {
-        return summaries(ListEventSummariesRequest.builder().build());
+        return this.rawClient.summaries().thenApply(response -> response.body());
     }
 
     /**
      * Create event summaries for a user. Event summaries are used to track the number of times an event has occurred, the first time it occurred and the last time it occurred.
      */
     public CompletableFuture<Void> summaries(ListEventSummariesRequest request) {
-        return summaries(request, null);
+        return this.rawClient.summaries(request).thenApply(response -> response.body());
     }
 
     /**
      * Create event summaries for a user. Event summaries are used to track the number of times an event has occurred, the first time it occurred and the last time it occurred.
      */
     public CompletableFuture<Void> summaries(ListEventSummariesRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("events/summaries")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<Void> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(null);
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        if (response.code() == 401) {
-                            future.completeExceptionally(new UnauthorizedError(
-                                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class)));
-                            return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class)));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
+        return this.rawClient.summaries(request, requestOptions).thenApply(response -> response.body());
     }
 }

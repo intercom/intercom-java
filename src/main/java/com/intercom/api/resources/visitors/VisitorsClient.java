@@ -3,88 +3,43 @@
  */
 package com.intercom.api.resources.visitors;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.intercom.api.core.ClientOptions;
-import com.intercom.api.core.IntercomApiException;
-import com.intercom.api.core.IntercomException;
-import com.intercom.api.core.MediaTypes;
-import com.intercom.api.core.ObjectMappers;
-import com.intercom.api.core.QueryStringMapper;
 import com.intercom.api.core.RequestOptions;
-import com.intercom.api.errors.NotFoundError;
-import com.intercom.api.errors.UnauthorizedError;
 import com.intercom.api.resources.contacts.types.Contact;
 import com.intercom.api.resources.visitors.requests.FindVisitorRequest;
 import com.intercom.api.resources.visitors.requests.MergeVisitorToContactRequest;
-import com.intercom.api.types.Error;
 import com.intercom.api.types.UpdateVisitorRequest;
 import com.intercom.api.types.Visitor;
-import java.io.IOException;
-import okhttp3.Headers;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class VisitorsClient {
     protected final ClientOptions clientOptions;
 
+    private final RawVisitorsClient rawClient;
+
     public VisitorsClient(ClientOptions clientOptions) {
         this.clientOptions = clientOptions;
+        this.rawClient = new RawVisitorsClient(clientOptions);
+    }
+
+    /**
+     * Get responses with HTTP metadata like headers
+     */
+    public RawVisitorsClient withRawResponse() {
+        return this.rawClient;
     }
 
     /**
      * You can fetch the details of a single visitor.
      */
     public Visitor find(FindVisitorRequest request) {
-        return find(request, null);
+        return this.rawClient.find(request).body();
     }
 
     /**
      * You can fetch the details of a single visitor.
      */
     public Visitor find(FindVisitorRequest request, RequestOptions requestOptions) {
-        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("visitors");
-        QueryStringMapper.addQueryParameter(httpUrl, "user_id", request.getUserId(), false);
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl.build())
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Visitor.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.find(request, requestOptions).body();
     }
 
     /**
@@ -93,7 +48,7 @@ public class VisitorsClient {
      * <p><strong>Option 2.</strong> You can update a visitor by passing in the <code>id</code> of the visitor in the Request body.</p>
      */
     public Visitor update(UpdateVisitorRequest request) {
-        return update(request, null);
+        return this.rawClient.update(request).body();
     }
 
     /**
@@ -102,52 +57,7 @@ public class VisitorsClient {
      * <p><strong>Option 2.</strong> You can update a visitor by passing in the <code>id</code> of the visitor in the Request body.</p>
      */
     public Visitor update(UpdateVisitorRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("visitors")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("PUT", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Visitor.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.update(request, requestOptions).body();
     }
 
     /**
@@ -158,7 +68,7 @@ public class VisitorsClient {
      * </blockquote>
      */
     public Contact mergeToContact(MergeVisitorToContactRequest request) {
-        return mergeToContact(request, null);
+        return this.rawClient.mergeToContact(request).body();
     }
 
     /**
@@ -169,47 +79,6 @@ public class VisitorsClient {
      * </blockquote>
      */
     public Contact mergeToContact(MergeVisitorToContactRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("visitors/convert")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Contact.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                if (response.code() == 401) {
-                    throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.mergeToContact(request, requestOptions).body();
     }
 }

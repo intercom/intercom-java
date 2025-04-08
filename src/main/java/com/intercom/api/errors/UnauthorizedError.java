@@ -5,6 +5,7 @@ package com.intercom.api.errors;
 
 import com.intercom.api.core.IntercomApiException;
 import com.intercom.api.types.Error;
+import okhttp3.Response;
 
 public final class UnauthorizedError extends IntercomApiException {
     /**
@@ -14,6 +15,11 @@ public final class UnauthorizedError extends IntercomApiException {
 
     public UnauthorizedError(Error body) {
         super("UnauthorizedError", 401, body);
+        this.body = body;
+    }
+
+    public UnauthorizedError(Error body, Response rawResponse) {
+        super("UnauthorizedError", 401, body, rawResponse);
         this.body = body;
     }
 

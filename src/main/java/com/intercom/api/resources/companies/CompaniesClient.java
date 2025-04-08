@@ -3,18 +3,9 @@
  */
 package com.intercom.api.resources.companies;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.intercom.api.core.ClientOptions;
-import com.intercom.api.core.IntercomApiException;
-import com.intercom.api.core.IntercomException;
-import com.intercom.api.core.MediaTypes;
-import com.intercom.api.core.ObjectMappers;
-import com.intercom.api.core.QueryStringMapper;
 import com.intercom.api.core.RequestOptions;
 import com.intercom.api.core.pagination.SyncPagingIterable;
-import com.intercom.api.errors.BadRequestError;
-import com.intercom.api.errors.NotFoundError;
-import com.intercom.api.errors.UnauthorizedError;
 import com.intercom.api.resources.companies.requests.AttachContactToCompanyRequest;
 import com.intercom.api.resources.companies.requests.CreateOrUpdateCompanyRequest;
 import com.intercom.api.resources.companies.requests.DeleteCompanyRequest;
@@ -30,25 +21,23 @@ import com.intercom.api.resources.companies.types.Company;
 import com.intercom.api.types.CompanyAttachedContacts;
 import com.intercom.api.types.CompanyAttachedSegments;
 import com.intercom.api.types.CompanyList;
-import com.intercom.api.types.CompanyScroll;
 import com.intercom.api.types.DeletedCompanyObject;
-import com.intercom.api.types.Error;
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-import okhttp3.Headers;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class CompaniesClient {
     protected final ClientOptions clientOptions;
 
+    private final RawCompaniesClient rawClient;
+
     public CompaniesClient(ClientOptions clientOptions) {
         this.clientOptions = clientOptions;
+        this.rawClient = new RawCompaniesClient(clientOptions);
+    }
+
+    /**
+     * Get responses with HTTP metadata like headers
+     */
+    public RawCompaniesClient withRawResponse() {
+        return this.rawClient;
     }
 
     /**
@@ -60,7 +49,7 @@ public class CompaniesClient {
      * <p><code>https://api.intercom.io/companies?segment_id={segment_id}</code></p>
      */
     public CompanyList retrieve() {
-        return retrieve(RetrieveCompanyRequest.builder().build());
+        return this.rawClient.retrieve().body();
     }
 
     /**
@@ -72,7 +61,7 @@ public class CompaniesClient {
      * <p><code>https://api.intercom.io/companies?segment_id={segment_id}</code></p>
      */
     public CompanyList retrieve(RetrieveCompanyRequest request) {
-        return retrieve(request, null);
+        return this.rawClient.retrieve(request).body();
     }
 
     /**
@@ -84,68 +73,7 @@ public class CompaniesClient {
      * <p><code>https://api.intercom.io/companies?segment_id={segment_id}</code></p>
      */
     public CompanyList retrieve(RetrieveCompanyRequest request, RequestOptions requestOptions) {
-        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("companies");
-        if (request.getName().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "name", request.getName().get(), false);
-        }
-        if (request.getCompanyId().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "company_id", request.getCompanyId().get(), false);
-        }
-        if (request.getTagId().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "tag_id", request.getTagId().get(), false);
-        }
-        if (request.getSegmentId().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "segment_id", request.getSegmentId().get(), false);
-        }
-        if (request.getPage().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "page", request.getPage().get().toString(), false);
-        }
-        if (request.getPerPage().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "per_page", request.getPerPage().get().toString(), false);
-        }
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl.build())
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), CompanyList.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.retrieve(request, requestOptions).body();
     }
 
     /**
@@ -157,7 +85,7 @@ public class CompaniesClient {
      * {% /admonition %}</p>
      */
     public Company createOrUpdate() {
-        return createOrUpdate(CreateOrUpdateCompanyRequest.builder().build());
+        return this.rawClient.createOrUpdate().body();
     }
 
     /**
@@ -169,7 +97,7 @@ public class CompaniesClient {
      * {% /admonition %}</p>
      */
     public Company createOrUpdate(CreateOrUpdateCompanyRequest request) {
-        return createOrUpdate(request, null);
+        return this.rawClient.createOrUpdate(request).body();
     }
 
     /**
@@ -181,106 +109,21 @@ public class CompaniesClient {
      * {% /admonition %}</p>
      */
     public Company createOrUpdate(CreateOrUpdateCompanyRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("companies")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Company.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 400:
-                        throw new BadRequestError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.createOrUpdate(request, requestOptions).body();
     }
 
     /**
      * You can fetch a single company.
      */
     public Company find(FindCompanyRequest request) {
-        return find(request, null);
+        return this.rawClient.find(request).body();
     }
 
     /**
      * You can fetch a single company.
      */
     public Company find(FindCompanyRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("companies")
-                .addPathSegment(request.getCompanyId())
-                .build();
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl)
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Company.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.find(request, requestOptions).body();
     }
 
     /**
@@ -290,7 +133,7 @@ public class CompaniesClient {
      * {% /admonition %}</p>
      */
     public Company update(UpdateCompanyRequest request) {
-        return update(request, null);
+        return this.rawClient.update(request).body();
     }
 
     /**
@@ -300,106 +143,28 @@ public class CompaniesClient {
      * {% /admonition %}</p>
      */
     public Company update(UpdateCompanyRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("companies")
-                .addPathSegment(request.getCompanyId())
-                .build();
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl)
-                .method("PUT", RequestBody.create("", null))
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Company.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.update(request, requestOptions).body();
     }
 
     /**
      * You can delete a single company.
      */
     public DeletedCompanyObject delete(DeleteCompanyRequest request) {
-        return delete(request, null);
+        return this.rawClient.delete(request).body();
     }
 
     /**
      * You can delete a single company.
      */
     public DeletedCompanyObject delete(DeleteCompanyRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("companies")
-                .addPathSegment(request.getCompanyId())
-                .build();
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl)
-                .method("DELETE", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), DeletedCompanyObject.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.delete(request, requestOptions).body();
     }
 
     /**
      * You can fetch a list of all contacts that belong to a company.
      */
     public CompanyAttachedContacts listAttachedContacts(ListAttachedContactsRequest request) {
-        return listAttachedContacts(request, null);
+        return this.rawClient.listAttachedContacts(request).body();
     }
 
     /**
@@ -407,61 +172,14 @@ public class CompaniesClient {
      */
     public CompanyAttachedContacts listAttachedContacts(
             ListAttachedContactsRequest request, RequestOptions requestOptions) {
-        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("companies")
-                .addPathSegment(request.getCompanyId())
-                .addPathSegments("contacts");
-        if (request.getPage().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "page", request.getPage().get().toString(), false);
-        }
-        if (request.getPerPage().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "per_page", request.getPerPage().get().toString(), false);
-        }
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl.build())
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), CompanyAttachedContacts.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.listAttachedContacts(request, requestOptions).body();
     }
 
     /**
      * You can fetch a list of all segments that belong to a company.
      */
     public CompanyAttachedSegments listAttachedSegments(ListSegmentsAttachedToCompanyRequest request) {
-        return listAttachedSegments(request, null);
+        return this.rawClient.listAttachedSegments(request).body();
     }
 
     /**
@@ -469,47 +187,7 @@ public class CompaniesClient {
      */
     public CompanyAttachedSegments listAttachedSegments(
             ListSegmentsAttachedToCompanyRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("companies")
-                .addPathSegment(request.getCompanyId())
-                .addPathSegments("segments")
-                .build();
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl)
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), CompanyAttachedSegments.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.listAttachedSegments(request, requestOptions).body();
     }
 
     /**
@@ -522,7 +200,7 @@ public class CompaniesClient {
      * {% /admonition %}</p>
      */
     public SyncPagingIterable<Company> list() {
-        return list(ListCompaniesRequest.builder().build());
+        return this.rawClient.list().body();
     }
 
     /**
@@ -535,7 +213,7 @@ public class CompaniesClient {
      * {% /admonition %}</p>
      */
     public SyncPagingIterable<Company> list(ListCompaniesRequest request) {
-        return list(request, null);
+        return this.rawClient.list(request).body();
     }
 
     /**
@@ -548,60 +226,7 @@ public class CompaniesClient {
      * {% /admonition %}</p>
      */
     public SyncPagingIterable<Company> list(ListCompaniesRequest request, RequestOptions requestOptions) {
-        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("companies/list");
-        if (request.getPage().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "page", request.getPage().get().toString(), false);
-        }
-        if (request.getPerPage().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "per_page", request.getPerPage().get().toString(), false);
-        }
-        if (request.getOrder().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "order", request.getOrder().get(), false);
-        }
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl.build())
-                .method("POST", RequestBody.create("", null))
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                CompanyList parsedResponse =
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), CompanyList.class);
-                int newPageNumber = request.getPage().map(page -> page + 1).orElse(1);
-                ListCompaniesRequest nextRequest = ListCompaniesRequest.builder()
-                        .from(request)
-                        .page(newPageNumber)
-                        .build();
-                List<Company> result = parsedResponse.getData();
-                return new SyncPagingIterable<Company>(true, result, () -> list(nextRequest, requestOptions));
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                if (response.code() == 401) {
-                    throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.list(request, requestOptions).body();
     }
 
     /**
@@ -622,7 +247,7 @@ public class CompaniesClient {
      * {% /admonition %}</p>
      */
     public SyncPagingIterable<Company> scroll() {
-        return scroll(ScrollCompaniesRequest.builder().build());
+        return this.rawClient.scroll().body();
     }
 
     /**
@@ -643,7 +268,7 @@ public class CompaniesClient {
      * {% /admonition %}</p>
      */
     public SyncPagingIterable<Company> scroll(ScrollCompaniesRequest request) {
-        return scroll(request, null);
+        return this.rawClient.scroll(request).body();
     }
 
     /**
@@ -664,171 +289,34 @@ public class CompaniesClient {
      * {% /admonition %}</p>
      */
     public SyncPagingIterable<Company> scroll(ScrollCompaniesRequest request, RequestOptions requestOptions) {
-        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("companies/scroll");
-        if (request.getScrollParam().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "scroll_param", request.getScrollParam().get(), false);
-        }
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl.build())
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                CompanyScroll parsedResponse =
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), CompanyScroll.class);
-                Optional<String> startingAfter = parsedResponse.getScrollParam();
-                ScrollCompaniesRequest nextRequest = ScrollCompaniesRequest.builder()
-                        .from(request)
-                        .scrollParam(startingAfter)
-                        .build();
-                List<Company> result = parsedResponse.getData();
-                return new SyncPagingIterable<Company>(
-                        startingAfter.isPresent(), result, () -> scroll(nextRequest, requestOptions));
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                if (response.code() == 401) {
-                    throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.scroll(request, requestOptions).body();
     }
 
     /**
      * You can attach a company to a single contact.
      */
     public Company attachContact(AttachContactToCompanyRequest request) {
-        return attachContact(request, null);
+        return this.rawClient.attachContact(request).body();
     }
 
     /**
      * You can attach a company to a single contact.
      */
     public Company attachContact(AttachContactToCompanyRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("contacts")
-                .addPathSegment(request.getContactId())
-                .addPathSegments("companies")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Company.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 400:
-                        throw new BadRequestError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.attachContact(request, requestOptions).body();
     }
 
     /**
      * You can detach a company from a single contact.
      */
     public Company detachContact(DetachContactFromCompanyRequest request) {
-        return detachContact(request, null);
+        return this.rawClient.detachContact(request).body();
     }
 
     /**
      * You can detach a company from a single contact.
      */
     public Company detachContact(DetachContactFromCompanyRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("contacts")
-                .addPathSegment(request.getContactId())
-                .addPathSegments("companies")
-                .addPathSegment(request.getCompanyId())
-                .build();
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl)
-                .method("DELETE", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Company.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.detachContact(request, requestOptions).body();
     }
 }

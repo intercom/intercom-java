@@ -3,163 +3,64 @@
  */
 package com.intercom.api.resources.dataattributes;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.intercom.api.core.ClientOptions;
-import com.intercom.api.core.IntercomApiException;
-import com.intercom.api.core.IntercomException;
-import com.intercom.api.core.MediaTypes;
-import com.intercom.api.core.ObjectMappers;
-import com.intercom.api.core.QueryStringMapper;
 import com.intercom.api.core.RequestOptions;
-import com.intercom.api.errors.BadRequestError;
-import com.intercom.api.errors.NotFoundError;
-import com.intercom.api.errors.UnauthorizedError;
-import com.intercom.api.errors.UnprocessableEntityError;
 import com.intercom.api.resources.dataattributes.requests.CreateDataAttributeRequest;
 import com.intercom.api.resources.dataattributes.requests.ListDataAttributesRequest;
 import com.intercom.api.resources.dataattributes.requests.UpdateDataAttributeRequest;
 import com.intercom.api.resources.dataattributes.types.DataAttribute;
 import com.intercom.api.types.DataAttributeList;
-import com.intercom.api.types.Error;
-import java.io.IOException;
-import okhttp3.Headers;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class DataAttributesClient {
     protected final ClientOptions clientOptions;
 
+    private final RawDataAttributesClient rawClient;
+
     public DataAttributesClient(ClientOptions clientOptions) {
         this.clientOptions = clientOptions;
+        this.rawClient = new RawDataAttributesClient(clientOptions);
+    }
+
+    /**
+     * Get responses with HTTP metadata like headers
+     */
+    public RawDataAttributesClient withRawResponse() {
+        return this.rawClient;
     }
 
     /**
      * You can fetch a list of all data attributes belonging to a workspace for contacts, companies or conversations.
      */
     public DataAttributeList list() {
-        return list(ListDataAttributesRequest.builder().build());
+        return this.rawClient.list().body();
     }
 
     /**
      * You can fetch a list of all data attributes belonging to a workspace for contacts, companies or conversations.
      */
     public DataAttributeList list(ListDataAttributesRequest request) {
-        return list(request, null);
+        return this.rawClient.list(request).body();
     }
 
     /**
      * You can fetch a list of all data attributes belonging to a workspace for contacts, companies or conversations.
      */
     public DataAttributeList list(ListDataAttributesRequest request, RequestOptions requestOptions) {
-        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("data_attributes");
-        if (request.getModel().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "model", request.getModel().get().toString(), false);
-        }
-        if (request.getIncludeArchived().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl,
-                    "include_archived",
-                    request.getIncludeArchived().get().toString(),
-                    false);
-        }
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl.build())
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), DataAttributeList.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                if (response.code() == 401) {
-                    throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.list(request, requestOptions).body();
     }
 
     /**
      * You can create a data attributes for a <code>contact</code> or a <code>company</code>.
      */
     public DataAttribute create(CreateDataAttributeRequest request) {
-        return create(request, null);
+        return this.rawClient.create(request).body();
     }
 
     /**
      * You can create a data attributes for a <code>contact</code> or a <code>company</code>.
      */
     public DataAttribute create(CreateDataAttributeRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("data_attributes")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), DataAttribute.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 400:
-                        throw new BadRequestError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.create(request, requestOptions).body();
     }
 
     /**
@@ -170,7 +71,7 @@ public class DataAttributesClient {
      * </blockquote>
      */
     public DataAttribute update(UpdateDataAttributeRequest request) {
-        return update(request, null);
+        return this.rawClient.update(request).body();
     }
 
     /**
@@ -181,58 +82,6 @@ public class DataAttributesClient {
      * </blockquote>
      */
     public DataAttribute update(UpdateDataAttributeRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("data_attributes")
-                .addPathSegment(request.getDataAttributeId())
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("PUT", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), DataAttribute.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 400:
-                        throw new BadRequestError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                    case 422:
-                        throw new UnprocessableEntityError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.update(request, requestOptions).body();
     }
 }

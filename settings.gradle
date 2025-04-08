@@ -1,1 +1,3 @@
+rootProject.name = 'intercom-java'
+
 include 'sample-app'

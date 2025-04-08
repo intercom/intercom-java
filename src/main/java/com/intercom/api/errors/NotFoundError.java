@@ -4,6 +4,7 @@
 package com.intercom.api.errors;
 
 import com.intercom.api.core.IntercomApiException;
+import okhttp3.Response;
 
 public final class NotFoundError extends IntercomApiException {
     /**
@@ -13,6 +14,11 @@ public final class NotFoundError extends IntercomApiException {
 
     public NotFoundError(Object body) {
         super("NotFoundError", 404, body);
+        this.body = body;
+    }
+
+    public NotFoundError(Object body, Response rawResponse) {
+        super("NotFoundError", 404, body, rawResponse);
         this.body = body;
     }
 

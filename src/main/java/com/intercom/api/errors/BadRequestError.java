@@ -4,6 +4,7 @@
 package com.intercom.api.errors;
 
 import com.intercom.api.core.IntercomApiException;
+import okhttp3.Response;
 
 public final class BadRequestError extends IntercomApiException {
     /**
@@ -13,6 +14,11 @@ public final class BadRequestError extends IntercomApiException {
 
     public BadRequestError(Object body) {
         super("BadRequestError", 400, body);
+        this.body = body;
+    }
+
+    public BadRequestError(Object body, Response rawResponse) {
+        super("BadRequestError", 400, body, rawResponse);
         this.body = body;
     }
 

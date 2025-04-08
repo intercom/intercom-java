@@ -3,272 +3,88 @@
  */
 package com.intercom.api.resources.tickets;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.intercom.api.core.ClientOptions;
-import com.intercom.api.core.IntercomApiException;
-import com.intercom.api.core.IntercomException;
-import com.intercom.api.core.MediaTypes;
-import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.core.RequestOptions;
 import com.intercom.api.core.pagination.SyncPagingIterable;
-import com.intercom.api.errors.BadRequestError;
-import com.intercom.api.errors.NotFoundError;
-import com.intercom.api.errors.UnauthorizedError;
 import com.intercom.api.resources.tickets.requests.CreateTicketRequest;
 import com.intercom.api.resources.tickets.requests.FindTicketRequest;
 import com.intercom.api.resources.tickets.requests.ReplyToTicketRequest;
 import com.intercom.api.resources.tickets.requests.UpdateTicketRequest;
 import com.intercom.api.resources.tickets.types.Ticket;
-import com.intercom.api.types.CursorPages;
-import com.intercom.api.types.Error;
 import com.intercom.api.types.SearchRequest;
-import com.intercom.api.types.StartingAfterPaging;
-import com.intercom.api.types.TicketList;
 import com.intercom.api.types.TicketReply;
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-import okhttp3.Headers;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class TicketsClient {
     protected final ClientOptions clientOptions;
 
+    private final RawTicketsClient rawClient;
+
     public TicketsClient(ClientOptions clientOptions) {
         this.clientOptions = clientOptions;
+        this.rawClient = new RawTicketsClient(clientOptions);
+    }
+
+    /**
+     * Get responses with HTTP metadata like headers
+     */
+    public RawTicketsClient withRawResponse() {
+        return this.rawClient;
     }
 
     /**
      * You can reply to a ticket with a message from an admin or on behalf of a contact, or with a note for admins.
      */
     public TicketReply reply(ReplyToTicketRequest request) {
-        return reply(request, null);
+        return this.rawClient.reply(request).body();
     }
 
     /**
      * You can reply to a ticket with a message from an admin or on behalf of a contact, or with a note for admins.
      */
     public TicketReply reply(ReplyToTicketRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("tickets")
-                .addPathSegment(request.getTicketId())
-                .addPathSegments("reply")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request.getBody()), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), TicketReply.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 400:
-                        throw new BadRequestError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.reply(request, requestOptions).body();
     }
 
     /**
      * You can create a new ticket.
      */
     public Ticket create(CreateTicketRequest request) {
-        return create(request, null);
+        return this.rawClient.create(request).body();
     }
 
     /**
      * You can create a new ticket.
      */
     public Ticket create(CreateTicketRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("tickets")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Ticket.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                if (response.code() == 401) {
-                    throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.create(request, requestOptions).body();
     }
 
     /**
      * You can fetch the details of a single ticket.
      */
     public Ticket get(FindTicketRequest request) {
-        return get(request, null);
+        return this.rawClient.get(request).body();
     }
 
     /**
      * You can fetch the details of a single ticket.
      */
     public Ticket get(FindTicketRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("tickets")
-                .addPathSegment(request.getTicketId())
-                .build();
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl)
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Ticket.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                if (response.code() == 401) {
-                    throw new UnauthorizedError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.get(request, requestOptions).body();
     }
 
     /**
      * You can update a ticket.
      */
     public Ticket update(UpdateTicketRequest request) {
-        return update(request, null);
+        return this.rawClient.update(request).body();
     }
 
     /**
      * You can update a ticket.
      */
     public Ticket update(UpdateTicketRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("tickets")
-                .addPathSegment(request.getTicketId())
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("PUT", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Ticket.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.update(request, requestOptions).body();
     }
 
     /**
@@ -326,7 +142,7 @@ public class TicketsClient {
      * | $        | String                         | Ends With                                                    |</p>
      */
     public SyncPagingIterable<Ticket> search(SearchRequest request) {
-        return search(request, null);
+        return this.rawClient.search(request).body();
     }
 
     /**
@@ -384,57 +200,6 @@ public class TicketsClient {
      * | $        | String                         | Ends With                                                    |</p>
      */
     public SyncPagingIterable<Ticket> search(SearchRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("tickets/search")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                TicketList parsedResponse =
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), TicketList.class);
-                Optional<String> startingAfter = parsedResponse
-                        .getPages()
-                        .flatMap(CursorPages::getNext)
-                        .flatMap(StartingAfterPaging::getStartingAfter);
-                Optional<StartingAfterPaging> pagination = request.getPagination()
-                        .map(pagination_ -> StartingAfterPaging.builder()
-                                .from(pagination_)
-                                .startingAfter(startingAfter)
-                                .build());
-                SearchRequest nextRequest = SearchRequest.builder()
-                        .from(request)
-                        .pagination(pagination)
-                        .build();
-                List<Ticket> result = parsedResponse.getTickets();
-                return new SyncPagingIterable<Ticket>(
-                        startingAfter.isPresent(), result, () -> search(nextRequest, requestOptions));
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.search(request, requestOptions).body();
     }
 }

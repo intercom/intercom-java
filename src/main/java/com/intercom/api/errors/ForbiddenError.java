@@ -5,6 +5,7 @@ package com.intercom.api.errors;
 
 import com.intercom.api.core.IntercomApiException;
 import com.intercom.api.types.Error;
+import okhttp3.Response;
 
 public final class ForbiddenError extends IntercomApiException {
     /**
@@ -14,6 +15,11 @@ public final class ForbiddenError extends IntercomApiException {
 
     public ForbiddenError(Error body) {
         super("ForbiddenError", 403, body);
+        this.body = body;
+    }
+
+    public ForbiddenError(Error body, Response rawResponse) {
+        super("ForbiddenError", 403, body, rawResponse);
         this.body = body;
     }
 
