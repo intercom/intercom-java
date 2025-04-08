@@ -3,20 +3,9 @@
  */
 package com.intercom.api.resources.conversations;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.intercom.api.core.ClientOptions;
-import com.intercom.api.core.IntercomApiException;
-import com.intercom.api.core.IntercomException;
-import com.intercom.api.core.MediaTypes;
-import com.intercom.api.core.ObjectMappers;
-import com.intercom.api.core.QueryStringMapper;
 import com.intercom.api.core.RequestOptions;
 import com.intercom.api.core.pagination.SyncPagingIterable;
-import com.intercom.api.errors.BadRequestError;
-import com.intercom.api.errors.ForbiddenError;
-import com.intercom.api.errors.NotFoundError;
-import com.intercom.api.errors.UnauthorizedError;
-import com.intercom.api.errors.UnprocessableEntityError;
 import com.intercom.api.resources.conversations.requests.AttachContactToConversationRequest;
 import com.intercom.api.resources.conversations.requests.AutoAssignConversationRequest;
 import com.intercom.api.resources.conversations.requests.ConvertConversationToTicketRequest;
@@ -30,30 +19,24 @@ import com.intercom.api.resources.conversations.requests.UpdateConversationReque
 import com.intercom.api.resources.conversations.types.Conversation;
 import com.intercom.api.resources.messages.types.Message;
 import com.intercom.api.resources.tickets.types.Ticket;
-import com.intercom.api.types.CursorPages;
-import com.intercom.api.types.Error;
-import com.intercom.api.types.PaginatedConversationResponse;
 import com.intercom.api.types.RedactConversationRequest;
 import com.intercom.api.types.SearchRequest;
-import com.intercom.api.types.StartingAfterPaging;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import okhttp3.Headers;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class ConversationsClient {
     protected final ClientOptions clientOptions;
 
+    private final RawConversationsClient rawClient;
+
     public ConversationsClient(ClientOptions clientOptions) {
         this.clientOptions = clientOptions;
+        this.rawClient = new RawConversationsClient(clientOptions);
+    }
+
+    /**
+     * Get responses with HTTP metadata like headers
+     */
+    public RawConversationsClient withRawResponse() {
+        return this.rawClient;
     }
 
     /**
@@ -65,7 +48,7 @@ public class ConversationsClient {
      * {% /admonition %}</p>
      */
     public SyncPagingIterable<Conversation> list() {
-        return list(ListConversationsRequest.builder().build());
+        return this.rawClient.list().body();
     }
 
     /**
@@ -77,7 +60,7 @@ public class ConversationsClient {
      * {% /admonition %}</p>
      */
     public SyncPagingIterable<Conversation> list(ListConversationsRequest request) {
-        return list(request, null);
+        return this.rawClient.list(request).body();
     }
 
     /**
@@ -89,64 +72,7 @@ public class ConversationsClient {
      * {% /admonition %}</p>
      */
     public SyncPagingIterable<Conversation> list(ListConversationsRequest request, RequestOptions requestOptions) {
-        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations");
-        if (request.getPerPage().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "per_page", request.getPerPage().get().toString(), false);
-        }
-        if (request.getStartingAfter().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "starting_after", request.getStartingAfter().get(), false);
-        }
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl.build())
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                PaginatedConversationResponse parsedResponse =
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), PaginatedConversationResponse.class);
-                Optional<String> startingAfter = parsedResponse
-                        .getPages()
-                        .flatMap(CursorPages::getNext)
-                        .flatMap(StartingAfterPaging::getStartingAfter);
-                ListConversationsRequest nextRequest = ListConversationsRequest.builder()
-                        .from(request)
-                        .startingAfter(startingAfter)
-                        .build();
-                List<Conversation> result = parsedResponse.getConversations();
-                return new SyncPagingIterable<Conversation>(
-                        startingAfter.isPresent(), result, () -> list(nextRequest, requestOptions));
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 403:
-                        throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.list(request, requestOptions).body();
     }
 
     /**
@@ -159,7 +85,7 @@ public class ConversationsClient {
      * <p>This will return the Message model that has been created.</p>
      */
     public Message create(CreateConversationRequest request) {
-        return create(request, null);
+        return this.rawClient.create(request).body();
     }
 
     /**
@@ -172,54 +98,7 @@ public class ConversationsClient {
      * <p>This will return the Message model that has been created.</p>
      */
     public Message create(CreateConversationRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Message.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 403:
-                        throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.create(request, requestOptions).body();
     }
 
     /**
@@ -231,7 +110,7 @@ public class ConversationsClient {
      * <p>For AI agent conversation metadata, please note that you need to have the agent enabled in your workspace, which is a <a href="https://www.intercom.com/help/en/articles/8205718-fin-resolutions#h_97f8c2e671">paid feature</a>.</p>
      */
     public Conversation find(FindConversationRequest request) {
-        return find(request, null);
+        return this.rawClient.find(request).body();
     }
 
     /**
@@ -243,51 +122,7 @@ public class ConversationsClient {
      * <p>For AI agent conversation metadata, please note that you need to have the agent enabled in your workspace, which is a <a href="https://www.intercom.com/help/en/articles/8205718-fin-resolutions#h_97f8c2e671">paid feature</a>.</p>
      */
     public Conversation find(FindConversationRequest request, RequestOptions requestOptions) {
-        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations")
-                .addPathSegment(request.getConversationId());
-        if (request.getDisplayAs().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "display_as", request.getDisplayAs().get(), false);
-        }
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl.build())
-                .method("GET", null)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 403:
-                        throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.find(request, requestOptions).body();
     }
 
     /**
@@ -297,7 +132,7 @@ public class ConversationsClient {
      * {% /admonition %}</p>
      */
     public Conversation update(UpdateConversationRequest request) {
-        return update(request, null);
+        return this.rawClient.update(request).body();
     }
 
     /**
@@ -307,65 +142,7 @@ public class ConversationsClient {
      * {% /admonition %}</p>
      */
     public Conversation update(UpdateConversationRequest request, RequestOptions requestOptions) {
-        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations")
-                .addPathSegment(request.getConversationId());
-        if (request.getDisplayAs().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "display_as", request.getDisplayAs().get(), false);
-        }
-        Map<String, Object> properties = new HashMap<>();
-        if (request.getRead().isPresent()) {
-            properties.put("read", request.getRead());
-        }
-        if (request.getCustomAttributes().isPresent()) {
-            properties.put("custom_attributes", request.getCustomAttributes());
-        }
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(properties), MediaTypes.APPLICATION_JSON);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl.build())
-                .method("PUT", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 403:
-                        throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.update(request, requestOptions).body();
     }
 
     /**
@@ -462,7 +239,7 @@ public class ConversationsClient {
      * | $        | String                         | Ends With                                                    |</p>
      */
     public SyncPagingIterable<Conversation> search(SearchRequest request) {
-        return search(request, null);
+        return this.rawClient.search(request).body();
     }
 
     /**
@@ -559,121 +336,21 @@ public class ConversationsClient {
      * | $        | String                         | Ends With                                                    |</p>
      */
     public SyncPagingIterable<Conversation> search(SearchRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations/search")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                PaginatedConversationResponse parsedResponse =
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), PaginatedConversationResponse.class);
-                Optional<String> startingAfter = parsedResponse
-                        .getPages()
-                        .flatMap(CursorPages::getNext)
-                        .flatMap(StartingAfterPaging::getStartingAfter);
-                Optional<StartingAfterPaging> pagination = request.getPagination()
-                        .map(pagination_ -> StartingAfterPaging.builder()
-                                .from(pagination_)
-                                .startingAfter(startingAfter)
-                                .build());
-                SearchRequest nextRequest = SearchRequest.builder()
-                        .from(request)
-                        .pagination(pagination)
-                        .build();
-                List<Conversation> result = parsedResponse.getConversations();
-                return new SyncPagingIterable<Conversation>(
-                        startingAfter.isPresent(), result, () -> search(nextRequest, requestOptions));
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.search(request, requestOptions).body();
     }
 
     /**
      * You can reply to a conversation with a message from an admin or on behalf of a contact, or with a note for admins.
      */
     public Conversation reply(ReplyToConversationRequest request) {
-        return reply(request, null);
+        return this.rawClient.reply(request).body();
     }
 
     /**
      * You can reply to a conversation with a message from an admin or on behalf of a contact, or with a note for admins.
      */
     public Conversation reply(ReplyToConversationRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations")
-                .addPathSegment(request.getConversationId())
-                .addPathSegments("reply")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request.getBody()), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 403:
-                        throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.reply(request, requestOptions).body();
     }
 
     /**
@@ -686,7 +363,7 @@ public class ConversationsClient {
      * </ul>
      */
     public Conversation manage(ManageConversationPartsRequest request) {
-        return manage(request, null);
+        return this.rawClient.manage(request).body();
     }
 
     /**
@@ -699,56 +376,7 @@ public class ConversationsClient {
      * </ul>
      */
     public Conversation manage(ManageConversationPartsRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations")
-                .addPathSegment(request.getConversationId())
-                .addPathSegments("parts")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request.getBody()), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 403:
-                        throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.manage(request, requestOptions).body();
     }
 
     /**
@@ -761,7 +389,7 @@ public class ConversationsClient {
      * {% /admonition %}
      */
     public Conversation runAssignmentRules(AutoAssignConversationRequest request) {
-        return runAssignmentRules(request, null);
+        return this.rawClient.runAssignmentRules(request).body();
     }
 
     /**
@@ -774,49 +402,7 @@ public class ConversationsClient {
      * {% /admonition %}
      */
     public Conversation runAssignmentRules(AutoAssignConversationRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations")
-                .addPathSegment(request.getConversationId())
-                .addPathSegments("run_assignment_rules")
-                .build();
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", RequestBody.create("", null))
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 403:
-                        throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.runAssignmentRules(request, requestOptions).body();
     }
 
     /**
@@ -826,7 +412,7 @@ public class ConversationsClient {
      * {% /admonition %}</p>
      */
     public Conversation attachContactAsAdmin(AttachContactToConversationRequest request) {
-        return attachContactAsAdmin(request, null);
+        return this.rawClient.attachContactAsAdmin(request).body();
     }
 
     /**
@@ -837,56 +423,7 @@ public class ConversationsClient {
      */
     public Conversation attachContactAsAdmin(
             AttachContactToConversationRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations")
-                .addPathSegment(request.getConversationId())
-                .addPathSegments("customers")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 403:
-                        throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.attachContactAsAdmin(request, requestOptions).body();
     }
 
     /**
@@ -896,7 +433,7 @@ public class ConversationsClient {
      * {% /admonition %}</p>
      */
     public Conversation detachContactAsAdmin(DetachContactFromConversationRequest request) {
-        return detachContactAsAdmin(request, null);
+        return this.rawClient.detachContactAsAdmin(request).body();
     }
 
     /**
@@ -907,60 +444,7 @@ public class ConversationsClient {
      */
     public Conversation detachContactAsAdmin(
             DetachContactFromConversationRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations")
-                .addPathSegment(request.getConversationId())
-                .addPathSegments("customers")
-                .addPathSegment(request.getContactId())
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("DELETE", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 403:
-                        throw new ForbiddenError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                    case 422:
-                        throw new UnprocessableEntityError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.detachContactAsAdmin(request, requestOptions).body();
     }
 
     /**
@@ -970,7 +454,7 @@ public class ConversationsClient {
      * {% /admonition %}</p>
      */
     public Conversation redactConversationPart(RedactConversationRequest request) {
-        return redactConversationPart(request, null);
+        return this.rawClient.redactConversationPart(request).body();
     }
 
     /**
@@ -980,108 +464,20 @@ public class ConversationsClient {
      * {% /admonition %}</p>
      */
     public Conversation redactConversationPart(RedactConversationRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations/redact")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                switch (response.code()) {
-                    case 401:
-                        throw new UnauthorizedError(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class));
-                    case 404:
-                        throw new NotFoundError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.redactConversationPart(request, requestOptions).body();
     }
 
     /**
      * You can convert a conversation to a ticket.
      */
     public Ticket convertToTicket(ConvertConversationToTicketRequest request) {
-        return convertToTicket(request, null);
+        return this.rawClient.convertToTicket(request).body();
     }
 
     /**
      * You can convert a conversation to a ticket.
      */
     public Ticket convertToTicket(ConvertConversationToTicketRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations")
-                .addPathSegment(request.getConversationId())
-                .addPathSegments("convert")
-                .build();
-        RequestBody body;
-        try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
-        } catch (JsonProcessingException e) {
-            throw new IntercomException("Failed to serialize request", e);
-        }
-        Request okhttpRequest = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", body)
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json")
-                .build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        try (Response response = client.newCall(okhttpRequest).execute()) {
-            ResponseBody responseBody = response.body();
-            if (response.isSuccessful()) {
-                return ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Ticket.class);
-            }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-            try {
-                if (response.code() == 400) {
-                    throw new BadRequestError(ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-                }
-            } catch (JsonProcessingException ignored) {
-                // unable to map error response, throwing generic error
-            }
-            throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class));
-        } catch (IOException e) {
-            throw new IntercomException("Network error executing HTTP request", e);
-        }
+        return this.rawClient.convertToTicket(request, requestOptions).body();
     }
 }

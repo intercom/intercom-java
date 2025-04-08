@@ -42,10 +42,60 @@ java {
 }
 
 
+group = 'io.intercom'
+
+version = '3.0.0-alpha0'
+
+jar {
+    dependsOn(":generatePomFileForMavenPublication")
+    archiveBaseName = "intercom-java"
+}
+
+sourcesJar {
+    archiveBaseName = "intercom-java"
+}
+
+javadocJar {
+    archiveBaseName = "intercom-java"
+}
+
 test {
     useJUnitPlatform()
     testLogging {
         showStandardStreams = true
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'io.intercom'
+            artifactId = 'intercom-java'
+            version = '3.0.0-alpha0'
+            from components.java
+            pom {
+                licenses {
+                    license {
+                        name = 'The MIT License (MIT)'
+                        url = 'https://mit-license.org/'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/intercom/intercom-java.git'
+                    developerConnection = 'scm:git:git://github.com/intercom/intercom-java.git'
+                    url = 'https://github.com/intercom/intercom-java'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url "$System.env.MAVEN_PUBLISH_REGISTRY_URL"
+            credentials {
+                username "$System.env.MAVEN_USERNAME"
+                password "$System.env.MAVEN_PASSWORD"
+            }
+        }
     }
 }
 

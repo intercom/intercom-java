@@ -4,6 +4,7 @@
 package com.intercom.api.errors;
 
 import com.intercom.api.core.IntercomApiException;
+import okhttp3.Response;
 
 public final class UnprocessableEntityError extends IntercomApiException {
     /**
@@ -13,6 +14,11 @@ public final class UnprocessableEntityError extends IntercomApiException {
 
     public UnprocessableEntityError(Object body) {
         super("UnprocessableEntityError", 422, body);
+        this.body = body;
+    }
+
+    public UnprocessableEntityError(Object body, Response rawResponse) {
+        super("UnprocessableEntityError", 422, body, rawResponse);
         this.body = body;
     }
 
