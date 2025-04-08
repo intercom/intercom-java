@@ -17,10 +17,10 @@ import com.intercom.api.resources.companies.requests.ListSegmentsAttachedToCompa
 import com.intercom.api.resources.companies.requests.RetrieveCompanyRequest;
 import com.intercom.api.resources.companies.requests.ScrollCompaniesRequest;
 import com.intercom.api.resources.companies.requests.UpdateCompanyRequest;
+import com.intercom.api.resources.companies.types.CompaniesRetrieveResponse;
 import com.intercom.api.resources.companies.types.Company;
 import com.intercom.api.types.CompanyAttachedContacts;
 import com.intercom.api.types.CompanyAttachedSegments;
-import com.intercom.api.types.CompanyList;
 import com.intercom.api.types.DeletedCompanyObject;
 import java.util.concurrent.CompletableFuture;
 
@@ -49,7 +49,7 @@ public class AsyncCompaniesClient {
      * <p><code>https://api.intercom.io/companies?tag_id={tag_id}</code></p>
      * <p><code>https://api.intercom.io/companies?segment_id={segment_id}</code></p>
      */
-    public CompletableFuture<CompanyList> retrieve() {
+    public CompletableFuture<CompaniesRetrieveResponse> retrieve() {
         return this.rawClient.retrieve().thenApply(response -> response.body());
     }
 
@@ -61,7 +61,7 @@ public class AsyncCompaniesClient {
      * <p><code>https://api.intercom.io/companies?tag_id={tag_id}</code></p>
      * <p><code>https://api.intercom.io/companies?segment_id={segment_id}</code></p>
      */
-    public CompletableFuture<CompanyList> retrieve(RetrieveCompanyRequest request) {
+    public CompletableFuture<CompaniesRetrieveResponse> retrieve(RetrieveCompanyRequest request) {
         return this.rawClient.retrieve(request).thenApply(response -> response.body());
     }
 
@@ -73,7 +73,8 @@ public class AsyncCompaniesClient {
      * <p><code>https://api.intercom.io/companies?tag_id={tag_id}</code></p>
      * <p><code>https://api.intercom.io/companies?segment_id={segment_id}</code></p>
      */
-    public CompletableFuture<CompanyList> retrieve(RetrieveCompanyRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<CompaniesRetrieveResponse> retrieve(
+            RetrieveCompanyRequest request, RequestOptions requestOptions) {
         return this.rawClient.retrieve(request, requestOptions).thenApply(response -> response.body());
     }
 

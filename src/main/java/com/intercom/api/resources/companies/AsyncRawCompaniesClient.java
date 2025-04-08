@@ -27,6 +27,7 @@ import com.intercom.api.resources.companies.requests.ListSegmentsAttachedToCompa
 import com.intercom.api.resources.companies.requests.RetrieveCompanyRequest;
 import com.intercom.api.resources.companies.requests.ScrollCompaniesRequest;
 import com.intercom.api.resources.companies.requests.UpdateCompanyRequest;
+import com.intercom.api.resources.companies.types.CompaniesRetrieveResponse;
 import com.intercom.api.resources.companies.types.Company;
 import com.intercom.api.types.CompanyAttachedContacts;
 import com.intercom.api.types.CompanyAttachedSegments;
@@ -65,7 +66,7 @@ public class AsyncRawCompaniesClient {
      * <p><code>https://api.intercom.io/companies?tag_id={tag_id}</code></p>
      * <p><code>https://api.intercom.io/companies?segment_id={segment_id}</code></p>
      */
-    public CompletableFuture<IntercomHttpResponse<CompanyList>> retrieve() {
+    public CompletableFuture<IntercomHttpResponse<CompaniesRetrieveResponse>> retrieve() {
         return retrieve(RetrieveCompanyRequest.builder().build());
     }
 
@@ -77,7 +78,7 @@ public class AsyncRawCompaniesClient {
      * <p><code>https://api.intercom.io/companies?tag_id={tag_id}</code></p>
      * <p><code>https://api.intercom.io/companies?segment_id={segment_id}</code></p>
      */
-    public CompletableFuture<IntercomHttpResponse<CompanyList>> retrieve(RetrieveCompanyRequest request) {
+    public CompletableFuture<IntercomHttpResponse<CompaniesRetrieveResponse>> retrieve(RetrieveCompanyRequest request) {
         return retrieve(request, null);
     }
 
@@ -89,7 +90,7 @@ public class AsyncRawCompaniesClient {
      * <p><code>https://api.intercom.io/companies?tag_id={tag_id}</code></p>
      * <p><code>https://api.intercom.io/companies?segment_id={segment_id}</code></p>
      */
-    public CompletableFuture<IntercomHttpResponse<CompanyList>> retrieve(
+    public CompletableFuture<IntercomHttpResponse<CompaniesRetrieveResponse>> retrieve(
             RetrieveCompanyRequest request, RequestOptions requestOptions) {
         HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
@@ -129,14 +130,15 @@ public class AsyncRawCompaniesClient {
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<IntercomHttpResponse<CompanyList>> future = new CompletableFuture<>();
+        CompletableFuture<IntercomHttpResponse<CompaniesRetrieveResponse>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), CompanyList.class),
+                                ObjectMappers.JSON_MAPPER.readValue(
+                                        responseBody.string(), CompaniesRetrieveResponse.class),
                                 response));
                         return;
                     }

@@ -9,18 +9,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.Nulls;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.intercom.api.core.ObjectMappers;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -33,14 +25,14 @@ public final class ConvertConversationToTicketRequest {
 
     private final String ticketTypeId;
 
-    private final Optional<Map<String, AttributesValue>> attributes;
+    private final Optional<Map<String, Object>> attributes;
 
     private final Map<String, Object> additionalProperties;
 
     private ConvertConversationToTicketRequest(
             String conversationId,
             String ticketTypeId,
-            Optional<Map<String, AttributesValue>> attributes,
+            Optional<Map<String, Object>> attributes,
             Map<String, Object> additionalProperties) {
         this.conversationId = conversationId;
         this.ticketTypeId = ticketTypeId;
@@ -65,7 +57,7 @@ public final class ConvertConversationToTicketRequest {
     }
 
     @JsonProperty("attributes")
-    public Optional<Map<String, AttributesValue>> getAttributes() {
+    public Optional<Map<String, Object>> getAttributes() {
         return attributes;
     }
 
@@ -114,9 +106,9 @@ public final class ConvertConversationToTicketRequest {
     public interface _FinalStage {
         ConvertConversationToTicketRequest build();
 
-        _FinalStage attributes(Optional<Map<String, AttributesValue>> attributes);
+        _FinalStage attributes(Optional<Map<String, Object>> attributes);
 
-        _FinalStage attributes(Map<String, AttributesValue> attributes);
+        _FinalStage attributes(Map<String, Object> attributes);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -125,7 +117,7 @@ public final class ConvertConversationToTicketRequest {
 
         private String ticketTypeId;
 
-        private Optional<Map<String, AttributesValue>> attributes = Optional.empty();
+        private Optional<Map<String, Object>> attributes = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -163,14 +155,14 @@ public final class ConvertConversationToTicketRequest {
         }
 
         @java.lang.Override
-        public _FinalStage attributes(Map<String, AttributesValue> attributes) {
+        public _FinalStage attributes(Map<String, Object> attributes) {
             this.attributes = Optional.ofNullable(attributes);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "attributes", nulls = Nulls.SKIP)
-        public _FinalStage attributes(Optional<Map<String, AttributesValue>> attributes) {
+        public _FinalStage attributes(Optional<Map<String, Object>> attributes) {
             this.attributes = attributes;
             return this;
         }
@@ -179,108 +171,6 @@ public final class ConvertConversationToTicketRequest {
         public ConvertConversationToTicketRequest build() {
             return new ConvertConversationToTicketRequest(
                     conversationId, ticketTypeId, attributes, additionalProperties);
-        }
-    }
-
-    @JsonDeserialize(using = AttributesValue.Deserializer.class)
-    public static final class AttributesValue {
-        private final Object value;
-
-        private final int type;
-
-        private AttributesValue(Object value, int type) {
-            this.value = value;
-            this.type = type;
-        }
-
-        @JsonValue
-        public Object get() {
-            return this.value;
-        }
-
-        public <T> T visit(Visitor<T> visitor) {
-            if (this.type == 0) {
-                return visitor.visit((Optional<String>) this.value);
-            } else if (this.type == 1) {
-                return visitor.visit((double) this.value);
-            } else if (this.type == 2) {
-                return visitor.visit((boolean) this.value);
-            } else if (this.type == 3) {
-                return visitor.visit((List<Object>) this.value);
-            }
-            throw new IllegalStateException("Failed to visit value. This should never happen.");
-        }
-
-        @java.lang.Override
-        public boolean equals(Object other) {
-            if (this == other) return true;
-            return other instanceof AttributesValue && equalTo((AttributesValue) other);
-        }
-
-        private boolean equalTo(AttributesValue other) {
-            return value.equals(other.value);
-        }
-
-        @java.lang.Override
-        public int hashCode() {
-            return Objects.hash(this.value);
-        }
-
-        @java.lang.Override
-        public String toString() {
-            return this.value.toString();
-        }
-
-        public static AttributesValue of(Optional<String> value) {
-            return new AttributesValue(value, 0);
-        }
-
-        public static AttributesValue of(double value) {
-            return new AttributesValue(value, 1);
-        }
-
-        public static AttributesValue of(boolean value) {
-            return new AttributesValue(value, 2);
-        }
-
-        public static AttributesValue of(List<Object> value) {
-            return new AttributesValue(value, 3);
-        }
-
-        public interface Visitor<T> {
-            T visit(Optional<String> value);
-
-            T visit(double value);
-
-            T visit(boolean value);
-
-            T visit(List<Object> value);
-        }
-
-        static final class Deserializer extends StdDeserializer<AttributesValue> {
-            Deserializer() {
-                super(AttributesValue.class);
-            }
-
-            @java.lang.Override
-            public AttributesValue deserialize(JsonParser p, DeserializationContext context) throws IOException {
-                Object value = p.readValueAs(Object.class);
-                try {
-                    return of(ObjectMappers.JSON_MAPPER.convertValue(value, new TypeReference<Optional<String>>() {}));
-                } catch (IllegalArgumentException e) {
-                }
-                if (value instanceof Double) {
-                    return of((Double) value);
-                }
-                if (value instanceof Boolean) {
-                    return of((Boolean) value);
-                }
-                try {
-                    return of(ObjectMappers.JSON_MAPPER.convertValue(value, new TypeReference<List<Object>>() {}));
-                } catch (IllegalArgumentException e) {
-                }
-                throw new JsonParseException(p, "Failed to deserialize");
-            }
         }
     }
 }

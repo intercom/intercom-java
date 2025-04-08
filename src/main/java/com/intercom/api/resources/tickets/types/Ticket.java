@@ -11,20 +11,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.Nulls;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.intercom.api.core.ObjectMappers;
-import com.intercom.api.types.FileAttribute;
 import com.intercom.api.types.LinkedObjectList;
 import com.intercom.api.types.TicketParts;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -39,7 +31,7 @@ public final class Ticket {
 
     private final Category category;
 
-    private final Map<String, TicketAttributesValue> ticketAttributes;
+    private final Map<String, Object> ticketAttributes;
 
     private final TicketState ticketState;
 
@@ -75,7 +67,7 @@ public final class Ticket {
             String id,
             String ticketId,
             Category category,
-            Map<String, TicketAttributesValue> ticketAttributes,
+            Map<String, Object> ticketAttributes,
             TicketState ticketState,
             TicketType ticketType,
             TicketContacts contacts,
@@ -145,7 +137,7 @@ public final class Ticket {
     }
 
     @JsonProperty("ticket_attributes")
-    public Map<String, TicketAttributesValue> getTicketAttributes() {
+    public Map<String, Object> getTicketAttributes() {
         return ticketAttributes;
     }
 
@@ -342,11 +334,11 @@ public final class Ticket {
     public interface _FinalStage {
         Ticket build();
 
-        _FinalStage ticketAttributes(Map<String, TicketAttributesValue> ticketAttributes);
+        _FinalStage ticketAttributes(Map<String, Object> ticketAttributes);
 
-        _FinalStage putAllTicketAttributes(Map<String, TicketAttributesValue> ticketAttributes);
+        _FinalStage putAllTicketAttributes(Map<String, Object> ticketAttributes);
 
-        _FinalStage ticketAttributes(String key, TicketAttributesValue value);
+        _FinalStage ticketAttributes(String key, Object value);
 
         _FinalStage adminAssigneeId(Optional<String> adminAssigneeId);
 
@@ -436,7 +428,7 @@ public final class Ticket {
 
         private Optional<String> adminAssigneeId = Optional.empty();
 
-        private Map<String, TicketAttributesValue> ticketAttributes = new LinkedHashMap<>();
+        private Map<String, Object> ticketAttributes = new LinkedHashMap<>();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -704,20 +696,20 @@ public final class Ticket {
         }
 
         @java.lang.Override
-        public _FinalStage ticketAttributes(String key, TicketAttributesValue value) {
+        public _FinalStage ticketAttributes(String key, Object value) {
             this.ticketAttributes.put(key, value);
             return this;
         }
 
         @java.lang.Override
-        public _FinalStage putAllTicketAttributes(Map<String, TicketAttributesValue> ticketAttributes) {
+        public _FinalStage putAllTicketAttributes(Map<String, Object> ticketAttributes) {
             this.ticketAttributes.putAll(ticketAttributes);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "ticket_attributes", nulls = Nulls.SKIP)
-        public _FinalStage ticketAttributes(Map<String, TicketAttributesValue> ticketAttributes) {
+        public _FinalStage ticketAttributes(Map<String, Object> ticketAttributes) {
             this.ticketAttributes.clear();
             this.ticketAttributes.putAll(ticketAttributes);
             return this;
@@ -787,120 +779,6 @@ public final class Ticket {
         @java.lang.Override
         public String toString() {
             return this.value;
-        }
-    }
-
-    @JsonDeserialize(using = TicketAttributesValue.Deserializer.class)
-    public static final class TicketAttributesValue {
-        private final Object value;
-
-        private final int type;
-
-        private TicketAttributesValue(Object value, int type) {
-            this.value = value;
-            this.type = type;
-        }
-
-        @JsonValue
-        public Object get() {
-            return this.value;
-        }
-
-        public <T> T visit(Visitor<T> visitor) {
-            if (this.type == 0) {
-                return visitor.visit((Optional<String>) this.value);
-            } else if (this.type == 1) {
-                return visitor.visit((double) this.value);
-            } else if (this.type == 2) {
-                return visitor.visit((boolean) this.value);
-            } else if (this.type == 3) {
-                return visitor.visit((List<Object>) this.value);
-            } else if (this.type == 4) {
-                return visitor.visit((FileAttribute) this.value);
-            }
-            throw new IllegalStateException("Failed to visit value. This should never happen.");
-        }
-
-        @java.lang.Override
-        public boolean equals(Object other) {
-            if (this == other) return true;
-            return other instanceof TicketAttributesValue && equalTo((TicketAttributesValue) other);
-        }
-
-        private boolean equalTo(TicketAttributesValue other) {
-            return value.equals(other.value);
-        }
-
-        @java.lang.Override
-        public int hashCode() {
-            return Objects.hash(this.value);
-        }
-
-        @java.lang.Override
-        public String toString() {
-            return this.value.toString();
-        }
-
-        public static TicketAttributesValue of(Optional<String> value) {
-            return new TicketAttributesValue(value, 0);
-        }
-
-        public static TicketAttributesValue of(double value) {
-            return new TicketAttributesValue(value, 1);
-        }
-
-        public static TicketAttributesValue of(boolean value) {
-            return new TicketAttributesValue(value, 2);
-        }
-
-        public static TicketAttributesValue of(List<Object> value) {
-            return new TicketAttributesValue(value, 3);
-        }
-
-        public static TicketAttributesValue of(FileAttribute value) {
-            return new TicketAttributesValue(value, 4);
-        }
-
-        public interface Visitor<T> {
-            T visit(Optional<String> value);
-
-            T visit(double value);
-
-            T visit(boolean value);
-
-            T visit(List<Object> value);
-
-            T visit(FileAttribute value);
-        }
-
-        static final class Deserializer extends StdDeserializer<TicketAttributesValue> {
-            Deserializer() {
-                super(TicketAttributesValue.class);
-            }
-
-            @java.lang.Override
-            public TicketAttributesValue deserialize(JsonParser p, DeserializationContext context) throws IOException {
-                Object value = p.readValueAs(Object.class);
-                try {
-                    return of(ObjectMappers.JSON_MAPPER.convertValue(value, new TypeReference<Optional<String>>() {}));
-                } catch (IllegalArgumentException e) {
-                }
-                if (value instanceof Double) {
-                    return of((Double) value);
-                }
-                if (value instanceof Boolean) {
-                    return of((Boolean) value);
-                }
-                try {
-                    return of(ObjectMappers.JSON_MAPPER.convertValue(value, new TypeReference<List<Object>>() {}));
-                } catch (IllegalArgumentException e) {
-                }
-                try {
-                    return of(ObjectMappers.JSON_MAPPER.convertValue(value, FileAttribute.class));
-                } catch (IllegalArgumentException e) {
-                }
-                throw new JsonParseException(p, "Failed to deserialize");
-            }
         }
     }
 }

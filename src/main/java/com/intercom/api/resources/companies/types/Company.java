@@ -23,8 +23,6 @@ import org.jetbrains.annotations.NotNull;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = Company.Builder.class)
 public final class Company {
-    private final Optional<String> type;
-
     private final String id;
 
     private final String name;
@@ -64,7 +62,6 @@ public final class Company {
     private final Map<String, Object> additionalProperties;
 
     private Company(
-            Optional<String> type,
             String id,
             String name,
             String appId,
@@ -84,7 +81,6 @@ public final class Company {
             Optional<Tags> tags,
             Optional<Segments> segments,
             Map<String, Object> additionalProperties) {
-        this.type = type;
         this.id = id;
         this.name = name;
         this.appId = appId;
@@ -104,14 +100,6 @@ public final class Company {
         this.tags = tags;
         this.segments = segments;
         this.additionalProperties = additionalProperties;
-    }
-
-    /**
-     * @return Value is <code>company</code>
-     */
-    @JsonProperty("type")
-    public Optional<String> getType() {
-        return type;
     }
 
     /**
@@ -267,8 +255,7 @@ public final class Company {
     }
 
     private boolean equalTo(Company other) {
-        return type.equals(other.type)
-                && id.equals(other.id)
+        return id.equals(other.id)
                 && name.equals(other.name)
                 && appId.equals(other.appId)
                 && plan.equals(other.plan)
@@ -291,7 +278,6 @@ public final class Company {
     @java.lang.Override
     public int hashCode() {
         return Objects.hash(
-                this.type,
                 this.id,
                 this.name,
                 this.appId,
@@ -382,10 +368,6 @@ public final class Company {
     public interface _FinalStage {
         Company build();
 
-        _FinalStage type(Optional<String> type);
-
-        _FinalStage type(String type);
-
         _FinalStage plan(Optional<Plan> plan);
 
         _FinalStage plan(Plan plan);
@@ -456,8 +438,6 @@ public final class Company {
 
         private Optional<Plan> plan = Optional.empty();
 
-        private Optional<String> type = Optional.empty();
-
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -465,7 +445,6 @@ public final class Company {
 
         @java.lang.Override
         public Builder from(Company other) {
-            type(other.getType());
             id(other.getId());
             name(other.getName());
             appId(other.getAppId());
@@ -705,27 +684,9 @@ public final class Company {
             return this;
         }
 
-        /**
-         * <p>Value is <code>company</code></p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage type(String type) {
-            this.type = Optional.ofNullable(type);
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter(value = "type", nulls = Nulls.SKIP)
-        public _FinalStage type(Optional<String> type) {
-            this.type = type;
-            return this;
-        }
-
         @java.lang.Override
         public Company build() {
             return new Company(
-                    type,
                     id,
                     name,
                     appId,

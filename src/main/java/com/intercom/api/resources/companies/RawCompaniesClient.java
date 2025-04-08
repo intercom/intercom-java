@@ -27,6 +27,7 @@ import com.intercom.api.resources.companies.requests.ListSegmentsAttachedToCompa
 import com.intercom.api.resources.companies.requests.RetrieveCompanyRequest;
 import com.intercom.api.resources.companies.requests.ScrollCompaniesRequest;
 import com.intercom.api.resources.companies.requests.UpdateCompanyRequest;
+import com.intercom.api.resources.companies.types.CompaniesRetrieveResponse;
 import com.intercom.api.resources.companies.types.Company;
 import com.intercom.api.types.CompanyAttachedContacts;
 import com.intercom.api.types.CompanyAttachedSegments;
@@ -60,7 +61,7 @@ public class RawCompaniesClient {
      * <p><code>https://api.intercom.io/companies?tag_id={tag_id}</code></p>
      * <p><code>https://api.intercom.io/companies?segment_id={segment_id}</code></p>
      */
-    public IntercomHttpResponse<CompanyList> retrieve() {
+    public IntercomHttpResponse<CompaniesRetrieveResponse> retrieve() {
         return retrieve(RetrieveCompanyRequest.builder().build());
     }
 
@@ -72,7 +73,7 @@ public class RawCompaniesClient {
      * <p><code>https://api.intercom.io/companies?tag_id={tag_id}</code></p>
      * <p><code>https://api.intercom.io/companies?segment_id={segment_id}</code></p>
      */
-    public IntercomHttpResponse<CompanyList> retrieve(RetrieveCompanyRequest request) {
+    public IntercomHttpResponse<CompaniesRetrieveResponse> retrieve(RetrieveCompanyRequest request) {
         return retrieve(request, null);
     }
 
@@ -84,7 +85,8 @@ public class RawCompaniesClient {
      * <p><code>https://api.intercom.io/companies?tag_id={tag_id}</code></p>
      * <p><code>https://api.intercom.io/companies?segment_id={segment_id}</code></p>
      */
-    public IntercomHttpResponse<CompanyList> retrieve(RetrieveCompanyRequest request, RequestOptions requestOptions) {
+    public IntercomHttpResponse<CompaniesRetrieveResponse> retrieve(
+            RetrieveCompanyRequest request, RequestOptions requestOptions) {
         HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("companies");
@@ -127,7 +129,8 @@ public class RawCompaniesClient {
             ResponseBody responseBody = response.body();
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), CompanyList.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), CompaniesRetrieveResponse.class),
+                        response);
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {

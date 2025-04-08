@@ -17,10 +17,10 @@ import com.intercom.api.resources.companies.requests.ListSegmentsAttachedToCompa
 import com.intercom.api.resources.companies.requests.RetrieveCompanyRequest;
 import com.intercom.api.resources.companies.requests.ScrollCompaniesRequest;
 import com.intercom.api.resources.companies.requests.UpdateCompanyRequest;
+import com.intercom.api.resources.companies.types.CompaniesRetrieveResponse;
 import com.intercom.api.resources.companies.types.Company;
 import com.intercom.api.types.CompanyAttachedContacts;
 import com.intercom.api.types.CompanyAttachedSegments;
-import com.intercom.api.types.CompanyList;
 import com.intercom.api.types.DeletedCompanyObject;
 
 public class CompaniesClient {
@@ -48,7 +48,7 @@ public class CompaniesClient {
      * <p><code>https://api.intercom.io/companies?tag_id={tag_id}</code></p>
      * <p><code>https://api.intercom.io/companies?segment_id={segment_id}</code></p>
      */
-    public CompanyList retrieve() {
+    public CompaniesRetrieveResponse retrieve() {
         return this.rawClient.retrieve().body();
     }
 
@@ -60,7 +60,7 @@ public class CompaniesClient {
      * <p><code>https://api.intercom.io/companies?tag_id={tag_id}</code></p>
      * <p><code>https://api.intercom.io/companies?segment_id={segment_id}</code></p>
      */
-    public CompanyList retrieve(RetrieveCompanyRequest request) {
+    public CompaniesRetrieveResponse retrieve(RetrieveCompanyRequest request) {
         return this.rawClient.retrieve(request).body();
     }
 
@@ -72,7 +72,7 @@ public class CompaniesClient {
      * <p><code>https://api.intercom.io/companies?tag_id={tag_id}</code></p>
      * <p><code>https://api.intercom.io/companies?segment_id={segment_id}</code></p>
      */
-    public CompanyList retrieve(RetrieveCompanyRequest request, RequestOptions requestOptions) {
+    public CompaniesRetrieveResponse retrieve(RetrieveCompanyRequest request, RequestOptions requestOptions) {
         return this.rawClient.retrieve(request, requestOptions).body();
     }
 
