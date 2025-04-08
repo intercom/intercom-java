@@ -1,1 +1,5 @@
 # Specify files that shouldn't be modified by Fern
+
+src/test/java/com/intercom/api/integration
+src/test/java/com/intercom/api/utils
+
