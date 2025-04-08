@@ -39,14 +39,6 @@ public final class CompanyList {
         this.additionalProperties = additionalProperties;
     }
 
-    /**
-     * @return The type of object - <code>list</code>.
-     */
-    @JsonProperty("type")
-    public String getType() {
-        return "list";
-    }
-
     @JsonProperty("pages")
     public Optional<OffsetPages> getPages() {
         return pages;
