@@ -5,6 +5,7 @@ package com.intercom.api.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -247,25 +248,98 @@ public final class Context {
         }
     }
 
-    public enum Location {
-        CONVERSATION("conversation"),
+    public static final class Location {
+        public static final Location OPERATOR = new Location(Value.OPERATOR, "operator");
 
-        HOME("home"),
+        public static final Location MESSAGE = new Location(Value.MESSAGE, "message");
 
-        MESSAGE("message"),
+        public static final Location HOME = new Location(Value.HOME, "home");
 
-        OPERATOR("operator");
+        public static final Location CONVERSATION = new Location(Value.CONVERSATION, "conversation");
 
-        private final String value;
+        private final Value value;
 
-        Location(String value) {
+        private final String string;
+
+        Location(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof Location && this.string.equals(((Location) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case OPERATOR:
+                    return visitor.visitOperator();
+                case MESSAGE:
+                    return visitor.visitMessage();
+                case HOME:
+                    return visitor.visitHome();
+                case CONVERSATION:
+                    return visitor.visitConversation();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static Location valueOf(String value) {
+            switch (value) {
+                case "operator":
+                    return OPERATOR;
+                case "message":
+                    return MESSAGE;
+                case "home":
+                    return HOME;
+                case "conversation":
+                    return CONVERSATION;
+                default:
+                    return new Location(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            CONVERSATION,
+
+            HOME,
+
+            MESSAGE,
+
+            OPERATOR,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitConversation();
+
+            T visitHome();
+
+            T visitMessage();
+
+            T visitOperator();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

@@ -5,6 +5,7 @@ package com.intercom.api.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -122,27 +123,108 @@ public final class SpacerComponent {
         }
     }
 
-    public enum Size {
-        XS("xs"),
+    public static final class Size {
+        public static final Size XS = new Size(Value.XS, "xs");
 
-        S("s"),
+        public static final Size S = new Size(Value.S, "s");
 
-        M("m"),
+        public static final Size L = new Size(Value.L, "l");
 
-        L("l"),
+        public static final Size XL = new Size(Value.XL, "xl");
 
-        XL("xl");
+        public static final Size M = new Size(Value.M, "m");
 
-        private final String value;
+        private final Value value;
 
-        Size(String value) {
+        private final String string;
+
+        Size(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof Size && this.string.equals(((Size) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case XS:
+                    return visitor.visitXs();
+                case S:
+                    return visitor.visitS();
+                case L:
+                    return visitor.visitL();
+                case XL:
+                    return visitor.visitXl();
+                case M:
+                    return visitor.visitM();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static Size valueOf(String value) {
+            switch (value) {
+                case "xs":
+                    return XS;
+                case "s":
+                    return S;
+                case "l":
+                    return L;
+                case "xl":
+                    return XL;
+                case "m":
+                    return M;
+                default:
+                    return new Size(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            XS,
+
+            S,
+
+            M,
+
+            L,
+
+            XL,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitXs();
+
+            T visitS();
+
+            T visitM();
+
+            T visitL();
+
+            T visitXl();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

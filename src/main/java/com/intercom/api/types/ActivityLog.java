@@ -5,6 +5,7 @@ package com.intercom.api.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -433,151 +434,784 @@ public final class ActivityLog {
         }
     }
 
-    public enum ActivityType {
-        ADMIN_ASSIGNMENT_LIMIT_CHANGE("admin_assignment_limit_change"),
+    public static final class ActivityType {
+        public static final ActivityType CAMPAIGN_DELETION =
+                new ActivityType(Value.CAMPAIGN_DELETION, "campaign_deletion");
 
-        ADMIN_AWAY_MODE_CHANGE("admin_away_mode_change"),
+        public static final ActivityType ADMIN_LOGOUT = new ActivityType(Value.ADMIN_LOGOUT, "admin_logout");
 
-        ADMIN_DELETION("admin_deletion"),
+        public static final ActivityType TEMPORARY_EXPECTATION_CHANGE =
+                new ActivityType(Value.TEMPORARY_EXPECTATION_CHANGE, "temporary_expectation_change");
 
-        ADMIN_DEPROVISIONED("admin_deprovisioned"),
+        public static final ActivityType ADMIN_IMPERSONATION_END =
+                new ActivityType(Value.ADMIN_IMPERSONATION_END, "admin_impersonation_end");
 
-        ADMIN_IMPERSONATION_END("admin_impersonation_end"),
+        public static final ActivityType APP_OUTBOUND_ADDRESS_CHANGE =
+                new ActivityType(Value.APP_OUTBOUND_ADDRESS_CHANGE, "app_outbound_address_change");
 
-        ADMIN_IMPERSONATION_START("admin_impersonation_start"),
+        public static final ActivityType SEAT_CHANGE = new ActivityType(Value.SEAT_CHANGE, "seat_change");
 
-        ADMIN_INVITE_CHANGE("admin_invite_change"),
+        public static final ActivityType SEARCH_BROWSE_REQUIRED_CHANGE =
+                new ActivityType(Value.SEARCH_BROWSE_REQUIRED_CHANGE, "search_browse_required_change");
 
-        ADMIN_INVITE_CREATION("admin_invite_creation"),
+        public static final ActivityType SECURITY_SETTINGS_CHANGE =
+                new ActivityType(Value.SECURITY_SETTINGS_CHANGE, "security_settings_change");
 
-        ADMIN_INVITE_DELETION("admin_invite_deletion"),
+        public static final ActivityType APP_TEAM_CREATION =
+                new ActivityType(Value.APP_TEAM_CREATION, "app_team_creation");
 
-        ADMIN_LOGIN_FAILURE("admin_login_failure"),
+        public static final ActivityType APP_PACKAGE_UNINSTALLATION =
+                new ActivityType(Value.APP_PACKAGE_UNINSTALLATION, "app_package_uninstallation");
 
-        ADMIN_LOGIN_SUCCESS("admin_login_success"),
+        public static final ActivityType CONVERSATION_TOPIC_CHANGE =
+                new ActivityType(Value.CONVERSATION_TOPIC_CHANGE, "conversation_topic_change");
 
-        ADMIN_LOGOUT("admin_logout"),
+        public static final ActivityType ADMIN_ASSIGNMENT_LIMIT_CHANGE =
+                new ActivityType(Value.ADMIN_ASSIGNMENT_LIMIT_CHANGE, "admin_assignment_limit_change");
 
-        ADMIN_PASSWORD_RESET_REQUEST("admin_password_reset_request"),
+        public static final ActivityType CAMPAIGN_STATE_CHANGE =
+                new ActivityType(Value.CAMPAIGN_STATE_CHANGE, "campaign_state_change");
 
-        ADMIN_PASSWORD_RESET_SUCCESS("admin_password_reset_success"),
+        public static final ActivityType ADMIN_AWAY_MODE_CHANGE =
+                new ActivityType(Value.ADMIN_AWAY_MODE_CHANGE, "admin_away_mode_change");
 
-        ADMIN_PERMISSION_CHANGE("admin_permission_change"),
+        public static final ActivityType CONVERSATION_PART_DELETION =
+                new ActivityType(Value.CONVERSATION_PART_DELETION, "conversation_part_deletion");
 
-        ADMIN_PROVISIONED("admin_provisioned"),
+        public static final ActivityType APP_WEBHOOK_DELETION =
+                new ActivityType(Value.APP_WEBHOOK_DELETION, "app_webhook_deletion");
 
-        ADMIN_TWO_FACTOR_AUTH_CHANGE("admin_two_factor_auth_change"),
+        public static final ActivityType SEARCH_BROWSE_ENABLED_CHANGE =
+                new ActivityType(Value.SEARCH_BROWSE_ENABLED_CHANGE, "search_browse_enabled_change");
 
-        ADMIN_UNAUTHORIZED_SIGN_IN_METHOD("admin_unauthorized_sign_in_method"),
+        public static final ActivityType MESSENGER_SEARCH_REQUIRED_CHANGE =
+                new ActivityType(Value.MESSENGER_SEARCH_REQUIRED_CHANGE, "messenger_search_required_change");
 
-        APP_ADMIN_JOIN("app_admin_join"),
+        public static final ActivityType ADMIN_DEPROVISIONED =
+                new ActivityType(Value.ADMIN_DEPROVISIONED, "admin_deprovisioned");
 
-        APP_AUTHENTICATION_METHOD_CHANGE("app_authentication_method_change"),
+        public static final ActivityType APP_AUTHENTICATION_METHOD_CHANGE =
+                new ActivityType(Value.APP_AUTHENTICATION_METHOD_CHANGE, "app_authentication_method_change");
 
-        APP_DATA_DELETION("app_data_deletion"),
+        public static final ActivityType RULESET_CREATION =
+                new ActivityType(Value.RULESET_CREATION, "ruleset_creation");
 
-        APP_DATA_EXPORT("app_data_export"),
+        public static final ActivityType ADMIN_DELETION = new ActivityType(Value.ADMIN_DELETION, "admin_deletion");
 
-        APP_GOOGLE_SSO_DOMAIN_CHANGE("app_google_sso_domain_change"),
+        public static final ActivityType APP_PACKAGE_INSTALLATION =
+                new ActivityType(Value.APP_PACKAGE_INSTALLATION, "app_package_installation");
 
-        APP_IDENTITY_VERIFICATION_CHANGE("app_identity_verification_change"),
+        public static final ActivityType ROLE_CREATION = new ActivityType(Value.ROLE_CREATION, "role_creation");
 
-        APP_NAME_CHANGE("app_name_change"),
+        public static final ActivityType APP_ADMIN_JOIN = new ActivityType(Value.APP_ADMIN_JOIN, "app_admin_join");
 
-        APP_OUTBOUND_ADDRESS_CHANGE("app_outbound_address_change"),
+        public static final ActivityType APP_DATA_EXPORT = new ActivityType(Value.APP_DATA_EXPORT, "app_data_export");
 
-        APP_PACKAGE_INSTALLATION("app_package_installation"),
+        public static final ActivityType ADMIN_LOGIN_FAILURE =
+                new ActivityType(Value.ADMIN_LOGIN_FAILURE, "admin_login_failure");
 
-        APP_PACKAGE_TOKEN_REGENERATION("app_package_token_regeneration"),
+        public static final ActivityType APP_TEAM_DELETION =
+                new ActivityType(Value.APP_TEAM_DELETION, "app_team_deletion");
 
-        APP_PACKAGE_UNINSTALLATION("app_package_uninstallation"),
+        public static final ActivityType MESSENGER_LOOK_AND_FEEL_CHANGE =
+                new ActivityType(Value.MESSENGER_LOOK_AND_FEEL_CHANGE, "messenger_look_and_feel_change");
 
-        APP_TEAM_CREATION("app_team_creation"),
+        public static final ActivityType SEAT_REVOKE = new ActivityType(Value.SEAT_REVOKE, "seat_revoke");
 
-        APP_TEAM_DELETION("app_team_deletion"),
+        public static final ActivityType RULESET_ACTIVATION_TITLE_PREVIEW =
+                new ActivityType(Value.RULESET_ACTIVATION_TITLE_PREVIEW, "ruleset_activation_title_preview");
 
-        APP_TEAM_MEMBERSHIP_MODIFICATION("app_team_membership_modification"),
+        public static final ActivityType MESSAGE_DELETION =
+                new ActivityType(Value.MESSAGE_DELETION, "message_deletion");
 
-        APP_TIMEZONE_CHANGE("app_timezone_change"),
+        public static final ActivityType MESSENGER_SPACES_CHANGE =
+                new ActivityType(Value.MESSENGER_SPACES_CHANGE, "messenger_spaces_change");
 
-        APP_WEBHOOK_CREATION("app_webhook_creation"),
+        public static final ActivityType APP_NAME_CHANGE = new ActivityType(Value.APP_NAME_CHANGE, "app_name_change");
 
-        APP_WEBHOOK_DELETION("app_webhook_deletion"),
+        public static final ActivityType APP_WEBHOOK_CREATION =
+                new ActivityType(Value.APP_WEBHOOK_CREATION, "app_webhook_creation");
 
-        ARTICLES_IN_MESSENGER_ENABLED_CHANGE("articles_in_messenger_enabled_change"),
+        public static final ActivityType APP_GOOGLE_SSO_DOMAIN_CHANGE =
+                new ActivityType(Value.APP_GOOGLE_SSO_DOMAIN_CHANGE, "app_google_sso_domain_change");
 
-        BULK_DELETE("bulk_delete"),
+        public static final ActivityType CONVERSATION_TOPIC_CREATION =
+                new ActivityType(Value.CONVERSATION_TOPIC_CREATION, "conversation_topic_creation");
 
-        BULK_EXPORT("bulk_export"),
+        public static final ActivityType HELP_CENTER_SETTINGS_CHANGE =
+                new ActivityType(Value.HELP_CENTER_SETTINGS_CHANGE, "help_center_settings_change");
 
-        CAMPAIGN_DELETION("campaign_deletion"),
+        public static final ActivityType ROLE_DELETION = new ActivityType(Value.ROLE_DELETION, "role_deletion");
 
-        CAMPAIGN_STATE_CHANGE("campaign_state_change"),
+        public static final ActivityType APP_PACKAGE_TOKEN_REGENERATION =
+                new ActivityType(Value.APP_PACKAGE_TOKEN_REGENERATION, "app_package_token_regeneration");
 
-        CONVERSATION_PART_DELETION("conversation_part_deletion"),
+        public static final ActivityType APP_TIMEZONE_CHANGE =
+                new ActivityType(Value.APP_TIMEZONE_CHANGE, "app_timezone_change");
 
-        CONVERSATION_TOPIC_CHANGE("conversation_topic_change"),
+        public static final ActivityType ROLE_CHANGE = new ActivityType(Value.ROLE_CHANGE, "role_change");
 
-        CONVERSATION_TOPIC_CREATION("conversation_topic_creation"),
+        public static final ActivityType ADMIN_IMPERSONATION_START =
+                new ActivityType(Value.ADMIN_IMPERSONATION_START, "admin_impersonation_start");
 
-        CONVERSATION_TOPIC_DELETION("conversation_topic_deletion"),
+        public static final ActivityType BULK_DELETE = new ActivityType(Value.BULK_DELETE, "bulk_delete");
 
-        HELP_CENTER_SETTINGS_CHANGE("help_center_settings_change"),
+        public static final ActivityType ADMIN_INVITE_DELETION =
+                new ActivityType(Value.ADMIN_INVITE_DELETION, "admin_invite_deletion");
 
-        INBOUND_CONVERSATIONS_CHANGE("inbound_conversations_change"),
+        public static final ActivityType ADMIN_PASSWORD_RESET_REQUEST =
+                new ActivityType(Value.ADMIN_PASSWORD_RESET_REQUEST, "admin_password_reset_request");
 
-        INBOX_ACCESS_CHANGE("inbox_access_change"),
+        public static final ActivityType APP_DATA_DELETION =
+                new ActivityType(Value.APP_DATA_DELETION, "app_data_deletion");
 
-        MESSAGE_DELETION("message_deletion"),
+        public static final ActivityType APP_IDENTITY_VERIFICATION_CHANGE =
+                new ActivityType(Value.APP_IDENTITY_VERIFICATION_CHANGE, "app_identity_verification_change");
 
-        MESSAGE_STATE_CHANGE("message_state_change"),
+        public static final ActivityType CONVERSATION_TOPIC_DELETION =
+                new ActivityType(Value.CONVERSATION_TOPIC_DELETION, "conversation_topic_deletion");
 
-        MESSENGER_LOOK_AND_FEEL_CHANGE("messenger_look_and_feel_change"),
+        public static final ActivityType ADMIN_PASSWORD_RESET_SUCCESS =
+                new ActivityType(Value.ADMIN_PASSWORD_RESET_SUCCESS, "admin_password_reset_success");
 
-        MESSENGER_SEARCH_REQUIRED_CHANGE("messenger_search_required_change"),
+        public static final ActivityType OFFICE_HOURS_CHANGE =
+                new ActivityType(Value.OFFICE_HOURS_CHANGE, "office_hours_change");
 
-        MESSENGER_SPACES_CHANGE("messenger_spaces_change"),
+        public static final ActivityType ADMIN_UNAUTHORIZED_SIGN_IN_METHOD =
+                new ActivityType(Value.ADMIN_UNAUTHORIZED_SIGN_IN_METHOD, "admin_unauthorized_sign_in_method");
 
-        OFFICE_HOURS_CHANGE("office_hours_change"),
+        public static final ActivityType BULK_EXPORT = new ActivityType(Value.BULK_EXPORT, "bulk_export");
 
-        ROLE_CHANGE("role_change"),
+        public static final ActivityType WELCOME_MESSAGE_CHANGE =
+                new ActivityType(Value.WELCOME_MESSAGE_CHANGE, "welcome_message_change");
 
-        ROLE_CREATION("role_creation"),
+        public static final ActivityType ADMIN_PROVISIONED =
+                new ActivityType(Value.ADMIN_PROVISIONED, "admin_provisioned");
 
-        ROLE_DELETION("role_deletion"),
+        public static final ActivityType UPFRONT_EMAIL_COLLECTION_CHANGE =
+                new ActivityType(Value.UPFRONT_EMAIL_COLLECTION_CHANGE, "upfront_email_collection_change");
 
-        RULESET_ACTIVATION_TITLE_PREVIEW("ruleset_activation_title_preview"),
+        public static final ActivityType ARTICLES_IN_MESSENGER_ENABLED_CHANGE =
+                new ActivityType(Value.ARTICLES_IN_MESSENGER_ENABLED_CHANGE, "articles_in_messenger_enabled_change");
 
-        RULESET_CREATION("ruleset_creation"),
+        public static final ActivityType ADMIN_LOGIN_SUCCESS =
+                new ActivityType(Value.ADMIN_LOGIN_SUCCESS, "admin_login_success");
 
-        RULESET_DELETION("ruleset_deletion"),
+        public static final ActivityType ADMIN_TWO_FACTOR_AUTH_CHANGE =
+                new ActivityType(Value.ADMIN_TWO_FACTOR_AUTH_CHANGE, "admin_two_factor_auth_change");
 
-        SEARCH_BROWSE_ENABLED_CHANGE("search_browse_enabled_change"),
+        public static final ActivityType APP_TEAM_MEMBERSHIP_MODIFICATION =
+                new ActivityType(Value.APP_TEAM_MEMBERSHIP_MODIFICATION, "app_team_membership_modification");
 
-        SEARCH_BROWSE_REQUIRED_CHANGE("search_browse_required_change"),
+        public static final ActivityType ADMIN_PERMISSION_CHANGE =
+                new ActivityType(Value.ADMIN_PERMISSION_CHANGE, "admin_permission_change");
 
-        SEAT_CHANGE("seat_change"),
+        public static final ActivityType INBOUND_CONVERSATIONS_CHANGE =
+                new ActivityType(Value.INBOUND_CONVERSATIONS_CHANGE, "inbound_conversations_change");
 
-        SEAT_REVOKE("seat_revoke"),
+        public static final ActivityType MESSAGE_STATE_CHANGE =
+                new ActivityType(Value.MESSAGE_STATE_CHANGE, "message_state_change");
 
-        SECURITY_SETTINGS_CHANGE("security_settings_change"),
+        public static final ActivityType ADMIN_INVITE_CREATION =
+                new ActivityType(Value.ADMIN_INVITE_CREATION, "admin_invite_creation");
 
-        TEMPORARY_EXPECTATION_CHANGE("temporary_expectation_change"),
+        public static final ActivityType INBOX_ACCESS_CHANGE =
+                new ActivityType(Value.INBOX_ACCESS_CHANGE, "inbox_access_change");
 
-        UPFRONT_EMAIL_COLLECTION_CHANGE("upfront_email_collection_change"),
+        public static final ActivityType ADMIN_INVITE_CHANGE =
+                new ActivityType(Value.ADMIN_INVITE_CHANGE, "admin_invite_change");
 
-        WELCOME_MESSAGE_CHANGE("welcome_message_change");
+        public static final ActivityType RULESET_DELETION =
+                new ActivityType(Value.RULESET_DELETION, "ruleset_deletion");
 
-        private final String value;
+        private final Value value;
 
-        ActivityType(String value) {
+        private final String string;
+
+        ActivityType(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other)
+                    || (other instanceof ActivityType && this.string.equals(((ActivityType) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case CAMPAIGN_DELETION:
+                    return visitor.visitCampaignDeletion();
+                case ADMIN_LOGOUT:
+                    return visitor.visitAdminLogout();
+                case TEMPORARY_EXPECTATION_CHANGE:
+                    return visitor.visitTemporaryExpectationChange();
+                case ADMIN_IMPERSONATION_END:
+                    return visitor.visitAdminImpersonationEnd();
+                case APP_OUTBOUND_ADDRESS_CHANGE:
+                    return visitor.visitAppOutboundAddressChange();
+                case SEAT_CHANGE:
+                    return visitor.visitSeatChange();
+                case SEARCH_BROWSE_REQUIRED_CHANGE:
+                    return visitor.visitSearchBrowseRequiredChange();
+                case SECURITY_SETTINGS_CHANGE:
+                    return visitor.visitSecuritySettingsChange();
+                case APP_TEAM_CREATION:
+                    return visitor.visitAppTeamCreation();
+                case APP_PACKAGE_UNINSTALLATION:
+                    return visitor.visitAppPackageUninstallation();
+                case CONVERSATION_TOPIC_CHANGE:
+                    return visitor.visitConversationTopicChange();
+                case ADMIN_ASSIGNMENT_LIMIT_CHANGE:
+                    return visitor.visitAdminAssignmentLimitChange();
+                case CAMPAIGN_STATE_CHANGE:
+                    return visitor.visitCampaignStateChange();
+                case ADMIN_AWAY_MODE_CHANGE:
+                    return visitor.visitAdminAwayModeChange();
+                case CONVERSATION_PART_DELETION:
+                    return visitor.visitConversationPartDeletion();
+                case APP_WEBHOOK_DELETION:
+                    return visitor.visitAppWebhookDeletion();
+                case SEARCH_BROWSE_ENABLED_CHANGE:
+                    return visitor.visitSearchBrowseEnabledChange();
+                case MESSENGER_SEARCH_REQUIRED_CHANGE:
+                    return visitor.visitMessengerSearchRequiredChange();
+                case ADMIN_DEPROVISIONED:
+                    return visitor.visitAdminDeprovisioned();
+                case APP_AUTHENTICATION_METHOD_CHANGE:
+                    return visitor.visitAppAuthenticationMethodChange();
+                case RULESET_CREATION:
+                    return visitor.visitRulesetCreation();
+                case ADMIN_DELETION:
+                    return visitor.visitAdminDeletion();
+                case APP_PACKAGE_INSTALLATION:
+                    return visitor.visitAppPackageInstallation();
+                case ROLE_CREATION:
+                    return visitor.visitRoleCreation();
+                case APP_ADMIN_JOIN:
+                    return visitor.visitAppAdminJoin();
+                case APP_DATA_EXPORT:
+                    return visitor.visitAppDataExport();
+                case ADMIN_LOGIN_FAILURE:
+                    return visitor.visitAdminLoginFailure();
+                case APP_TEAM_DELETION:
+                    return visitor.visitAppTeamDeletion();
+                case MESSENGER_LOOK_AND_FEEL_CHANGE:
+                    return visitor.visitMessengerLookAndFeelChange();
+                case SEAT_REVOKE:
+                    return visitor.visitSeatRevoke();
+                case RULESET_ACTIVATION_TITLE_PREVIEW:
+                    return visitor.visitRulesetActivationTitlePreview();
+                case MESSAGE_DELETION:
+                    return visitor.visitMessageDeletion();
+                case MESSENGER_SPACES_CHANGE:
+                    return visitor.visitMessengerSpacesChange();
+                case APP_NAME_CHANGE:
+                    return visitor.visitAppNameChange();
+                case APP_WEBHOOK_CREATION:
+                    return visitor.visitAppWebhookCreation();
+                case APP_GOOGLE_SSO_DOMAIN_CHANGE:
+                    return visitor.visitAppGoogleSsoDomainChange();
+                case CONVERSATION_TOPIC_CREATION:
+                    return visitor.visitConversationTopicCreation();
+                case HELP_CENTER_SETTINGS_CHANGE:
+                    return visitor.visitHelpCenterSettingsChange();
+                case ROLE_DELETION:
+                    return visitor.visitRoleDeletion();
+                case APP_PACKAGE_TOKEN_REGENERATION:
+                    return visitor.visitAppPackageTokenRegeneration();
+                case APP_TIMEZONE_CHANGE:
+                    return visitor.visitAppTimezoneChange();
+                case ROLE_CHANGE:
+                    return visitor.visitRoleChange();
+                case ADMIN_IMPERSONATION_START:
+                    return visitor.visitAdminImpersonationStart();
+                case BULK_DELETE:
+                    return visitor.visitBulkDelete();
+                case ADMIN_INVITE_DELETION:
+                    return visitor.visitAdminInviteDeletion();
+                case ADMIN_PASSWORD_RESET_REQUEST:
+                    return visitor.visitAdminPasswordResetRequest();
+                case APP_DATA_DELETION:
+                    return visitor.visitAppDataDeletion();
+                case APP_IDENTITY_VERIFICATION_CHANGE:
+                    return visitor.visitAppIdentityVerificationChange();
+                case CONVERSATION_TOPIC_DELETION:
+                    return visitor.visitConversationTopicDeletion();
+                case ADMIN_PASSWORD_RESET_SUCCESS:
+                    return visitor.visitAdminPasswordResetSuccess();
+                case OFFICE_HOURS_CHANGE:
+                    return visitor.visitOfficeHoursChange();
+                case ADMIN_UNAUTHORIZED_SIGN_IN_METHOD:
+                    return visitor.visitAdminUnauthorizedSignInMethod();
+                case BULK_EXPORT:
+                    return visitor.visitBulkExport();
+                case WELCOME_MESSAGE_CHANGE:
+                    return visitor.visitWelcomeMessageChange();
+                case ADMIN_PROVISIONED:
+                    return visitor.visitAdminProvisioned();
+                case UPFRONT_EMAIL_COLLECTION_CHANGE:
+                    return visitor.visitUpfrontEmailCollectionChange();
+                case ARTICLES_IN_MESSENGER_ENABLED_CHANGE:
+                    return visitor.visitArticlesInMessengerEnabledChange();
+                case ADMIN_LOGIN_SUCCESS:
+                    return visitor.visitAdminLoginSuccess();
+                case ADMIN_TWO_FACTOR_AUTH_CHANGE:
+                    return visitor.visitAdminTwoFactorAuthChange();
+                case APP_TEAM_MEMBERSHIP_MODIFICATION:
+                    return visitor.visitAppTeamMembershipModification();
+                case ADMIN_PERMISSION_CHANGE:
+                    return visitor.visitAdminPermissionChange();
+                case INBOUND_CONVERSATIONS_CHANGE:
+                    return visitor.visitInboundConversationsChange();
+                case MESSAGE_STATE_CHANGE:
+                    return visitor.visitMessageStateChange();
+                case ADMIN_INVITE_CREATION:
+                    return visitor.visitAdminInviteCreation();
+                case INBOX_ACCESS_CHANGE:
+                    return visitor.visitInboxAccessChange();
+                case ADMIN_INVITE_CHANGE:
+                    return visitor.visitAdminInviteChange();
+                case RULESET_DELETION:
+                    return visitor.visitRulesetDeletion();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static ActivityType valueOf(String value) {
+            switch (value) {
+                case "campaign_deletion":
+                    return CAMPAIGN_DELETION;
+                case "admin_logout":
+                    return ADMIN_LOGOUT;
+                case "temporary_expectation_change":
+                    return TEMPORARY_EXPECTATION_CHANGE;
+                case "admin_impersonation_end":
+                    return ADMIN_IMPERSONATION_END;
+                case "app_outbound_address_change":
+                    return APP_OUTBOUND_ADDRESS_CHANGE;
+                case "seat_change":
+                    return SEAT_CHANGE;
+                case "search_browse_required_change":
+                    return SEARCH_BROWSE_REQUIRED_CHANGE;
+                case "security_settings_change":
+                    return SECURITY_SETTINGS_CHANGE;
+                case "app_team_creation":
+                    return APP_TEAM_CREATION;
+                case "app_package_uninstallation":
+                    return APP_PACKAGE_UNINSTALLATION;
+                case "conversation_topic_change":
+                    return CONVERSATION_TOPIC_CHANGE;
+                case "admin_assignment_limit_change":
+                    return ADMIN_ASSIGNMENT_LIMIT_CHANGE;
+                case "campaign_state_change":
+                    return CAMPAIGN_STATE_CHANGE;
+                case "admin_away_mode_change":
+                    return ADMIN_AWAY_MODE_CHANGE;
+                case "conversation_part_deletion":
+                    return CONVERSATION_PART_DELETION;
+                case "app_webhook_deletion":
+                    return APP_WEBHOOK_DELETION;
+                case "search_browse_enabled_change":
+                    return SEARCH_BROWSE_ENABLED_CHANGE;
+                case "messenger_search_required_change":
+                    return MESSENGER_SEARCH_REQUIRED_CHANGE;
+                case "admin_deprovisioned":
+                    return ADMIN_DEPROVISIONED;
+                case "app_authentication_method_change":
+                    return APP_AUTHENTICATION_METHOD_CHANGE;
+                case "ruleset_creation":
+                    return RULESET_CREATION;
+                case "admin_deletion":
+                    return ADMIN_DELETION;
+                case "app_package_installation":
+                    return APP_PACKAGE_INSTALLATION;
+                case "role_creation":
+                    return ROLE_CREATION;
+                case "app_admin_join":
+                    return APP_ADMIN_JOIN;
+                case "app_data_export":
+                    return APP_DATA_EXPORT;
+                case "admin_login_failure":
+                    return ADMIN_LOGIN_FAILURE;
+                case "app_team_deletion":
+                    return APP_TEAM_DELETION;
+                case "messenger_look_and_feel_change":
+                    return MESSENGER_LOOK_AND_FEEL_CHANGE;
+                case "seat_revoke":
+                    return SEAT_REVOKE;
+                case "ruleset_activation_title_preview":
+                    return RULESET_ACTIVATION_TITLE_PREVIEW;
+                case "message_deletion":
+                    return MESSAGE_DELETION;
+                case "messenger_spaces_change":
+                    return MESSENGER_SPACES_CHANGE;
+                case "app_name_change":
+                    return APP_NAME_CHANGE;
+                case "app_webhook_creation":
+                    return APP_WEBHOOK_CREATION;
+                case "app_google_sso_domain_change":
+                    return APP_GOOGLE_SSO_DOMAIN_CHANGE;
+                case "conversation_topic_creation":
+                    return CONVERSATION_TOPIC_CREATION;
+                case "help_center_settings_change":
+                    return HELP_CENTER_SETTINGS_CHANGE;
+                case "role_deletion":
+                    return ROLE_DELETION;
+                case "app_package_token_regeneration":
+                    return APP_PACKAGE_TOKEN_REGENERATION;
+                case "app_timezone_change":
+                    return APP_TIMEZONE_CHANGE;
+                case "role_change":
+                    return ROLE_CHANGE;
+                case "admin_impersonation_start":
+                    return ADMIN_IMPERSONATION_START;
+                case "bulk_delete":
+                    return BULK_DELETE;
+                case "admin_invite_deletion":
+                    return ADMIN_INVITE_DELETION;
+                case "admin_password_reset_request":
+                    return ADMIN_PASSWORD_RESET_REQUEST;
+                case "app_data_deletion":
+                    return APP_DATA_DELETION;
+                case "app_identity_verification_change":
+                    return APP_IDENTITY_VERIFICATION_CHANGE;
+                case "conversation_topic_deletion":
+                    return CONVERSATION_TOPIC_DELETION;
+                case "admin_password_reset_success":
+                    return ADMIN_PASSWORD_RESET_SUCCESS;
+                case "office_hours_change":
+                    return OFFICE_HOURS_CHANGE;
+                case "admin_unauthorized_sign_in_method":
+                    return ADMIN_UNAUTHORIZED_SIGN_IN_METHOD;
+                case "bulk_export":
+                    return BULK_EXPORT;
+                case "welcome_message_change":
+                    return WELCOME_MESSAGE_CHANGE;
+                case "admin_provisioned":
+                    return ADMIN_PROVISIONED;
+                case "upfront_email_collection_change":
+                    return UPFRONT_EMAIL_COLLECTION_CHANGE;
+                case "articles_in_messenger_enabled_change":
+                    return ARTICLES_IN_MESSENGER_ENABLED_CHANGE;
+                case "admin_login_success":
+                    return ADMIN_LOGIN_SUCCESS;
+                case "admin_two_factor_auth_change":
+                    return ADMIN_TWO_FACTOR_AUTH_CHANGE;
+                case "app_team_membership_modification":
+                    return APP_TEAM_MEMBERSHIP_MODIFICATION;
+                case "admin_permission_change":
+                    return ADMIN_PERMISSION_CHANGE;
+                case "inbound_conversations_change":
+                    return INBOUND_CONVERSATIONS_CHANGE;
+                case "message_state_change":
+                    return MESSAGE_STATE_CHANGE;
+                case "admin_invite_creation":
+                    return ADMIN_INVITE_CREATION;
+                case "inbox_access_change":
+                    return INBOX_ACCESS_CHANGE;
+                case "admin_invite_change":
+                    return ADMIN_INVITE_CHANGE;
+                case "ruleset_deletion":
+                    return RULESET_DELETION;
+                default:
+                    return new ActivityType(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            ADMIN_ASSIGNMENT_LIMIT_CHANGE,
+
+            ADMIN_AWAY_MODE_CHANGE,
+
+            ADMIN_DELETION,
+
+            ADMIN_DEPROVISIONED,
+
+            ADMIN_IMPERSONATION_END,
+
+            ADMIN_IMPERSONATION_START,
+
+            ADMIN_INVITE_CHANGE,
+
+            ADMIN_INVITE_CREATION,
+
+            ADMIN_INVITE_DELETION,
+
+            ADMIN_LOGIN_FAILURE,
+
+            ADMIN_LOGIN_SUCCESS,
+
+            ADMIN_LOGOUT,
+
+            ADMIN_PASSWORD_RESET_REQUEST,
+
+            ADMIN_PASSWORD_RESET_SUCCESS,
+
+            ADMIN_PERMISSION_CHANGE,
+
+            ADMIN_PROVISIONED,
+
+            ADMIN_TWO_FACTOR_AUTH_CHANGE,
+
+            ADMIN_UNAUTHORIZED_SIGN_IN_METHOD,
+
+            APP_ADMIN_JOIN,
+
+            APP_AUTHENTICATION_METHOD_CHANGE,
+
+            APP_DATA_DELETION,
+
+            APP_DATA_EXPORT,
+
+            APP_GOOGLE_SSO_DOMAIN_CHANGE,
+
+            APP_IDENTITY_VERIFICATION_CHANGE,
+
+            APP_NAME_CHANGE,
+
+            APP_OUTBOUND_ADDRESS_CHANGE,
+
+            APP_PACKAGE_INSTALLATION,
+
+            APP_PACKAGE_TOKEN_REGENERATION,
+
+            APP_PACKAGE_UNINSTALLATION,
+
+            APP_TEAM_CREATION,
+
+            APP_TEAM_DELETION,
+
+            APP_TEAM_MEMBERSHIP_MODIFICATION,
+
+            APP_TIMEZONE_CHANGE,
+
+            APP_WEBHOOK_CREATION,
+
+            APP_WEBHOOK_DELETION,
+
+            ARTICLES_IN_MESSENGER_ENABLED_CHANGE,
+
+            BULK_DELETE,
+
+            BULK_EXPORT,
+
+            CAMPAIGN_DELETION,
+
+            CAMPAIGN_STATE_CHANGE,
+
+            CONVERSATION_PART_DELETION,
+
+            CONVERSATION_TOPIC_CHANGE,
+
+            CONVERSATION_TOPIC_CREATION,
+
+            CONVERSATION_TOPIC_DELETION,
+
+            HELP_CENTER_SETTINGS_CHANGE,
+
+            INBOUND_CONVERSATIONS_CHANGE,
+
+            INBOX_ACCESS_CHANGE,
+
+            MESSAGE_DELETION,
+
+            MESSAGE_STATE_CHANGE,
+
+            MESSENGER_LOOK_AND_FEEL_CHANGE,
+
+            MESSENGER_SEARCH_REQUIRED_CHANGE,
+
+            MESSENGER_SPACES_CHANGE,
+
+            OFFICE_HOURS_CHANGE,
+
+            ROLE_CHANGE,
+
+            ROLE_CREATION,
+
+            ROLE_DELETION,
+
+            RULESET_ACTIVATION_TITLE_PREVIEW,
+
+            RULESET_CREATION,
+
+            RULESET_DELETION,
+
+            SEARCH_BROWSE_ENABLED_CHANGE,
+
+            SEARCH_BROWSE_REQUIRED_CHANGE,
+
+            SEAT_CHANGE,
+
+            SEAT_REVOKE,
+
+            SECURITY_SETTINGS_CHANGE,
+
+            TEMPORARY_EXPECTATION_CHANGE,
+
+            UPFRONT_EMAIL_COLLECTION_CHANGE,
+
+            WELCOME_MESSAGE_CHANGE,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitAdminAssignmentLimitChange();
+
+            T visitAdminAwayModeChange();
+
+            T visitAdminDeletion();
+
+            T visitAdminDeprovisioned();
+
+            T visitAdminImpersonationEnd();
+
+            T visitAdminImpersonationStart();
+
+            T visitAdminInviteChange();
+
+            T visitAdminInviteCreation();
+
+            T visitAdminInviteDeletion();
+
+            T visitAdminLoginFailure();
+
+            T visitAdminLoginSuccess();
+
+            T visitAdminLogout();
+
+            T visitAdminPasswordResetRequest();
+
+            T visitAdminPasswordResetSuccess();
+
+            T visitAdminPermissionChange();
+
+            T visitAdminProvisioned();
+
+            T visitAdminTwoFactorAuthChange();
+
+            T visitAdminUnauthorizedSignInMethod();
+
+            T visitAppAdminJoin();
+
+            T visitAppAuthenticationMethodChange();
+
+            T visitAppDataDeletion();
+
+            T visitAppDataExport();
+
+            T visitAppGoogleSsoDomainChange();
+
+            T visitAppIdentityVerificationChange();
+
+            T visitAppNameChange();
+
+            T visitAppOutboundAddressChange();
+
+            T visitAppPackageInstallation();
+
+            T visitAppPackageTokenRegeneration();
+
+            T visitAppPackageUninstallation();
+
+            T visitAppTeamCreation();
+
+            T visitAppTeamDeletion();
+
+            T visitAppTeamMembershipModification();
+
+            T visitAppTimezoneChange();
+
+            T visitAppWebhookCreation();
+
+            T visitAppWebhookDeletion();
+
+            T visitArticlesInMessengerEnabledChange();
+
+            T visitBulkDelete();
+
+            T visitBulkExport();
+
+            T visitCampaignDeletion();
+
+            T visitCampaignStateChange();
+
+            T visitConversationPartDeletion();
+
+            T visitConversationTopicChange();
+
+            T visitConversationTopicCreation();
+
+            T visitConversationTopicDeletion();
+
+            T visitHelpCenterSettingsChange();
+
+            T visitInboundConversationsChange();
+
+            T visitInboxAccessChange();
+
+            T visitMessageDeletion();
+
+            T visitMessageStateChange();
+
+            T visitMessengerLookAndFeelChange();
+
+            T visitMessengerSearchRequiredChange();
+
+            T visitMessengerSpacesChange();
+
+            T visitOfficeHoursChange();
+
+            T visitRoleChange();
+
+            T visitRoleCreation();
+
+            T visitRoleDeletion();
+
+            T visitRulesetActivationTitlePreview();
+
+            T visitRulesetCreation();
+
+            T visitRulesetDeletion();
+
+            T visitSearchBrowseEnabledChange();
+
+            T visitSearchBrowseRequiredChange();
+
+            T visitSeatChange();
+
+            T visitSeatRevoke();
+
+            T visitSecuritySettingsChange();
+
+            T visitTemporaryExpectationChange();
+
+            T visitUpfrontEmailCollectionChange();
+
+            T visitWelcomeMessageChange();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

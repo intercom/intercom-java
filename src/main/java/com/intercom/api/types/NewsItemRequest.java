@@ -5,6 +5,7 @@ package com.intercom.api.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -384,21 +385,78 @@ public final class NewsItemRequest {
         }
     }
 
-    public enum State {
-        DRAFT("draft"),
+    public static final class State {
+        public static final State LIVE = new State(Value.LIVE, "live");
 
-        LIVE("live");
+        public static final State DRAFT = new State(Value.DRAFT, "draft");
 
-        private final String value;
+        private final Value value;
 
-        State(String value) {
+        private final String string;
+
+        State(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof State && this.string.equals(((State) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case LIVE:
+                    return visitor.visitLive();
+                case DRAFT:
+                    return visitor.visitDraft();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static State valueOf(String value) {
+            switch (value) {
+                case "live":
+                    return LIVE;
+                case "draft":
+                    return DRAFT;
+                default:
+                    return new State(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            DRAFT,
+
+            LIVE,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitDraft();
+
+            T visitLive();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

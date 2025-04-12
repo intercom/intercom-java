@@ -5,6 +5,7 @@ package com.intercom.api.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -172,25 +173,98 @@ public final class SlaApplied {
         }
     }
 
-    public enum SlaStatus {
-        HIT("hit"),
+    public static final class SlaStatus {
+        public static final SlaStatus HIT = new SlaStatus(Value.HIT, "hit");
 
-        MISSED("missed"),
+        public static final SlaStatus CANCELLED = new SlaStatus(Value.CANCELLED, "cancelled");
 
-        CANCELLED("cancelled"),
+        public static final SlaStatus ACTIVE = new SlaStatus(Value.ACTIVE, "active");
 
-        ACTIVE("active");
+        public static final SlaStatus MISSED = new SlaStatus(Value.MISSED, "missed");
 
-        private final String value;
+        private final Value value;
 
-        SlaStatus(String value) {
+        private final String string;
+
+        SlaStatus(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof SlaStatus && this.string.equals(((SlaStatus) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case HIT:
+                    return visitor.visitHit();
+                case CANCELLED:
+                    return visitor.visitCancelled();
+                case ACTIVE:
+                    return visitor.visitActive();
+                case MISSED:
+                    return visitor.visitMissed();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static SlaStatus valueOf(String value) {
+            switch (value) {
+                case "hit":
+                    return HIT;
+                case "cancelled":
+                    return CANCELLED;
+                case "active":
+                    return ACTIVE;
+                case "missed":
+                    return MISSED;
+                default:
+                    return new SlaStatus(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            HIT,
+
+            MISSED,
+
+            CANCELLED,
+
+            ACTIVE,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitHit();
+
+            T visitMissed();
+
+            T visitCancelled();
+
+            T visitActive();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

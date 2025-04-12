@@ -5,6 +5,7 @@ package com.intercom.api.resources.conversations.requests;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -288,23 +289,88 @@ public final class CreateConversationRequest {
             }
         }
 
-        public enum Type {
-            LEAD("lead"),
+        public static final class Type {
+            public static final Type USER = new Type(Value.USER, "user");
 
-            USER("user"),
+            public static final Type CONTACT = new Type(Value.CONTACT, "contact");
 
-            CONTACT("contact");
+            public static final Type LEAD = new Type(Value.LEAD, "lead");
 
-            private final String value;
+            private final Value value;
 
-            Type(String value) {
+            private final String string;
+
+            Type(Value value, String string) {
                 this.value = value;
+                this.string = string;
             }
 
-            @JsonValue
+            public Value getEnumValue() {
+                return value;
+            }
+
             @java.lang.Override
+            @JsonValue
             public String toString() {
-                return this.value;
+                return this.string;
+            }
+
+            @java.lang.Override
+            public boolean equals(Object other) {
+                return (this == other) || (other instanceof Type && this.string.equals(((Type) other).string));
+            }
+
+            @java.lang.Override
+            public int hashCode() {
+                return this.string.hashCode();
+            }
+
+            public <T> T visit(Visitor<T> visitor) {
+                switch (value) {
+                    case USER:
+                        return visitor.visitUser();
+                    case CONTACT:
+                        return visitor.visitContact();
+                    case LEAD:
+                        return visitor.visitLead();
+                    case UNKNOWN:
+                    default:
+                        return visitor.visitUnknown(string);
+                }
+            }
+
+            @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+            public static Type valueOf(String value) {
+                switch (value) {
+                    case "user":
+                        return USER;
+                    case "contact":
+                        return CONTACT;
+                    case "lead":
+                        return LEAD;
+                    default:
+                        return new Type(Value.UNKNOWN, value);
+                }
+            }
+
+            public enum Value {
+                LEAD,
+
+                USER,
+
+                CONTACT,
+
+                UNKNOWN
+            }
+
+            public interface Visitor<T> {
+                T visitLead();
+
+                T visitUser();
+
+                T visitContact();
+
+                T visitUnknown(String unknownType);
             }
         }
     }

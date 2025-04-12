@@ -5,6 +5,7 @@ package com.intercom.api.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -260,45 +261,183 @@ public final class TextComponent {
         }
     }
 
-    public enum Style {
-        HEADER("header"),
+    public static final class Style {
+        public static final Style MUTED = new Style(Value.MUTED, "muted");
 
-        PARAGRAPH("paragraph"),
+        public static final Style HEADER = new Style(Value.HEADER, "header");
 
-        MUTED("muted"),
+        public static final Style PARAGRAPH = new Style(Value.PARAGRAPH, "paragraph");
 
-        ERROR("error");
+        public static final Style ERROR = new Style(Value.ERROR, "error");
 
-        private final String value;
+        private final Value value;
 
-        Style(String value) {
+        private final String string;
+
+        Style(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof Style && this.string.equals(((Style) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case MUTED:
+                    return visitor.visitMuted();
+                case HEADER:
+                    return visitor.visitHeader();
+                case PARAGRAPH:
+                    return visitor.visitParagraph();
+                case ERROR:
+                    return visitor.visitError();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static Style valueOf(String value) {
+            switch (value) {
+                case "muted":
+                    return MUTED;
+                case "header":
+                    return HEADER;
+                case "paragraph":
+                    return PARAGRAPH;
+                case "error":
+                    return ERROR;
+                default:
+                    return new Style(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            HEADER,
+
+            PARAGRAPH,
+
+            MUTED,
+
+            ERROR,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitHeader();
+
+            T visitParagraph();
+
+            T visitMuted();
+
+            T visitError();
+
+            T visitUnknown(String unknownType);
         }
     }
 
-    public enum Align {
-        LEFT("left"),
+    public static final class Align {
+        public static final Align LEFT = new Align(Value.LEFT, "left");
 
-        CENTER("center"),
+        public static final Align RIGHT = new Align(Value.RIGHT, "right");
 
-        RIGHT("right");
+        public static final Align CENTER = new Align(Value.CENTER, "center");
 
-        private final String value;
+        private final Value value;
 
-        Align(String value) {
+        private final String string;
+
+        Align(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof Align && this.string.equals(((Align) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case LEFT:
+                    return visitor.visitLeft();
+                case RIGHT:
+                    return visitor.visitRight();
+                case CENTER:
+                    return visitor.visitCenter();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static Align valueOf(String value) {
+            switch (value) {
+                case "left":
+                    return LEFT;
+                case "right":
+                    return RIGHT;
+                case "center":
+                    return CENTER;
+                default:
+                    return new Align(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            LEFT,
+
+            CENTER,
+
+            RIGHT,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitLeft();
+
+            T visitCenter();
+
+            T visitRight();
+
+            T visitUnknown(String unknownType);
         }
     }
 }
