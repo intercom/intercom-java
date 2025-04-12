@@ -5,6 +5,7 @@ package com.intercom.api.resources.messages.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -305,25 +306,99 @@ public final class Message {
         }
     }
 
-    public enum MessageType {
-        EMAIL("email"),
+    public static final class MessageType {
+        public static final MessageType EMAIL = new MessageType(Value.EMAIL, "email");
 
-        INAPP("inapp"),
+        public static final MessageType FACEBOOK = new MessageType(Value.FACEBOOK, "facebook");
 
-        FACEBOOK("facebook"),
+        public static final MessageType INAPP = new MessageType(Value.INAPP, "inapp");
 
-        TWITTER("twitter");
+        public static final MessageType TWITTER = new MessageType(Value.TWITTER, "twitter");
 
-        private final String value;
+        private final Value value;
 
-        MessageType(String value) {
+        private final String string;
+
+        MessageType(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other)
+                    || (other instanceof MessageType && this.string.equals(((MessageType) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case EMAIL:
+                    return visitor.visitEmail();
+                case FACEBOOK:
+                    return visitor.visitFacebook();
+                case INAPP:
+                    return visitor.visitInapp();
+                case TWITTER:
+                    return visitor.visitTwitter();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static MessageType valueOf(String value) {
+            switch (value) {
+                case "email":
+                    return EMAIL;
+                case "facebook":
+                    return FACEBOOK;
+                case "inapp":
+                    return INAPP;
+                case "twitter":
+                    return TWITTER;
+                default:
+                    return new MessageType(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            EMAIL,
+
+            INAPP,
+
+            FACEBOOK,
+
+            TWITTER,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitEmail();
+
+            T visitInapp();
+
+            T visitFacebook();
+
+            T visitTwitter();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

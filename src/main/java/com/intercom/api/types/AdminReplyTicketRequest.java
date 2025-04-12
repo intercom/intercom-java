@@ -5,6 +5,7 @@ package com.intercom.api.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -292,23 +293,89 @@ public final class AdminReplyTicketRequest {
         }
     }
 
-    public enum MessageType {
-        COMMENT("comment"),
+    public static final class MessageType {
+        public static final MessageType NOTE = new MessageType(Value.NOTE, "note");
 
-        NOTE("note"),
+        public static final MessageType QUICK_REPLY = new MessageType(Value.QUICK_REPLY, "quick_reply");
 
-        QUICK_REPLY("quick_reply");
+        public static final MessageType COMMENT = new MessageType(Value.COMMENT, "comment");
 
-        private final String value;
+        private final Value value;
 
-        MessageType(String value) {
+        private final String string;
+
+        MessageType(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other)
+                    || (other instanceof MessageType && this.string.equals(((MessageType) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case NOTE:
+                    return visitor.visitNote();
+                case QUICK_REPLY:
+                    return visitor.visitQuickReply();
+                case COMMENT:
+                    return visitor.visitComment();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static MessageType valueOf(String value) {
+            switch (value) {
+                case "note":
+                    return NOTE;
+                case "quick_reply":
+                    return QUICK_REPLY;
+                case "comment":
+                    return COMMENT;
+                default:
+                    return new MessageType(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            COMMENT,
+
+            NOTE,
+
+            QUICK_REPLY,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitComment();
+
+            T visitNote();
+
+            T visitQuickReply();
+
+            T visitUnknown(String unknownType);
         }
     }
 

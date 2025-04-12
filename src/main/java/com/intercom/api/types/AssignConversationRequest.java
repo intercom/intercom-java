@@ -5,6 +5,7 @@ package com.intercom.api.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -204,21 +205,78 @@ public final class AssignConversationRequest {
         }
     }
 
-    public enum Type {
-        ADMIN("admin"),
+    public static final class Type {
+        public static final Type ADMIN = new Type(Value.ADMIN, "admin");
 
-        TEAM("team");
+        public static final Type TEAM = new Type(Value.TEAM, "team");
 
-        private final String value;
+        private final Value value;
 
-        Type(String value) {
+        private final String string;
+
+        Type(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof Type && this.string.equals(((Type) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case ADMIN:
+                    return visitor.visitAdmin();
+                case TEAM:
+                    return visitor.visitTeam();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static Type valueOf(String value) {
+            switch (value) {
+                case "admin":
+                    return ADMIN;
+                case "team":
+                    return TEAM;
+                default:
+                    return new Type(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            ADMIN,
+
+            TEAM,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitAdmin();
+
+            T visitTeam();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

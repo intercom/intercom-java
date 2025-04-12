@@ -5,6 +5,7 @@ package com.intercom.api.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -361,25 +362,98 @@ public final class ImageComponent {
         }
     }
 
-    public enum Align {
-        LEFT("left"),
+    public static final class Align {
+        public static final Align LEFT = new Align(Value.LEFT, "left");
 
-        CENTER("center"),
+        public static final Align RIGHT = new Align(Value.RIGHT, "right");
 
-        RIGHT("right"),
+        public static final Align CENTER = new Align(Value.CENTER, "center");
 
-        FULL_WIDTH("full_width");
+        public static final Align FULL_WIDTH = new Align(Value.FULL_WIDTH, "full_width");
 
-        private final String value;
+        private final Value value;
 
-        Align(String value) {
+        private final String string;
+
+        Align(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof Align && this.string.equals(((Align) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case LEFT:
+                    return visitor.visitLeft();
+                case RIGHT:
+                    return visitor.visitRight();
+                case CENTER:
+                    return visitor.visitCenter();
+                case FULL_WIDTH:
+                    return visitor.visitFullWidth();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static Align valueOf(String value) {
+            switch (value) {
+                case "left":
+                    return LEFT;
+                case "right":
+                    return RIGHT;
+                case "center":
+                    return CENTER;
+                case "full_width":
+                    return FULL_WIDTH;
+                default:
+                    return new Align(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            LEFT,
+
+            CENTER,
+
+            RIGHT,
+
+            FULL_WIDTH,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitLeft();
+
+            T visitCenter();
+
+            T visitRight();
+
+            T visitFullWidth();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

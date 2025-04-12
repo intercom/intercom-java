@@ -5,6 +5,7 @@ package com.intercom.api.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -123,21 +124,78 @@ public final class MultipleFilterSearchRequest {
         }
     }
 
-    public enum Operator {
-        AND("AND"),
+    public static final class Operator {
+        public static final Operator AND = new Operator(Value.AND, "AND");
 
-        OR("OR");
+        public static final Operator OR = new Operator(Value.OR, "OR");
 
-        private final String value;
+        private final Value value;
 
-        Operator(String value) {
+        private final String string;
+
+        Operator(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof Operator && this.string.equals(((Operator) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case AND:
+                    return visitor.visitAnd();
+                case OR:
+                    return visitor.visitOr();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static Operator valueOf(String value) {
+            switch (value) {
+                case "AND":
+                    return AND;
+                case "OR":
+                    return OR;
+                default:
+                    return new Operator(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            AND,
+
+            OR,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitAnd();
+
+            T visitOr();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

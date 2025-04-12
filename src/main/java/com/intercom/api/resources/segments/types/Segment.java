@@ -5,6 +5,7 @@ package com.intercom.api.resources.segments.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -287,21 +288,78 @@ public final class Segment {
         }
     }
 
-    public enum PersonType {
-        CONTACT("contact"),
+    public static final class PersonType {
+        public static final PersonType USER = new PersonType(Value.USER, "user");
 
-        USER("user");
+        public static final PersonType CONTACT = new PersonType(Value.CONTACT, "contact");
 
-        private final String value;
+        private final Value value;
 
-        PersonType(String value) {
+        private final String string;
+
+        PersonType(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof PersonType && this.string.equals(((PersonType) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case USER:
+                    return visitor.visitUser();
+                case CONTACT:
+                    return visitor.visitContact();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static PersonType valueOf(String value) {
+            switch (value) {
+                case "user":
+                    return USER;
+                case "contact":
+                    return CONTACT;
+                default:
+                    return new PersonType(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            CONTACT,
+
+            USER,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitContact();
+
+            T visitUser();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

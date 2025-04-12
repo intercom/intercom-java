@@ -5,6 +5,7 @@ package com.intercom.api.resources.conversations.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -989,41 +990,163 @@ public final class Conversation {
         }
     }
 
-    public enum Priority {
-        PRIORITY("priority"),
+    public static final class Priority {
+        public static final Priority PRIORITY = new Priority(Value.PRIORITY, "priority");
 
-        NOT_PRIORITY("not_priority");
+        public static final Priority NOT_PRIORITY = new Priority(Value.NOT_PRIORITY, "not_priority");
 
-        private final String value;
+        private final Value value;
 
-        Priority(String value) {
+        private final String string;
+
+        Priority(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof Priority && this.string.equals(((Priority) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case PRIORITY:
+                    return visitor.visitPriority();
+                case NOT_PRIORITY:
+                    return visitor.visitNotPriority();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static Priority valueOf(String value) {
+            switch (value) {
+                case "priority":
+                    return PRIORITY;
+                case "not_priority":
+                    return NOT_PRIORITY;
+                default:
+                    return new Priority(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            PRIORITY,
+
+            NOT_PRIORITY,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitPriority();
+
+            T visitNotPriority();
+
+            T visitUnknown(String unknownType);
         }
     }
 
-    public enum State {
-        OPEN("open"),
+    public static final class State {
+        public static final State SNOOZED = new State(Value.SNOOZED, "snoozed");
 
-        CLOSED("closed"),
+        public static final State CLOSED = new State(Value.CLOSED, "closed");
 
-        SNOOZED("snoozed");
+        public static final State OPEN = new State(Value.OPEN, "open");
 
-        private final String value;
+        private final Value value;
 
-        State(String value) {
+        private final String string;
+
+        State(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof State && this.string.equals(((State) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case SNOOZED:
+                    return visitor.visitSnoozed();
+                case CLOSED:
+                    return visitor.visitClosed();
+                case OPEN:
+                    return visitor.visitOpen();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static State valueOf(String value) {
+            switch (value) {
+                case "snoozed":
+                    return SNOOZED;
+                case "closed":
+                    return CLOSED;
+                case "open":
+                    return OPEN;
+                default:
+                    return new State(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            OPEN,
+
+            CLOSED,
+
+            SNOOZED,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitOpen();
+
+            T visitClosed();
+
+            T visitSnoozed();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

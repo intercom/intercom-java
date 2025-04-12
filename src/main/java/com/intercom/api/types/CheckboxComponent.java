@@ -5,6 +5,7 @@ package com.intercom.api.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -306,23 +307,88 @@ public final class CheckboxComponent {
         }
     }
 
-    public enum SaveState {
-        UNSAVED("unsaved"),
+    public static final class SaveState {
+        public static final SaveState SAVED = new SaveState(Value.SAVED, "saved");
 
-        SAVED("saved"),
+        public static final SaveState UNSAVED = new SaveState(Value.UNSAVED, "unsaved");
 
-        FAILED("failed");
+        public static final SaveState FAILED = new SaveState(Value.FAILED, "failed");
 
-        private final String value;
+        private final Value value;
 
-        SaveState(String value) {
+        private final String string;
+
+        SaveState(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof SaveState && this.string.equals(((SaveState) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case SAVED:
+                    return visitor.visitSaved();
+                case UNSAVED:
+                    return visitor.visitUnsaved();
+                case FAILED:
+                    return visitor.visitFailed();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static SaveState valueOf(String value) {
+            switch (value) {
+                case "saved":
+                    return SAVED;
+                case "unsaved":
+                    return UNSAVED;
+                case "failed":
+                    return FAILED;
+                default:
+                    return new SaveState(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            UNSAVED,
+
+            SAVED,
+
+            FAILED,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitUnsaved();
+
+            T visitSaved();
+
+            T visitFailed();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

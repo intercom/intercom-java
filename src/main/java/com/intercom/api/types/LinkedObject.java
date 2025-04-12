@@ -5,6 +5,7 @@ package com.intercom.api.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -174,21 +175,78 @@ public final class LinkedObject {
         }
     }
 
-    public enum Type {
-        TICKET("ticket"),
+    public static final class Type {
+        public static final Type TICKET = new Type(Value.TICKET, "ticket");
 
-        CONVERSATION("conversation");
+        public static final Type CONVERSATION = new Type(Value.CONVERSATION, "conversation");
 
-        private final String value;
+        private final Value value;
 
-        Type(String value) {
+        private final String string;
+
+        Type(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof Type && this.string.equals(((Type) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case TICKET:
+                    return visitor.visitTicket();
+                case CONVERSATION:
+                    return visitor.visitConversation();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static Type valueOf(String value) {
+            switch (value) {
+                case "ticket":
+                    return TICKET;
+                case "conversation":
+                    return CONVERSATION;
+                default:
+                    return new Type(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            TICKET,
+
+            CONVERSATION,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitTicket();
+
+            T visitConversation();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

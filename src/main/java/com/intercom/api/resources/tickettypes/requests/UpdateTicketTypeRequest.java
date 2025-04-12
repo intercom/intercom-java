@@ -5,6 +5,7 @@ package com.intercom.api.resources.tickettypes.requests;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -342,23 +343,88 @@ public final class UpdateTicketTypeRequest {
         }
     }
 
-    public enum Category {
-        CUSTOMER("Customer"),
+    public static final class Category {
+        public static final Category BACK_OFFICE = new Category(Value.BACK_OFFICE, "Back-office");
 
-        BACK_OFFICE("Back-office"),
+        public static final Category CUSTOMER = new Category(Value.CUSTOMER, "Customer");
 
-        TRACKER("Tracker");
+        public static final Category TRACKER = new Category(Value.TRACKER, "Tracker");
 
-        private final String value;
+        private final Value value;
 
-        Category(String value) {
+        private final String string;
+
+        Category(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof Category && this.string.equals(((Category) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case BACK_OFFICE:
+                    return visitor.visitBackOffice();
+                case CUSTOMER:
+                    return visitor.visitCustomer();
+                case TRACKER:
+                    return visitor.visitTracker();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static Category valueOf(String value) {
+            switch (value) {
+                case "Back-office":
+                    return BACK_OFFICE;
+                case "Customer":
+                    return CUSTOMER;
+                case "Tracker":
+                    return TRACKER;
+                default:
+                    return new Category(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            CUSTOMER,
+
+            BACK_OFFICE,
+
+            TRACKER,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitCustomer();
+
+            T visitBackOffice();
+
+            T visitTracker();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

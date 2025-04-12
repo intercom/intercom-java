@@ -5,6 +5,7 @@ package com.intercom.api.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -659,31 +660,128 @@ public final class TicketTypeAttribute {
         }
     }
 
-    public enum DataType {
-        STRING("string"),
+    public static final class DataType {
+        public static final DataType STRING = new DataType(Value.STRING, "string");
 
-        LIST("list"),
+        public static final DataType DECIMAL = new DataType(Value.DECIMAL, "decimal");
 
-        INTEGER("integer"),
+        public static final DataType LIST = new DataType(Value.LIST, "list");
 
-        DECIMAL("decimal"),
+        public static final DataType INTEGER = new DataType(Value.INTEGER, "integer");
 
-        BOOLEAN("boolean"),
+        public static final DataType DATETIME = new DataType(Value.DATETIME, "datetime");
 
-        DATETIME("datetime"),
+        public static final DataType BOOLEAN = new DataType(Value.BOOLEAN, "boolean");
 
-        FILES("files");
+        public static final DataType FILES = new DataType(Value.FILES, "files");
 
-        private final String value;
+        private final Value value;
 
-        DataType(String value) {
+        private final String string;
+
+        DataType(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof DataType && this.string.equals(((DataType) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case STRING:
+                    return visitor.visitString();
+                case DECIMAL:
+                    return visitor.visitDecimal();
+                case LIST:
+                    return visitor.visitList();
+                case INTEGER:
+                    return visitor.visitInteger();
+                case DATETIME:
+                    return visitor.visitDatetime();
+                case BOOLEAN:
+                    return visitor.visitBoolean();
+                case FILES:
+                    return visitor.visitFiles();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static DataType valueOf(String value) {
+            switch (value) {
+                case "string":
+                    return STRING;
+                case "decimal":
+                    return DECIMAL;
+                case "list":
+                    return LIST;
+                case "integer":
+                    return INTEGER;
+                case "datetime":
+                    return DATETIME;
+                case "boolean":
+                    return BOOLEAN;
+                case "files":
+                    return FILES;
+                default:
+                    return new DataType(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            STRING,
+
+            LIST,
+
+            INTEGER,
+
+            DECIMAL,
+
+            BOOLEAN,
+
+            DATETIME,
+
+            FILES,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitString();
+
+            T visitList();
+
+            T visitInteger();
+
+            T visitDecimal();
+
+            T visitBoolean();
+
+            T visitDatetime();
+
+            T visitFiles();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

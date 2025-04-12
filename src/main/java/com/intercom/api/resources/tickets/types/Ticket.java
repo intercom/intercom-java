@@ -5,6 +5,7 @@ package com.intercom.api.resources.tickets.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -740,45 +741,185 @@ public final class Ticket {
         }
     }
 
-    public enum TicketState {
-        SUBMITTED("submitted"),
+    public static final class TicketState {
+        public static final TicketState IN_PROGRESS = new TicketState(Value.IN_PROGRESS, "in_progress");
 
-        IN_PROGRESS("in_progress"),
+        public static final TicketState SUBMITTED = new TicketState(Value.SUBMITTED, "submitted");
 
-        WAITING_ON_CUSTOMER("waiting_on_customer"),
+        public static final TicketState RESOLVED = new TicketState(Value.RESOLVED, "resolved");
 
-        RESOLVED("resolved");
+        public static final TicketState WAITING_ON_CUSTOMER =
+                new TicketState(Value.WAITING_ON_CUSTOMER, "waiting_on_customer");
 
-        private final String value;
+        private final Value value;
 
-        TicketState(String value) {
+        private final String string;
+
+        TicketState(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other)
+                    || (other instanceof TicketState && this.string.equals(((TicketState) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case IN_PROGRESS:
+                    return visitor.visitInProgress();
+                case SUBMITTED:
+                    return visitor.visitSubmitted();
+                case RESOLVED:
+                    return visitor.visitResolved();
+                case WAITING_ON_CUSTOMER:
+                    return visitor.visitWaitingOnCustomer();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static TicketState valueOf(String value) {
+            switch (value) {
+                case "in_progress":
+                    return IN_PROGRESS;
+                case "submitted":
+                    return SUBMITTED;
+                case "resolved":
+                    return RESOLVED;
+                case "waiting_on_customer":
+                    return WAITING_ON_CUSTOMER;
+                default:
+                    return new TicketState(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            SUBMITTED,
+
+            IN_PROGRESS,
+
+            WAITING_ON_CUSTOMER,
+
+            RESOLVED,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitSubmitted();
+
+            T visitInProgress();
+
+            T visitWaitingOnCustomer();
+
+            T visitResolved();
+
+            T visitUnknown(String unknownType);
         }
     }
 
-    public enum Category {
-        CUSTOMER("Customer"),
+    public static final class Category {
+        public static final Category BACK_OFFICE = new Category(Value.BACK_OFFICE, "Back-office");
 
-        BACK_OFFICE("Back-office"),
+        public static final Category CUSTOMER = new Category(Value.CUSTOMER, "Customer");
 
-        TRACKER("Tracker");
+        public static final Category TRACKER = new Category(Value.TRACKER, "Tracker");
 
-        private final String value;
+        private final Value value;
 
-        Category(String value) {
+        private final String string;
+
+        Category(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof Category && this.string.equals(((Category) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case BACK_OFFICE:
+                    return visitor.visitBackOffice();
+                case CUSTOMER:
+                    return visitor.visitCustomer();
+                case TRACKER:
+                    return visitor.visitTracker();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static Category valueOf(String value) {
+            switch (value) {
+                case "Back-office":
+                    return BACK_OFFICE;
+                case "Customer":
+                    return CUSTOMER;
+                case "Tracker":
+                    return TRACKER;
+                default:
+                    return new Category(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            CUSTOMER,
+
+            BACK_OFFICE,
+
+            TRACKER,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitCustomer();
+
+            T visitBackOffice();
+
+            T visitTracker();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

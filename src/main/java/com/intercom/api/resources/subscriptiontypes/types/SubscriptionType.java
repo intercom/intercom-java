@@ -5,6 +5,7 @@ package com.intercom.api.resources.subscriptiontypes.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -311,59 +312,240 @@ public final class SubscriptionType {
         }
     }
 
-    public enum ConsentType {
-        OPT_OUT("opt_out"),
+    public static final class ConsentType {
+        public static final ConsentType OPT_IN = new ConsentType(Value.OPT_IN, "opt_in");
 
-        OPT_IN("opt_in");
+        public static final ConsentType OPT_OUT = new ConsentType(Value.OPT_OUT, "opt_out");
 
-        private final String value;
+        private final Value value;
 
-        ConsentType(String value) {
+        private final String string;
+
+        ConsentType(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other)
+                    || (other instanceof ConsentType && this.string.equals(((ConsentType) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case OPT_IN:
+                    return visitor.visitOptIn();
+                case OPT_OUT:
+                    return visitor.visitOptOut();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static ConsentType valueOf(String value) {
+            switch (value) {
+                case "opt_in":
+                    return OPT_IN;
+                case "opt_out":
+                    return OPT_OUT;
+                default:
+                    return new ConsentType(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            OPT_OUT,
+
+            OPT_IN,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitOptOut();
+
+            T visitOptIn();
+
+            T visitUnknown(String unknownType);
         }
     }
 
-    public enum State {
-        LIVE("live"),
+    public static final class State {
+        public static final State LIVE = new State(Value.LIVE, "live");
 
-        DRAFT("draft"),
+        public static final State ARCHIVED = new State(Value.ARCHIVED, "archived");
 
-        ARCHIVED("archived");
+        public static final State DRAFT = new State(Value.DRAFT, "draft");
 
-        private final String value;
+        private final Value value;
 
-        State(String value) {
+        private final String string;
+
+        State(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof State && this.string.equals(((State) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case LIVE:
+                    return visitor.visitLive();
+                case ARCHIVED:
+                    return visitor.visitArchived();
+                case DRAFT:
+                    return visitor.visitDraft();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static State valueOf(String value) {
+            switch (value) {
+                case "live":
+                    return LIVE;
+                case "archived":
+                    return ARCHIVED;
+                case "draft":
+                    return DRAFT;
+                default:
+                    return new State(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            LIVE,
+
+            DRAFT,
+
+            ARCHIVED,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitLive();
+
+            T visitDraft();
+
+            T visitArchived();
+
+            T visitUnknown(String unknownType);
         }
     }
 
-    public enum ContentTypesItem {
-        EMAIL("email"),
+    public static final class ContentTypesItem {
+        public static final ContentTypesItem EMAIL = new ContentTypesItem(Value.EMAIL, "email");
 
-        SMS_MESSAGE("sms_message");
+        public static final ContentTypesItem SMS_MESSAGE = new ContentTypesItem(Value.SMS_MESSAGE, "sms_message");
 
-        private final String value;
+        private final Value value;
 
-        ContentTypesItem(String value) {
+        private final String string;
+
+        ContentTypesItem(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other)
+                    || (other instanceof ContentTypesItem && this.string.equals(((ContentTypesItem) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case EMAIL:
+                    return visitor.visitEmail();
+                case SMS_MESSAGE:
+                    return visitor.visitSmsMessage();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static ContentTypesItem valueOf(String value) {
+            switch (value) {
+                case "email":
+                    return EMAIL;
+                case "sms_message":
+                    return SMS_MESSAGE;
+                default:
+                    return new ContentTypesItem(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            EMAIL,
+
+            SMS_MESSAGE,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitEmail();
+
+            T visitSmsMessage();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

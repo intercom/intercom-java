@@ -5,6 +5,7 @@ package com.intercom.api.resources.dataattributes.requests;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -288,47 +289,193 @@ public final class CreateDataAttributeRequest {
         }
     }
 
-    public enum Model {
-        CONTACT("contact"),
+    public static final class Model {
+        public static final Model CONTACT = new Model(Value.CONTACT, "contact");
 
-        COMPANY("company");
+        public static final Model COMPANY = new Model(Value.COMPANY, "company");
 
-        private final String value;
+        private final Value value;
 
-        Model(String value) {
+        private final String string;
+
+        Model(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof Model && this.string.equals(((Model) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case CONTACT:
+                    return visitor.visitContact();
+                case COMPANY:
+                    return visitor.visitCompany();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static Model valueOf(String value) {
+            switch (value) {
+                case "contact":
+                    return CONTACT;
+                case "company":
+                    return COMPANY;
+                default:
+                    return new Model(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            CONTACT,
+
+            COMPANY,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitContact();
+
+            T visitCompany();
+
+            T visitUnknown(String unknownType);
         }
     }
 
-    public enum DataType {
-        STRING("string"),
+    public static final class DataType {
+        public static final DataType STRING = new DataType(Value.STRING, "string");
 
-        INTEGER("integer"),
+        public static final DataType FLOAT = new DataType(Value.FLOAT, "float");
 
-        FLOAT("float"),
+        public static final DataType INTEGER = new DataType(Value.INTEGER, "integer");
 
-        BOOLEAN("boolean"),
+        public static final DataType DATETIME = new DataType(Value.DATETIME, "datetime");
 
-        DATETIME("datetime"),
+        public static final DataType BOOLEAN = new DataType(Value.BOOLEAN, "boolean");
 
-        DATE("date");
+        public static final DataType DATE = new DataType(Value.DATE, "date");
 
-        private final String value;
+        private final Value value;
 
-        DataType(String value) {
+        private final String string;
+
+        DataType(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof DataType && this.string.equals(((DataType) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case STRING:
+                    return visitor.visitString();
+                case FLOAT:
+                    return visitor.visitFloat();
+                case INTEGER:
+                    return visitor.visitInteger();
+                case DATETIME:
+                    return visitor.visitDatetime();
+                case BOOLEAN:
+                    return visitor.visitBoolean();
+                case DATE:
+                    return visitor.visitDate();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static DataType valueOf(String value) {
+            switch (value) {
+                case "string":
+                    return STRING;
+                case "float":
+                    return FLOAT;
+                case "integer":
+                    return INTEGER;
+                case "datetime":
+                    return DATETIME;
+                case "boolean":
+                    return BOOLEAN;
+                case "date":
+                    return DATE;
+                default:
+                    return new DataType(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            STRING,
+
+            INTEGER,
+
+            FLOAT,
+
+            BOOLEAN,
+
+            DATETIME,
+
+            DATE,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitString();
+
+            T visitInteger();
+
+            T visitFloat();
+
+            T visitBoolean();
+
+            T visitDatetime();
+
+            T visitDate();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

@@ -5,6 +5,7 @@ package com.intercom.api.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -248,23 +249,88 @@ public final class ButtonComponent {
         }
     }
 
-    public enum Style {
-        PRIMARY("primary"),
+    public static final class Style {
+        public static final Style SECONDARY = new Style(Value.SECONDARY, "secondary");
 
-        SECONDARY("secondary"),
+        public static final Style LINK = new Style(Value.LINK, "link");
 
-        LINK("link");
+        public static final Style PRIMARY = new Style(Value.PRIMARY, "primary");
 
-        private final String value;
+        private final Value value;
 
-        Style(String value) {
+        private final String string;
+
+        Style(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof Style && this.string.equals(((Style) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case SECONDARY:
+                    return visitor.visitSecondary();
+                case LINK:
+                    return visitor.visitLink();
+                case PRIMARY:
+                    return visitor.visitPrimary();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static Style valueOf(String value) {
+            switch (value) {
+                case "secondary":
+                    return SECONDARY;
+                case "link":
+                    return LINK;
+                case "primary":
+                    return PRIMARY;
+                default:
+                    return new Style(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            PRIMARY,
+
+            SECONDARY,
+
+            LINK,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitPrimary();
+
+            T visitSecondary();
+
+            T visitLink();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

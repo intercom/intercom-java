@@ -5,6 +5,7 @@ package com.intercom.api.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -158,37 +159,158 @@ public final class SingleFilterSearchRequest {
         }
     }
 
-    public enum Operator {
-        EQUALS("="),
+    public static final class Operator {
+        public static final Operator GREATER_THAN = new Operator(Value.GREATER_THAN, ">");
 
-        NOT_EQUALS("!="),
+        public static final Operator DOES_NOT_CONTAIN = new Operator(Value.DOES_NOT_CONTAIN, "!~");
 
-        IN("IN"),
+        public static final Operator IN = new Operator(Value.IN, "IN");
 
-        NOT_IN("NIN"),
+        public static final Operator CONTAINS = new Operator(Value.CONTAINS, "~");
 
-        LESS_THAN("<"),
+        public static final Operator LESS_THAN = new Operator(Value.LESS_THAN, "<");
 
-        GREATER_THAN(">"),
+        public static final Operator EQUALS = new Operator(Value.EQUALS, "=");
 
-        CONTAINS("~"),
+        public static final Operator NOT_EQUALS = new Operator(Value.NOT_EQUALS, "!=");
 
-        DOES_NOT_CONTAIN("!~"),
+        public static final Operator ENDS_WITH = new Operator(Value.ENDS_WITH, "$");
 
-        STARTS_WITH("^"),
+        public static final Operator STARTS_WITH = new Operator(Value.STARTS_WITH, "^");
 
-        ENDS_WITH("$");
+        public static final Operator NOT_IN = new Operator(Value.NOT_IN, "NIN");
 
-        private final String value;
+        private final Value value;
 
-        Operator(String value) {
+        private final String string;
+
+        Operator(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof Operator && this.string.equals(((Operator) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case GREATER_THAN:
+                    return visitor.visitGreaterThan();
+                case DOES_NOT_CONTAIN:
+                    return visitor.visitDoesNotContain();
+                case IN:
+                    return visitor.visitIn();
+                case CONTAINS:
+                    return visitor.visitContains();
+                case LESS_THAN:
+                    return visitor.visitLessThan();
+                case EQUALS:
+                    return visitor.visitEquals();
+                case NOT_EQUALS:
+                    return visitor.visitNotEquals();
+                case ENDS_WITH:
+                    return visitor.visitEndsWith();
+                case STARTS_WITH:
+                    return visitor.visitStartsWith();
+                case NOT_IN:
+                    return visitor.visitNotIn();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static Operator valueOf(String value) {
+            switch (value) {
+                case ">":
+                    return GREATER_THAN;
+                case "!~":
+                    return DOES_NOT_CONTAIN;
+                case "IN":
+                    return IN;
+                case "~":
+                    return CONTAINS;
+                case "<":
+                    return LESS_THAN;
+                case "=":
+                    return EQUALS;
+                case "!=":
+                    return NOT_EQUALS;
+                case "$":
+                    return ENDS_WITH;
+                case "^":
+                    return STARTS_WITH;
+                case "NIN":
+                    return NOT_IN;
+                default:
+                    return new Operator(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            EQUALS,
+
+            NOT_EQUALS,
+
+            IN,
+
+            NOT_IN,
+
+            LESS_THAN,
+
+            GREATER_THAN,
+
+            CONTAINS,
+
+            DOES_NOT_CONTAIN,
+
+            STARTS_WITH,
+
+            ENDS_WITH,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitEquals();
+
+            T visitNotEquals();
+
+            T visitIn();
+
+            T visitNotIn();
+
+            T visitLessThan();
+
+            T visitGreaterThan();
+
+            T visitContains();
+
+            T visitDoesNotContain();
+
+            T visitStartsWith();
+
+            T visitEndsWith();
+
+            T visitUnknown(String unknownType);
         }
     }
 

@@ -5,6 +5,7 @@ package com.intercom.api.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -383,37 +384,158 @@ public final class ConversationSource {
         }
     }
 
-    public enum Type {
-        CONVERSATION("conversation"),
+    public static final class Type {
+        public static final Type EMAIL = new Type(Value.EMAIL, "email");
 
-        EMAIL("email"),
+        public static final Type FACEBOOK = new Type(Value.FACEBOOK, "facebook");
 
-        FACEBOOK("facebook"),
+        public static final Type INSTAGRAM = new Type(Value.INSTAGRAM, "instagram");
 
-        INSTAGRAM("instagram"),
+        public static final Type PHONE_CALL = new Type(Value.PHONE_CALL, "phone_call");
 
-        PHONE_CALL("phone_call"),
+        public static final Type PUSH = new Type(Value.PUSH, "push");
 
-        PHONE_SWITCH("phone_switch"),
+        public static final Type WHATSAPP = new Type(Value.WHATSAPP, "whatsapp");
 
-        PUSH("push"),
+        public static final Type SMS = new Type(Value.SMS, "sms");
 
-        SMS("sms"),
+        public static final Type CONVERSATION = new Type(Value.CONVERSATION, "conversation");
 
-        TWITTER("twitter"),
+        public static final Type TWITTER = new Type(Value.TWITTER, "twitter");
 
-        WHATSAPP("whatsapp");
+        public static final Type PHONE_SWITCH = new Type(Value.PHONE_SWITCH, "phone_switch");
 
-        private final String value;
+        private final Value value;
 
-        Type(String value) {
+        private final String string;
+
+        Type(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof Type && this.string.equals(((Type) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case EMAIL:
+                    return visitor.visitEmail();
+                case FACEBOOK:
+                    return visitor.visitFacebook();
+                case INSTAGRAM:
+                    return visitor.visitInstagram();
+                case PHONE_CALL:
+                    return visitor.visitPhoneCall();
+                case PUSH:
+                    return visitor.visitPush();
+                case WHATSAPP:
+                    return visitor.visitWhatsapp();
+                case SMS:
+                    return visitor.visitSms();
+                case CONVERSATION:
+                    return visitor.visitConversation();
+                case TWITTER:
+                    return visitor.visitTwitter();
+                case PHONE_SWITCH:
+                    return visitor.visitPhoneSwitch();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static Type valueOf(String value) {
+            switch (value) {
+                case "email":
+                    return EMAIL;
+                case "facebook":
+                    return FACEBOOK;
+                case "instagram":
+                    return INSTAGRAM;
+                case "phone_call":
+                    return PHONE_CALL;
+                case "push":
+                    return PUSH;
+                case "whatsapp":
+                    return WHATSAPP;
+                case "sms":
+                    return SMS;
+                case "conversation":
+                    return CONVERSATION;
+                case "twitter":
+                    return TWITTER;
+                case "phone_switch":
+                    return PHONE_SWITCH;
+                default:
+                    return new Type(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            CONVERSATION,
+
+            EMAIL,
+
+            FACEBOOK,
+
+            INSTAGRAM,
+
+            PHONE_CALL,
+
+            PHONE_SWITCH,
+
+            PUSH,
+
+            SMS,
+
+            TWITTER,
+
+            WHATSAPP,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitConversation();
+
+            T visitEmail();
+
+            T visitFacebook();
+
+            T visitInstagram();
+
+            T visitPhoneCall();
+
+            T visitPhoneSwitch();
+
+            T visitPush();
+
+            T visitSms();
+
+            T visitTwitter();
+
+            T visitWhatsapp();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

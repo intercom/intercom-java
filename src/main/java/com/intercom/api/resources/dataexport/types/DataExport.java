@@ -5,6 +5,7 @@ package com.intercom.api.resources.dataexport.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -204,29 +205,118 @@ public final class DataExport {
         }
     }
 
-    public enum Status {
-        PENDING("pending"),
+    public static final class Status {
+        public static final Status FAILED = new Status(Value.FAILED, "failed");
 
-        IN_PROGRESS("in_progress"),
+        public static final Status COMPLETED = new Status(Value.COMPLETED, "completed");
 
-        FAILED("failed"),
+        public static final Status NO_DATA = new Status(Value.NO_DATA, "no_data");
 
-        COMPLETED("completed"),
+        public static final Status PENDING = new Status(Value.PENDING, "pending");
 
-        NO_DATA("no_data"),
+        public static final Status IN_PROGRESS = new Status(Value.IN_PROGRESS, "in_progress");
 
-        CANCELED("canceled");
+        public static final Status CANCELED = new Status(Value.CANCELED, "canceled");
 
-        private final String value;
+        private final Value value;
 
-        Status(String value) {
+        private final String string;
+
+        Status(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof Status && this.string.equals(((Status) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case FAILED:
+                    return visitor.visitFailed();
+                case COMPLETED:
+                    return visitor.visitCompleted();
+                case NO_DATA:
+                    return visitor.visitNoData();
+                case PENDING:
+                    return visitor.visitPending();
+                case IN_PROGRESS:
+                    return visitor.visitInProgress();
+                case CANCELED:
+                    return visitor.visitCanceled();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static Status valueOf(String value) {
+            switch (value) {
+                case "failed":
+                    return FAILED;
+                case "completed":
+                    return COMPLETED;
+                case "no_data":
+                    return NO_DATA;
+                case "pending":
+                    return PENDING;
+                case "in_progress":
+                    return IN_PROGRESS;
+                case "canceled":
+                    return CANCELED;
+                default:
+                    return new Status(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            PENDING,
+
+            IN_PROGRESS,
+
+            FAILED,
+
+            COMPLETED,
+
+            NO_DATA,
+
+            CANCELED,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitPending();
+
+            T visitInProgress();
+
+            T visitFailed();
+
+            T visitCompleted();
+
+            T visitNoData();
+
+            T visitCanceled();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

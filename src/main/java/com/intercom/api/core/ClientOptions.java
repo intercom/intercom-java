@@ -27,30 +27,7 @@ public final class ClientOptions {
     private final ApiVersion version;
 
     /**
-     * @param version Defaults to "{\n"
-     *     + "  \"name\" : {\n"
-     *     + "    \"wireValue\" : \"2.11\",\n"
-     *     + "    \"name\" : {\n"
-     *     + "      \"originalName\" : \"2.11\",\n"
-     *     + "      \"camelCase\" : {\n"
-     *     + "        \"unsafeName\" : \"211\",\n"
-     *     + "        \"safeName\" : \"_211\"\n"
-     *     + "      },\n"
-     *     + "      \"pascalCase\" : {\n"
-     *     + "        \"unsafeName\" : \"211\",\n"
-     *     + "        \"safeName\" : \"_211\"\n"
-     *     + "      },\n"
-     *     + "      \"snakeCase\" : {\n"
-     *     + "        \"unsafeName\" : \"2_11\",\n"
-     *     + "        \"safeName\" : \"_2_11\"\n"
-     *     + "      },\n"
-     *     + "      \"screamingSnakeCase\" : {\n"
-     *     + "        \"unsafeName\" : \"2_11\",\n"
-     *     + "        \"safeName\" : \"_2_11\"\n"
-     *     + "      }\n"
-     *     + "    }\n"
-     *     + "  }\n"
-     *     + "}" if empty
+     * @param version Defaults to "2.11" if empty
      */
     private ClientOptions(
             Environment environment,
@@ -73,7 +50,7 @@ public final class ClientOptions {
         this.headerSuppliers = headerSuppliers;
         this.httpClient = httpClient;
         this.timeout = timeout;
-        this.version = version.orElse(ApiVersion.CURRENT);
+        this.version = version.orElse(ApiVersion._2_11);
         this.headers.put("Intercom-Version", this.version.toString());
     }
 
