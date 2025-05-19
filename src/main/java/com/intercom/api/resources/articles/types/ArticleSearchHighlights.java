@@ -5,6 +5,7 @@ package com.intercom.api.resources.articles.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -319,21 +320,78 @@ public final class ArticleSearchHighlights {
             }
         }
 
-        public enum Type {
-            HIGHLIGHT("highlight"),
+        public static final class Type {
+            public static final Type PLAIN = new Type(Value.PLAIN, "plain");
 
-            PLAIN("plain");
+            public static final Type HIGHLIGHT = new Type(Value.HIGHLIGHT, "highlight");
 
-            private final String value;
+            private final Value value;
 
-            Type(String value) {
+            private final String string;
+
+            Type(Value value, String string) {
                 this.value = value;
+                this.string = string;
             }
 
-            @JsonValue
+            public Value getEnumValue() {
+                return value;
+            }
+
             @java.lang.Override
+            @JsonValue
             public String toString() {
-                return this.value;
+                return this.string;
+            }
+
+            @java.lang.Override
+            public boolean equals(Object other) {
+                return (this == other) || (other instanceof Type && this.string.equals(((Type) other).string));
+            }
+
+            @java.lang.Override
+            public int hashCode() {
+                return this.string.hashCode();
+            }
+
+            public <T> T visit(Visitor<T> visitor) {
+                switch (value) {
+                    case PLAIN:
+                        return visitor.visitPlain();
+                    case HIGHLIGHT:
+                        return visitor.visitHighlight();
+                    case UNKNOWN:
+                    default:
+                        return visitor.visitUnknown(string);
+                }
+            }
+
+            @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+            public static Type valueOf(String value) {
+                switch (value) {
+                    case "plain":
+                        return PLAIN;
+                    case "highlight":
+                        return HIGHLIGHT;
+                    default:
+                        return new Type(Value.UNKNOWN, value);
+                }
+            }
+
+            public enum Value {
+                HIGHLIGHT,
+
+                PLAIN,
+
+                UNKNOWN
+            }
+
+            public interface Visitor<T> {
+                T visitHighlight();
+
+                T visitPlain();
+
+                T visitUnknown(String unknownType);
             }
         }
     }
@@ -443,21 +501,78 @@ public final class ArticleSearchHighlights {
             }
         }
 
-        public enum Type {
-            HIGHLIGHT("highlight"),
+        public static final class Type {
+            public static final Type PLAIN = new Type(Value.PLAIN, "plain");
 
-            PLAIN("plain");
+            public static final Type HIGHLIGHT = new Type(Value.HIGHLIGHT, "highlight");
 
-            private final String value;
+            private final Value value;
 
-            Type(String value) {
+            private final String string;
+
+            Type(Value value, String string) {
                 this.value = value;
+                this.string = string;
             }
 
-            @JsonValue
+            public Value getEnumValue() {
+                return value;
+            }
+
             @java.lang.Override
+            @JsonValue
             public String toString() {
-                return this.value;
+                return this.string;
+            }
+
+            @java.lang.Override
+            public boolean equals(Object other) {
+                return (this == other) || (other instanceof Type && this.string.equals(((Type) other).string));
+            }
+
+            @java.lang.Override
+            public int hashCode() {
+                return this.string.hashCode();
+            }
+
+            public <T> T visit(Visitor<T> visitor) {
+                switch (value) {
+                    case PLAIN:
+                        return visitor.visitPlain();
+                    case HIGHLIGHT:
+                        return visitor.visitHighlight();
+                    case UNKNOWN:
+                    default:
+                        return visitor.visitUnknown(string);
+                }
+            }
+
+            @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+            public static Type valueOf(String value) {
+                switch (value) {
+                    case "plain":
+                        return PLAIN;
+                    case "highlight":
+                        return HIGHLIGHT;
+                    default:
+                        return new Type(Value.UNKNOWN, value);
+                }
+            }
+
+            public enum Value {
+                HIGHLIGHT,
+
+                PLAIN,
+
+                UNKNOWN
+            }
+
+            public interface Visitor<T> {
+                T visitHighlight();
+
+                T visitPlain();
+
+                T visitUnknown(String unknownType);
             }
         }
     }

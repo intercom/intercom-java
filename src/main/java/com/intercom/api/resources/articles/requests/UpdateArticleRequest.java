@@ -5,6 +5,7 @@ package com.intercom.api.resources.articles.requests;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -421,39 +422,153 @@ public final class UpdateArticleRequest {
         }
     }
 
-    public enum ParentType {
-        COLLECTION("collection"),
+    public static final class ParentType {
+        public static final ParentType SECTION = new ParentType(Value.SECTION, "section");
 
-        SECTION("section");
+        public static final ParentType COLLECTION = new ParentType(Value.COLLECTION, "collection");
 
-        private final String value;
+        private final Value value;
 
-        ParentType(String value) {
+        private final String string;
+
+        ParentType(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof ParentType && this.string.equals(((ParentType) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case SECTION:
+                    return visitor.visitSection();
+                case COLLECTION:
+                    return visitor.visitCollection();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static ParentType valueOf(String value) {
+            switch (value) {
+                case "section":
+                    return SECTION;
+                case "collection":
+                    return COLLECTION;
+                default:
+                    return new ParentType(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            COLLECTION,
+
+            SECTION,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitCollection();
+
+            T visitSection();
+
+            T visitUnknown(String unknownType);
         }
     }
 
-    public enum State {
-        PUBLISHED("published"),
+    public static final class State {
+        public static final State PUBLISHED = new State(Value.PUBLISHED, "published");
 
-        DRAFT("draft");
+        public static final State DRAFT = new State(Value.DRAFT, "draft");
 
-        private final String value;
+        private final Value value;
 
-        State(String value) {
+        private final String string;
+
+        State(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof State && this.string.equals(((State) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case PUBLISHED:
+                    return visitor.visitPublished();
+                case DRAFT:
+                    return visitor.visitDraft();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static State valueOf(String value) {
+            switch (value) {
+                case "published":
+                    return PUBLISHED;
+                case "draft":
+                    return DRAFT;
+                default:
+                    return new State(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            PUBLISHED,
+
+            DRAFT,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitPublished();
+
+            T visitDraft();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

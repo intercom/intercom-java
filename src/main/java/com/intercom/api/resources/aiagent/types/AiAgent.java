@@ -5,6 +5,7 @@ package com.intercom.api.resources.aiagent.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -343,27 +344,109 @@ public final class AiAgent {
         }
     }
 
-    public enum SourceType {
-        ESSENTIALS_PLAN_SETUP("essentials_plan_setup"),
+    public static final class SourceType {
+        public static final SourceType WORKFLOW = new SourceType(Value.WORKFLOW, "workflow");
 
-        PROFILE("profile"),
+        public static final SourceType WORKFLOW_PREVIEW = new SourceType(Value.WORKFLOW_PREVIEW, "workflow_preview");
 
-        WORKFLOW("workflow"),
+        public static final SourceType FIN_PREVIEW = new SourceType(Value.FIN_PREVIEW, "fin_preview");
 
-        WORKFLOW_PREVIEW("workflow_preview"),
+        public static final SourceType ESSENTIALS_PLAN_SETUP =
+                new SourceType(Value.ESSENTIALS_PLAN_SETUP, "essentials_plan_setup");
 
-        FIN_PREVIEW("fin_preview");
+        public static final SourceType PROFILE = new SourceType(Value.PROFILE, "profile");
 
-        private final String value;
+        private final Value value;
 
-        SourceType(String value) {
+        private final String string;
+
+        SourceType(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof SourceType && this.string.equals(((SourceType) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case WORKFLOW:
+                    return visitor.visitWorkflow();
+                case WORKFLOW_PREVIEW:
+                    return visitor.visitWorkflowPreview();
+                case FIN_PREVIEW:
+                    return visitor.visitFinPreview();
+                case ESSENTIALS_PLAN_SETUP:
+                    return visitor.visitEssentialsPlanSetup();
+                case PROFILE:
+                    return visitor.visitProfile();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static SourceType valueOf(String value) {
+            switch (value) {
+                case "workflow":
+                    return WORKFLOW;
+                case "workflow_preview":
+                    return WORKFLOW_PREVIEW;
+                case "fin_preview":
+                    return FIN_PREVIEW;
+                case "essentials_plan_setup":
+                    return ESSENTIALS_PLAN_SETUP;
+                case "profile":
+                    return PROFILE;
+                default:
+                    return new SourceType(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            ESSENTIALS_PLAN_SETUP,
+
+            PROFILE,
+
+            WORKFLOW,
+
+            WORKFLOW_PREVIEW,
+
+            FIN_PREVIEW,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitEssentialsPlanSetup();
+
+            T visitProfile();
+
+            T visitWorkflow();
+
+            T visitWorkflowPreview();
+
+            T visitFinPreview();
+
+            T visitUnknown(String unknownType);
         }
     }
 }

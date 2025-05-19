@@ -27,30 +27,7 @@ public final class ClientOptions {
     private final ApiVersion version;
 
     /**
-     * @param version Defaults to "{\n"
-     *     + "  \"name\" : {\n"
-     *     + "    \"wireValue\" : \"2.11\",\n"
-     *     + "    \"name\" : {\n"
-     *     + "      \"originalName\" : \"2.11\",\n"
-     *     + "      \"camelCase\" : {\n"
-     *     + "        \"unsafeName\" : \"211\",\n"
-     *     + "        \"safeName\" : \"_211\"\n"
-     *     + "      },\n"
-     *     + "      \"pascalCase\" : {\n"
-     *     + "        \"unsafeName\" : \"211\",\n"
-     *     + "        \"safeName\" : \"_211\"\n"
-     *     + "      },\n"
-     *     + "      \"snakeCase\" : {\n"
-     *     + "        \"unsafeName\" : \"2_11\",\n"
-     *     + "        \"safeName\" : \"_2_11\"\n"
-     *     + "      },\n"
-     *     + "      \"screamingSnakeCase\" : {\n"
-     *     + "        \"unsafeName\" : \"2_11\",\n"
-     *     + "        \"safeName\" : \"_2_11\"\n"
-     *     + "      }\n"
-     *     + "    }\n"
-     *     + "  }\n"
-     *     + "}" if empty
+     * @param version Defaults to "2.11" if empty
      */
     private ClientOptions(
             Environment environment,
@@ -64,16 +41,16 @@ public final class ClientOptions {
         this.headers.putAll(headers);
         this.headers.putAll(new HashMap<String, String>() {
             {
-                put("User-Agent", "io.intercom:intercom-java/3.0.0-alpha0");
+                put("User-Agent", "io.intercom:intercom-java/3.0.0-alpha4");
                 put("X-Fern-Language", "JAVA");
                 put("X-Fern-SDK-Name", "com.intercom.fern:api-sdk");
-                put("X-Fern-SDK-Version", "3.0.0-alpha0");
+                put("X-Fern-SDK-Version", "3.0.0-alpha4");
             }
         });
         this.headerSuppliers = headerSuppliers;
         this.httpClient = httpClient;
         this.timeout = timeout;
-        this.version = version.orElse(ApiVersion.CURRENT);
+        this.version = version.orElse(ApiVersion._2_11);
         this.headers.put("Intercom-Version", this.version.toString());
     }
 
