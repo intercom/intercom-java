@@ -44,7 +44,7 @@ java {
 
 group = 'io.intercom'
 
-version = '3.0.0-alpha0'
+version = '3.0.0-alpha4'
 
 jar {
     dependsOn(":generatePomFileForMavenPublication")
@@ -71,7 +71,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'io.intercom'
             artifactId = 'intercom-java'
-            version = '3.0.0-alpha0'
+            version = '3.0.0-alpha4'
             from components.java
             pom {
                 licenses {

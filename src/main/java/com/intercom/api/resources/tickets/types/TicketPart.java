@@ -5,6 +5,7 @@ package com.intercom.api.resources.tickets.types;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -531,47 +532,198 @@ public final class TicketPart {
         }
     }
 
-    public enum PreviousTicketState {
-        SUBMITTED("submitted"),
+    public static final class PreviousTicketState {
+        public static final PreviousTicketState IN_PROGRESS = new PreviousTicketState(Value.IN_PROGRESS, "in_progress");
 
-        IN_PROGRESS("in_progress"),
+        public static final PreviousTicketState SUBMITTED = new PreviousTicketState(Value.SUBMITTED, "submitted");
 
-        WAITING_ON_CUSTOMER("waiting_on_customer"),
+        public static final PreviousTicketState RESOLVED = new PreviousTicketState(Value.RESOLVED, "resolved");
 
-        RESOLVED("resolved");
+        public static final PreviousTicketState WAITING_ON_CUSTOMER =
+                new PreviousTicketState(Value.WAITING_ON_CUSTOMER, "waiting_on_customer");
 
-        private final String value;
+        private final Value value;
 
-        PreviousTicketState(String value) {
+        private final String string;
+
+        PreviousTicketState(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other)
+                    || (other instanceof PreviousTicketState
+                            && this.string.equals(((PreviousTicketState) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case IN_PROGRESS:
+                    return visitor.visitInProgress();
+                case SUBMITTED:
+                    return visitor.visitSubmitted();
+                case RESOLVED:
+                    return visitor.visitResolved();
+                case WAITING_ON_CUSTOMER:
+                    return visitor.visitWaitingOnCustomer();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static PreviousTicketState valueOf(String value) {
+            switch (value) {
+                case "in_progress":
+                    return IN_PROGRESS;
+                case "submitted":
+                    return SUBMITTED;
+                case "resolved":
+                    return RESOLVED;
+                case "waiting_on_customer":
+                    return WAITING_ON_CUSTOMER;
+                default:
+                    return new PreviousTicketState(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            SUBMITTED,
+
+            IN_PROGRESS,
+
+            WAITING_ON_CUSTOMER,
+
+            RESOLVED,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitSubmitted();
+
+            T visitInProgress();
+
+            T visitWaitingOnCustomer();
+
+            T visitResolved();
+
+            T visitUnknown(String unknownType);
         }
     }
 
-    public enum TicketState {
-        SUBMITTED("submitted"),
+    public static final class TicketState {
+        public static final TicketState IN_PROGRESS = new TicketState(Value.IN_PROGRESS, "in_progress");
 
-        IN_PROGRESS("in_progress"),
+        public static final TicketState SUBMITTED = new TicketState(Value.SUBMITTED, "submitted");
 
-        WAITING_ON_CUSTOMER("waiting_on_customer"),
+        public static final TicketState RESOLVED = new TicketState(Value.RESOLVED, "resolved");
 
-        RESOLVED("resolved");
+        public static final TicketState WAITING_ON_CUSTOMER =
+                new TicketState(Value.WAITING_ON_CUSTOMER, "waiting_on_customer");
 
-        private final String value;
+        private final Value value;
 
-        TicketState(String value) {
+        private final String string;
+
+        TicketState(Value value, String string) {
             this.value = value;
+            this.string = string;
         }
 
-        @JsonValue
+        public Value getEnumValue() {
+            return value;
+        }
+
         @java.lang.Override
+        @JsonValue
         public String toString() {
-            return this.value;
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other)
+                    || (other instanceof TicketState && this.string.equals(((TicketState) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case IN_PROGRESS:
+                    return visitor.visitInProgress();
+                case SUBMITTED:
+                    return visitor.visitSubmitted();
+                case RESOLVED:
+                    return visitor.visitResolved();
+                case WAITING_ON_CUSTOMER:
+                    return visitor.visitWaitingOnCustomer();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static TicketState valueOf(String value) {
+            switch (value) {
+                case "in_progress":
+                    return IN_PROGRESS;
+                case "submitted":
+                    return SUBMITTED;
+                case "resolved":
+                    return RESOLVED;
+                case "waiting_on_customer":
+                    return WAITING_ON_CUSTOMER;
+                default:
+                    return new TicketState(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            SUBMITTED,
+
+            IN_PROGRESS,
+
+            WAITING_ON_CUSTOMER,
+
+            RESOLVED,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitSubmitted();
+
+            T visitInProgress();
+
+            T visitWaitingOnCustomer();
+
+            T visitResolved();
+
+            T visitUnknown(String unknownType);
         }
     }
 }
