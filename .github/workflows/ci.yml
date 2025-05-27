@@ -57,7 +57,7 @@ jobs:
 
       - name: Publish to maven
         run: |
-          ./gradlew sonatypeCentralUpload -X test
+          ./gradlew sonatypeCentralUpload -x test
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
