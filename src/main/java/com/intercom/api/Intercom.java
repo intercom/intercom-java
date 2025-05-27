@@ -10,6 +10,7 @@ import com.intercom.api.resources.articles.ArticlesClient;
 import com.intercom.api.resources.companies.CompaniesClient;
 import com.intercom.api.resources.contacts.ContactsClient;
 import com.intercom.api.resources.conversations.ConversationsClient;
+import com.intercom.api.resources.customchannelevents.CustomChannelEventsClient;
 import com.intercom.api.resources.dataattributes.DataAttributesClient;
 import com.intercom.api.resources.dataexport.DataExportClient;
 import com.intercom.api.resources.events.EventsClient;
@@ -68,6 +69,8 @@ public class Intercom {
 
     protected final Supplier<VisitorsClient> visitorsClient;
 
+    protected final Supplier<CustomChannelEventsClient> customChannelEventsClient;
+
     protected final Supplier<NewsClient> newsClient;
 
     public Intercom(ClientOptions clientOptions) {
@@ -91,6 +94,7 @@ public class Intercom {
         this.ticketTypesClient = Suppliers.memoize(() -> new TicketTypesClient(clientOptions));
         this.ticketsClient = Suppliers.memoize(() -> new TicketsClient(clientOptions));
         this.visitorsClient = Suppliers.memoize(() -> new VisitorsClient(clientOptions));
+        this.customChannelEventsClient = Suppliers.memoize(() -> new CustomChannelEventsClient(clientOptions));
         this.newsClient = Suppliers.memoize(() -> new NewsClient(clientOptions));
     }
 
@@ -168,6 +172,10 @@ public class Intercom {
 
     public VisitorsClient visitors() {
         return this.visitorsClient.get();
+    }
+
+    public CustomChannelEventsClient customChannelEvents() {
+        return this.customChannelEventsClient.get();
     }
 
     public NewsClient news() {

@@ -10,6 +10,7 @@ import com.intercom.api.resources.articles.AsyncArticlesClient;
 import com.intercom.api.resources.companies.AsyncCompaniesClient;
 import com.intercom.api.resources.contacts.AsyncContactsClient;
 import com.intercom.api.resources.conversations.AsyncConversationsClient;
+import com.intercom.api.resources.customchannelevents.AsyncCustomChannelEventsClient;
 import com.intercom.api.resources.dataattributes.AsyncDataAttributesClient;
 import com.intercom.api.resources.dataexport.AsyncDataExportClient;
 import com.intercom.api.resources.events.AsyncEventsClient;
@@ -68,6 +69,8 @@ public class AsyncIntercom {
 
     protected final Supplier<AsyncVisitorsClient> visitorsClient;
 
+    protected final Supplier<AsyncCustomChannelEventsClient> customChannelEventsClient;
+
     protected final Supplier<AsyncNewsClient> newsClient;
 
     public AsyncIntercom(ClientOptions clientOptions) {
@@ -91,6 +94,7 @@ public class AsyncIntercom {
         this.ticketTypesClient = Suppliers.memoize(() -> new AsyncTicketTypesClient(clientOptions));
         this.ticketsClient = Suppliers.memoize(() -> new AsyncTicketsClient(clientOptions));
         this.visitorsClient = Suppliers.memoize(() -> new AsyncVisitorsClient(clientOptions));
+        this.customChannelEventsClient = Suppliers.memoize(() -> new AsyncCustomChannelEventsClient(clientOptions));
         this.newsClient = Suppliers.memoize(() -> new AsyncNewsClient(clientOptions));
     }
 
@@ -168,6 +172,10 @@ public class AsyncIntercom {
 
     public AsyncVisitorsClient visitors() {
         return this.visitorsClient.get();
+    }
+
+    public AsyncCustomChannelEventsClient customChannelEvents() {
+        return this.customChannelEventsClient.get();
     }
 
     public AsyncNewsClient news() {
