@@ -308,60 +308,102 @@ public final class Company {
     }
 
     public interface IdStage {
+        /**
+         * The Intercom defined id representing the company.
+         */
         NameStage id(@NotNull String id);
 
         Builder from(Company other);
     }
 
     public interface NameStage {
+        /**
+         * The name of the company.
+         */
         AppIdStage name(@NotNull String name);
     }
 
     public interface AppIdStage {
+        /**
+         * The Intercom defined code of the workspace the company is associated to.
+         */
         CompanyIdStage appId(@NotNull String appId);
     }
 
     public interface CompanyIdStage {
+        /**
+         * The company id you have defined for the company.
+         */
         RemoteCreatedAtStage companyId(@NotNull String companyId);
     }
 
     public interface RemoteCreatedAtStage {
+        /**
+         * The time the company was created by you.
+         */
         CreatedAtStage remoteCreatedAt(int remoteCreatedAt);
     }
 
     public interface CreatedAtStage {
+        /**
+         * The time the company was added in Intercom.
+         */
         UpdatedAtStage createdAt(int createdAt);
     }
 
     public interface UpdatedAtStage {
+        /**
+         * The last time the company was updated.
+         */
         LastRequestAtStage updatedAt(int updatedAt);
     }
 
     public interface LastRequestAtStage {
+        /**
+         * The time the company last recorded making a request.
+         */
         SizeStage lastRequestAt(int lastRequestAt);
     }
 
     public interface SizeStage {
+        /**
+         * The number of employees in the company.
+         */
         WebsiteStage size(int size);
     }
 
     public interface WebsiteStage {
+        /**
+         * The URL for the company website.
+         */
         IndustryStage website(@NotNull String website);
     }
 
     public interface IndustryStage {
+        /**
+         * The industry that the company operates in.
+         */
         MonthlySpendStage industry(@NotNull String industry);
     }
 
     public interface MonthlySpendStage {
+        /**
+         * How much revenue the company generates for your business.
+         */
         SessionCountStage monthlySpend(int monthlySpend);
     }
 
     public interface SessionCountStage {
+        /**
+         * How many sessions the company has recorded.
+         */
         UserCountStage sessionCount(int sessionCount);
     }
 
     public interface UserCountStage {
+        /**
+         * The number of users in the company.
+         */
         _FinalStage userCount(int userCount);
     }
 
@@ -372,14 +414,23 @@ public final class Company {
 
         _FinalStage plan(Plan plan);
 
+        /**
+         * <p>The custom attributes you have set on the company.</p>
+         */
         _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes);
 
         _FinalStage customAttributes(Map<String, Object> customAttributes);
 
+        /**
+         * <p>The list of tags associated with the company</p>
+         */
         _FinalStage tags(Optional<Tags> tags);
 
         _FinalStage tags(Tags tags);
 
+        /**
+         * <p>The list of segments associated with the company</p>
+         */
         _FinalStage segments(Optional<Segments> segments);
 
         _FinalStage segments(Segments segments);
@@ -467,7 +518,7 @@ public final class Company {
         }
 
         /**
-         * <p>The Intercom defined id representing the company.</p>
+         * The Intercom defined id representing the company.<p>The Intercom defined id representing the company.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -478,7 +529,7 @@ public final class Company {
         }
 
         /**
-         * <p>The name of the company.</p>
+         * The name of the company.<p>The name of the company.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -489,7 +540,7 @@ public final class Company {
         }
 
         /**
-         * <p>The Intercom defined code of the workspace the company is associated to.</p>
+         * The Intercom defined code of the workspace the company is associated to.<p>The Intercom defined code of the workspace the company is associated to.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -500,7 +551,7 @@ public final class Company {
         }
 
         /**
-         * <p>The company id you have defined for the company.</p>
+         * The company id you have defined for the company.<p>The company id you have defined for the company.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -511,7 +562,7 @@ public final class Company {
         }
 
         /**
-         * <p>The time the company was created by you.</p>
+         * The time the company was created by you.<p>The time the company was created by you.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -522,7 +573,7 @@ public final class Company {
         }
 
         /**
-         * <p>The time the company was added in Intercom.</p>
+         * The time the company was added in Intercom.<p>The time the company was added in Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -533,7 +584,7 @@ public final class Company {
         }
 
         /**
-         * <p>The last time the company was updated.</p>
+         * The last time the company was updated.<p>The last time the company was updated.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -544,7 +595,7 @@ public final class Company {
         }
 
         /**
-         * <p>The time the company last recorded making a request.</p>
+         * The time the company last recorded making a request.<p>The time the company last recorded making a request.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -555,7 +606,7 @@ public final class Company {
         }
 
         /**
-         * <p>The number of employees in the company.</p>
+         * The number of employees in the company.<p>The number of employees in the company.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -566,7 +617,7 @@ public final class Company {
         }
 
         /**
-         * <p>The URL for the company website.</p>
+         * The URL for the company website.<p>The URL for the company website.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -577,7 +628,7 @@ public final class Company {
         }
 
         /**
-         * <p>The industry that the company operates in.</p>
+         * The industry that the company operates in.<p>The industry that the company operates in.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -588,7 +639,7 @@ public final class Company {
         }
 
         /**
-         * <p>How much revenue the company generates for your business.</p>
+         * How much revenue the company generates for your business.<p>How much revenue the company generates for your business.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -599,7 +650,7 @@ public final class Company {
         }
 
         /**
-         * <p>How many sessions the company has recorded.</p>
+         * How many sessions the company has recorded.<p>How many sessions the company has recorded.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -610,7 +661,7 @@ public final class Company {
         }
 
         /**
-         * <p>The number of users in the company.</p>
+         * The number of users in the company.<p>The number of users in the company.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -630,6 +681,9 @@ public final class Company {
             return this;
         }
 
+        /**
+         * <p>The list of segments associated with the company</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "segments", nulls = Nulls.SKIP)
         public _FinalStage segments(Optional<Segments> segments) {
@@ -647,6 +701,9 @@ public final class Company {
             return this;
         }
 
+        /**
+         * <p>The list of tags associated with the company</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "tags", nulls = Nulls.SKIP)
         public _FinalStage tags(Optional<Tags> tags) {
@@ -664,6 +721,9 @@ public final class Company {
             return this;
         }
 
+        /**
+         * <p>The custom attributes you have set on the company.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "custom_attributes", nulls = Nulls.SKIP)
         public _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes) {
@@ -783,6 +843,9 @@ public final class Company {
                 return this;
             }
 
+            /**
+             * <p>The type of the object</p>
+             */
             @JsonSetter(value = "type", nulls = Nulls.SKIP)
             public Builder type(Optional<String> type) {
                 this.type = type;
@@ -886,6 +949,9 @@ public final class Company {
                 return this;
             }
 
+            /**
+             * <p>The type of the object</p>
+             */
             @JsonSetter(value = "type", nulls = Nulls.SKIP)
             public Builder type(Optional<String> type) {
                 this.type = type;
@@ -1009,6 +1075,9 @@ public final class Company {
                 return this;
             }
 
+            /**
+             * <p>Value is always &quot;plan&quot;</p>
+             */
             @JsonSetter(value = "type", nulls = Nulls.SKIP)
             public Builder type(Optional<String> type) {
                 this.type = type;
@@ -1020,6 +1089,9 @@ public final class Company {
                 return this;
             }
 
+            /**
+             * <p>The id of the plan</p>
+             */
             @JsonSetter(value = "id", nulls = Nulls.SKIP)
             public Builder id(Optional<String> id) {
                 this.id = id;
@@ -1031,6 +1103,9 @@ public final class Company {
                 return this;
             }
 
+            /**
+             * <p>The name of the plan</p>
+             */
             @JsonSetter(value = "name", nulls = Nulls.SKIP)
             public Builder name(Optional<String> name) {
                 this.name = name;

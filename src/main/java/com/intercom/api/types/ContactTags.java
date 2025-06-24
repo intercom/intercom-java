@@ -110,22 +110,34 @@ public final class ContactTags {
     }
 
     public interface UrlStage {
+        /**
+         * url to get more tag resources for this contact
+         */
         TotalCountStage url(@NotNull String url);
 
         Builder from(ContactTags other);
     }
 
     public interface TotalCountStage {
+        /**
+         * Int representing the total number of tags attached to this contact
+         */
         HasMoreStage totalCount(int totalCount);
     }
 
     public interface HasMoreStage {
+        /**
+         * Whether there's more Addressable Objects to be viewed. If true, use the url to view all
+         */
         _FinalStage hasMore(boolean hasMore);
     }
 
     public interface _FinalStage {
         ContactTags build();
 
+        /**
+         * <p>This object represents the tags attached to a contact.</p>
+         */
         _FinalStage data(List<AddressableList> data);
 
         _FinalStage addData(AddressableList data);
@@ -158,7 +170,7 @@ public final class ContactTags {
         }
 
         /**
-         * <p>url to get more tag resources for this contact</p>
+         * url to get more tag resources for this contact<p>url to get more tag resources for this contact</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -169,7 +181,7 @@ public final class ContactTags {
         }
 
         /**
-         * <p>Int representing the total number of tags attached to this contact</p>
+         * Int representing the total number of tags attached to this contact<p>Int representing the total number of tags attached to this contact</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -180,7 +192,7 @@ public final class ContactTags {
         }
 
         /**
-         * <p>Whether there's more Addressable Objects to be viewed. If true, use the url to view all</p>
+         * Whether there's more Addressable Objects to be viewed. If true, use the url to view all<p>Whether there's more Addressable Objects to be viewed. If true, use the url to view all</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -210,6 +222,9 @@ public final class ContactTags {
             return this;
         }
 
+        /**
+         * <p>This object represents the tags attached to a contact.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
         public _FinalStage data(List<AddressableList> data) {

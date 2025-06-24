@@ -205,46 +205,76 @@ public final class ListItemWithImage implements IListItem {
     }
 
     public interface IdStage {
+        /**
+         * A unique identifier for the item.
+         */
         TitleStage id(@NotNull String id);
 
         Builder from(ListItemWithImage other);
     }
 
     public interface TitleStage {
+        /**
+         * The text shown as the title for the item.
+         */
         ImageStage title(@NotNull String title);
     }
 
     public interface ImageStage {
+        /**
+         * An image that will be displayed to the left of the item.
+         */
         ImageWidthStage image(@NotNull String image);
     }
 
     public interface ImageWidthStage {
+        /**
+         * The exact width of the image in pixels.
+         */
         ImageHeightStage imageWidth(int imageWidth);
     }
 
     public interface ImageHeightStage {
+        /**
+         * The exact height of the image in pixels.
+         */
         _FinalStage imageHeight(int imageHeight);
     }
 
     public interface _FinalStage {
         ListItemWithImage build();
 
+        /**
+         * <p>The text shown underneath the item's title.</p>
+         */
         _FinalStage subtitle(Optional<String> subtitle);
 
         _FinalStage subtitle(String subtitle);
 
+        /**
+         * <p>The text shown next to the subtitle, separates by a bullet.</p>
+         */
         _FinalStage tertiaryText(Optional<String> tertiaryText);
 
         _FinalStage tertiaryText(String tertiaryText);
 
+        /**
+         * <p>Rounds the corners of the image. Default is <code>false</code>.</p>
+         */
         _FinalStage roundedImage(Optional<Boolean> roundedImage);
 
         _FinalStage roundedImage(Boolean roundedImage);
 
+        /**
+         * <p>Styles all list items and prevents the action. Default is <code>false</code>.</p>
+         */
         _FinalStage disabled(Optional<Boolean> disabled);
 
         _FinalStage disabled(Boolean disabled);
 
+        /**
+         * <p>This can be a Submit Action, URL Action, or Sheets Action.</p>
+         */
         _FinalStage action(Optional<ActionComponent> action);
 
         _FinalStage action(ActionComponent action);
@@ -294,7 +324,7 @@ public final class ListItemWithImage implements IListItem {
         }
 
         /**
-         * <p>A unique identifier for the item.</p>
+         * A unique identifier for the item.<p>A unique identifier for the item.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -305,7 +335,7 @@ public final class ListItemWithImage implements IListItem {
         }
 
         /**
-         * <p>The text shown as the title for the item.</p>
+         * The text shown as the title for the item.<p>The text shown as the title for the item.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -316,7 +346,7 @@ public final class ListItemWithImage implements IListItem {
         }
 
         /**
-         * <p>An image that will be displayed to the left of the item.</p>
+         * An image that will be displayed to the left of the item.<p>An image that will be displayed to the left of the item.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -327,7 +357,7 @@ public final class ListItemWithImage implements IListItem {
         }
 
         /**
-         * <p>The exact width of the image in pixels.</p>
+         * The exact width of the image in pixels.<p>The exact width of the image in pixels.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -338,7 +368,7 @@ public final class ListItemWithImage implements IListItem {
         }
 
         /**
-         * <p>The exact height of the image in pixels.</p>
+         * The exact height of the image in pixels.<p>The exact height of the image in pixels.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -358,6 +388,9 @@ public final class ListItemWithImage implements IListItem {
             return this;
         }
 
+        /**
+         * <p>This can be a Submit Action, URL Action, or Sheets Action.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "action", nulls = Nulls.SKIP)
         public _FinalStage action(Optional<ActionComponent> action) {
@@ -375,6 +408,9 @@ public final class ListItemWithImage implements IListItem {
             return this;
         }
 
+        /**
+         * <p>Styles all list items and prevents the action. Default is <code>false</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "disabled", nulls = Nulls.SKIP)
         public _FinalStage disabled(Optional<Boolean> disabled) {
@@ -392,6 +428,9 @@ public final class ListItemWithImage implements IListItem {
             return this;
         }
 
+        /**
+         * <p>Rounds the corners of the image. Default is <code>false</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "rounded_image", nulls = Nulls.SKIP)
         public _FinalStage roundedImage(Optional<Boolean> roundedImage) {
@@ -409,6 +448,9 @@ public final class ListItemWithImage implements IListItem {
             return this;
         }
 
+        /**
+         * <p>The text shown next to the subtitle, separates by a bullet.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "tertiary_text", nulls = Nulls.SKIP)
         public _FinalStage tertiaryText(Optional<String> tertiaryText) {
@@ -426,6 +468,9 @@ public final class ListItemWithImage implements IListItem {
             return this;
         }
 
+        /**
+         * <p>The text shown underneath the item's title.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "subtitle", nulls = Nulls.SKIP)
         public _FinalStage subtitle(Optional<String> subtitle) {

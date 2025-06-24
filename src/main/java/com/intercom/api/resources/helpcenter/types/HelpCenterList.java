@@ -89,6 +89,9 @@ public final class HelpCenterList {
             return this;
         }
 
+        /**
+         * <p>An array of Help Center objects</p>
+         */
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
         public Builder data(List<HelpCenter> data) {
             this.data.clear();

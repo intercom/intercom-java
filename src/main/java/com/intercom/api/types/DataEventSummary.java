@@ -118,22 +118,34 @@ public final class DataEventSummary {
     }
 
     public interface EmailStage {
+        /**
+         * The email address of the user
+         */
         IntercomUserIdStage email(@NotNull String email);
 
         Builder from(DataEventSummary other);
     }
 
     public interface IntercomUserIdStage {
+        /**
+         * The Intercom user ID of the user
+         */
         UserIdStage intercomUserId(@NotNull String intercomUserId);
     }
 
     public interface UserIdStage {
+        /**
+         * The user ID of the user
+         */
         _FinalStage userId(@NotNull String userId);
     }
 
     public interface _FinalStage {
         DataEventSummary build();
 
+        /**
+         * <p>A summary of data events</p>
+         */
         _FinalStage events(List<DataEventSummaryItem> events);
 
         _FinalStage addEvents(DataEventSummaryItem events);
@@ -166,7 +178,7 @@ public final class DataEventSummary {
         }
 
         /**
-         * <p>The email address of the user</p>
+         * The email address of the user<p>The email address of the user</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -177,7 +189,7 @@ public final class DataEventSummary {
         }
 
         /**
-         * <p>The Intercom user ID of the user</p>
+         * The Intercom user ID of the user<p>The Intercom user ID of the user</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -188,7 +200,7 @@ public final class DataEventSummary {
         }
 
         /**
-         * <p>The user ID of the user</p>
+         * The user ID of the user<p>The user ID of the user</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -218,6 +230,9 @@ public final class DataEventSummary {
             return this;
         }
 
+        /**
+         * <p>A summary of data events</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "events", nulls = Nulls.SKIP)
         public _FinalStage events(List<DataEventSummaryItem> events) {

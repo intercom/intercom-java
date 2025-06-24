@@ -691,36 +691,60 @@ public final class Contact {
     }
 
     public interface IdStage {
+        /**
+         * The unique identifier for the contact which is given by Intercom.
+         */
         WorkspaceIdStage id(@NotNull String id);
 
         Builder from(Contact other);
     }
 
     public interface WorkspaceIdStage {
+        /**
+         * The id of the workspace which the contact belongs to.
+         */
         RoleStage workspaceId(@NotNull String workspaceId);
     }
 
     public interface RoleStage {
+        /**
+         * The role of the contact.
+         */
         HasHardBouncedStage role(@NotNull String role);
     }
 
     public interface HasHardBouncedStage {
+        /**
+         * Whether the contact has had an email sent to them hard bounce.
+         */
         MarkedEmailAsSpamStage hasHardBounced(boolean hasHardBounced);
     }
 
     public interface MarkedEmailAsSpamStage {
+        /**
+         * Whether the contact has marked an email sent to them as spam.
+         */
         UnsubscribedFromEmailsStage markedEmailAsSpam(boolean markedEmailAsSpam);
     }
 
     public interface UnsubscribedFromEmailsStage {
+        /**
+         * Whether the contact is unsubscribed from emails.
+         */
         CreatedAtStage unsubscribedFromEmails(boolean unsubscribedFromEmails);
     }
 
     public interface CreatedAtStage {
+        /**
+         * (UNIX timestamp) The time when the contact was created.
+         */
         UpdatedAtStage createdAt(int createdAt);
     }
 
     public interface UpdatedAtStage {
+        /**
+         * (UNIX timestamp) The time when the contact was last updated.
+         */
         LocationStage updatedAt(int updatedAt);
     }
 
@@ -735,134 +759,233 @@ public final class Contact {
     public interface _FinalStage {
         Contact build();
 
+        /**
+         * <p>The type of object.</p>
+         */
         _FinalStage type(Optional<String> type);
 
         _FinalStage type(String type);
 
+        /**
+         * <p>The unique identifier for the contact which is provided by the Client.</p>
+         */
         _FinalStage externalId(Optional<String> externalId);
 
         _FinalStage externalId(String externalId);
 
+        /**
+         * <p>The contact's email.</p>
+         */
         _FinalStage email(Optional<String> email);
 
         _FinalStage email(String email);
 
+        /**
+         * <p>The contact's email domain.</p>
+         */
         _FinalStage emailDomain(Optional<String> emailDomain);
 
         _FinalStage emailDomain(String emailDomain);
 
+        /**
+         * <p>The contacts phone.</p>
+         */
         _FinalStage phone(Optional<String> phone);
 
         _FinalStage phone(String phone);
 
+        /**
+         * <p>The contacts phone number normalized to the E164 format</p>
+         */
         _FinalStage formattedPhone(Optional<String> formattedPhone);
 
         _FinalStage formattedPhone(String formattedPhone);
 
+        /**
+         * <p>The contacts name.</p>
+         */
         _FinalStage name(Optional<String> name);
 
         _FinalStage name(String name);
 
+        /**
+         * <p>The id of an admin that has been assigned account ownership of the contact.</p>
+         */
         _FinalStage ownerId(Optional<Integer> ownerId);
 
         _FinalStage ownerId(Integer ownerId);
 
+        /**
+         * <p>(UNIX timestamp) The time specified for when a contact signed up.</p>
+         */
         _FinalStage signedUpAt(Optional<Integer> signedUpAt);
 
         _FinalStage signedUpAt(Integer signedUpAt);
 
+        /**
+         * <p>(UNIX timestamp) The time when the contact was last seen (either where the Intercom Messenger was installed or when specified manually).</p>
+         */
         _FinalStage lastSeenAt(Optional<Integer> lastSeenAt);
 
         _FinalStage lastSeenAt(Integer lastSeenAt);
 
+        /**
+         * <p>(UNIX timestamp) The time when the contact last messaged in.</p>
+         */
         _FinalStage lastRepliedAt(Optional<Integer> lastRepliedAt);
 
         _FinalStage lastRepliedAt(Integer lastRepliedAt);
 
+        /**
+         * <p>(UNIX timestamp) The time when the contact was last messaged.</p>
+         */
         _FinalStage lastContactedAt(Optional<Integer> lastContactedAt);
 
         _FinalStage lastContactedAt(Integer lastContactedAt);
 
+        /**
+         * <p>(UNIX timestamp) The time when the contact last opened an email.</p>
+         */
         _FinalStage lastEmailOpenedAt(Optional<Integer> lastEmailOpenedAt);
 
         _FinalStage lastEmailOpenedAt(Integer lastEmailOpenedAt);
 
+        /**
+         * <p>(UNIX timestamp) The time when the contact last clicked a link in an email.</p>
+         */
         _FinalStage lastEmailClickedAt(Optional<Integer> lastEmailClickedAt);
 
         _FinalStage lastEmailClickedAt(Integer lastEmailClickedAt);
 
+        /**
+         * <p>A preferred language setting for the contact, used by the Intercom Messenger even if their browser settings change.</p>
+         */
         _FinalStage languageOverride(Optional<String> languageOverride);
 
         _FinalStage languageOverride(String languageOverride);
 
+        /**
+         * <p>The name of the browser which the contact is using.</p>
+         */
         _FinalStage browser(Optional<String> browser);
 
         _FinalStage browser(String browser);
 
+        /**
+         * <p>The version of the browser which the contact is using.</p>
+         */
         _FinalStage browserVersion(Optional<String> browserVersion);
 
         _FinalStage browserVersion(String browserVersion);
 
+        /**
+         * <p>The language set by the browser which the contact is using.</p>
+         */
         _FinalStage browserLanguage(Optional<String> browserLanguage);
 
         _FinalStage browserLanguage(String browserLanguage);
 
+        /**
+         * <p>The operating system which the contact is using.</p>
+         */
         _FinalStage os(Optional<String> os);
 
         _FinalStage os(String os);
 
+        /**
+         * <p>The name of the Android app which the contact is using.</p>
+         */
         _FinalStage androidAppName(Optional<String> androidAppName);
 
         _FinalStage androidAppName(String androidAppName);
 
+        /**
+         * <p>The version of the Android app which the contact is using.</p>
+         */
         _FinalStage androidAppVersion(Optional<String> androidAppVersion);
 
         _FinalStage androidAppVersion(String androidAppVersion);
 
+        /**
+         * <p>The Android device which the contact is using.</p>
+         */
         _FinalStage androidDevice(Optional<String> androidDevice);
 
         _FinalStage androidDevice(String androidDevice);
 
+        /**
+         * <p>The version of the Android OS which the contact is using.</p>
+         */
         _FinalStage androidOsVersion(Optional<String> androidOsVersion);
 
         _FinalStage androidOsVersion(String androidOsVersion);
 
+        /**
+         * <p>The version of the Android SDK which the contact is using.</p>
+         */
         _FinalStage androidSdkVersion(Optional<String> androidSdkVersion);
 
         _FinalStage androidSdkVersion(String androidSdkVersion);
 
+        /**
+         * <p>(UNIX timestamp) The time when the contact was last seen on an Android device.</p>
+         */
         _FinalStage androidLastSeenAt(Optional<Integer> androidLastSeenAt);
 
         _FinalStage androidLastSeenAt(Integer androidLastSeenAt);
 
+        /**
+         * <p>The name of the iOS app which the contact is using.</p>
+         */
         _FinalStage iosAppName(Optional<String> iosAppName);
 
         _FinalStage iosAppName(String iosAppName);
 
+        /**
+         * <p>The version of the iOS app which the contact is using.</p>
+         */
         _FinalStage iosAppVersion(Optional<String> iosAppVersion);
 
         _FinalStage iosAppVersion(String iosAppVersion);
 
+        /**
+         * <p>The iOS device which the contact is using.</p>
+         */
         _FinalStage iosDevice(Optional<String> iosDevice);
 
         _FinalStage iosDevice(String iosDevice);
 
+        /**
+         * <p>The version of iOS which the contact is using.</p>
+         */
         _FinalStage iosOsVersion(Optional<String> iosOsVersion);
 
         _FinalStage iosOsVersion(String iosOsVersion);
 
+        /**
+         * <p>The version of the iOS SDK which the contact is using.</p>
+         */
         _FinalStage iosSdkVersion(Optional<String> iosSdkVersion);
 
         _FinalStage iosSdkVersion(String iosSdkVersion);
 
+        /**
+         * <p>(UNIX timestamp) The last time the contact used the iOS app.</p>
+         */
         _FinalStage iosLastSeenAt(Optional<Integer> iosLastSeenAt);
 
         _FinalStage iosLastSeenAt(Integer iosLastSeenAt);
 
+        /**
+         * <p>The custom attributes which are set for the contact.</p>
+         */
         _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes);
 
         _FinalStage customAttributes(Map<String, Object> customAttributes);
 
+        /**
+         * <p>An image URL containing the avatar of a contact.</p>
+         */
         _FinalStage avatar(Optional<String> avatar);
 
         _FinalStage avatar(String avatar);
@@ -1042,7 +1165,7 @@ public final class Contact {
         }
 
         /**
-         * <p>The unique identifier for the contact which is given by Intercom.</p>
+         * The unique identifier for the contact which is given by Intercom.<p>The unique identifier for the contact which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -1053,7 +1176,7 @@ public final class Contact {
         }
 
         /**
-         * <p>The id of the workspace which the contact belongs to.</p>
+         * The id of the workspace which the contact belongs to.<p>The id of the workspace which the contact belongs to.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -1064,7 +1187,7 @@ public final class Contact {
         }
 
         /**
-         * <p>The role of the contact.</p>
+         * The role of the contact.<p>The role of the contact.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -1075,7 +1198,7 @@ public final class Contact {
         }
 
         /**
-         * <p>Whether the contact has had an email sent to them hard bounce.</p>
+         * Whether the contact has had an email sent to them hard bounce.<p>Whether the contact has had an email sent to them hard bounce.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -1086,7 +1209,7 @@ public final class Contact {
         }
 
         /**
-         * <p>Whether the contact has marked an email sent to them as spam.</p>
+         * Whether the contact has marked an email sent to them as spam.<p>Whether the contact has marked an email sent to them as spam.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -1097,7 +1220,7 @@ public final class Contact {
         }
 
         /**
-         * <p>Whether the contact is unsubscribed from emails.</p>
+         * Whether the contact is unsubscribed from emails.<p>Whether the contact is unsubscribed from emails.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -1108,7 +1231,7 @@ public final class Contact {
         }
 
         /**
-         * <p>(UNIX timestamp) The time when the contact was created.</p>
+         * (UNIX timestamp) The time when the contact was created.<p>(UNIX timestamp) The time when the contact was created.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -1119,7 +1242,7 @@ public final class Contact {
         }
 
         /**
-         * <p>(UNIX timestamp) The time when the contact was last updated.</p>
+         * (UNIX timestamp) The time when the contact was last updated.<p>(UNIX timestamp) The time when the contact was last updated.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -1192,6 +1315,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>An image URL containing the avatar of a contact.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "avatar", nulls = Nulls.SKIP)
         public _FinalStage avatar(Optional<String> avatar) {
@@ -1209,6 +1335,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The custom attributes which are set for the contact.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "custom_attributes", nulls = Nulls.SKIP)
         public _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes) {
@@ -1226,6 +1355,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>(UNIX timestamp) The last time the contact used the iOS app.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "ios_last_seen_at", nulls = Nulls.SKIP)
         public _FinalStage iosLastSeenAt(Optional<Integer> iosLastSeenAt) {
@@ -1243,6 +1375,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The version of the iOS SDK which the contact is using.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "ios_sdk_version", nulls = Nulls.SKIP)
         public _FinalStage iosSdkVersion(Optional<String> iosSdkVersion) {
@@ -1260,6 +1395,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The version of iOS which the contact is using.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "ios_os_version", nulls = Nulls.SKIP)
         public _FinalStage iosOsVersion(Optional<String> iosOsVersion) {
@@ -1277,6 +1415,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The iOS device which the contact is using.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "ios_device", nulls = Nulls.SKIP)
         public _FinalStage iosDevice(Optional<String> iosDevice) {
@@ -1294,6 +1435,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The version of the iOS app which the contact is using.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "ios_app_version", nulls = Nulls.SKIP)
         public _FinalStage iosAppVersion(Optional<String> iosAppVersion) {
@@ -1311,6 +1455,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The name of the iOS app which the contact is using.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "ios_app_name", nulls = Nulls.SKIP)
         public _FinalStage iosAppName(Optional<String> iosAppName) {
@@ -1328,6 +1475,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>(UNIX timestamp) The time when the contact was last seen on an Android device.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "android_last_seen_at", nulls = Nulls.SKIP)
         public _FinalStage androidLastSeenAt(Optional<Integer> androidLastSeenAt) {
@@ -1345,6 +1495,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The version of the Android SDK which the contact is using.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "android_sdk_version", nulls = Nulls.SKIP)
         public _FinalStage androidSdkVersion(Optional<String> androidSdkVersion) {
@@ -1362,6 +1515,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The version of the Android OS which the contact is using.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "android_os_version", nulls = Nulls.SKIP)
         public _FinalStage androidOsVersion(Optional<String> androidOsVersion) {
@@ -1379,6 +1535,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The Android device which the contact is using.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "android_device", nulls = Nulls.SKIP)
         public _FinalStage androidDevice(Optional<String> androidDevice) {
@@ -1396,6 +1555,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The version of the Android app which the contact is using.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "android_app_version", nulls = Nulls.SKIP)
         public _FinalStage androidAppVersion(Optional<String> androidAppVersion) {
@@ -1413,6 +1575,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The name of the Android app which the contact is using.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "android_app_name", nulls = Nulls.SKIP)
         public _FinalStage androidAppName(Optional<String> androidAppName) {
@@ -1430,6 +1595,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The operating system which the contact is using.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "os", nulls = Nulls.SKIP)
         public _FinalStage os(Optional<String> os) {
@@ -1447,6 +1615,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The language set by the browser which the contact is using.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "browser_language", nulls = Nulls.SKIP)
         public _FinalStage browserLanguage(Optional<String> browserLanguage) {
@@ -1464,6 +1635,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The version of the browser which the contact is using.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "browser_version", nulls = Nulls.SKIP)
         public _FinalStage browserVersion(Optional<String> browserVersion) {
@@ -1481,6 +1655,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The name of the browser which the contact is using.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "browser", nulls = Nulls.SKIP)
         public _FinalStage browser(Optional<String> browser) {
@@ -1498,6 +1675,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>A preferred language setting for the contact, used by the Intercom Messenger even if their browser settings change.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "language_override", nulls = Nulls.SKIP)
         public _FinalStage languageOverride(Optional<String> languageOverride) {
@@ -1515,6 +1695,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>(UNIX timestamp) The time when the contact last clicked a link in an email.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "last_email_clicked_at", nulls = Nulls.SKIP)
         public _FinalStage lastEmailClickedAt(Optional<Integer> lastEmailClickedAt) {
@@ -1532,6 +1715,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>(UNIX timestamp) The time when the contact last opened an email.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "last_email_opened_at", nulls = Nulls.SKIP)
         public _FinalStage lastEmailOpenedAt(Optional<Integer> lastEmailOpenedAt) {
@@ -1549,6 +1735,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>(UNIX timestamp) The time when the contact was last messaged.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "last_contacted_at", nulls = Nulls.SKIP)
         public _FinalStage lastContactedAt(Optional<Integer> lastContactedAt) {
@@ -1566,6 +1755,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>(UNIX timestamp) The time when the contact last messaged in.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "last_replied_at", nulls = Nulls.SKIP)
         public _FinalStage lastRepliedAt(Optional<Integer> lastRepliedAt) {
@@ -1583,6 +1775,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>(UNIX timestamp) The time when the contact was last seen (either where the Intercom Messenger was installed or when specified manually).</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "last_seen_at", nulls = Nulls.SKIP)
         public _FinalStage lastSeenAt(Optional<Integer> lastSeenAt) {
@@ -1600,6 +1795,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>(UNIX timestamp) The time specified for when a contact signed up.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "signed_up_at", nulls = Nulls.SKIP)
         public _FinalStage signedUpAt(Optional<Integer> signedUpAt) {
@@ -1617,6 +1815,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The id of an admin that has been assigned account ownership of the contact.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "owner_id", nulls = Nulls.SKIP)
         public _FinalStage ownerId(Optional<Integer> ownerId) {
@@ -1634,6 +1835,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The contacts name.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "name", nulls = Nulls.SKIP)
         public _FinalStage name(Optional<String> name) {
@@ -1651,6 +1855,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The contacts phone number normalized to the E164 format</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "formatted_phone", nulls = Nulls.SKIP)
         public _FinalStage formattedPhone(Optional<String> formattedPhone) {
@@ -1668,6 +1875,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The contacts phone.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "phone", nulls = Nulls.SKIP)
         public _FinalStage phone(Optional<String> phone) {
@@ -1685,6 +1895,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The contact's email domain.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "email_domain", nulls = Nulls.SKIP)
         public _FinalStage emailDomain(Optional<String> emailDomain) {
@@ -1702,6 +1915,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The contact's email.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "email", nulls = Nulls.SKIP)
         public _FinalStage email(Optional<String> email) {
@@ -1719,6 +1935,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The unique identifier for the contact which is provided by the Client.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "external_id", nulls = Nulls.SKIP)
         public _FinalStage externalId(Optional<String> externalId) {
@@ -1736,6 +1955,9 @@ public final class Contact {
             return this;
         }
 
+        /**
+         * <p>The type of object.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "type", nulls = Nulls.SKIP)
         public _FinalStage type(Optional<String> type) {

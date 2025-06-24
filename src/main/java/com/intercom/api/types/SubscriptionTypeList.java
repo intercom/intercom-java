@@ -90,6 +90,9 @@ public final class SubscriptionTypeList {
             return this;
         }
 
+        /**
+         * <p>A list of subscription type objects associated with the workspace .</p>
+         */
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
         public Builder data(List<SubscriptionType> data) {
             this.data.clear();

@@ -80,6 +80,9 @@ public final class ResultsResponse {
             return this;
         }
 
+        /**
+         * <p>Key-value pairs of data you want access to in the Initialize request</p>
+         */
         @JsonSetter(value = "results", nulls = Nulls.SKIP)
         public Builder results(Map<String, Object> results) {
             this.results.clear();

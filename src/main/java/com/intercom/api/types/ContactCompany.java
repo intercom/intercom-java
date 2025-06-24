@@ -85,12 +85,18 @@ public final class ContactCompany {
     }
 
     public interface IdStage {
+        /**
+         * The unique identifier for the company
+         */
         UrlStage id(@NotNull String id);
 
         Builder from(ContactCompany other);
     }
 
     public interface UrlStage {
+        /**
+         * URL to get the full company resource
+         */
         _FinalStage url(@NotNull String url);
     }
 
@@ -117,7 +123,7 @@ public final class ContactCompany {
         }
 
         /**
-         * <p>The unique identifier for the company</p>
+         * The unique identifier for the company<p>The unique identifier for the company</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -128,7 +134,7 @@ public final class ContactCompany {
         }
 
         /**
-         * <p>URL to get the full company resource</p>
+         * URL to get the full company resource<p>URL to get the full company resource</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

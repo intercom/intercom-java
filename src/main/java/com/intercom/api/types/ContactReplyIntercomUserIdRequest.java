@@ -133,26 +133,41 @@ public final class ContactReplyIntercomUserIdRequest implements IContactReplyBas
     }
 
     public interface BodyStage {
+        /**
+         * The text body of the comment.
+         */
         IntercomUserIdStage body(@NotNull String body);
 
         Builder from(ContactReplyIntercomUserIdRequest other);
     }
 
     public interface IntercomUserIdStage {
+        /**
+         * The identifier for the contact as given by Intercom.
+         */
         _FinalStage intercomUserId(@NotNull String intercomUserId);
     }
 
     public interface _FinalStage {
         ContactReplyIntercomUserIdRequest build();
 
+        /**
+         * <p>The time the reply was created. If not provided, the current time will be used.</p>
+         */
         _FinalStage createdAt(Optional<Integer> createdAt);
 
         _FinalStage createdAt(Integer createdAt);
 
+        /**
+         * <p>A list of image URLs that will be added as attachments. You can include up to 10 URLs.</p>
+         */
         _FinalStage attachmentUrls(Optional<List<String>> attachmentUrls);
 
         _FinalStage attachmentUrls(List<String> attachmentUrls);
 
+        /**
+         * <p>A list of files that will be added as attachments.</p>
+         */
         _FinalStage attachmentFiles(Optional<List<ConversationAttachmentFiles>> attachmentFiles);
 
         _FinalStage attachmentFiles(List<ConversationAttachmentFiles> attachmentFiles);
@@ -186,7 +201,7 @@ public final class ContactReplyIntercomUserIdRequest implements IContactReplyBas
         }
 
         /**
-         * <p>The text body of the comment.</p>
+         * The text body of the comment.<p>The text body of the comment.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -197,7 +212,7 @@ public final class ContactReplyIntercomUserIdRequest implements IContactReplyBas
         }
 
         /**
-         * <p>The identifier for the contact as given by Intercom.</p>
+         * The identifier for the contact as given by Intercom.<p>The identifier for the contact as given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -217,6 +232,9 @@ public final class ContactReplyIntercomUserIdRequest implements IContactReplyBas
             return this;
         }
 
+        /**
+         * <p>A list of files that will be added as attachments.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "attachment_files", nulls = Nulls.SKIP)
         public _FinalStage attachmentFiles(Optional<List<ConversationAttachmentFiles>> attachmentFiles) {
@@ -234,6 +252,9 @@ public final class ContactReplyIntercomUserIdRequest implements IContactReplyBas
             return this;
         }
 
+        /**
+         * <p>A list of image URLs that will be added as attachments. You can include up to 10 URLs.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "attachment_urls", nulls = Nulls.SKIP)
         public _FinalStage attachmentUrls(Optional<List<String>> attachmentUrls) {
@@ -251,6 +272,9 @@ public final class ContactReplyIntercomUserIdRequest implements IContactReplyBas
             return this;
         }
 
+        /**
+         * <p>The time the reply was created. If not provided, the current time will be used.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
         public _FinalStage createdAt(Optional<Integer> createdAt) {

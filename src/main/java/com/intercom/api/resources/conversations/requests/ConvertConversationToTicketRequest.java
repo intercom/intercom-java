@@ -94,12 +94,18 @@ public final class ConvertConversationToTicketRequest {
     }
 
     public interface ConversationIdStage {
+        /**
+         * The id of the conversation to target
+         */
         TicketTypeIdStage conversationId(@NotNull String conversationId);
 
         Builder from(ConvertConversationToTicketRequest other);
     }
 
     public interface TicketTypeIdStage {
+        /**
+         * The ID of the type of ticket you want to convert the conversation to
+         */
         _FinalStage ticketTypeId(@NotNull String ticketTypeId);
     }
 
@@ -133,7 +139,7 @@ public final class ConvertConversationToTicketRequest {
         }
 
         /**
-         * <p>The id of the conversation to target</p>
+         * The id of the conversation to target<p>The id of the conversation to target</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -144,7 +150,7 @@ public final class ConvertConversationToTicketRequest {
         }
 
         /**
-         * <p>The ID of the type of ticket you want to convert the conversation to</p>
+         * The ID of the type of ticket you want to convert the conversation to<p>The ID of the type of ticket you want to convert the conversation to</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

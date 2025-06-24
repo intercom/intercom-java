@@ -101,6 +101,9 @@ public final class PaginatedNewsfeedResponse {
     }
 
     public interface TotalCountStage {
+        /**
+         * A count of the total number of Newsfeeds.
+         */
         _FinalStage totalCount(int totalCount);
 
         Builder from(PaginatedNewsfeedResponse other);
@@ -113,6 +116,9 @@ public final class PaginatedNewsfeedResponse {
 
         _FinalStage pages(CursorPages pages);
 
+        /**
+         * <p>An array of Newsfeeds</p>
+         */
         _FinalStage data(List<Newsfeed> data);
 
         _FinalStage addData(Newsfeed data);
@@ -142,7 +148,7 @@ public final class PaginatedNewsfeedResponse {
         }
 
         /**
-         * <p>A count of the total number of Newsfeeds.</p>
+         * A count of the total number of Newsfeeds.<p>A count of the total number of Newsfeeds.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -172,6 +178,9 @@ public final class PaginatedNewsfeedResponse {
             return this;
         }
 
+        /**
+         * <p>An array of Newsfeeds</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
         public _FinalStage data(List<Newsfeed> data) {

@@ -101,6 +101,9 @@ public final class TicketList {
     }
 
     public interface TotalCountStage {
+        /**
+         * A count of the total number of objects.
+         */
         _FinalStage totalCount(int totalCount);
 
         Builder from(TicketList other);
@@ -109,6 +112,9 @@ public final class TicketList {
     public interface _FinalStage {
         TicketList build();
 
+        /**
+         * <p>The list of ticket objects</p>
+         */
         _FinalStage tickets(List<Ticket> tickets);
 
         _FinalStage addTickets(Ticket tickets);
@@ -142,7 +148,7 @@ public final class TicketList {
         }
 
         /**
-         * <p>A count of the total number of objects.</p>
+         * A count of the total number of objects.<p>A count of the total number of objects.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -185,6 +191,9 @@ public final class TicketList {
             return this;
         }
 
+        /**
+         * <p>The list of ticket objects</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "tickets", nulls = Nulls.SKIP)
         public _FinalStage tickets(List<Ticket> tickets) {

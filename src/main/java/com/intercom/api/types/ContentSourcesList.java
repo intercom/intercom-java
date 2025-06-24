@@ -86,6 +86,9 @@ public final class ContentSourcesList {
     }
 
     public interface TotalCountStage {
+        /**
+         * The total number of content sources used by AI Agent in the conversation.
+         */
         _FinalStage totalCount(int totalCount);
 
         Builder from(ContentSourcesList other);
@@ -94,6 +97,9 @@ public final class ContentSourcesList {
     public interface _FinalStage {
         ContentSourcesList build();
 
+        /**
+         * <p>The content sources used by AI Agent in the conversation.</p>
+         */
         _FinalStage contentSources(List<ContentSource> contentSources);
 
         _FinalStage addContentSources(ContentSource contentSources);
@@ -120,7 +126,7 @@ public final class ContentSourcesList {
         }
 
         /**
-         * <p>The total number of content sources used by AI Agent in the conversation.</p>
+         * The total number of content sources used by AI Agent in the conversation.<p>The total number of content sources used by AI Agent in the conversation.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -150,6 +156,9 @@ public final class ContentSourcesList {
             return this;
         }
 
+        /**
+         * <p>The content sources used by AI Agent in the conversation.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "content_sources", nulls = Nulls.SKIP)
         public _FinalStage contentSources(List<ContentSource> contentSources) {

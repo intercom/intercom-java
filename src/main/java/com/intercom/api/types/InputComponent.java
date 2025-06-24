@@ -151,6 +151,9 @@ public final class InputComponent {
     }
 
     public interface IdStage {
+        /**
+         * A unique identifier for the component.
+         */
         _FinalStage id(@NotNull String id);
 
         Builder from(InputComponent other);
@@ -159,26 +162,44 @@ public final class InputComponent {
     public interface _FinalStage {
         InputComponent build();
 
+        /**
+         * <p>The text shown above the input.</p>
+         */
         _FinalStage label(Optional<String> label);
 
         _FinalStage label(String label);
 
+        /**
+         * <p>An example value shown inside the component when it's empty.</p>
+         */
         _FinalStage placeholder(Optional<String> placeholder);
 
         _FinalStage placeholder(String placeholder);
 
+        /**
+         * <p>An entered value which is already inside the component.</p>
+         */
         _FinalStage value(Optional<String> value);
 
         _FinalStage value(String value);
 
+        /**
+         * <p>This can be a Submit Action, URL Action, or Sheets Action.</p>
+         */
         _FinalStage action(Optional<ActionComponent> action);
 
         _FinalStage action(ActionComponent action);
 
+        /**
+         * <p>Styles the input. Default is <code>unsaved</code>. Prevent action with <code>saved</code>.</p>
+         */
         _FinalStage saveState(Optional<SaveState> saveState);
 
         _FinalStage saveState(SaveState saveState);
 
+        /**
+         * <p>Styles the input and prevents the action. Default is false. Will be overridden if save_state is saved.</p>
+         */
         _FinalStage disabled(Optional<Boolean> disabled);
 
         _FinalStage disabled(Boolean disabled);
@@ -218,7 +239,7 @@ public final class InputComponent {
         }
 
         /**
-         * <p>A unique identifier for the component.</p>
+         * A unique identifier for the component.<p>A unique identifier for the component.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -238,6 +259,9 @@ public final class InputComponent {
             return this;
         }
 
+        /**
+         * <p>Styles the input and prevents the action. Default is false. Will be overridden if save_state is saved.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "disabled", nulls = Nulls.SKIP)
         public _FinalStage disabled(Optional<Boolean> disabled) {
@@ -255,6 +279,9 @@ public final class InputComponent {
             return this;
         }
 
+        /**
+         * <p>Styles the input. Default is <code>unsaved</code>. Prevent action with <code>saved</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "save_state", nulls = Nulls.SKIP)
         public _FinalStage saveState(Optional<SaveState> saveState) {
@@ -272,6 +299,9 @@ public final class InputComponent {
             return this;
         }
 
+        /**
+         * <p>This can be a Submit Action, URL Action, or Sheets Action.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "action", nulls = Nulls.SKIP)
         public _FinalStage action(Optional<ActionComponent> action) {
@@ -289,6 +319,9 @@ public final class InputComponent {
             return this;
         }
 
+        /**
+         * <p>An entered value which is already inside the component.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "value", nulls = Nulls.SKIP)
         public _FinalStage value(Optional<String> value) {
@@ -306,6 +339,9 @@ public final class InputComponent {
             return this;
         }
 
+        /**
+         * <p>An example value shown inside the component when it's empty.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "placeholder", nulls = Nulls.SKIP)
         public _FinalStage placeholder(Optional<String> placeholder) {
@@ -323,6 +359,9 @@ public final class InputComponent {
             return this;
         }
 
+        /**
+         * <p>The text shown above the input.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "label", nulls = Nulls.SKIP)
         public _FinalStage label(Optional<String> label) {

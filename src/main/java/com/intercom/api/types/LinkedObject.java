@@ -92,18 +92,27 @@ public final class LinkedObject {
     }
 
     public interface TypeStage {
+        /**
+         * ticket or conversation
+         */
         IdStage type(@NotNull Type type);
 
         Builder from(LinkedObject other);
     }
 
     public interface IdStage {
+        /**
+         * The ID of the linked object
+         */
         _FinalStage id(@NotNull String id);
     }
 
     public interface _FinalStage {
         LinkedObject build();
 
+        /**
+         * <p>Category of the Linked Ticket Object.</p>
+         */
         _FinalStage category(Optional<String> category);
 
         _FinalStage category(String category);
@@ -131,7 +140,7 @@ public final class LinkedObject {
         }
 
         /**
-         * <p>ticket or conversation</p>
+         * ticket or conversation<p>ticket or conversation</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -142,7 +151,7 @@ public final class LinkedObject {
         }
 
         /**
-         * <p>The ID of the linked object</p>
+         * The ID of the linked object<p>The ID of the linked object</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -162,6 +171,9 @@ public final class LinkedObject {
             return this;
         }
 
+        /**
+         * <p>Category of the Linked Ticket Object.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "category", nulls = Nulls.SKIP)
         public _FinalStage category(Optional<String> category) {

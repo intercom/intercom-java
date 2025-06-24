@@ -77,12 +77,18 @@ public final class SnoozeConversationRequest {
     }
 
     public interface AdminIdStage {
+        /**
+         * The id of the admin who is performing the action.
+         */
         SnoozedUntilStage adminId(@NotNull String adminId);
 
         Builder from(SnoozeConversationRequest other);
     }
 
     public interface SnoozedUntilStage {
+        /**
+         * The time you want the conversation to reopen.
+         */
         _FinalStage snoozedUntil(int snoozedUntil);
     }
 
@@ -109,7 +115,7 @@ public final class SnoozeConversationRequest {
         }
 
         /**
-         * <p>The id of the admin who is performing the action.</p>
+         * The id of the admin who is performing the action.<p>The id of the admin who is performing the action.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -120,7 +126,7 @@ public final class SnoozeConversationRequest {
         }
 
         /**
-         * <p>The time you want the conversation to reopen.</p>
+         * The time you want the conversation to reopen.<p>The time you want the conversation to reopen.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

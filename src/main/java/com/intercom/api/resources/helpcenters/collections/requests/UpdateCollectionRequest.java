@@ -120,6 +120,9 @@ public final class UpdateCollectionRequest {
     }
 
     public interface CollectionIdStage {
+        /**
+         * The unique identifier for the collection which is given by Intercom.
+         */
         _FinalStage collectionId(@NotNull String collectionId);
 
         Builder from(UpdateCollectionRequest other);
@@ -128,10 +131,16 @@ public final class UpdateCollectionRequest {
     public interface _FinalStage {
         UpdateCollectionRequest build();
 
+        /**
+         * <p>The name of the collection. For multilingual collections, this will be the name of the default language's content.</p>
+         */
         _FinalStage name(Optional<String> name);
 
         _FinalStage name(String name);
 
+        /**
+         * <p>The description of the collection. For multilingual collections, this will be the description of the default language's content.</p>
+         */
         _FinalStage description(Optional<String> description);
 
         _FinalStage description(String description);
@@ -140,6 +149,9 @@ public final class UpdateCollectionRequest {
 
         _FinalStage translatedContent(GroupTranslatedContent translatedContent);
 
+        /**
+         * <p>The id of the parent collection. If <code>null</code> then it will be updated as the first level collection.</p>
+         */
         _FinalStage parentId(Optional<String> parentId);
 
         _FinalStage parentId(String parentId);
@@ -173,7 +185,7 @@ public final class UpdateCollectionRequest {
         }
 
         /**
-         * <p>The unique identifier for the collection which is given by Intercom.</p>
+         * The unique identifier for the collection which is given by Intercom.<p>The unique identifier for the collection which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -193,6 +205,9 @@ public final class UpdateCollectionRequest {
             return this;
         }
 
+        /**
+         * <p>The id of the parent collection. If <code>null</code> then it will be updated as the first level collection.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "parent_id", nulls = Nulls.SKIP)
         public _FinalStage parentId(Optional<String> parentId) {
@@ -223,6 +238,9 @@ public final class UpdateCollectionRequest {
             return this;
         }
 
+        /**
+         * <p>The description of the collection. For multilingual collections, this will be the description of the default language's content.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "description", nulls = Nulls.SKIP)
         public _FinalStage description(Optional<String> description) {
@@ -240,6 +258,9 @@ public final class UpdateCollectionRequest {
             return this;
         }
 
+        /**
+         * <p>The name of the collection. For multilingual collections, this will be the name of the default language's content.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "name", nulls = Nulls.SKIP)
         public _FinalStage name(Optional<String> name) {

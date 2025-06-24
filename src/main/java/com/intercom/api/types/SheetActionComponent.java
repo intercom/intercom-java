@@ -66,6 +66,9 @@ public final class SheetActionComponent {
     }
 
     public interface UrlStage {
+        /**
+         * The link which hosts your sheet.
+         */
         _FinalStage url(@NotNull String url);
 
         Builder from(SheetActionComponent other);
@@ -91,7 +94,7 @@ public final class SheetActionComponent {
         }
 
         /**
-         * <p>The link which hosts your sheet.</p>
+         * The link which hosts your sheet.<p>The link which hosts your sheet.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

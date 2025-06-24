@@ -92,16 +92,25 @@ public final class DetachContactFromConversationRequest {
     }
 
     public interface ConversationIdStage {
+        /**
+         * The identifier for the conversation as given by Intercom.
+         */
         ContactIdStage conversationId(@NotNull String conversationId);
 
         Builder from(DetachContactFromConversationRequest other);
     }
 
     public interface ContactIdStage {
+        /**
+         * The identifier for the contact as given by Intercom.
+         */
         AdminIdStage contactId(@NotNull String contactId);
     }
 
     public interface AdminIdStage {
+        /**
+         * The `id` of the admin who is performing the action.
+         */
         _FinalStage adminId(@NotNull String adminId);
     }
 
@@ -131,7 +140,7 @@ public final class DetachContactFromConversationRequest {
         }
 
         /**
-         * <p>The identifier for the conversation as given by Intercom.</p>
+         * The identifier for the conversation as given by Intercom.<p>The identifier for the conversation as given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -142,7 +151,7 @@ public final class DetachContactFromConversationRequest {
         }
 
         /**
-         * <p>The identifier for the contact as given by Intercom.</p>
+         * The identifier for the contact as given by Intercom.<p>The identifier for the contact as given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -153,7 +162,7 @@ public final class DetachContactFromConversationRequest {
         }
 
         /**
-         * <p>The <code>id</code> of the admin who is performing the action.</p>
+         * The `id` of the admin who is performing the action.<p>The <code>id</code> of the admin who is performing the action.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

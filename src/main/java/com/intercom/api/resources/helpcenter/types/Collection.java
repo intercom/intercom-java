@@ -237,46 +237,76 @@ public final class Collection {
     }
 
     public interface IdStage {
+        /**
+         * The unique identifier for the collection which is given by Intercom.
+         */
         WorkspaceIdStage id(@NotNull String id);
 
         Builder from(Collection other);
     }
 
     public interface WorkspaceIdStage {
+        /**
+         * The id of the workspace which the collection belongs to.
+         */
         NameStage workspaceId(@NotNull String workspaceId);
     }
 
     public interface NameStage {
+        /**
+         * The name of the collection. For multilingual collections, this will be the name of the default language's content.
+         */
         CreatedAtStage name(@NotNull String name);
     }
 
     public interface CreatedAtStage {
+        /**
+         * The time when the article was created (seconds). For multilingual articles, this will be the timestamp of creation of the default language's content.
+         */
         OrderStage createdAt(int createdAt);
     }
 
     public interface OrderStage {
+        /**
+         * The order of the section in relation to others sections within a collection. Values go from `0` upwards. `0` is the default if there's no order.
+         */
         DefaultLocaleStage order(int order);
     }
 
     public interface DefaultLocaleStage {
+        /**
+         * The default locale of the help center. This field is only returned for multilingual help centers.
+         */
         _FinalStage defaultLocale(@NotNull String defaultLocale);
     }
 
     public interface _FinalStage {
         Collection build();
 
+        /**
+         * <p>The description of the collection. For multilingual help centers, this will be the description of the collection for the default language.</p>
+         */
         _FinalStage description(Optional<String> description);
 
         _FinalStage description(String description);
 
+        /**
+         * <p>The time when the article was last updated (seconds). For multilingual articles, this will be the timestamp of last update of the default language's content.</p>
+         */
         _FinalStage updatedAt(Optional<Integer> updatedAt);
 
         _FinalStage updatedAt(Integer updatedAt);
 
+        /**
+         * <p>The URL of the collection. For multilingual help centers, this will be the URL of the collection for the default language.</p>
+         */
         _FinalStage url(Optional<String> url);
 
         _FinalStage url(String url);
 
+        /**
+         * <p>The icon of the collection.</p>
+         */
         _FinalStage icon(Optional<String> icon);
 
         _FinalStage icon(String icon);
@@ -285,10 +315,16 @@ public final class Collection {
 
         _FinalStage translatedContent(GroupTranslatedContent translatedContent);
 
+        /**
+         * <p>The id of the parent collection. If <code>null</code> then it is the first level collection.</p>
+         */
         _FinalStage parentId(Optional<String> parentId);
 
         _FinalStage parentId(String parentId);
 
+        /**
+         * <p>The id of the help center the collection is in.</p>
+         */
         _FinalStage helpCenterId(Optional<Integer> helpCenterId);
 
         _FinalStage helpCenterId(Integer helpCenterId);
@@ -353,7 +389,7 @@ public final class Collection {
         }
 
         /**
-         * <p>The unique identifier for the collection which is given by Intercom.</p>
+         * The unique identifier for the collection which is given by Intercom.<p>The unique identifier for the collection which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -364,7 +400,7 @@ public final class Collection {
         }
 
         /**
-         * <p>The id of the workspace which the collection belongs to.</p>
+         * The id of the workspace which the collection belongs to.<p>The id of the workspace which the collection belongs to.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -375,7 +411,7 @@ public final class Collection {
         }
 
         /**
-         * <p>The name of the collection. For multilingual collections, this will be the name of the default language's content.</p>
+         * The name of the collection. For multilingual collections, this will be the name of the default language's content.<p>The name of the collection. For multilingual collections, this will be the name of the default language's content.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -386,7 +422,7 @@ public final class Collection {
         }
 
         /**
-         * <p>The time when the article was created (seconds). For multilingual articles, this will be the timestamp of creation of the default language's content.</p>
+         * The time when the article was created (seconds). For multilingual articles, this will be the timestamp of creation of the default language's content.<p>The time when the article was created (seconds). For multilingual articles, this will be the timestamp of creation of the default language's content.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -397,7 +433,7 @@ public final class Collection {
         }
 
         /**
-         * <p>The order of the section in relation to others sections within a collection. Values go from <code>0</code> upwards. <code>0</code> is the default if there's no order.</p>
+         * The order of the section in relation to others sections within a collection. Values go from `0` upwards. `0` is the default if there's no order.<p>The order of the section in relation to others sections within a collection. Values go from <code>0</code> upwards. <code>0</code> is the default if there's no order.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -408,7 +444,7 @@ public final class Collection {
         }
 
         /**
-         * <p>The default locale of the help center. This field is only returned for multilingual help centers.</p>
+         * The default locale of the help center. This field is only returned for multilingual help centers.<p>The default locale of the help center. This field is only returned for multilingual help centers.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -428,6 +464,9 @@ public final class Collection {
             return this;
         }
 
+        /**
+         * <p>The id of the help center the collection is in.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "help_center_id", nulls = Nulls.SKIP)
         public _FinalStage helpCenterId(Optional<Integer> helpCenterId) {
@@ -445,6 +484,9 @@ public final class Collection {
             return this;
         }
 
+        /**
+         * <p>The id of the parent collection. If <code>null</code> then it is the first level collection.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "parent_id", nulls = Nulls.SKIP)
         public _FinalStage parentId(Optional<String> parentId) {
@@ -475,6 +517,9 @@ public final class Collection {
             return this;
         }
 
+        /**
+         * <p>The icon of the collection.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "icon", nulls = Nulls.SKIP)
         public _FinalStage icon(Optional<String> icon) {
@@ -492,6 +537,9 @@ public final class Collection {
             return this;
         }
 
+        /**
+         * <p>The URL of the collection. For multilingual help centers, this will be the URL of the collection for the default language.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "url", nulls = Nulls.SKIP)
         public _FinalStage url(Optional<String> url) {
@@ -509,6 +557,9 @@ public final class Collection {
             return this;
         }
 
+        /**
+         * <p>The time when the article was last updated (seconds). For multilingual articles, this will be the timestamp of last update of the default language's content.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
         public _FinalStage updatedAt(Optional<Integer> updatedAt) {
@@ -526,6 +577,9 @@ public final class Collection {
             return this;
         }
 
+        /**
+         * <p>The description of the collection. For multilingual help centers, this will be the description of the collection for the default language.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "description", nulls = Nulls.SKIP)
         public _FinalStage description(Optional<String> description) {

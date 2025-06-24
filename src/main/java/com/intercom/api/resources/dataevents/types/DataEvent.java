@@ -169,38 +169,62 @@ public final class DataEvent {
     }
 
     public interface EventNameStage {
+        /**
+         * The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example `updated-plan`.
+         */
         CreatedAtStage eventName(@NotNull String eventName);
 
         Builder from(DataEvent other);
     }
 
     public interface CreatedAtStage {
+        /**
+         * The time the event occurred as a UTC Unix timestamp
+         */
         _FinalStage createdAt(int createdAt);
     }
 
     public interface _FinalStage {
         DataEvent build();
 
+        /**
+         * <p>The type of the object</p>
+         */
         _FinalStage type(Optional<String> type);
 
         _FinalStage type(String type);
 
+        /**
+         * <p>Your identifier for the user.</p>
+         */
         _FinalStage userId(Optional<String> userId);
 
         _FinalStage userId(String userId);
 
+        /**
+         * <p>Your identifier for a lead or a user.</p>
+         */
         _FinalStage id(Optional<String> id);
 
         _FinalStage id(String id);
 
+        /**
+         * <p>The Intercom identifier for the user.</p>
+         */
         _FinalStage intercomUserId(Optional<String> intercomUserId);
 
         _FinalStage intercomUserId(String intercomUserId);
 
+        /**
+         * <p>An email address for your user. An email should only be used where your application uses email to uniquely identify users.</p>
+         */
         _FinalStage email(Optional<String> email);
 
         _FinalStage email(String email);
 
+        /**
+         * <p>Optional metadata about the event.</p>
+         */
         _FinalStage metadata(Optional<Map<String, String>> metadata);
 
         _FinalStage metadata(Map<String, String> metadata);
@@ -243,7 +267,7 @@ public final class DataEvent {
         }
 
         /**
-         * <p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
+         * The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example `updated-plan`.<p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -254,7 +278,7 @@ public final class DataEvent {
         }
 
         /**
-         * <p>The time the event occurred as a UTC Unix timestamp</p>
+         * The time the event occurred as a UTC Unix timestamp<p>The time the event occurred as a UTC Unix timestamp</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -274,6 +298,9 @@ public final class DataEvent {
             return this;
         }
 
+        /**
+         * <p>Optional metadata about the event.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "metadata", nulls = Nulls.SKIP)
         public _FinalStage metadata(Optional<Map<String, String>> metadata) {
@@ -291,6 +318,9 @@ public final class DataEvent {
             return this;
         }
 
+        /**
+         * <p>An email address for your user. An email should only be used where your application uses email to uniquely identify users.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "email", nulls = Nulls.SKIP)
         public _FinalStage email(Optional<String> email) {
@@ -308,6 +338,9 @@ public final class DataEvent {
             return this;
         }
 
+        /**
+         * <p>The Intercom identifier for the user.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "intercom_user_id", nulls = Nulls.SKIP)
         public _FinalStage intercomUserId(Optional<String> intercomUserId) {
@@ -325,6 +358,9 @@ public final class DataEvent {
             return this;
         }
 
+        /**
+         * <p>Your identifier for a lead or a user.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "id", nulls = Nulls.SKIP)
         public _FinalStage id(Optional<String> id) {
@@ -342,6 +378,9 @@ public final class DataEvent {
             return this;
         }
 
+        /**
+         * <p>Your identifier for the user.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "user_id", nulls = Nulls.SKIP)
         public _FinalStage userId(Optional<String> userId) {
@@ -359,6 +398,9 @@ public final class DataEvent {
             return this;
         }
 
+        /**
+         * <p>The type of the object</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "type", nulls = Nulls.SKIP)
         public _FinalStage type(Optional<String> type) {

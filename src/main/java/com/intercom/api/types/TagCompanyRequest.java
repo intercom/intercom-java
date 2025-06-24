@@ -81,6 +81,9 @@ public final class TagCompanyRequest {
     }
 
     public interface NameStage {
+        /**
+         * The name of the tag, which will be created if not found.
+         */
         _FinalStage name(@NotNull String name);
 
         Builder from(TagCompanyRequest other);
@@ -89,6 +92,9 @@ public final class TagCompanyRequest {
     public interface _FinalStage {
         TagCompanyRequest build();
 
+        /**
+         * <p>The id or company_id of the company can be passed as input parameters.</p>
+         */
         _FinalStage companies(List<CompaniesItem> companies);
 
         _FinalStage addCompanies(CompaniesItem companies);
@@ -115,7 +121,7 @@ public final class TagCompanyRequest {
         }
 
         /**
-         * <p>The name of the tag, which will be created if not found.</p>
+         * The name of the tag, which will be created if not found.<p>The name of the tag, which will be created if not found.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -145,6 +151,9 @@ public final class TagCompanyRequest {
             return this;
         }
 
+        /**
+         * <p>The id or company_id of the company can be passed as input parameters.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "companies", nulls = Nulls.SKIP)
         public _FinalStage companies(List<CompaniesItem> companies) {
@@ -237,6 +246,9 @@ public final class TagCompanyRequest {
                 return this;
             }
 
+            /**
+             * <p>The Intercom defined id representing the company.</p>
+             */
             @JsonSetter(value = "id", nulls = Nulls.SKIP)
             public Builder id(Optional<String> id) {
                 this.id = id;
@@ -248,6 +260,9 @@ public final class TagCompanyRequest {
                 return this;
             }
 
+            /**
+             * <p>The company id you have defined for the company.</p>
+             */
             @JsonSetter(value = "company_id", nulls = Nulls.SKIP)
             public Builder companyId(Optional<String> companyId) {
                 this.companyId = companyId;

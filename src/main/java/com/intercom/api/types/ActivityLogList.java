@@ -113,6 +113,9 @@ public final class ActivityLogList {
             return this;
         }
 
+        /**
+         * <p>An array of activity logs</p>
+         */
         @JsonSetter(value = "activity_logs", nulls = Nulls.SKIP)
         public Builder activityLogs(List<ActivityLog> activityLogs) {
             this.activityLogs.clear();

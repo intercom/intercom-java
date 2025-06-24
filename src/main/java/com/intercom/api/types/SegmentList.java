@@ -106,6 +106,9 @@ public final class SegmentList {
             return this;
         }
 
+        /**
+         * <p>A list of Segment objects</p>
+         */
         @JsonSetter(value = "segments", nulls = Nulls.SKIP)
         public Builder segments(List<Segment> segments) {
             this.segments.clear();
@@ -123,6 +126,9 @@ public final class SegmentList {
             return this;
         }
 
+        /**
+         * <p>A pagination object, which may be empty, indicating no further pages to fetch.</p>
+         */
         @JsonSetter(value = "pages", nulls = Nulls.SKIP)
         public Builder pages(Optional<Map<String, Object>> pages) {
             this.pages = pages;

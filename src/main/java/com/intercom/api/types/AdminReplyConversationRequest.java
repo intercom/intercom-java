@@ -147,24 +147,39 @@ public final class AdminReplyConversationRequest {
     }
 
     public interface AdminIdStage {
+        /**
+         * The id of the admin who is authoring the comment.
+         */
         _FinalStage adminId(@NotNull String adminId);
     }
 
     public interface _FinalStage {
         AdminReplyConversationRequest build();
 
+        /**
+         * <p>The text body of the reply. Notes accept some HTML formatting. Must be present for comment and note message types.</p>
+         */
         _FinalStage body(Optional<String> body);
 
         _FinalStage body(String body);
 
+        /**
+         * <p>The time the reply was created. If not provided, the current time will be used.</p>
+         */
         _FinalStage createdAt(Optional<Integer> createdAt);
 
         _FinalStage createdAt(Integer createdAt);
 
+        /**
+         * <p>A list of image URLs that will be added as attachments. You can include up to 10 URLs.</p>
+         */
         _FinalStage attachmentUrls(Optional<List<String>> attachmentUrls);
 
         _FinalStage attachmentUrls(List<String> attachmentUrls);
 
+        /**
+         * <p>A list of files that will be added as attachments. You can include up to 10 files</p>
+         */
         _FinalStage attachmentFiles(Optional<List<ConversationAttachmentFiles>> attachmentFiles);
 
         _FinalStage attachmentFiles(List<ConversationAttachmentFiles> attachmentFiles);
@@ -208,7 +223,7 @@ public final class AdminReplyConversationRequest {
         }
 
         /**
-         * <p>The id of the admin who is authoring the comment.</p>
+         * The id of the admin who is authoring the comment.<p>The id of the admin who is authoring the comment.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -228,6 +243,9 @@ public final class AdminReplyConversationRequest {
             return this;
         }
 
+        /**
+         * <p>A list of files that will be added as attachments. You can include up to 10 files</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "attachment_files", nulls = Nulls.SKIP)
         public _FinalStage attachmentFiles(Optional<List<ConversationAttachmentFiles>> attachmentFiles) {
@@ -245,6 +263,9 @@ public final class AdminReplyConversationRequest {
             return this;
         }
 
+        /**
+         * <p>A list of image URLs that will be added as attachments. You can include up to 10 URLs.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "attachment_urls", nulls = Nulls.SKIP)
         public _FinalStage attachmentUrls(Optional<List<String>> attachmentUrls) {
@@ -262,6 +283,9 @@ public final class AdminReplyConversationRequest {
             return this;
         }
 
+        /**
+         * <p>The time the reply was created. If not provided, the current time will be used.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
         public _FinalStage createdAt(Optional<Integer> createdAt) {
@@ -279,6 +303,9 @@ public final class AdminReplyConversationRequest {
             return this;
         }
 
+        /**
+         * <p>The text body of the reply. Notes accept some HTML formatting. Must be present for comment and note message types.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "body", nulls = Nulls.SKIP)
         public _FinalStage body(Optional<String> body) {

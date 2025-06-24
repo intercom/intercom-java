@@ -96,16 +96,25 @@ public final class ContentSource {
     }
 
     public interface UrlStage {
+        /**
+         * The internal URL linking to the content source for teammates.
+         */
         TitleStage url(@NotNull String url);
 
         Builder from(ContentSource other);
     }
 
     public interface TitleStage {
+        /**
+         * The title of the content source.
+         */
         LocaleStage title(@NotNull String title);
     }
 
     public interface LocaleStage {
+        /**
+         * The ISO 639 language code of the content source.
+         */
         _FinalStage locale(@NotNull String locale);
     }
 
@@ -135,7 +144,7 @@ public final class ContentSource {
         }
 
         /**
-         * <p>The internal URL linking to the content source for teammates.</p>
+         * The internal URL linking to the content source for teammates.<p>The internal URL linking to the content source for teammates.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -146,7 +155,7 @@ public final class ContentSource {
         }
 
         /**
-         * <p>The title of the content source.</p>
+         * The title of the content source.<p>The title of the content source.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -157,7 +166,7 @@ public final class ContentSource {
         }
 
         /**
-         * <p>The ISO 639 language code of the content source.</p>
+         * The ISO 639 language code of the content source.<p>The ISO 639 language code of the content source.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

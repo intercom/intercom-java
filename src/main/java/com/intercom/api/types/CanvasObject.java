@@ -96,6 +96,9 @@ public final class CanvasObject {
     }
 
     public interface ContentStage {
+        /**
+         * The content object that will be shown as the UI of the app. Max Size is 64KB.
+         */
         _FinalStage content(@NotNull ContentObject content);
 
         Builder from(CanvasObject other);
@@ -104,10 +107,16 @@ public final class CanvasObject {
     public interface _FinalStage {
         CanvasObject build();
 
+        /**
+         * <p>The URL which we make Live Canvas requests to. You must respond to these with a content object. Max size is 64KB.</p>
+         */
         _FinalStage contentUrl(Optional<String> contentUrl);
 
         _FinalStage contentUrl(String contentUrl);
 
+        /**
+         * <p>Optional Stored Data that you want to be returned in the next sent request. Max Size is 64KB.</p>
+         */
         _FinalStage storedData(Optional<Map<String, Object>> storedData);
 
         _FinalStage storedData(Map<String, Object> storedData);
@@ -135,7 +144,7 @@ public final class CanvasObject {
         }
 
         /**
-         * <p>The content object that will be shown as the UI of the app. Max Size is 64KB.</p>
+         * The content object that will be shown as the UI of the app. Max Size is 64KB.<p>The content object that will be shown as the UI of the app. Max Size is 64KB.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -155,6 +164,9 @@ public final class CanvasObject {
             return this;
         }
 
+        /**
+         * <p>Optional Stored Data that you want to be returned in the next sent request. Max Size is 64KB.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "stored_data", nulls = Nulls.SKIP)
         public _FinalStage storedData(Optional<Map<String, Object>> storedData) {
@@ -172,6 +184,9 @@ public final class CanvasObject {
             return this;
         }
 
+        /**
+         * <p>The URL which we make Live Canvas requests to. You must respond to these with a content object. Max size is 64KB.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "content_url", nulls = Nulls.SKIP)
         public _FinalStage contentUrl(Optional<String> contentUrl) {

@@ -87,6 +87,9 @@ public final class ContactReference {
     }
 
     public interface IdStage {
+        /**
+         * The unique identifier for the contact which is given by Intercom.
+         */
         _FinalStage id(@NotNull String id);
 
         Builder from(ContactReference other);
@@ -95,6 +98,9 @@ public final class ContactReference {
     public interface _FinalStage {
         ContactReference build();
 
+        /**
+         * <p>The unique identifier for the contact which is provided by the Client.</p>
+         */
         _FinalStage externalId(Optional<String> externalId);
 
         _FinalStage externalId(String externalId);
@@ -119,7 +125,7 @@ public final class ContactReference {
         }
 
         /**
-         * <p>The unique identifier for the contact which is given by Intercom.</p>
+         * The unique identifier for the contact which is given by Intercom.<p>The unique identifier for the contact which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -139,6 +145,9 @@ public final class ContactReference {
             return this;
         }
 
+        /**
+         * <p>The unique identifier for the contact which is provided by the Client.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "external_id", nulls = Nulls.SKIP)
         public _FinalStage externalId(Optional<String> externalId) {

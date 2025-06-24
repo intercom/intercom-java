@@ -155,6 +155,9 @@ public final class AiAgent {
     }
 
     public interface SourceTypeStage {
+        /**
+         * The type of the source that triggered AI Agent involvement in the conversation.
+         */
         _FinalStage sourceType(@NotNull SourceType sourceType);
 
         Builder from(AiAgent other);
@@ -163,22 +166,37 @@ public final class AiAgent {
     public interface _FinalStage {
         AiAgent build();
 
+        /**
+         * <p>The title of the source that triggered AI Agent involvement in the conversation. If this is <code>essentials_plan_setup</code> then it will return <code>null</code>.</p>
+         */
         _FinalStage sourceTitle(Optional<String> sourceTitle);
 
         _FinalStage sourceTitle(String sourceTitle);
 
+        /**
+         * <p>The type of the last answer delivered by AI Agent. If no answer was delivered then this will return <code>null</code></p>
+         */
         _FinalStage lastAnswerType(Optional<String> lastAnswerType);
 
         _FinalStage lastAnswerType(String lastAnswerType);
 
+        /**
+         * <p>The resolution state of AI Agent. If no AI or custom answer has been delivered then this will return <code>null</code>.</p>
+         */
         _FinalStage resolutionState(Optional<String> resolutionState);
 
         _FinalStage resolutionState(String resolutionState);
 
+        /**
+         * <p>The customer satisfaction rating given to AI Agent, from 1-5.</p>
+         */
         _FinalStage rating(Optional<Integer> rating);
 
         _FinalStage rating(Integer rating);
 
+        /**
+         * <p>The customer satisfaction rating remark given to AI Agent.</p>
+         */
         _FinalStage ratingRemark(Optional<String> ratingRemark);
 
         _FinalStage ratingRemark(String ratingRemark);
@@ -222,7 +240,7 @@ public final class AiAgent {
         }
 
         /**
-         * <p>The type of the source that triggered AI Agent involvement in the conversation.</p>
+         * The type of the source that triggered AI Agent involvement in the conversation.<p>The type of the source that triggered AI Agent involvement in the conversation.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -255,6 +273,9 @@ public final class AiAgent {
             return this;
         }
 
+        /**
+         * <p>The customer satisfaction rating remark given to AI Agent.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "rating_remark", nulls = Nulls.SKIP)
         public _FinalStage ratingRemark(Optional<String> ratingRemark) {
@@ -272,6 +293,9 @@ public final class AiAgent {
             return this;
         }
 
+        /**
+         * <p>The customer satisfaction rating given to AI Agent, from 1-5.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "rating", nulls = Nulls.SKIP)
         public _FinalStage rating(Optional<Integer> rating) {
@@ -289,6 +313,9 @@ public final class AiAgent {
             return this;
         }
 
+        /**
+         * <p>The resolution state of AI Agent. If no AI or custom answer has been delivered then this will return <code>null</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "resolution_state", nulls = Nulls.SKIP)
         public _FinalStage resolutionState(Optional<String> resolutionState) {
@@ -306,6 +333,9 @@ public final class AiAgent {
             return this;
         }
 
+        /**
+         * <p>The type of the last answer delivered by AI Agent. If no answer was delivered then this will return <code>null</code></p>
+         */
         @java.lang.Override
         @JsonSetter(value = "last_answer_type", nulls = Nulls.SKIP)
         public _FinalStage lastAnswerType(Optional<String> lastAnswerType) {
@@ -323,6 +353,9 @@ public final class AiAgent {
             return this;
         }
 
+        /**
+         * <p>The title of the source that triggered AI Agent involvement in the conversation. If this is <code>essentials_plan_setup</code> then it will return <code>null</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "source_title", nulls = Nulls.SKIP)
         public _FinalStage sourceTitle(Optional<String> sourceTitle) {

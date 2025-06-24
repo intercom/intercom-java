@@ -124,6 +124,9 @@ public final class UpdateDataAttributeRequest {
     }
 
     public interface DataAttributeIdStage {
+        /**
+         * The data attribute id
+         */
         _FinalStage dataAttributeId(@NotNull String dataAttributeId);
 
         Builder from(UpdateDataAttributeRequest other);
@@ -132,18 +135,30 @@ public final class UpdateDataAttributeRequest {
     public interface _FinalStage {
         UpdateDataAttributeRequest build();
 
+        /**
+         * <p>Whether the attribute is to be archived or not.</p>
+         */
         _FinalStage archived(Optional<Boolean> archived);
 
         _FinalStage archived(Boolean archived);
 
+        /**
+         * <p>The readable description you see in the UI for the attribute.</p>
+         */
         _FinalStage description(Optional<String> description);
 
         _FinalStage description(String description);
 
+        /**
+         * <p>To create list attributes. Provide a set of hashes with <code>value</code> as the key of the options you want to make. <code>data_type</code> must be <code>string</code>.</p>
+         */
         _FinalStage options(Optional<List<OptionsItem>> options);
 
         _FinalStage options(List<OptionsItem> options);
 
+        /**
+         * <p>Can this attribute be updated by the Messenger</p>
+         */
         _FinalStage messengerWritable(Optional<Boolean> messengerWritable);
 
         _FinalStage messengerWritable(Boolean messengerWritable);
@@ -177,7 +192,7 @@ public final class UpdateDataAttributeRequest {
         }
 
         /**
-         * <p>The data attribute id</p>
+         * The data attribute id<p>The data attribute id</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -197,6 +212,9 @@ public final class UpdateDataAttributeRequest {
             return this;
         }
 
+        /**
+         * <p>Can this attribute be updated by the Messenger</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "messenger_writable", nulls = Nulls.SKIP)
         public _FinalStage messengerWritable(Optional<Boolean> messengerWritable) {
@@ -214,6 +232,9 @@ public final class UpdateDataAttributeRequest {
             return this;
         }
 
+        /**
+         * <p>To create list attributes. Provide a set of hashes with <code>value</code> as the key of the options you want to make. <code>data_type</code> must be <code>string</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "options", nulls = Nulls.SKIP)
         public _FinalStage options(Optional<List<OptionsItem>> options) {
@@ -231,6 +252,9 @@ public final class UpdateDataAttributeRequest {
             return this;
         }
 
+        /**
+         * <p>The readable description you see in the UI for the attribute.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "description", nulls = Nulls.SKIP)
         public _FinalStage description(Optional<String> description) {
@@ -248,6 +272,9 @@ public final class UpdateDataAttributeRequest {
             return this;
         }
 
+        /**
+         * <p>Whether the attribute is to be archived or not.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "archived", nulls = Nulls.SKIP)
         public _FinalStage archived(Optional<Boolean> archived) {

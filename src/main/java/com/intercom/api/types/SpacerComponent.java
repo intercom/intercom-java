@@ -96,6 +96,9 @@ public final class SpacerComponent {
             return this;
         }
 
+        /**
+         * <p>A unique identifier for the component.</p>
+         */
         @JsonSetter(value = "id", nulls = Nulls.SKIP)
         public Builder id(Optional<String> id) {
             this.id = id;
@@ -107,6 +110,9 @@ public final class SpacerComponent {
             return this;
         }
 
+        /**
+         * <p>The amount of space between components. Default is <code>s</code>.</p>
+         */
         @JsonSetter(value = "size", nulls = Nulls.SKIP)
         public Builder size(Optional<Size> size) {
             this.size = size;

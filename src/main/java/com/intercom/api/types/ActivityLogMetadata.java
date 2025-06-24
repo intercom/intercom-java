@@ -219,6 +219,9 @@ public final class ActivityLogMetadata {
             return this;
         }
 
+        /**
+         * <p>The way the admin signed in.</p>
+         */
         @JsonSetter(value = "sign_in_method", nulls = Nulls.SKIP)
         public Builder signInMethod(Optional<String> signInMethod) {
             this.signInMethod = signInMethod;
@@ -230,6 +233,9 @@ public final class ActivityLogMetadata {
             return this;
         }
 
+        /**
+         * <p>The unique identifier for the contact which is provided by the Client.</p>
+         */
         @JsonSetter(value = "external_id", nulls = Nulls.SKIP)
         public Builder externalId(Optional<String> externalId) {
             this.externalId = externalId;
@@ -241,6 +247,9 @@ public final class ActivityLogMetadata {
             return this;
         }
 
+        /**
+         * <p>The away mode status which is set to true when away and false when returned.</p>
+         */
         @JsonSetter(value = "away_mode", nulls = Nulls.SKIP)
         public Builder awayMode(Optional<Boolean> awayMode) {
             this.awayMode = awayMode;
@@ -252,6 +261,9 @@ public final class ActivityLogMetadata {
             return this;
         }
 
+        /**
+         * <p>The reason the Admin is away.</p>
+         */
         @JsonSetter(value = "away_status_reason", nulls = Nulls.SKIP)
         public Builder awayStatusReason(Optional<String> awayStatusReason) {
             this.awayStatusReason = awayStatusReason;
@@ -263,6 +275,9 @@ public final class ActivityLogMetadata {
             return this;
         }
 
+        /**
+         * <p>Indicates if conversations should be reassigned while an Admin is away.</p>
+         */
         @JsonSetter(value = "reassign_conversations", nulls = Nulls.SKIP)
         public Builder reassignConversations(Optional<Boolean> reassignConversations) {
             this.reassignConversations = reassignConversations;
@@ -274,6 +289,9 @@ public final class ActivityLogMetadata {
             return this;
         }
 
+        /**
+         * <p>The action that initiated the status change.</p>
+         */
         @JsonSetter(value = "source", nulls = Nulls.SKIP)
         public Builder source(Optional<String> source) {
             this.source = source;
@@ -285,6 +303,9 @@ public final class ActivityLogMetadata {
             return this;
         }
 
+        /**
+         * <p>Indicates if the status was changed automatically or manually.</p>
+         */
         @JsonSetter(value = "auto_changed", nulls = Nulls.SKIP)
         public Builder autoChanged(Optional<String> autoChanged) {
             this.autoChanged = autoChanged;
@@ -296,6 +317,9 @@ public final class ActivityLogMetadata {
             return this;
         }
 
+        /**
+         * <p>The ID of the Admin who initiated the activity.</p>
+         */
         @JsonSetter(value = "update_by", nulls = Nulls.SKIP)
         public Builder updateBy(Optional<Integer> updateBy) {
             this.updateBy = updateBy;
@@ -307,6 +331,9 @@ public final class ActivityLogMetadata {
             return this;
         }
 
+        /**
+         * <p>The name of the Admin who initiated the activity.</p>
+         */
         @JsonSetter(value = "update_by_name", nulls = Nulls.SKIP)
         public Builder updateByName(Optional<String> updateByName) {
             this.updateByName = updateByName;

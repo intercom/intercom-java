@@ -399,28 +399,46 @@ public final class Conversation {
     }
 
     public interface IdStage {
+        /**
+         * The id representing the conversation.
+         */
         CreatedAtStage id(@NotNull String id);
 
         Builder from(Conversation other);
     }
 
     public interface CreatedAtStage {
+        /**
+         * The time the conversation was created.
+         */
         UpdatedAtStage createdAt(int createdAt);
     }
 
     public interface UpdatedAtStage {
+        /**
+         * The last time the conversation was updated.
+         */
         OpenStage updatedAt(int updatedAt);
     }
 
     public interface OpenStage {
+        /**
+         * Indicates whether a conversation is open (true) or closed (false).
+         */
         StateStage open(boolean open);
     }
 
     public interface StateStage {
+        /**
+         * Can be set to "open", "closed" or "snoozed".
+         */
         ReadStage state(@NotNull State state);
     }
 
     public interface ReadStage {
+        /**
+         * Indicates whether a conversation has been read.
+         */
         SourceStage read(boolean read);
     }
 
@@ -439,30 +457,51 @@ public final class Conversation {
     public interface _FinalStage {
         Conversation build();
 
+        /**
+         * <p>Always conversation.</p>
+         */
         _FinalStage type(Optional<String> type);
 
         _FinalStage type(String type);
 
+        /**
+         * <p>The title given to the conversation.</p>
+         */
         _FinalStage title(Optional<String> title);
 
         _FinalStage title(String title);
 
+        /**
+         * <p>The last time a Contact responded to an Admin. In other words, the time a customer started waiting for a response. Set to null if last reply is from an Admin.</p>
+         */
         _FinalStage waitingSince(Optional<Integer> waitingSince);
 
         _FinalStage waitingSince(Integer waitingSince);
 
+        /**
+         * <p>If set this is the time in the future when this conversation will be marked as open. i.e. it will be in a snoozed state until this time. i.e. it will be in a snoozed state until this time.</p>
+         */
         _FinalStage snoozedUntil(Optional<Integer> snoozedUntil);
 
         _FinalStage snoozedUntil(Integer snoozedUntil);
 
+        /**
+         * <p>If marked as priority, it will return priority or else not_priority.</p>
+         */
         _FinalStage priority(Optional<Priority> priority);
 
         _FinalStage priority(Priority priority);
 
+        /**
+         * <p>The id of the admin assigned to the conversation. If it's not assigned to an admin it will return null.</p>
+         */
         _FinalStage adminAssigneeId(Optional<Integer> adminAssigneeId);
 
         _FinalStage adminAssigneeId(Integer adminAssigneeId);
 
+        /**
+         * <p>The id of the team assigned to the conversation. If it's not assigned to a team it will return null.</p>
+         */
         _FinalStage teamAssigneeId(Optional<String> teamAssigneeId);
 
         _FinalStage teamAssigneeId(String teamAssigneeId);
@@ -501,6 +540,9 @@ public final class Conversation {
 
         _FinalStage linkedObjects(LinkedObjectList linkedObjects);
 
+        /**
+         * <p>Indicates whether the AI Agent participated in the conversation.</p>
+         */
         _FinalStage aiAgentParticipated(Optional<Boolean> aiAgentParticipated);
 
         _FinalStage aiAgentParticipated(Boolean aiAgentParticipated);
@@ -611,7 +653,7 @@ public final class Conversation {
         }
 
         /**
-         * <p>The id representing the conversation.</p>
+         * The id representing the conversation.<p>The id representing the conversation.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -622,7 +664,7 @@ public final class Conversation {
         }
 
         /**
-         * <p>The time the conversation was created.</p>
+         * The time the conversation was created.<p>The time the conversation was created.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -633,7 +675,7 @@ public final class Conversation {
         }
 
         /**
-         * <p>The last time the conversation was updated.</p>
+         * The last time the conversation was updated.<p>The last time the conversation was updated.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -644,7 +686,7 @@ public final class Conversation {
         }
 
         /**
-         * <p>Indicates whether a conversation is open (true) or closed (false).</p>
+         * Indicates whether a conversation is open (true) or closed (false).<p>Indicates whether a conversation is open (true) or closed (false).</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -655,7 +697,7 @@ public final class Conversation {
         }
 
         /**
-         * <p>Can be set to &quot;open&quot;, &quot;closed&quot; or &quot;snoozed&quot;.</p>
+         * Can be set to "open", "closed" or "snoozed".<p>Can be set to &quot;open&quot;, &quot;closed&quot; or &quot;snoozed&quot;.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -666,7 +708,7 @@ public final class Conversation {
         }
 
         /**
-         * <p>Indicates whether a conversation has been read.</p>
+         * Indicates whether a conversation has been read.<p>Indicates whether a conversation has been read.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -720,6 +762,9 @@ public final class Conversation {
             return this;
         }
 
+        /**
+         * <p>Indicates whether the AI Agent participated in the conversation.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "ai_agent_participated", nulls = Nulls.SKIP)
         public _FinalStage aiAgentParticipated(Optional<Boolean> aiAgentParticipated) {
@@ -848,6 +893,9 @@ public final class Conversation {
             return this;
         }
 
+        /**
+         * <p>The id of the team assigned to the conversation. If it's not assigned to a team it will return null.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "team_assignee_id", nulls = Nulls.SKIP)
         public _FinalStage teamAssigneeId(Optional<String> teamAssigneeId) {
@@ -865,6 +913,9 @@ public final class Conversation {
             return this;
         }
 
+        /**
+         * <p>The id of the admin assigned to the conversation. If it's not assigned to an admin it will return null.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "admin_assignee_id", nulls = Nulls.SKIP)
         public _FinalStage adminAssigneeId(Optional<Integer> adminAssigneeId) {
@@ -882,6 +933,9 @@ public final class Conversation {
             return this;
         }
 
+        /**
+         * <p>If marked as priority, it will return priority or else not_priority.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "priority", nulls = Nulls.SKIP)
         public _FinalStage priority(Optional<Priority> priority) {
@@ -899,6 +953,9 @@ public final class Conversation {
             return this;
         }
 
+        /**
+         * <p>If set this is the time in the future when this conversation will be marked as open. i.e. it will be in a snoozed state until this time. i.e. it will be in a snoozed state until this time.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "snoozed_until", nulls = Nulls.SKIP)
         public _FinalStage snoozedUntil(Optional<Integer> snoozedUntil) {
@@ -916,6 +973,9 @@ public final class Conversation {
             return this;
         }
 
+        /**
+         * <p>The last time a Contact responded to an Admin. In other words, the time a customer started waiting for a response. Set to null if last reply is from an Admin.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "waiting_since", nulls = Nulls.SKIP)
         public _FinalStage waitingSince(Optional<Integer> waitingSince) {
@@ -933,6 +993,9 @@ public final class Conversation {
             return this;
         }
 
+        /**
+         * <p>The title given to the conversation.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "title", nulls = Nulls.SKIP)
         public _FinalStage title(Optional<String> title) {
@@ -950,6 +1013,9 @@ public final class Conversation {
             return this;
         }
 
+        /**
+         * <p>Always conversation.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "type", nulls = Nulls.SKIP)
         public _FinalStage type(Optional<String> type) {

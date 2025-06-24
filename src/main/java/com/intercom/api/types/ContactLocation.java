@@ -120,6 +120,9 @@ public final class ContactLocation {
             return this;
         }
 
+        /**
+         * <p>The country that the contact is located in</p>
+         */
         @JsonSetter(value = "country", nulls = Nulls.SKIP)
         public Builder country(Optional<String> country) {
             this.country = country;
@@ -131,6 +134,9 @@ public final class ContactLocation {
             return this;
         }
 
+        /**
+         * <p>The overal region that the contact is located in</p>
+         */
         @JsonSetter(value = "region", nulls = Nulls.SKIP)
         public Builder region(Optional<String> region) {
             this.region = region;
@@ -142,6 +148,9 @@ public final class ContactLocation {
             return this;
         }
 
+        /**
+         * <p>The city that the contact is located in</p>
+         */
         @JsonSetter(value = "city", nulls = Nulls.SKIP)
         public Builder city(Optional<String> city) {
             this.city = city;

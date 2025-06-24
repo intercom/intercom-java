@@ -678,6 +678,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The type of object - article_translated_content.</p>
+         */
         @JsonSetter(value = "type", nulls = Nulls.SKIP)
         public Builder type(Optional<String> type) {
             this.type = type;
@@ -689,6 +692,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Arabic</p>
+         */
         @JsonSetter(value = "ar", nulls = Nulls.SKIP)
         public Builder ar(Optional<ArticleContent> ar) {
             this.ar = ar;
@@ -700,6 +706,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Bulgarian</p>
+         */
         @JsonSetter(value = "bg", nulls = Nulls.SKIP)
         public Builder bg(Optional<ArticleContent> bg) {
             this.bg = bg;
@@ -711,6 +720,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Bosnian</p>
+         */
         @JsonSetter(value = "bs", nulls = Nulls.SKIP)
         public Builder bs(Optional<ArticleContent> bs) {
             this.bs = bs;
@@ -722,6 +734,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Catalan</p>
+         */
         @JsonSetter(value = "ca", nulls = Nulls.SKIP)
         public Builder ca(Optional<ArticleContent> ca) {
             this.ca = ca;
@@ -733,6 +748,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Czech</p>
+         */
         @JsonSetter(value = "cs", nulls = Nulls.SKIP)
         public Builder cs(Optional<ArticleContent> cs) {
             this.cs = cs;
@@ -744,6 +762,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Danish</p>
+         */
         @JsonSetter(value = "da", nulls = Nulls.SKIP)
         public Builder da(Optional<ArticleContent> da) {
             this.da = da;
@@ -755,6 +776,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in German</p>
+         */
         @JsonSetter(value = "de", nulls = Nulls.SKIP)
         public Builder de(Optional<ArticleContent> de) {
             this.de = de;
@@ -766,6 +790,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Greek</p>
+         */
         @JsonSetter(value = "el", nulls = Nulls.SKIP)
         public Builder el(Optional<ArticleContent> el) {
             this.el = el;
@@ -777,6 +804,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in English</p>
+         */
         @JsonSetter(value = "en", nulls = Nulls.SKIP)
         public Builder en(Optional<ArticleContent> en) {
             this.en = en;
@@ -788,6 +818,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Spanish</p>
+         */
         @JsonSetter(value = "es", nulls = Nulls.SKIP)
         public Builder es(Optional<ArticleContent> es) {
             this.es = es;
@@ -799,6 +832,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Estonian</p>
+         */
         @JsonSetter(value = "et", nulls = Nulls.SKIP)
         public Builder et(Optional<ArticleContent> et) {
             this.et = et;
@@ -810,6 +846,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Finnish</p>
+         */
         @JsonSetter(value = "fi", nulls = Nulls.SKIP)
         public Builder fi(Optional<ArticleContent> fi) {
             this.fi = fi;
@@ -821,6 +860,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in French</p>
+         */
         @JsonSetter(value = "fr", nulls = Nulls.SKIP)
         public Builder fr(Optional<ArticleContent> fr) {
             this.fr = fr;
@@ -832,6 +874,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Hebrew</p>
+         */
         @JsonSetter(value = "he", nulls = Nulls.SKIP)
         public Builder he(Optional<ArticleContent> he) {
             this.he = he;
@@ -843,6 +888,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Croatian</p>
+         */
         @JsonSetter(value = "hr", nulls = Nulls.SKIP)
         public Builder hr(Optional<ArticleContent> hr) {
             this.hr = hr;
@@ -854,6 +902,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Hungarian</p>
+         */
         @JsonSetter(value = "hu", nulls = Nulls.SKIP)
         public Builder hu(Optional<ArticleContent> hu) {
             this.hu = hu;
@@ -865,6 +916,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Indonesian</p>
+         */
         @JsonSetter(value = "id", nulls = Nulls.SKIP)
         public Builder id(Optional<ArticleContent> id) {
             this.id = id;
@@ -876,6 +930,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Italian</p>
+         */
         @JsonSetter(value = "it", nulls = Nulls.SKIP)
         public Builder it(Optional<ArticleContent> it) {
             this.it = it;
@@ -887,6 +944,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Japanese</p>
+         */
         @JsonSetter(value = "ja", nulls = Nulls.SKIP)
         public Builder ja(Optional<ArticleContent> ja) {
             this.ja = ja;
@@ -898,6 +958,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Korean</p>
+         */
         @JsonSetter(value = "ko", nulls = Nulls.SKIP)
         public Builder ko(Optional<ArticleContent> ko) {
             this.ko = ko;
@@ -909,6 +972,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Lithuanian</p>
+         */
         @JsonSetter(value = "lt", nulls = Nulls.SKIP)
         public Builder lt(Optional<ArticleContent> lt) {
             this.lt = lt;
@@ -920,6 +986,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Latvian</p>
+         */
         @JsonSetter(value = "lv", nulls = Nulls.SKIP)
         public Builder lv(Optional<ArticleContent> lv) {
             this.lv = lv;
@@ -931,6 +1000,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Mongolian</p>
+         */
         @JsonSetter(value = "mn", nulls = Nulls.SKIP)
         public Builder mn(Optional<ArticleContent> mn) {
             this.mn = mn;
@@ -942,6 +1014,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Norwegian</p>
+         */
         @JsonSetter(value = "nb", nulls = Nulls.SKIP)
         public Builder nb(Optional<ArticleContent> nb) {
             this.nb = nb;
@@ -953,6 +1028,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Dutch</p>
+         */
         @JsonSetter(value = "nl", nulls = Nulls.SKIP)
         public Builder nl(Optional<ArticleContent> nl) {
             this.nl = nl;
@@ -964,6 +1042,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Polish</p>
+         */
         @JsonSetter(value = "pl", nulls = Nulls.SKIP)
         public Builder pl(Optional<ArticleContent> pl) {
             this.pl = pl;
@@ -975,6 +1056,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Portuguese (Portugal)</p>
+         */
         @JsonSetter(value = "pt", nulls = Nulls.SKIP)
         public Builder pt(Optional<ArticleContent> pt) {
             this.pt = pt;
@@ -986,6 +1070,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Romanian</p>
+         */
         @JsonSetter(value = "ro", nulls = Nulls.SKIP)
         public Builder ro(Optional<ArticleContent> ro) {
             this.ro = ro;
@@ -997,6 +1084,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Russian</p>
+         */
         @JsonSetter(value = "ru", nulls = Nulls.SKIP)
         public Builder ru(Optional<ArticleContent> ru) {
             this.ru = ru;
@@ -1008,6 +1098,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Slovenian</p>
+         */
         @JsonSetter(value = "sl", nulls = Nulls.SKIP)
         public Builder sl(Optional<ArticleContent> sl) {
             this.sl = sl;
@@ -1019,6 +1112,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Serbian</p>
+         */
         @JsonSetter(value = "sr", nulls = Nulls.SKIP)
         public Builder sr(Optional<ArticleContent> sr) {
             this.sr = sr;
@@ -1030,6 +1126,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Swedish</p>
+         */
         @JsonSetter(value = "sv", nulls = Nulls.SKIP)
         public Builder sv(Optional<ArticleContent> sv) {
             this.sv = sv;
@@ -1041,6 +1140,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Turkish</p>
+         */
         @JsonSetter(value = "tr", nulls = Nulls.SKIP)
         public Builder tr(Optional<ArticleContent> tr) {
             this.tr = tr;
@@ -1052,6 +1154,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Vietnamese</p>
+         */
         @JsonSetter(value = "vi", nulls = Nulls.SKIP)
         public Builder vi(Optional<ArticleContent> vi) {
             this.vi = vi;
@@ -1063,6 +1168,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Portuguese (Brazil)</p>
+         */
         @JsonSetter(value = "pt-BR", nulls = Nulls.SKIP)
         public Builder ptBr(Optional<ArticleContent> ptBr) {
             this.ptBr = ptBr;
@@ -1074,6 +1182,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Chinese (China)</p>
+         */
         @JsonSetter(value = "zh-CN", nulls = Nulls.SKIP)
         public Builder zhCn(Optional<ArticleContent> zhCn) {
             this.zhCn = zhCn;
@@ -1085,6 +1196,9 @@ public final class ArticleTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the article in Chinese (Taiwan)</p>
+         */
         @JsonSetter(value = "zh-TW", nulls = Nulls.SKIP)
         public Builder zhTw(Optional<ArticleContent> zhTw) {
             this.zhTw = zhTw;

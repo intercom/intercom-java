@@ -66,6 +66,9 @@ public final class CurrentCanvas {
     }
 
     public interface CurrentCanvasStage {
+        /**
+         * The canvas object representing the current canvas state.
+         */
         _FinalStage currentCanvas(@NotNull CanvasObject currentCanvas);
 
         Builder from(CurrentCanvas other);
@@ -91,7 +94,7 @@ public final class CurrentCanvas {
         }
 
         /**
-         * <p>The canvas object representing the current canvas state.</p>
+         * The canvas object representing the current canvas state.<p>The canvas object representing the current canvas state.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

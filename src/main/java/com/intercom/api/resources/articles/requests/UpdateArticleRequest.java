@@ -183,6 +183,9 @@ public final class UpdateArticleRequest {
     }
 
     public interface ArticleIdStage {
+        /**
+         * The unique identifier for the article which is given by Intercom.
+         */
         _FinalStage articleId(@NotNull String articleId);
 
         Builder from(UpdateArticleRequest other);
@@ -191,30 +194,51 @@ public final class UpdateArticleRequest {
     public interface _FinalStage {
         UpdateArticleRequest build();
 
+        /**
+         * <p>The title of the article.For multilingual articles, this will be the title of the default language's content.</p>
+         */
         _FinalStage title(Optional<String> title);
 
         _FinalStage title(String title);
 
+        /**
+         * <p>The description of the article. For multilingual articles, this will be the description of the default language's content.</p>
+         */
         _FinalStage description(Optional<String> description);
 
         _FinalStage description(String description);
 
+        /**
+         * <p>The content of the article. For multilingual articles, this will be the body of the default language's content.</p>
+         */
         _FinalStage body(Optional<String> body);
 
         _FinalStage body(String body);
 
+        /**
+         * <p>The id of the author of the article. For multilingual articles, this will be the id of the author of the default language's content. Must be a teammate on the help center's workspace.</p>
+         */
         _FinalStage authorId(Optional<Integer> authorId);
 
         _FinalStage authorId(Integer authorId);
 
+        /**
+         * <p>Whether the article will be <code>published</code> or will be a <code>draft</code>. Defaults to draft. For multilingual articles, this will be the state of the default language's content.</p>
+         */
         _FinalStage state(Optional<State> state);
 
         _FinalStage state(State state);
 
+        /**
+         * <p>The id of the article's parent collection or section. An article without this field stands alone.</p>
+         */
         _FinalStage parentId(Optional<String> parentId);
 
         _FinalStage parentId(String parentId);
 
+        /**
+         * <p>The type of parent, which can either be a <code>collection</code> or <code>section</code>.</p>
+         */
         _FinalStage parentType(Optional<ParentType> parentType);
 
         _FinalStage parentType(ParentType parentType);
@@ -264,7 +288,7 @@ public final class UpdateArticleRequest {
         }
 
         /**
-         * <p>The unique identifier for the article which is given by Intercom.</p>
+         * The unique identifier for the article which is given by Intercom.<p>The unique identifier for the article which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -297,6 +321,9 @@ public final class UpdateArticleRequest {
             return this;
         }
 
+        /**
+         * <p>The type of parent, which can either be a <code>collection</code> or <code>section</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "parent_type", nulls = Nulls.SKIP)
         public _FinalStage parentType(Optional<ParentType> parentType) {
@@ -314,6 +341,9 @@ public final class UpdateArticleRequest {
             return this;
         }
 
+        /**
+         * <p>The id of the article's parent collection or section. An article without this field stands alone.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "parent_id", nulls = Nulls.SKIP)
         public _FinalStage parentId(Optional<String> parentId) {
@@ -331,6 +361,9 @@ public final class UpdateArticleRequest {
             return this;
         }
 
+        /**
+         * <p>Whether the article will be <code>published</code> or will be a <code>draft</code>. Defaults to draft. For multilingual articles, this will be the state of the default language's content.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "state", nulls = Nulls.SKIP)
         public _FinalStage state(Optional<State> state) {
@@ -348,6 +381,9 @@ public final class UpdateArticleRequest {
             return this;
         }
 
+        /**
+         * <p>The id of the author of the article. For multilingual articles, this will be the id of the author of the default language's content. Must be a teammate on the help center's workspace.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "author_id", nulls = Nulls.SKIP)
         public _FinalStage authorId(Optional<Integer> authorId) {
@@ -365,6 +401,9 @@ public final class UpdateArticleRequest {
             return this;
         }
 
+        /**
+         * <p>The content of the article. For multilingual articles, this will be the body of the default language's content.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "body", nulls = Nulls.SKIP)
         public _FinalStage body(Optional<String> body) {
@@ -382,6 +421,9 @@ public final class UpdateArticleRequest {
             return this;
         }
 
+        /**
+         * <p>The description of the article. For multilingual articles, this will be the description of the default language's content.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "description", nulls = Nulls.SKIP)
         public _FinalStage description(Optional<String> description) {
@@ -399,6 +441,9 @@ public final class UpdateArticleRequest {
             return this;
         }
 
+        /**
+         * <p>The title of the article.For multilingual articles, this will be the title of the default language's content.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "title", nulls = Nulls.SKIP)
         public _FinalStage title(Optional<String> title) {

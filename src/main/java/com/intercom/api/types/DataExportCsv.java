@@ -421,110 +421,188 @@ public final class DataExportCsv {
     }
 
     public interface UserIdStage {
+        /**
+         * The user_id of the user who was sent the message.
+         */
         CompanyIdStage userId(@NotNull String userId);
 
         Builder from(DataExportCsv other);
     }
 
     public interface CompanyIdStage {
+        /**
+         * The company ID of the user in relation to the message that was sent. Will return -1 if no company is present.
+         */
         EmailStage companyId(@NotNull String companyId);
     }
 
     public interface EmailStage {
+        /**
+         * The users email who was sent the message.
+         */
         NameStage email(@NotNull String email);
     }
 
     public interface NameStage {
+        /**
+         * The full name of the user receiving the message
+         */
         RulesetIdStage name(@NotNull String name);
     }
 
     public interface RulesetIdStage {
+        /**
+         * The id of the message.
+         */
         ContentIdStage rulesetId(@NotNull String rulesetId);
     }
 
     public interface ContentIdStage {
+        /**
+         * The specific content that was received. In an A/B test each version has its own Content ID.
+         */
         ContentTypeStage contentId(@NotNull String contentId);
     }
 
     public interface ContentTypeStage {
+        /**
+         * Email, Chat, Post etc.
+         */
         ContentTitleStage contentType(@NotNull String contentType);
     }
 
     public interface ContentTitleStage {
+        /**
+         * The title of the content you see in your Intercom workspace.
+         */
         _FinalStage contentTitle(@NotNull String contentTitle);
     }
 
     public interface _FinalStage {
         DataExportCsv build();
 
+        /**
+         * <p>The external_user_id of the user who was sent the message</p>
+         */
         _FinalStage userExternalId(Optional<String> userExternalId);
 
         _FinalStage userExternalId(String userExternalId);
 
+        /**
+         * <p>As you edit content we record new versions. This ID can help you determine which version of a piece of content that was received.</p>
+         */
         _FinalStage rulesetVersionId(Optional<String> rulesetVersionId);
 
         _FinalStage rulesetVersionId(String rulesetVersionId);
 
+        /**
+         * <p>ID for this receipt. Will be included with any related stats in other files to identify this specific delivery of a message.</p>
+         */
         _FinalStage receiptId(Optional<String> receiptId);
 
         _FinalStage receiptId(String receiptId);
 
+        /**
+         * <p>Timestamp for when the receipt was recorded.</p>
+         */
         _FinalStage receivedAt(Optional<Integer> receivedAt);
 
         _FinalStage receivedAt(Integer receivedAt);
 
+        /**
+         * <p>The id of the series that this content is part of. Will return -1 if not part of a series.</p>
+         */
         _FinalStage seriesId(Optional<String> seriesId);
 
         _FinalStage seriesId(String seriesId);
 
+        /**
+         * <p>The title of the series that this content is part of.</p>
+         */
         _FinalStage seriesTitle(Optional<String> seriesTitle);
 
         _FinalStage seriesTitle(String seriesTitle);
 
+        /**
+         * <p>The id of the series node that this ruleset is associated with. Each block in a series has a corresponding node_id.</p>
+         */
         _FinalStage nodeId(Optional<String> nodeId);
 
         _FinalStage nodeId(String nodeId);
 
+        /**
+         * <p>The first time a user replied to this message if the content was able to receive replies.</p>
+         */
         _FinalStage firstReply(Optional<Integer> firstReply);
 
         _FinalStage firstReply(Integer firstReply);
 
+        /**
+         * <p>The first time a user completed this message if the content was able to be completed e.g. Tours, Surveys.</p>
+         */
         _FinalStage firstCompletion(Optional<Integer> firstCompletion);
 
         _FinalStage firstCompletion(Integer firstCompletion);
 
+        /**
+         * <p>The first time the series this message was a part of was completed by the user.</p>
+         */
         _FinalStage firstSeriesCompletion(Optional<Integer> firstSeriesCompletion);
 
         _FinalStage firstSeriesCompletion(Integer firstSeriesCompletion);
 
+        /**
+         * <p>The first time the series this message was a part of was disengaged by the user.</p>
+         */
         _FinalStage firstSeriesDisengagement(Optional<Integer> firstSeriesDisengagement);
 
         _FinalStage firstSeriesDisengagement(Integer firstSeriesDisengagement);
 
+        /**
+         * <p>The first time the series this message was a part of was exited by the user.</p>
+         */
         _FinalStage firstSeriesExit(Optional<Integer> firstSeriesExit);
 
         _FinalStage firstSeriesExit(Integer firstSeriesExit);
 
+        /**
+         * <p>The first time the user met this messages associated goal if one exists.</p>
+         */
         _FinalStage firstGoalSuccess(Optional<Integer> firstGoalSuccess);
 
         _FinalStage firstGoalSuccess(Integer firstGoalSuccess);
 
+        /**
+         * <p>The first time the user opened this message.</p>
+         */
         _FinalStage firstOpen(Optional<Integer> firstOpen);
 
         _FinalStage firstOpen(Integer firstOpen);
 
+        /**
+         * <p>The first time the series the user clicked on a link within this message.</p>
+         */
         _FinalStage firstClick(Optional<Integer> firstClick);
 
         _FinalStage firstClick(Integer firstClick);
 
+        /**
+         * <p>The first time the series the user dismissed this message.</p>
+         */
         _FinalStage firstDismisall(Optional<Integer> firstDismisall);
 
         _FinalStage firstDismisall(Integer firstDismisall);
 
+        /**
+         * <p>The first time the user unsubscribed from this message.</p>
+         */
         _FinalStage firstUnsubscribe(Optional<Integer> firstUnsubscribe);
 
         _FinalStage firstUnsubscribe(Integer firstUnsubscribe);
 
+        /**
+         * <p>The first time this message hard bounced for this user</p>
+         */
         _FinalStage firstHardBounce(Optional<Integer> firstHardBounce);
 
         _FinalStage firstHardBounce(Integer firstHardBounce);
@@ -630,7 +708,7 @@ public final class DataExportCsv {
         }
 
         /**
-         * <p>The user_id of the user who was sent the message.</p>
+         * The user_id of the user who was sent the message.<p>The user_id of the user who was sent the message.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -641,7 +719,7 @@ public final class DataExportCsv {
         }
 
         /**
-         * <p>The company ID of the user in relation to the message that was sent. Will return -1 if no company is present.</p>
+         * The company ID of the user in relation to the message that was sent. Will return -1 if no company is present.<p>The company ID of the user in relation to the message that was sent. Will return -1 if no company is present.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -652,7 +730,7 @@ public final class DataExportCsv {
         }
 
         /**
-         * <p>The users email who was sent the message.</p>
+         * The users email who was sent the message.<p>The users email who was sent the message.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -663,7 +741,7 @@ public final class DataExportCsv {
         }
 
         /**
-         * <p>The full name of the user receiving the message</p>
+         * The full name of the user receiving the message<p>The full name of the user receiving the message</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -674,7 +752,7 @@ public final class DataExportCsv {
         }
 
         /**
-         * <p>The id of the message.</p>
+         * The id of the message.<p>The id of the message.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -685,7 +763,7 @@ public final class DataExportCsv {
         }
 
         /**
-         * <p>The specific content that was received. In an A/B test each version has its own Content ID.</p>
+         * The specific content that was received. In an A/B test each version has its own Content ID.<p>The specific content that was received. In an A/B test each version has its own Content ID.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -696,7 +774,7 @@ public final class DataExportCsv {
         }
 
         /**
-         * <p>Email, Chat, Post etc.</p>
+         * Email, Chat, Post etc.<p>Email, Chat, Post etc.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -707,7 +785,7 @@ public final class DataExportCsv {
         }
 
         /**
-         * <p>The title of the content you see in your Intercom workspace.</p>
+         * The title of the content you see in your Intercom workspace.<p>The title of the content you see in your Intercom workspace.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -727,6 +805,9 @@ public final class DataExportCsv {
             return this;
         }
 
+        /**
+         * <p>The first time this message hard bounced for this user</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "first_hard_bounce", nulls = Nulls.SKIP)
         public _FinalStage firstHardBounce(Optional<Integer> firstHardBounce) {
@@ -744,6 +825,9 @@ public final class DataExportCsv {
             return this;
         }
 
+        /**
+         * <p>The first time the user unsubscribed from this message.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "first_unsubscribe", nulls = Nulls.SKIP)
         public _FinalStage firstUnsubscribe(Optional<Integer> firstUnsubscribe) {
@@ -761,6 +845,9 @@ public final class DataExportCsv {
             return this;
         }
 
+        /**
+         * <p>The first time the series the user dismissed this message.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "first_dismisall", nulls = Nulls.SKIP)
         public _FinalStage firstDismisall(Optional<Integer> firstDismisall) {
@@ -778,6 +865,9 @@ public final class DataExportCsv {
             return this;
         }
 
+        /**
+         * <p>The first time the series the user clicked on a link within this message.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "first_click", nulls = Nulls.SKIP)
         public _FinalStage firstClick(Optional<Integer> firstClick) {
@@ -795,6 +885,9 @@ public final class DataExportCsv {
             return this;
         }
 
+        /**
+         * <p>The first time the user opened this message.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "first_open", nulls = Nulls.SKIP)
         public _FinalStage firstOpen(Optional<Integer> firstOpen) {
@@ -812,6 +905,9 @@ public final class DataExportCsv {
             return this;
         }
 
+        /**
+         * <p>The first time the user met this messages associated goal if one exists.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "first_goal_success", nulls = Nulls.SKIP)
         public _FinalStage firstGoalSuccess(Optional<Integer> firstGoalSuccess) {
@@ -829,6 +925,9 @@ public final class DataExportCsv {
             return this;
         }
 
+        /**
+         * <p>The first time the series this message was a part of was exited by the user.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "first_series_exit", nulls = Nulls.SKIP)
         public _FinalStage firstSeriesExit(Optional<Integer> firstSeriesExit) {
@@ -846,6 +945,9 @@ public final class DataExportCsv {
             return this;
         }
 
+        /**
+         * <p>The first time the series this message was a part of was disengaged by the user.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "first_series_disengagement", nulls = Nulls.SKIP)
         public _FinalStage firstSeriesDisengagement(Optional<Integer> firstSeriesDisengagement) {
@@ -863,6 +965,9 @@ public final class DataExportCsv {
             return this;
         }
 
+        /**
+         * <p>The first time the series this message was a part of was completed by the user.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "first_series_completion", nulls = Nulls.SKIP)
         public _FinalStage firstSeriesCompletion(Optional<Integer> firstSeriesCompletion) {
@@ -880,6 +985,9 @@ public final class DataExportCsv {
             return this;
         }
 
+        /**
+         * <p>The first time a user completed this message if the content was able to be completed e.g. Tours, Surveys.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "first_completion", nulls = Nulls.SKIP)
         public _FinalStage firstCompletion(Optional<Integer> firstCompletion) {
@@ -897,6 +1005,9 @@ public final class DataExportCsv {
             return this;
         }
 
+        /**
+         * <p>The first time a user replied to this message if the content was able to receive replies.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "first_reply", nulls = Nulls.SKIP)
         public _FinalStage firstReply(Optional<Integer> firstReply) {
@@ -914,6 +1025,9 @@ public final class DataExportCsv {
             return this;
         }
 
+        /**
+         * <p>The id of the series node that this ruleset is associated with. Each block in a series has a corresponding node_id.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "node_id", nulls = Nulls.SKIP)
         public _FinalStage nodeId(Optional<String> nodeId) {
@@ -931,6 +1045,9 @@ public final class DataExportCsv {
             return this;
         }
 
+        /**
+         * <p>The title of the series that this content is part of.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "series_title", nulls = Nulls.SKIP)
         public _FinalStage seriesTitle(Optional<String> seriesTitle) {
@@ -948,6 +1065,9 @@ public final class DataExportCsv {
             return this;
         }
 
+        /**
+         * <p>The id of the series that this content is part of. Will return -1 if not part of a series.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "series_id", nulls = Nulls.SKIP)
         public _FinalStage seriesId(Optional<String> seriesId) {
@@ -965,6 +1085,9 @@ public final class DataExportCsv {
             return this;
         }
 
+        /**
+         * <p>Timestamp for when the receipt was recorded.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "received_at", nulls = Nulls.SKIP)
         public _FinalStage receivedAt(Optional<Integer> receivedAt) {
@@ -982,6 +1105,9 @@ public final class DataExportCsv {
             return this;
         }
 
+        /**
+         * <p>ID for this receipt. Will be included with any related stats in other files to identify this specific delivery of a message.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "receipt_id", nulls = Nulls.SKIP)
         public _FinalStage receiptId(Optional<String> receiptId) {
@@ -999,6 +1125,9 @@ public final class DataExportCsv {
             return this;
         }
 
+        /**
+         * <p>As you edit content we record new versions. This ID can help you determine which version of a piece of content that was received.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "ruleset_version_id", nulls = Nulls.SKIP)
         public _FinalStage rulesetVersionId(Optional<String> rulesetVersionId) {
@@ -1016,6 +1145,9 @@ public final class DataExportCsv {
             return this;
         }
 
+        /**
+         * <p>The external_user_id of the user who was sent the message</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "user_external_id", nulls = Nulls.SKIP)
         public _FinalStage userExternalId(Optional<String> userExternalId) {

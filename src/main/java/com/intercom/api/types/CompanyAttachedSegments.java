@@ -90,6 +90,9 @@ public final class CompanyAttachedSegments {
             return this;
         }
 
+        /**
+         * <p>An array containing Segment Objects</p>
+         */
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
         public Builder data(List<Segment> data) {
             this.data.clear();

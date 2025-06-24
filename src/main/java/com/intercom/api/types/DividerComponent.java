@@ -95,6 +95,9 @@ public final class DividerComponent {
             return this;
         }
 
+        /**
+         * <p>A unique identifier for the component.</p>
+         */
         @JsonSetter(value = "id", nulls = Nulls.SKIP)
         public Builder id(Optional<String> id) {
             this.id = id;
@@ -106,6 +109,9 @@ public final class DividerComponent {
             return this;
         }
 
+        /**
+         * <p>Disables a component's margin-bottom of 10px.</p>
+         */
         @JsonSetter(value = "bottom_margin", nulls = Nulls.SKIP)
         public Builder bottomMargin(Optional<String> bottomMargin) {
             this.bottomMargin = bottomMargin;

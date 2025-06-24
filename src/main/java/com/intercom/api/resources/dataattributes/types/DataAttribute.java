@@ -292,70 +292,118 @@ public final class DataAttribute {
     }
 
     public interface NameStage {
+        /**
+         * Name of the attribute.
+         */
         FullNameStage name(@NotNull String name);
 
         Builder from(DataAttribute other);
     }
 
     public interface FullNameStage {
+        /**
+         * Full name of the attribute. Should match the name unless it's a nested attribute. We can split full_name on `.` to access nested user object values.
+         */
         LabelStage fullName(@NotNull String fullName);
     }
 
     public interface LabelStage {
+        /**
+         * Readable name of the attribute (i.e. name you see in the UI)
+         */
         DescriptionStage label(@NotNull String label);
     }
 
     public interface DescriptionStage {
+        /**
+         * Readable description of the attribute.
+         */
         DataTypeStage description(@NotNull String description);
     }
 
     public interface DataTypeStage {
+        /**
+         * The data type of the attribute.
+         */
         _FinalStage dataType(@NotNull DataType dataType);
     }
 
     public interface _FinalStage {
         DataAttribute build();
 
+        /**
+         * <p>The unique identifier for the data attribute which is given by Intercom. Only available for custom attributes.</p>
+         */
         _FinalStage id(Optional<Integer> id);
 
         _FinalStage id(Integer id);
 
+        /**
+         * <p>Value is <code>contact</code> for user/lead attributes and <code>company</code> for company attributes.</p>
+         */
         _FinalStage model(Optional<Model> model);
 
         _FinalStage model(Model model);
 
+        /**
+         * <p>List of predefined options for attribute value.</p>
+         */
         _FinalStage options(Optional<List<String>> options);
 
         _FinalStage options(List<String> options);
 
+        /**
+         * <p>Can this attribute be updated through API</p>
+         */
         _FinalStage apiWritable(Optional<Boolean> apiWritable);
 
         _FinalStage apiWritable(Boolean apiWritable);
 
+        /**
+         * <p>Can this attribute be updated by the Messenger</p>
+         */
         _FinalStage messengerWritable(Optional<Boolean> messengerWritable);
 
         _FinalStage messengerWritable(Boolean messengerWritable);
 
+        /**
+         * <p>Can this attribute be updated in the UI</p>
+         */
         _FinalStage uiWritable(Optional<Boolean> uiWritable);
 
         _FinalStage uiWritable(Boolean uiWritable);
 
+        /**
+         * <p>Set to true if this is a CDA</p>
+         */
         _FinalStage custom(Optional<Boolean> custom);
 
         _FinalStage custom(Boolean custom);
 
+        /**
+         * <p>Is this attribute archived. (Only applicable to CDAs)</p>
+         */
         _FinalStage archived(Optional<Boolean> archived);
 
         _FinalStage archived(Boolean archived);
 
+        /**
+         * <p>The time the attribute was created as a UTC Unix timestamp</p>
+         */
         _FinalStage createdAt(Optional<Integer> createdAt);
 
         _FinalStage createdAt(Integer createdAt);
 
+        /**
+         * <p>The time the attribute was last updated as a UTC Unix timestamp</p>
+         */
         _FinalStage updatedAt(Optional<Integer> updatedAt);
 
         _FinalStage updatedAt(Integer updatedAt);
 
+        /**
+         * <p>Teammate who created the attribute. Only applicable to CDAs</p>
+         */
         _FinalStage adminId(Optional<String> adminId);
 
         _FinalStage adminId(String adminId);
@@ -423,7 +471,7 @@ public final class DataAttribute {
         }
 
         /**
-         * <p>Name of the attribute.</p>
+         * Name of the attribute.<p>Name of the attribute.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -434,7 +482,7 @@ public final class DataAttribute {
         }
 
         /**
-         * <p>Full name of the attribute. Should match the name unless it's a nested attribute. We can split full_name on <code>.</code> to access nested user object values.</p>
+         * Full name of the attribute. Should match the name unless it's a nested attribute. We can split full_name on `.` to access nested user object values.<p>Full name of the attribute. Should match the name unless it's a nested attribute. We can split full_name on <code>.</code> to access nested user object values.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -445,7 +493,7 @@ public final class DataAttribute {
         }
 
         /**
-         * <p>Readable name of the attribute (i.e. name you see in the UI)</p>
+         * Readable name of the attribute (i.e. name you see in the UI)<p>Readable name of the attribute (i.e. name you see in the UI)</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -456,7 +504,7 @@ public final class DataAttribute {
         }
 
         /**
-         * <p>Readable description of the attribute.</p>
+         * Readable description of the attribute.<p>Readable description of the attribute.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -467,7 +515,7 @@ public final class DataAttribute {
         }
 
         /**
-         * <p>The data type of the attribute.</p>
+         * The data type of the attribute.<p>The data type of the attribute.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -487,6 +535,9 @@ public final class DataAttribute {
             return this;
         }
 
+        /**
+         * <p>Teammate who created the attribute. Only applicable to CDAs</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "admin_id", nulls = Nulls.SKIP)
         public _FinalStage adminId(Optional<String> adminId) {
@@ -504,6 +555,9 @@ public final class DataAttribute {
             return this;
         }
 
+        /**
+         * <p>The time the attribute was last updated as a UTC Unix timestamp</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
         public _FinalStage updatedAt(Optional<Integer> updatedAt) {
@@ -521,6 +575,9 @@ public final class DataAttribute {
             return this;
         }
 
+        /**
+         * <p>The time the attribute was created as a UTC Unix timestamp</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
         public _FinalStage createdAt(Optional<Integer> createdAt) {
@@ -538,6 +595,9 @@ public final class DataAttribute {
             return this;
         }
 
+        /**
+         * <p>Is this attribute archived. (Only applicable to CDAs)</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "archived", nulls = Nulls.SKIP)
         public _FinalStage archived(Optional<Boolean> archived) {
@@ -555,6 +615,9 @@ public final class DataAttribute {
             return this;
         }
 
+        /**
+         * <p>Set to true if this is a CDA</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "custom", nulls = Nulls.SKIP)
         public _FinalStage custom(Optional<Boolean> custom) {
@@ -572,6 +635,9 @@ public final class DataAttribute {
             return this;
         }
 
+        /**
+         * <p>Can this attribute be updated in the UI</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "ui_writable", nulls = Nulls.SKIP)
         public _FinalStage uiWritable(Optional<Boolean> uiWritable) {
@@ -589,6 +655,9 @@ public final class DataAttribute {
             return this;
         }
 
+        /**
+         * <p>Can this attribute be updated by the Messenger</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "messenger_writable", nulls = Nulls.SKIP)
         public _FinalStage messengerWritable(Optional<Boolean> messengerWritable) {
@@ -606,6 +675,9 @@ public final class DataAttribute {
             return this;
         }
 
+        /**
+         * <p>Can this attribute be updated through API</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "api_writable", nulls = Nulls.SKIP)
         public _FinalStage apiWritable(Optional<Boolean> apiWritable) {
@@ -623,6 +695,9 @@ public final class DataAttribute {
             return this;
         }
 
+        /**
+         * <p>List of predefined options for attribute value.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "options", nulls = Nulls.SKIP)
         public _FinalStage options(Optional<List<String>> options) {
@@ -640,6 +715,9 @@ public final class DataAttribute {
             return this;
         }
 
+        /**
+         * <p>Value is <code>contact</code> for user/lead attributes and <code>company</code> for company attributes.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "model", nulls = Nulls.SKIP)
         public _FinalStage model(Optional<Model> model) {
@@ -657,6 +735,9 @@ public final class DataAttribute {
             return this;
         }
 
+        /**
+         * <p>The unique identifier for the data attribute which is given by Intercom. Only available for custom attributes.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "id", nulls = Nulls.SKIP)
         public _FinalStage id(Optional<Integer> id) {

@@ -77,6 +77,9 @@ public final class CreatePhoneCallRedirectRequest {
     }
 
     public interface PhoneStage {
+        /**
+         * Phone number in E.164 format, that will receive the SMS to continue the conversation in the Messenger.
+         */
         _FinalStage phone(@NotNull String phone);
 
         Builder from(CreatePhoneCallRedirectRequest other);
@@ -109,7 +112,7 @@ public final class CreatePhoneCallRedirectRequest {
         }
 
         /**
-         * <p>Phone number in E.164 format, that will receive the SMS to continue the conversation in the Messenger.</p>
+         * Phone number in E.164 format, that will receive the SMS to continue the conversation in the Messenger.<p>Phone number in E.164 format, that will receive the SMS to continue the conversation in the Messenger.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

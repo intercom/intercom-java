@@ -66,6 +66,9 @@ public final class InitializeResponse {
     }
 
     public interface CanvasStage {
+        /**
+         * The canvas object that defines the UI to be shown for the app.
+         */
         _FinalStage canvas(@NotNull CanvasObject canvas);
 
         Builder from(InitializeResponse other);
@@ -91,7 +94,7 @@ public final class InitializeResponse {
         }
 
         /**
-         * <p>The canvas object that defines the UI to be shown for the app.</p>
+         * The canvas object that defines the UI to be shown for the app.<p>The canvas object that defines the UI to be shown for the app.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

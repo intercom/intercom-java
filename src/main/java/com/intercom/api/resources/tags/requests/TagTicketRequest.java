@@ -88,16 +88,25 @@ public final class TagTicketRequest {
     }
 
     public interface TicketIdStage {
+        /**
+         * ticket_id
+         */
         TagIdStage ticketId(@NotNull String ticketId);
 
         Builder from(TagTicketRequest other);
     }
 
     public interface TagIdStage {
+        /**
+         * The unique identifier for the tag which is given by Intercom
+         */
         AdminIdStage tagId(@NotNull String tagId);
     }
 
     public interface AdminIdStage {
+        /**
+         * The unique identifier for the admin which is given by Intercom.
+         */
         _FinalStage adminId(@NotNull String adminId);
     }
 
@@ -127,7 +136,7 @@ public final class TagTicketRequest {
         }
 
         /**
-         * <p>ticket_id</p>
+         * ticket_id<p>ticket_id</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -138,7 +147,7 @@ public final class TagTicketRequest {
         }
 
         /**
-         * <p>The unique identifier for the tag which is given by Intercom</p>
+         * The unique identifier for the tag which is given by Intercom<p>The unique identifier for the tag which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -149,7 +158,7 @@ public final class TagTicketRequest {
         }
 
         /**
-         * <p>The unique identifier for the admin which is given by Intercom.</p>
+         * The unique identifier for the admin which is given by Intercom.<p>The unique identifier for the admin which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

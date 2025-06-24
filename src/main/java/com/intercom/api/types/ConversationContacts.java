@@ -86,6 +86,9 @@ public final class ConversationContacts {
             return this;
         }
 
+        /**
+         * <p>The list of contacts (users or leads) involved in this conversation. This will only contain one customer unless more were added via the group conversation feature.</p>
+         */
         @JsonSetter(value = "contacts", nulls = Nulls.SKIP)
         public Builder contacts(List<ContactReference> contacts) {
             this.contacts.clear();

@@ -132,12 +132,18 @@ public final class ActivityLog {
     }
 
     public interface IdStage {
+        /**
+         * The id representing the activity.
+         */
         PerformedByStage id(@NotNull String id);
 
         Builder from(ActivityLog other);
     }
 
     public interface PerformedByStage {
+        /**
+         * Details about the Admin involved in the activity.
+         */
         ActivityTypeStage performedBy(@NotNull PerformedBy performedBy);
     }
 
@@ -152,10 +158,16 @@ public final class ActivityLog {
 
         _FinalStage metadata(ActivityLogMetadata metadata);
 
+        /**
+         * <p>The time the activity was created.</p>
+         */
         _FinalStage createdAt(Optional<Integer> createdAt);
 
         _FinalStage createdAt(Integer createdAt);
 
+        /**
+         * <p>A sentence or two describing the activity.</p>
+         */
         _FinalStage activityDescription(Optional<String> activityDescription);
 
         _FinalStage activityDescription(String activityDescription);
@@ -192,7 +204,7 @@ public final class ActivityLog {
         }
 
         /**
-         * <p>The id representing the activity.</p>
+         * The id representing the activity.<p>The id representing the activity.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -203,7 +215,7 @@ public final class ActivityLog {
         }
 
         /**
-         * <p>Details about the Admin involved in the activity.</p>
+         * Details about the Admin involved in the activity.<p>Details about the Admin involved in the activity.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -230,6 +242,9 @@ public final class ActivityLog {
             return this;
         }
 
+        /**
+         * <p>A sentence or two describing the activity.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "activity_description", nulls = Nulls.SKIP)
         public _FinalStage activityDescription(Optional<String> activityDescription) {
@@ -247,6 +262,9 @@ public final class ActivityLog {
             return this;
         }
 
+        /**
+         * <p>The time the activity was created.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
         public _FinalStage createdAt(Optional<Integer> createdAt) {
@@ -384,6 +402,9 @@ public final class ActivityLog {
                 return this;
             }
 
+            /**
+             * <p>String representing the object's type. Always has the value <code>admin</code>.</p>
+             */
             @JsonSetter(value = "type", nulls = Nulls.SKIP)
             public Builder type(Optional<String> type) {
                 this.type = type;
@@ -395,6 +416,9 @@ public final class ActivityLog {
                 return this;
             }
 
+            /**
+             * <p>The id representing the admin.</p>
+             */
             @JsonSetter(value = "id", nulls = Nulls.SKIP)
             public Builder id(Optional<String> id) {
                 this.id = id;
@@ -406,6 +430,9 @@ public final class ActivityLog {
                 return this;
             }
 
+            /**
+             * <p>The email of the admin.</p>
+             */
             @JsonSetter(value = "email", nulls = Nulls.SKIP)
             public Builder email(Optional<String> email) {
                 this.email = email;
@@ -417,6 +444,9 @@ public final class ActivityLog {
                 return this;
             }
 
+            /**
+             * <p>The IP address of the admin.</p>
+             */
             @JsonSetter(value = "ip", nulls = Nulls.SKIP)
             public Builder ip(Optional<String> ip) {
                 this.ip = ip;

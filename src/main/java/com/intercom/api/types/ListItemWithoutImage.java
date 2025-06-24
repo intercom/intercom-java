@@ -205,46 +205,76 @@ public final class ListItemWithoutImage implements IListItem {
     }
 
     public interface IdStage {
+        /**
+         * A unique identifier for the item.
+         */
         TitleStage id(@NotNull String id);
 
         Builder from(ListItemWithoutImage other);
     }
 
     public interface TitleStage {
+        /**
+         * The text shown as the title for the item.
+         */
         _FinalStage title(@NotNull String title);
     }
 
     public interface _FinalStage {
         ListItemWithoutImage build();
 
+        /**
+         * <p>The text shown underneath the item's title.</p>
+         */
         _FinalStage subtitle(Optional<String> subtitle);
 
         _FinalStage subtitle(String subtitle);
 
+        /**
+         * <p>The text shown next to the subtitle, separates by a bullet.</p>
+         */
         _FinalStage tertiaryText(Optional<String> tertiaryText);
 
         _FinalStage tertiaryText(String tertiaryText);
 
+        /**
+         * <p>Rounds the corners of the image. Default is <code>false</code>.</p>
+         */
         _FinalStage roundedImage(Optional<Boolean> roundedImage);
 
         _FinalStage roundedImage(Boolean roundedImage);
 
+        /**
+         * <p>Styles all list items and prevents the action. Default is <code>false</code>.</p>
+         */
         _FinalStage disabled(Optional<Boolean> disabled);
 
         _FinalStage disabled(Boolean disabled);
 
+        /**
+         * <p>This can be a Submit Action, URL Action, or Sheets Action.</p>
+         */
         _FinalStage action(Optional<ActionComponent> action);
 
         _FinalStage action(ActionComponent action);
 
+        /**
+         * <p>An image that will be displayed to the left of the item.</p>
+         */
         _FinalStage image(Optional<String> image);
 
         _FinalStage image(String image);
 
+        /**
+         * <p>The exact width of the image in pixels.</p>
+         */
         _FinalStage imageWidth(Optional<Integer> imageWidth);
 
         _FinalStage imageWidth(Integer imageWidth);
 
+        /**
+         * <p>The exact height of the image in pixels.</p>
+         */
         _FinalStage imageHeight(Optional<Integer> imageHeight);
 
         _FinalStage imageHeight(Integer imageHeight);
@@ -293,7 +323,7 @@ public final class ListItemWithoutImage implements IListItem {
         }
 
         /**
-         * <p>A unique identifier for the item.</p>
+         * A unique identifier for the item.<p>A unique identifier for the item.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -304,7 +334,7 @@ public final class ListItemWithoutImage implements IListItem {
         }
 
         /**
-         * <p>The text shown as the title for the item.</p>
+         * The text shown as the title for the item.<p>The text shown as the title for the item.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -324,6 +354,9 @@ public final class ListItemWithoutImage implements IListItem {
             return this;
         }
 
+        /**
+         * <p>The exact height of the image in pixels.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "image_height", nulls = Nulls.SKIP)
         public _FinalStage imageHeight(Optional<Integer> imageHeight) {
@@ -341,6 +374,9 @@ public final class ListItemWithoutImage implements IListItem {
             return this;
         }
 
+        /**
+         * <p>The exact width of the image in pixels.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "image_width", nulls = Nulls.SKIP)
         public _FinalStage imageWidth(Optional<Integer> imageWidth) {
@@ -358,6 +394,9 @@ public final class ListItemWithoutImage implements IListItem {
             return this;
         }
 
+        /**
+         * <p>An image that will be displayed to the left of the item.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "image", nulls = Nulls.SKIP)
         public _FinalStage image(Optional<String> image) {
@@ -375,6 +414,9 @@ public final class ListItemWithoutImage implements IListItem {
             return this;
         }
 
+        /**
+         * <p>This can be a Submit Action, URL Action, or Sheets Action.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "action", nulls = Nulls.SKIP)
         public _FinalStage action(Optional<ActionComponent> action) {
@@ -392,6 +434,9 @@ public final class ListItemWithoutImage implements IListItem {
             return this;
         }
 
+        /**
+         * <p>Styles all list items and prevents the action. Default is <code>false</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "disabled", nulls = Nulls.SKIP)
         public _FinalStage disabled(Optional<Boolean> disabled) {
@@ -409,6 +454,9 @@ public final class ListItemWithoutImage implements IListItem {
             return this;
         }
 
+        /**
+         * <p>Rounds the corners of the image. Default is <code>false</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "rounded_image", nulls = Nulls.SKIP)
         public _FinalStage roundedImage(Optional<Boolean> roundedImage) {
@@ -426,6 +474,9 @@ public final class ListItemWithoutImage implements IListItem {
             return this;
         }
 
+        /**
+         * <p>The text shown next to the subtitle, separates by a bullet.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "tertiary_text", nulls = Nulls.SKIP)
         public _FinalStage tertiaryText(Optional<String> tertiaryText) {
@@ -443,6 +494,9 @@ public final class ListItemWithoutImage implements IListItem {
             return this;
         }
 
+        /**
+         * <p>The text shown underneath the item's title.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "subtitle", nulls = Nulls.SKIP)
         public _FinalStage subtitle(Optional<String> subtitle) {

@@ -219,6 +219,9 @@ public final class CreateOrUpdateCompanyRequest {
             return this;
         }
 
+        /**
+         * <p>The name of the Company</p>
+         */
         @JsonSetter(value = "name", nulls = Nulls.SKIP)
         public Builder name(Optional<String> name) {
             this.name = name;
@@ -230,6 +233,9 @@ public final class CreateOrUpdateCompanyRequest {
             return this;
         }
 
+        /**
+         * <p>The company id you have defined for the company. Can't be updated</p>
+         */
         @JsonSetter(value = "company_id", nulls = Nulls.SKIP)
         public Builder companyId(Optional<String> companyId) {
             this.companyId = companyId;
@@ -241,6 +247,9 @@ public final class CreateOrUpdateCompanyRequest {
             return this;
         }
 
+        /**
+         * <p>The name of the plan you have associated with the company.</p>
+         */
         @JsonSetter(value = "plan", nulls = Nulls.SKIP)
         public Builder plan(Optional<String> plan) {
             this.plan = plan;
@@ -252,6 +261,9 @@ public final class CreateOrUpdateCompanyRequest {
             return this;
         }
 
+        /**
+         * <p>The number of employees in this company.</p>
+         */
         @JsonSetter(value = "size", nulls = Nulls.SKIP)
         public Builder size(Optional<Integer> size) {
             this.size = size;
@@ -263,6 +275,9 @@ public final class CreateOrUpdateCompanyRequest {
             return this;
         }
 
+        /**
+         * <p>The URL for this company's website. Please note that the value specified here is not validated. Accepts any string.</p>
+         */
         @JsonSetter(value = "website", nulls = Nulls.SKIP)
         public Builder website(Optional<String> website) {
             this.website = website;
@@ -274,6 +289,9 @@ public final class CreateOrUpdateCompanyRequest {
             return this;
         }
 
+        /**
+         * <p>The industry that this company operates in.</p>
+         */
         @JsonSetter(value = "industry", nulls = Nulls.SKIP)
         public Builder industry(Optional<String> industry) {
             this.industry = industry;
@@ -285,6 +303,9 @@ public final class CreateOrUpdateCompanyRequest {
             return this;
         }
 
+        /**
+         * <p>A hash of key/value pairs containing any other data about the company you want Intercom to store.</p>
+         */
         @JsonSetter(value = "custom_attributes", nulls = Nulls.SKIP)
         public Builder customAttributes(Optional<Map<String, Object>> customAttributes) {
             this.customAttributes = customAttributes;
@@ -296,6 +317,9 @@ public final class CreateOrUpdateCompanyRequest {
             return this;
         }
 
+        /**
+         * <p>The time the company was created by you.</p>
+         */
         @JsonSetter(value = "remote_created_at", nulls = Nulls.SKIP)
         public Builder remoteCreatedAt(Optional<Integer> remoteCreatedAt) {
             this.remoteCreatedAt = remoteCreatedAt;
@@ -307,6 +331,9 @@ public final class CreateOrUpdateCompanyRequest {
             return this;
         }
 
+        /**
+         * <p>How much revenue the company generates for your business. Note that this will truncate floats. i.e. it only allow for whole integers, 155.98 will be truncated to 155. Note that this has an upper limit of 2**31-1 or 2147483647..</p>
+         */
         @JsonSetter(value = "monthly_spend", nulls = Nulls.SKIP)
         public Builder monthlySpend(Optional<Integer> monthlySpend) {
             this.monthlySpend = monthlySpend;

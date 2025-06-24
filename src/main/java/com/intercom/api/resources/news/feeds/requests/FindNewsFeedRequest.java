@@ -66,6 +66,9 @@ public final class FindNewsFeedRequest {
     }
 
     public interface NewsfeedIdStage {
+        /**
+         * The unique identifier for the news feed item which is given by Intercom.
+         */
         _FinalStage newsfeedId(@NotNull String newsfeedId);
 
         Builder from(FindNewsFeedRequest other);
@@ -91,7 +94,7 @@ public final class FindNewsFeedRequest {
         }
 
         /**
-         * <p>The unique identifier for the news feed item which is given by Intercom.</p>
+         * The unique identifier for the news feed item which is given by Intercom.<p>The unique identifier for the news feed item which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

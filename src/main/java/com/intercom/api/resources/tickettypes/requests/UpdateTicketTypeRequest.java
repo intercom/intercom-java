@@ -157,6 +157,9 @@ public final class UpdateTicketTypeRequest {
     }
 
     public interface TicketTypeIdStage {
+        /**
+         * The unique identifier for the ticket type which is given by Intercom.
+         */
         _FinalStage ticketTypeId(@NotNull String ticketTypeId);
 
         Builder from(UpdateTicketTypeRequest other);
@@ -165,26 +168,44 @@ public final class UpdateTicketTypeRequest {
     public interface _FinalStage {
         UpdateTicketTypeRequest build();
 
+        /**
+         * <p>The name of the ticket type.</p>
+         */
         _FinalStage name(Optional<String> name);
 
         _FinalStage name(String name);
 
+        /**
+         * <p>The description of the ticket type.</p>
+         */
         _FinalStage description(Optional<String> description);
 
         _FinalStage description(String description);
 
+        /**
+         * <p>Category of the Ticket Type.</p>
+         */
         _FinalStage category(Optional<Category> category);
 
         _FinalStage category(Category category);
 
+        /**
+         * <p>The icon of the ticket type.</p>
+         */
         _FinalStage icon(Optional<String> icon);
 
         _FinalStage icon(String icon);
 
+        /**
+         * <p>The archived status of the ticket type.</p>
+         */
         _FinalStage archived(Optional<Boolean> archived);
 
         _FinalStage archived(Boolean archived);
 
+        /**
+         * <p>Whether the tickets associated with this ticket type are intended for internal use only or will be shared with customers. This is currently a limited attribute.</p>
+         */
         _FinalStage isInternal(Optional<Boolean> isInternal);
 
         _FinalStage isInternal(Boolean isInternal);
@@ -224,7 +245,7 @@ public final class UpdateTicketTypeRequest {
         }
 
         /**
-         * <p>The unique identifier for the ticket type which is given by Intercom.</p>
+         * The unique identifier for the ticket type which is given by Intercom.<p>The unique identifier for the ticket type which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -244,6 +265,9 @@ public final class UpdateTicketTypeRequest {
             return this;
         }
 
+        /**
+         * <p>Whether the tickets associated with this ticket type are intended for internal use only or will be shared with customers. This is currently a limited attribute.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "is_internal", nulls = Nulls.SKIP)
         public _FinalStage isInternal(Optional<Boolean> isInternal) {
@@ -261,6 +285,9 @@ public final class UpdateTicketTypeRequest {
             return this;
         }
 
+        /**
+         * <p>The archived status of the ticket type.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "archived", nulls = Nulls.SKIP)
         public _FinalStage archived(Optional<Boolean> archived) {
@@ -278,6 +305,9 @@ public final class UpdateTicketTypeRequest {
             return this;
         }
 
+        /**
+         * <p>The icon of the ticket type.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "icon", nulls = Nulls.SKIP)
         public _FinalStage icon(Optional<String> icon) {
@@ -295,6 +325,9 @@ public final class UpdateTicketTypeRequest {
             return this;
         }
 
+        /**
+         * <p>Category of the Ticket Type.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "category", nulls = Nulls.SKIP)
         public _FinalStage category(Optional<Category> category) {
@@ -312,6 +345,9 @@ public final class UpdateTicketTypeRequest {
             return this;
         }
 
+        /**
+         * <p>The description of the ticket type.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "description", nulls = Nulls.SKIP)
         public _FinalStage description(Optional<String> description) {
@@ -329,6 +365,9 @@ public final class UpdateTicketTypeRequest {
             return this;
         }
 
+        /**
+         * <p>The name of the ticket type.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "name", nulls = Nulls.SKIP)
         public _FinalStage name(Optional<String> name) {

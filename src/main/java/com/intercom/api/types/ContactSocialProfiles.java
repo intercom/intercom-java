@@ -81,6 +81,9 @@ public final class ContactSocialProfiles {
             return this;
         }
 
+        /**
+         * <p>A list of social profiles objects associated with the contact.</p>
+         */
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
         public Builder data(List<SocialProfile> data) {
             this.data.clear();

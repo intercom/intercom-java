@@ -85,12 +85,18 @@ public final class SocialProfile {
     }
 
     public interface NameStage {
+        /**
+         * The name of the Social media profile
+         */
         UrlStage name(@NotNull String name);
 
         Builder from(SocialProfile other);
     }
 
     public interface UrlStage {
+        /**
+         * The name of the Social media profile
+         */
         _FinalStage url(@NotNull String url);
     }
 
@@ -117,7 +123,7 @@ public final class SocialProfile {
         }
 
         /**
-         * <p>The name of the Social media profile</p>
+         * The name of the Social media profile<p>The name of the Social media profile</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -128,7 +134,7 @@ public final class SocialProfile {
         }
 
         /**
-         * <p>The name of the Social media profile</p>
+         * The name of the Social media profile<p>The name of the Social media profile</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

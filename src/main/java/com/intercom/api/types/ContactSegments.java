@@ -90,6 +90,9 @@ public final class ContactSegments {
             return this;
         }
 
+        /**
+         * <p>Segment objects associated with the contact.</p>
+         */
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
         public Builder data(List<Segment> data) {
             this.data.clear();

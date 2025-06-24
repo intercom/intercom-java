@@ -85,12 +85,18 @@ public final class VisitorDeletedObject {
     }
 
     public interface IdStage {
+        /**
+         * The unique identifier for the visitor which is given by Intercom.
+         */
         UserIdStage id(@NotNull String id);
 
         Builder from(VisitorDeletedObject other);
     }
 
     public interface UserIdStage {
+        /**
+         * Automatically generated identifier for the Visitor.
+         */
         _FinalStage userId(@NotNull String userId);
     }
 
@@ -117,7 +123,7 @@ public final class VisitorDeletedObject {
         }
 
         /**
-         * <p>The unique identifier for the visitor which is given by Intercom.</p>
+         * The unique identifier for the visitor which is given by Intercom.<p>The unique identifier for the visitor which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -128,7 +134,7 @@ public final class VisitorDeletedObject {
         }
 
         /**
-         * <p>Automatically generated identifier for the Visitor.</p>
+         * Automatically generated identifier for the Visitor.<p>Automatically generated identifier for the Visitor.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

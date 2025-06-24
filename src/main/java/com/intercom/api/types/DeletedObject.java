@@ -85,12 +85,18 @@ public final class DeletedObject {
     }
 
     public interface IdStage {
+        /**
+         * The unique identifier for the news item which you provided in the URL.
+         */
         DeletedStage id(@NotNull String id);
 
         Builder from(DeletedObject other);
     }
 
     public interface DeletedStage {
+        /**
+         * Whether the news item was deleted successfully or not.
+         */
         _FinalStage deleted(boolean deleted);
     }
 
@@ -117,7 +123,7 @@ public final class DeletedObject {
         }
 
         /**
-         * <p>The unique identifier for the news item which you provided in the URL.</p>
+         * The unique identifier for the news item which you provided in the URL.<p>The unique identifier for the news item which you provided in the URL.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -128,7 +134,7 @@ public final class DeletedObject {
         }
 
         /**
-         * <p>Whether the news item was deleted successfully or not.</p>
+         * Whether the news item was deleted successfully or not.<p>Whether the news item was deleted successfully or not.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

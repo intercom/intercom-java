@@ -159,26 +159,44 @@ public final class App {
     }
 
     public interface IdCodeStage {
+        /**
+         * The id of the app.
+         */
         NameStage idCode(@NotNull String idCode);
     }
 
     public interface NameStage {
+        /**
+         * The name of the app.
+         */
         RegionStage name(@NotNull String name);
     }
 
     public interface RegionStage {
+        /**
+         * The Intercom region the app is located in.
+         */
         TimezoneStage region(@NotNull String region);
     }
 
     public interface TimezoneStage {
+        /**
+         * The timezone of the region where the app is located.
+         */
         CreatedAtStage timezone(@NotNull String timezone);
     }
 
     public interface CreatedAtStage {
+        /**
+         * When the app was created.
+         */
         IdentityVerificationStage createdAt(int createdAt);
     }
 
     public interface IdentityVerificationStage {
+        /**
+         * Whether or not the app uses identity verification.
+         */
         _FinalStage identityVerification(boolean identityVerification);
     }
 
@@ -238,7 +256,7 @@ public final class App {
         }
 
         /**
-         * <p>The id of the app.</p>
+         * The id of the app.<p>The id of the app.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -249,7 +267,7 @@ public final class App {
         }
 
         /**
-         * <p>The name of the app.</p>
+         * The name of the app.<p>The name of the app.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -260,7 +278,7 @@ public final class App {
         }
 
         /**
-         * <p>The Intercom region the app is located in.</p>
+         * The Intercom region the app is located in.<p>The Intercom region the app is located in.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -271,7 +289,7 @@ public final class App {
         }
 
         /**
-         * <p>The timezone of the region where the app is located.</p>
+         * The timezone of the region where the app is located.<p>The timezone of the region where the app is located.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -282,7 +300,7 @@ public final class App {
         }
 
         /**
-         * <p>When the app was created.</p>
+         * When the app was created.<p>When the app was created.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -293,7 +311,7 @@ public final class App {
         }
 
         /**
-         * <p>Whether or not the app uses identity verification.</p>
+         * Whether or not the app uses identity verification.<p>Whether or not the app uses identity verification.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

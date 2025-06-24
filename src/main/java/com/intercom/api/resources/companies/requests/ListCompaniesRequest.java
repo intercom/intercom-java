@@ -112,6 +112,9 @@ public final class ListCompaniesRequest {
             return this;
         }
 
+        /**
+         * <p>The page of results to fetch. Defaults to first page</p>
+         */
         @JsonSetter(value = "page", nulls = Nulls.SKIP)
         public Builder page(Optional<Integer> page) {
             this.page = page;
@@ -123,6 +126,9 @@ public final class ListCompaniesRequest {
             return this;
         }
 
+        /**
+         * <p>How many results to return per page. Defaults to 15</p>
+         */
         @JsonSetter(value = "per_page", nulls = Nulls.SKIP)
         public Builder perPage(Optional<Integer> perPage) {
             this.perPage = perPage;
@@ -134,6 +140,9 @@ public final class ListCompaniesRequest {
             return this;
         }
 
+        /**
+         * <p><code>asc</code> or <code>desc</code>. Return the companies in ascending or descending order. Defaults to desc</p>
+         */
         @JsonSetter(value = "order", nulls = Nulls.SKIP)
         public Builder order(Optional<String> order) {
             this.order = order;

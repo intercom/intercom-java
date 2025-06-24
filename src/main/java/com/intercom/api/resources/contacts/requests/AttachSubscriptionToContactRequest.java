@@ -92,16 +92,25 @@ public final class AttachSubscriptionToContactRequest {
     }
 
     public interface ContactIdStage {
+        /**
+         * The unique identifier for the contact which is given by Intercom
+         */
         SubscriptionIdStage contactId(@NotNull String contactId);
 
         Builder from(AttachSubscriptionToContactRequest other);
     }
 
     public interface SubscriptionIdStage {
+        /**
+         * The unique identifier for the subscription which is given by Intercom
+         */
         ConsentTypeStage subscriptionId(@NotNull String subscriptionId);
     }
 
     public interface ConsentTypeStage {
+        /**
+         * The consent_type of a subscription, opt_out or opt_in.
+         */
         _FinalStage consentType(@NotNull String consentType);
     }
 
@@ -131,7 +140,7 @@ public final class AttachSubscriptionToContactRequest {
         }
 
         /**
-         * <p>The unique identifier for the contact which is given by Intercom</p>
+         * The unique identifier for the contact which is given by Intercom<p>The unique identifier for the contact which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -142,7 +151,7 @@ public final class AttachSubscriptionToContactRequest {
         }
 
         /**
-         * <p>The unique identifier for the subscription which is given by Intercom</p>
+         * The unique identifier for the subscription which is given by Intercom<p>The unique identifier for the subscription which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -153,7 +162,7 @@ public final class AttachSubscriptionToContactRequest {
         }
 
         /**
-         * <p>The consent_type of a subscription, opt_out or opt_in.</p>
+         * The consent_type of a subscription, opt_out or opt_in.<p>The consent_type of a subscription, opt_out or opt_in.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

@@ -89,16 +89,25 @@ public final class ConversationAttachmentFiles {
     }
 
     public interface ContentTypeStage {
+        /**
+         * The content type of the file
+         */
         DataStage contentType(@NotNull String contentType);
 
         Builder from(ConversationAttachmentFiles other);
     }
 
     public interface DataStage {
+        /**
+         * The base64 encoded file data.
+         */
         NameStage data(@NotNull String data);
     }
 
     public interface NameStage {
+        /**
+         * The name of the file.
+         */
         _FinalStage name(@NotNull String name);
     }
 
@@ -128,7 +137,7 @@ public final class ConversationAttachmentFiles {
         }
 
         /**
-         * <p>The content type of the file</p>
+         * The content type of the file<p>The content type of the file</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -139,7 +148,7 @@ public final class ConversationAttachmentFiles {
         }
 
         /**
-         * <p>The base64 encoded file data.</p>
+         * The base64 encoded file data.<p>The base64 encoded file data.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -150,7 +159,7 @@ public final class ConversationAttachmentFiles {
         }
 
         /**
-         * <p>The name of the file.</p>
+         * The name of the file.<p>The name of the file.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

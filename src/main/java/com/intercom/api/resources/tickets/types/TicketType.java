@@ -205,28 +205,46 @@ public final class TicketType {
     }
 
     public interface IdStage {
+        /**
+         * The id representing the ticket type.
+         */
         CategoryStage id(@NotNull String id);
 
         Builder from(TicketType other);
     }
 
     public interface CategoryStage {
+        /**
+         * Category of the Ticket Type.
+         */
         NameStage category(@NotNull Category category);
     }
 
     public interface NameStage {
+        /**
+         * The name of the ticket type
+         */
         DescriptionStage name(@NotNull String name);
     }
 
     public interface DescriptionStage {
+        /**
+         * The description of the ticket type
+         */
         IconStage description(@NotNull String description);
     }
 
     public interface IconStage {
+        /**
+         * The icon of the ticket type
+         */
         WorkspaceIdStage icon(@NotNull String icon);
     }
 
     public interface WorkspaceIdStage {
+        /**
+         * The id of the workspace that the ticket type belongs to.
+         */
         TicketTypeAttributesStage workspaceId(@NotNull String workspaceId);
     }
 
@@ -235,16 +253,25 @@ public final class TicketType {
     }
 
     public interface ArchivedStage {
+        /**
+         * Whether the ticket type is archived or not.
+         */
         CreatedAtStage archived(boolean archived);
     }
 
     public interface CreatedAtStage {
+        /**
+         * The date and time the ticket type was created.
+         */
         _FinalStage createdAt(int createdAt);
     }
 
     public interface _FinalStage {
         TicketType build();
 
+        /**
+         * <p>The date and time the ticket type was last updated.</p>
+         */
         _FinalStage updatedAt(Optional<Integer> updatedAt);
 
         _FinalStage updatedAt(Integer updatedAt);
@@ -303,7 +330,7 @@ public final class TicketType {
         }
 
         /**
-         * <p>The id representing the ticket type.</p>
+         * The id representing the ticket type.<p>The id representing the ticket type.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -314,7 +341,7 @@ public final class TicketType {
         }
 
         /**
-         * <p>Category of the Ticket Type.</p>
+         * Category of the Ticket Type.<p>Category of the Ticket Type.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -325,7 +352,7 @@ public final class TicketType {
         }
 
         /**
-         * <p>The name of the ticket type</p>
+         * The name of the ticket type<p>The name of the ticket type</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -336,7 +363,7 @@ public final class TicketType {
         }
 
         /**
-         * <p>The description of the ticket type</p>
+         * The description of the ticket type<p>The description of the ticket type</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -347,7 +374,7 @@ public final class TicketType {
         }
 
         /**
-         * <p>The icon of the ticket type</p>
+         * The icon of the ticket type<p>The icon of the ticket type</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -358,7 +385,7 @@ public final class TicketType {
         }
 
         /**
-         * <p>The id of the workspace that the ticket type belongs to.</p>
+         * The id of the workspace that the ticket type belongs to.<p>The id of the workspace that the ticket type belongs to.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -377,7 +404,7 @@ public final class TicketType {
         }
 
         /**
-         * <p>Whether the ticket type is archived or not.</p>
+         * Whether the ticket type is archived or not.<p>Whether the ticket type is archived or not.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -388,7 +415,7 @@ public final class TicketType {
         }
 
         /**
-         * <p>The date and time the ticket type was created.</p>
+         * The date and time the ticket type was created.<p>The date and time the ticket type was created.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -408,6 +435,9 @@ public final class TicketType {
             return this;
         }
 
+        /**
+         * <p>The date and time the ticket type was last updated.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
         public _FinalStage updatedAt(Optional<Integer> updatedAt) {

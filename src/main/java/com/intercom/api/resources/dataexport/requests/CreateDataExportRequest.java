@@ -76,12 +76,18 @@ public final class CreateDataExportRequest {
     }
 
     public interface CreatedAtAfterStage {
+        /**
+         * The start date that you request data for. It must be formatted as a unix timestamp.
+         */
         CreatedAtBeforeStage createdAtAfter(int createdAtAfter);
 
         Builder from(CreateDataExportRequest other);
     }
 
     public interface CreatedAtBeforeStage {
+        /**
+         * The end date that you request data for. It must be formatted as a unix timestamp.
+         */
         _FinalStage createdAtBefore(int createdAtBefore);
     }
 
@@ -108,7 +114,7 @@ public final class CreateDataExportRequest {
         }
 
         /**
-         * <p>The start date that you request data for. It must be formatted as a unix timestamp.</p>
+         * The start date that you request data for. It must be formatted as a unix timestamp.<p>The start date that you request data for. It must be formatted as a unix timestamp.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -119,7 +125,7 @@ public final class CreateDataExportRequest {
         }
 
         /**
-         * <p>The end date that you request data for. It must be formatted as a unix timestamp.</p>
+         * The end date that you request data for. It must be formatted as a unix timestamp.<p>The end date that you request data for. It must be formatted as a unix timestamp.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

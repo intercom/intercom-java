@@ -155,34 +155,55 @@ public final class HelpCenter {
     }
 
     public interface IdStage {
+        /**
+         * The unique identifier for the Help Center which is given by Intercom.
+         */
         WorkspaceIdStage id(@NotNull String id);
 
         Builder from(HelpCenter other);
     }
 
     public interface WorkspaceIdStage {
+        /**
+         * The id of the workspace which the Help Center belongs to.
+         */
         CreatedAtStage workspaceId(@NotNull String workspaceId);
     }
 
     public interface CreatedAtStage {
+        /**
+         * The time when the Help Center was created.
+         */
         IdentifierStage createdAt(int createdAt);
     }
 
     public interface IdentifierStage {
+        /**
+         * The identifier of the Help Center. This is used in the URL of the Help Center.
+         */
         WebsiteTurnedOnStage identifier(@NotNull String identifier);
     }
 
     public interface WebsiteTurnedOnStage {
+        /**
+         * Whether the Help Center is turned on or not. This is controlled in your Help Center settings.
+         */
         DisplayNameStage websiteTurnedOn(boolean websiteTurnedOn);
     }
 
     public interface DisplayNameStage {
+        /**
+         * The display name of the Help Center only seen by teammates.
+         */
         _FinalStage displayName(@NotNull String displayName);
     }
 
     public interface _FinalStage {
         HelpCenter build();
 
+        /**
+         * <p>The time when the Help Center was last updated.</p>
+         */
         _FinalStage updatedAt(Optional<Integer> updatedAt);
 
         _FinalStage updatedAt(Integer updatedAt);
@@ -229,7 +250,7 @@ public final class HelpCenter {
         }
 
         /**
-         * <p>The unique identifier for the Help Center which is given by Intercom.</p>
+         * The unique identifier for the Help Center which is given by Intercom.<p>The unique identifier for the Help Center which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -240,7 +261,7 @@ public final class HelpCenter {
         }
 
         /**
-         * <p>The id of the workspace which the Help Center belongs to.</p>
+         * The id of the workspace which the Help Center belongs to.<p>The id of the workspace which the Help Center belongs to.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -251,7 +272,7 @@ public final class HelpCenter {
         }
 
         /**
-         * <p>The time when the Help Center was created.</p>
+         * The time when the Help Center was created.<p>The time when the Help Center was created.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -262,7 +283,7 @@ public final class HelpCenter {
         }
 
         /**
-         * <p>The identifier of the Help Center. This is used in the URL of the Help Center.</p>
+         * The identifier of the Help Center. This is used in the URL of the Help Center.<p>The identifier of the Help Center. This is used in the URL of the Help Center.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -273,7 +294,7 @@ public final class HelpCenter {
         }
 
         /**
-         * <p>Whether the Help Center is turned on or not. This is controlled in your Help Center settings.</p>
+         * Whether the Help Center is turned on or not. This is controlled in your Help Center settings.<p>Whether the Help Center is turned on or not. This is controlled in your Help Center settings.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -284,7 +305,7 @@ public final class HelpCenter {
         }
 
         /**
-         * <p>The display name of the Help Center only seen by teammates.</p>
+         * The display name of the Help Center only seen by teammates.<p>The display name of the Help Center only seen by teammates.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -304,6 +325,9 @@ public final class HelpCenter {
             return this;
         }
 
+        /**
+         * <p>The time when the Help Center was last updated.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
         public _FinalStage updatedAt(Optional<Integer> updatedAt) {

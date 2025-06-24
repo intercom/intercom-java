@@ -101,6 +101,9 @@ public final class PaginatedNewsItemResponse {
     }
 
     public interface TotalCountStage {
+        /**
+         * A count of the total number of News Items.
+         */
         _FinalStage totalCount(int totalCount);
 
         Builder from(PaginatedNewsItemResponse other);
@@ -113,6 +116,9 @@ public final class PaginatedNewsItemResponse {
 
         _FinalStage pages(CursorPages pages);
 
+        /**
+         * <p>An array of News Items</p>
+         */
         _FinalStage data(List<NewsItem> data);
 
         _FinalStage addData(NewsItem data);
@@ -142,7 +148,7 @@ public final class PaginatedNewsItemResponse {
         }
 
         /**
-         * <p>A count of the total number of News Items.</p>
+         * A count of the total number of News Items.<p>A count of the total number of News Items.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -172,6 +178,9 @@ public final class PaginatedNewsItemResponse {
             return this;
         }
 
+        /**
+         * <p>An array of News Items</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
         public _FinalStage data(List<NewsItem> data) {

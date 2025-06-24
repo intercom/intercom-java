@@ -145,12 +145,18 @@ public final class SubscriptionType {
     }
 
     public interface IdStage {
+        /**
+         * The unique identifier representing the subscription type.
+         */
         StateStage id(@NotNull String id);
 
         Builder from(SubscriptionType other);
     }
 
     public interface StateStage {
+        /**
+         * The state of the subscription type.
+         */
         DefaultTranslationStage state(@NotNull State state);
     }
 
@@ -159,18 +165,27 @@ public final class SubscriptionType {
     }
 
     public interface ConsentTypeStage {
+        /**
+         * Describes the type of consent.
+         */
         _FinalStage consentType(@NotNull ConsentType consentType);
     }
 
     public interface _FinalStage {
         SubscriptionType build();
 
+        /**
+         * <p>An array of translations objects with the localised version of the subscription type in each available locale within your translation settings.</p>
+         */
         _FinalStage translations(List<Translation> translations);
 
         _FinalStage addTranslations(Translation translations);
 
         _FinalStage addAllTranslations(List<Translation> translations);
 
+        /**
+         * <p>The message types that this subscription supports - can contain <code>email</code> or <code>sms_message</code>.</p>
+         */
         _FinalStage contentTypes(List<ContentTypesItem> contentTypes);
 
         _FinalStage addContentTypes(ContentTypesItem contentTypes);
@@ -210,7 +225,7 @@ public final class SubscriptionType {
         }
 
         /**
-         * <p>The unique identifier representing the subscription type.</p>
+         * The unique identifier representing the subscription type.<p>The unique identifier representing the subscription type.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -221,7 +236,7 @@ public final class SubscriptionType {
         }
 
         /**
-         * <p>The state of the subscription type.</p>
+         * The state of the subscription type.<p>The state of the subscription type.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -239,7 +254,7 @@ public final class SubscriptionType {
         }
 
         /**
-         * <p>Describes the type of consent.</p>
+         * Describes the type of consent.<p>Describes the type of consent.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -269,6 +284,9 @@ public final class SubscriptionType {
             return this;
         }
 
+        /**
+         * <p>The message types that this subscription supports - can contain <code>email</code> or <code>sms_message</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "content_types", nulls = Nulls.SKIP)
         public _FinalStage contentTypes(List<ContentTypesItem> contentTypes) {
@@ -297,6 +315,9 @@ public final class SubscriptionType {
             return this;
         }
 
+        /**
+         * <p>An array of translations objects with the localised version of the subscription type in each available locale within your translation settings.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "translations", nulls = Nulls.SKIP)
         public _FinalStage translations(List<Translation> translations) {

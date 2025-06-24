@@ -98,6 +98,9 @@ public final class ListDataAttributesRequest {
             return this;
         }
 
+        /**
+         * <p>Specify the data attribute model to return.</p>
+         */
         @JsonSetter(value = "model", nulls = Nulls.SKIP)
         public Builder model(Optional<DataAttributesListRequestModel> model) {
             this.model = model;
@@ -109,6 +112,9 @@ public final class ListDataAttributesRequest {
             return this;
         }
 
+        /**
+         * <p>Include archived attributes in the list. By default we return only non archived data attributes.</p>
+         */
         @JsonSetter(value = "include_archived", nulls = Nulls.SKIP)
         public Builder includeArchived(Optional<Boolean> includeArchived) {
             this.includeArchived = includeArchived;

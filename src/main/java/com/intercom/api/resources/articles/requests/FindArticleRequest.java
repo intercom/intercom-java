@@ -66,6 +66,9 @@ public final class FindArticleRequest {
     }
 
     public interface ArticleIdStage {
+        /**
+         * The unique identifier for the article which is given by Intercom.
+         */
         _FinalStage articleId(@NotNull String articleId);
 
         Builder from(FindArticleRequest other);
@@ -91,7 +94,7 @@ public final class FindArticleRequest {
         }
 
         /**
-         * <p>The unique identifier for the article which is given by Intercom.</p>
+         * The unique identifier for the article which is given by Intercom.<p>The unique identifier for the article which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

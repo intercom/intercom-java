@@ -98,6 +98,9 @@ public final class TeamPriorityLevel {
             return this;
         }
 
+        /**
+         * <p>The primary team ids for the team</p>
+         */
         @JsonSetter(value = "primary_team_ids", nulls = Nulls.SKIP)
         public Builder primaryTeamIds(Optional<List<Integer>> primaryTeamIds) {
             this.primaryTeamIds = primaryTeamIds;
@@ -109,6 +112,9 @@ public final class TeamPriorityLevel {
             return this;
         }
 
+        /**
+         * <p>The secondary team ids for the team</p>
+         */
         @JsonSetter(value = "secondary_team_ids", nulls = Nulls.SKIP)
         public Builder secondaryTeamIds(Optional<List<Integer>> secondaryTeamIds) {
             this.secondaryTeamIds = secondaryTeamIds;

@@ -106,6 +106,9 @@ public final class UpdateConversationRequest {
     }
 
     public interface ConversationIdStage {
+        /**
+         * The id of the conversation to target
+         */
         _FinalStage conversationId(@NotNull String conversationId);
 
         Builder from(UpdateConversationRequest other);
@@ -114,10 +117,16 @@ public final class UpdateConversationRequest {
     public interface _FinalStage {
         UpdateConversationRequest build();
 
+        /**
+         * <p>Set to plaintext to retrieve conversation messages in plain text.</p>
+         */
         _FinalStage displayAs(Optional<String> displayAs);
 
         _FinalStage displayAs(String displayAs);
 
+        /**
+         * <p>Mark a conversation as read within Intercom.</p>
+         */
         _FinalStage read(Optional<Boolean> read);
 
         _FinalStage read(Boolean read);
@@ -152,7 +161,7 @@ public final class UpdateConversationRequest {
         }
 
         /**
-         * <p>The id of the conversation to target</p>
+         * The id of the conversation to target<p>The id of the conversation to target</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -185,6 +194,9 @@ public final class UpdateConversationRequest {
             return this;
         }
 
+        /**
+         * <p>Mark a conversation as read within Intercom.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "read", nulls = Nulls.SKIP)
         public _FinalStage read(Optional<Boolean> read) {
@@ -202,6 +214,9 @@ public final class UpdateConversationRequest {
             return this;
         }
 
+        /**
+         * <p>Set to plaintext to retrieve conversation messages in plain text.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "display_as", nulls = Nulls.SKIP)
         public _FinalStage displayAs(Optional<String> displayAs) {

@@ -124,6 +124,9 @@ public final class CreateTicketTypeRequest {
     }
 
     public interface NameStage {
+        /**
+         * The name of the ticket type.
+         */
         _FinalStage name(@NotNull String name);
 
         Builder from(CreateTicketTypeRequest other);
@@ -132,18 +135,30 @@ public final class CreateTicketTypeRequest {
     public interface _FinalStage {
         CreateTicketTypeRequest build();
 
+        /**
+         * <p>The description of the ticket type.</p>
+         */
         _FinalStage description(Optional<String> description);
 
         _FinalStage description(String description);
 
+        /**
+         * <p>Category of the Ticket Type.</p>
+         */
         _FinalStage category(Optional<Category> category);
 
         _FinalStage category(Category category);
 
+        /**
+         * <p>The icon of the ticket type.</p>
+         */
         _FinalStage icon(Optional<String> icon);
 
         _FinalStage icon(String icon);
 
+        /**
+         * <p>Whether the tickets associated with this ticket type are intended for internal use only or will be shared with customers. This is currently a limited attribute.</p>
+         */
         _FinalStage isInternal(Optional<Boolean> isInternal);
 
         _FinalStage isInternal(Boolean isInternal);
@@ -177,7 +192,7 @@ public final class CreateTicketTypeRequest {
         }
 
         /**
-         * <p>The name of the ticket type.</p>
+         * The name of the ticket type.<p>The name of the ticket type.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -197,6 +212,9 @@ public final class CreateTicketTypeRequest {
             return this;
         }
 
+        /**
+         * <p>Whether the tickets associated with this ticket type are intended for internal use only or will be shared with customers. This is currently a limited attribute.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "is_internal", nulls = Nulls.SKIP)
         public _FinalStage isInternal(Optional<Boolean> isInternal) {
@@ -214,6 +232,9 @@ public final class CreateTicketTypeRequest {
             return this;
         }
 
+        /**
+         * <p>The icon of the ticket type.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "icon", nulls = Nulls.SKIP)
         public _FinalStage icon(Optional<String> icon) {
@@ -231,6 +252,9 @@ public final class CreateTicketTypeRequest {
             return this;
         }
 
+        /**
+         * <p>Category of the Ticket Type.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "category", nulls = Nulls.SKIP)
         public _FinalStage category(Optional<Category> category) {
@@ -248,6 +272,9 @@ public final class CreateTicketTypeRequest {
             return this;
         }
 
+        /**
+         * <p>The description of the ticket type.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "description", nulls = Nulls.SKIP)
         public _FinalStage description(Optional<String> description) {

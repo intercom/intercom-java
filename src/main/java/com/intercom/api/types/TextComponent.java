@@ -124,6 +124,9 @@ public final class TextComponent {
     }
 
     public interface TextStage {
+        /**
+         * The text that will be rendered.
+         */
         _FinalStage text(@NotNull String text);
 
         Builder from(TextComponent other);
@@ -132,18 +135,30 @@ public final class TextComponent {
     public interface _FinalStage {
         TextComponent build();
 
+        /**
+         * <p>A unique identifier for the component.</p>
+         */
         _FinalStage id(Optional<String> id);
 
         _FinalStage id(String id);
 
+        /**
+         * <p>Aligns the text. Default is <code>left</code>.</p>
+         */
         _FinalStage align(Optional<Align> align);
 
         _FinalStage align(Align align);
 
+        /**
+         * <p>Styles the text. Default is <code>paragraph</code>.</p>
+         */
         _FinalStage style(Optional<Style> style);
 
         _FinalStage style(Style style);
 
+        /**
+         * <p>Disables a component's margin-bottom of 10px.</p>
+         */
         _FinalStage bottomMargin(Optional<String> bottomMargin);
 
         _FinalStage bottomMargin(String bottomMargin);
@@ -177,7 +192,7 @@ public final class TextComponent {
         }
 
         /**
-         * <p>The text that will be rendered.</p>
+         * The text that will be rendered.<p>The text that will be rendered.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -197,6 +212,9 @@ public final class TextComponent {
             return this;
         }
 
+        /**
+         * <p>Disables a component's margin-bottom of 10px.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "bottom_margin", nulls = Nulls.SKIP)
         public _FinalStage bottomMargin(Optional<String> bottomMargin) {
@@ -214,6 +232,9 @@ public final class TextComponent {
             return this;
         }
 
+        /**
+         * <p>Styles the text. Default is <code>paragraph</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "style", nulls = Nulls.SKIP)
         public _FinalStage style(Optional<Style> style) {
@@ -231,6 +252,9 @@ public final class TextComponent {
             return this;
         }
 
+        /**
+         * <p>Aligns the text. Default is <code>left</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "align", nulls = Nulls.SKIP)
         public _FinalStage align(Optional<Align> align) {
@@ -248,6 +272,9 @@ public final class TextComponent {
             return this;
         }
 
+        /**
+         * <p>A unique identifier for the component.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "id", nulls = Nulls.SKIP)
         public _FinalStage id(Optional<String> id) {

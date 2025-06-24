@@ -96,6 +96,9 @@ public final class SubmitResponse {
     }
 
     public interface CanvasStage {
+        /**
+         * The canvas object that defines the new UI to be shown.
+         */
         _FinalStage canvas(@NotNull CanvasObject canvas);
 
         Builder from(SubmitResponse other);
@@ -104,10 +107,16 @@ public final class SubmitResponse {
     public interface _FinalStage {
         SubmitResponse build();
 
+        /**
+         * <p>Optional. Key-value pairs that will be sent in the initialize request to insert an app into the conversation reply.</p>
+         */
         _FinalStage cardCreationOptions(Optional<Map<String, Object>> cardCreationOptions);
 
         _FinalStage cardCreationOptions(Map<String, Object> cardCreationOptions);
 
+        /**
+         * <p>Optional. Indicates if the app has completed its purpose.</p>
+         */
         _FinalStage event(Optional<Event> event);
 
         _FinalStage event(Event event);
@@ -135,7 +144,7 @@ public final class SubmitResponse {
         }
 
         /**
-         * <p>The canvas object that defines the new UI to be shown.</p>
+         * The canvas object that defines the new UI to be shown.<p>The canvas object that defines the new UI to be shown.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -155,6 +164,9 @@ public final class SubmitResponse {
             return this;
         }
 
+        /**
+         * <p>Optional. Indicates if the app has completed its purpose.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "event", nulls = Nulls.SKIP)
         public _FinalStage event(Optional<Event> event) {
@@ -172,6 +184,9 @@ public final class SubmitResponse {
             return this;
         }
 
+        /**
+         * <p>Optional. Key-value pairs that will be sent in the initialize request to insert an app into the conversation reply.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "card_creation_options", nulls = Nulls.SKIP)
         public _FinalStage cardCreationOptions(Optional<Map<String, Object>> cardCreationOptions) {

@@ -149,26 +149,44 @@ public final class FileAttribute {
     }
 
     public interface NameStage {
+        /**
+         * The name of the file
+         */
         UrlStage name(@NotNull String name);
     }
 
     public interface UrlStage {
+        /**
+         * The url of the file. This is a temporary URL and will expire after 30 minutes.
+         */
         ContentTypeStage url(@NotNull String url);
     }
 
     public interface ContentTypeStage {
+        /**
+         * The type of file
+         */
         FilesizeStage contentType(@NotNull String contentType);
     }
 
     public interface FilesizeStage {
+        /**
+         * The size of the file in bytes
+         */
         WidthStage filesize(int filesize);
     }
 
     public interface WidthStage {
+        /**
+         * The width of the file in pixels, if applicable
+         */
         HeightStage width(int width);
     }
 
     public interface HeightStage {
+        /**
+         * The height of the file in pixels, if applicable
+         */
         _FinalStage height(int height);
     }
 
@@ -225,7 +243,7 @@ public final class FileAttribute {
         }
 
         /**
-         * <p>The name of the file</p>
+         * The name of the file<p>The name of the file</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -236,7 +254,7 @@ public final class FileAttribute {
         }
 
         /**
-         * <p>The url of the file. This is a temporary URL and will expire after 30 minutes.</p>
+         * The url of the file. This is a temporary URL and will expire after 30 minutes.<p>The url of the file. This is a temporary URL and will expire after 30 minutes.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -247,7 +265,7 @@ public final class FileAttribute {
         }
 
         /**
-         * <p>The type of file</p>
+         * The type of file<p>The type of file</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -258,7 +276,7 @@ public final class FileAttribute {
         }
 
         /**
-         * <p>The size of the file in bytes</p>
+         * The size of the file in bytes<p>The size of the file in bytes</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -269,7 +287,7 @@ public final class FileAttribute {
         }
 
         /**
-         * <p>The width of the file in pixels, if applicable</p>
+         * The width of the file in pixels, if applicable<p>The width of the file in pixels, if applicable</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -280,7 +298,7 @@ public final class FileAttribute {
         }
 
         /**
-         * <p>The height of the file in pixels, if applicable</p>
+         * The height of the file in pixels, if applicable<p>The height of the file in pixels, if applicable</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

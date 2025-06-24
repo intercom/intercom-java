@@ -200,46 +200,76 @@ public final class SubmitRequest {
     }
 
     public interface WorkspaceIdStage {
+        /**
+         * The workspace ID of the teammate. Attribute is `app_id` for V1.2 and below.
+         */
         WorkspaceRegionStage workspaceId(@NotNull String workspaceId);
 
         Builder from(SubmitRequest other);
     }
 
     public interface WorkspaceRegionStage {
+        /**
+         * The Intercom hosted region that this app is located in.
+         */
         AdminStage workspaceRegion(@NotNull String workspaceRegion);
     }
 
     public interface AdminStage {
+        /**
+         * The Intercom teammate viewing the conversation.
+         */
         ComponentIdStage admin(@NotNull Admin admin);
     }
 
     public interface ComponentIdStage {
+        /**
+         * The id of the component clicked by the teammate to trigger the request.
+         */
         ContextStage componentId(@NotNull String componentId);
     }
 
     public interface ContextStage {
+        /**
+         * The context of where the app is added, where the user last visited, and information on the Messenger settings.
+         */
         ConversationStage context(@NotNull Context context);
     }
 
     public interface ConversationStage {
+        /**
+         * The conversation where your app is being shown.
+         */
         CurrentCanvasStage conversation(@NotNull Conversation conversation);
     }
 
     public interface CurrentCanvasStage {
+        /**
+         * The current canvas the teammate can see.
+         */
         ContactStage currentCanvas(@NotNull CurrentCanvas currentCanvas);
     }
 
     public interface ContactStage {
+        /**
+         * The contact which is currently being viewed by the teammate in the conversation details panel.
+         */
         UserStage contact(@NotNull Contact contact);
     }
 
     public interface UserStage {
+        /**
+         * The user who took the action.
+         */
         _FinalStage user(@NotNull Contact user);
     }
 
     public interface _FinalStage {
         SubmitRequest build();
 
+        /**
+         * <p>A list of key/value pairs of data, inputted by the teammate on the current canvas.</p>
+         */
         _FinalStage inputValues(Map<String, Object> inputValues);
 
         _FinalStage putAllInputValues(Map<String, Object> inputValues);
@@ -300,7 +330,7 @@ public final class SubmitRequest {
         }
 
         /**
-         * <p>The workspace ID of the teammate. Attribute is <code>app_id</code> for V1.2 and below.</p>
+         * The workspace ID of the teammate. Attribute is `app_id` for V1.2 and below.<p>The workspace ID of the teammate. Attribute is <code>app_id</code> for V1.2 and below.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -311,7 +341,7 @@ public final class SubmitRequest {
         }
 
         /**
-         * <p>The Intercom hosted region that this app is located in.</p>
+         * The Intercom hosted region that this app is located in.<p>The Intercom hosted region that this app is located in.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -322,7 +352,7 @@ public final class SubmitRequest {
         }
 
         /**
-         * <p>The Intercom teammate viewing the conversation.</p>
+         * The Intercom teammate viewing the conversation.<p>The Intercom teammate viewing the conversation.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -333,7 +363,7 @@ public final class SubmitRequest {
         }
 
         /**
-         * <p>The id of the component clicked by the teammate to trigger the request.</p>
+         * The id of the component clicked by the teammate to trigger the request.<p>The id of the component clicked by the teammate to trigger the request.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -344,7 +374,7 @@ public final class SubmitRequest {
         }
 
         /**
-         * <p>The context of where the app is added, where the user last visited, and information on the Messenger settings.</p>
+         * The context of where the app is added, where the user last visited, and information on the Messenger settings.<p>The context of where the app is added, where the user last visited, and information on the Messenger settings.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -355,7 +385,7 @@ public final class SubmitRequest {
         }
 
         /**
-         * <p>The conversation where your app is being shown.</p>
+         * The conversation where your app is being shown.<p>The conversation where your app is being shown.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -366,7 +396,7 @@ public final class SubmitRequest {
         }
 
         /**
-         * <p>The current canvas the teammate can see.</p>
+         * The current canvas the teammate can see.<p>The current canvas the teammate can see.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -377,7 +407,7 @@ public final class SubmitRequest {
         }
 
         /**
-         * <p>The contact which is currently being viewed by the teammate in the conversation details panel.</p>
+         * The contact which is currently being viewed by the teammate in the conversation details panel.<p>The contact which is currently being viewed by the teammate in the conversation details panel.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -388,7 +418,7 @@ public final class SubmitRequest {
         }
 
         /**
-         * <p>The user who took the action.</p>
+         * The user who took the action.<p>The user who took the action.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -418,6 +448,9 @@ public final class SubmitRequest {
             return this;
         }
 
+        /**
+         * <p>A list of key/value pairs of data, inputted by the teammate on the current canvas.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "input_values", nulls = Nulls.SKIP)
         public _FinalStage inputValues(Map<String, Object> inputValues) {

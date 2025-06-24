@@ -89,6 +89,9 @@ public final class ConversationTeammates {
             return this;
         }
 
+        /**
+         * <p>The list of teammates who participated in the conversation (wrote at least one conversation part).</p>
+         */
         @JsonSetter(value = "admins", nulls = Nulls.SKIP)
         public Builder admins(List<Reference> admins) {
             this.admins.clear();

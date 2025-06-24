@@ -101,6 +101,9 @@ public final class ContactAttachedCompanies {
     }
 
     public interface TotalCountStage {
+        /**
+         * The total number of companies associated to this contact
+         */
         _FinalStage totalCount(int totalCount);
 
         Builder from(ContactAttachedCompanies other);
@@ -109,6 +112,9 @@ public final class ContactAttachedCompanies {
     public interface _FinalStage {
         ContactAttachedCompanies build();
 
+        /**
+         * <p>An array containing Company Objects</p>
+         */
         _FinalStage companies(List<Company> companies);
 
         _FinalStage addCompanies(Company companies);
@@ -142,7 +148,7 @@ public final class ContactAttachedCompanies {
         }
 
         /**
-         * <p>The total number of companies associated to this contact</p>
+         * The total number of companies associated to this contact<p>The total number of companies associated to this contact</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -185,6 +191,9 @@ public final class ContactAttachedCompanies {
             return this;
         }
 
+        /**
+         * <p>An array containing Company Objects</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "companies", nulls = Nulls.SKIP)
         public _FinalStage companies(List<Company> companies) {

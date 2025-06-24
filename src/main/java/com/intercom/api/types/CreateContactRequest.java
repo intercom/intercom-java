@@ -40,6 +40,7 @@ public final class CreateContactRequest {
         return this.value;
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T visit(Visitor<T> visitor) {
         if (this.type == 0) {
             return visitor.visit((WithEmail) this.value);
@@ -280,6 +281,9 @@ public final class CreateContactRequest {
         }
 
         public interface EmailStage {
+            /**
+             * The contacts email
+             */
             _FinalStage email(@NotNull String email);
 
             Builder from(WithEmail other);
@@ -288,34 +292,58 @@ public final class CreateContactRequest {
         public interface _FinalStage {
             WithEmail build();
 
+            /**
+             * <p>The contacts phone</p>
+             */
             _FinalStage phone(Optional<String> phone);
 
             _FinalStage phone(String phone);
 
+            /**
+             * <p>The contacts name</p>
+             */
             _FinalStage name(Optional<String> name);
 
             _FinalStage name(String name);
 
+            /**
+             * <p>An image URL containing the avatar of a contact</p>
+             */
             _FinalStage avatar(Optional<String> avatar);
 
             _FinalStage avatar(String avatar);
 
+            /**
+             * <p>The time specified for when a contact signed up</p>
+             */
             _FinalStage signedUpAt(Optional<Integer> signedUpAt);
 
             _FinalStage signedUpAt(Integer signedUpAt);
 
+            /**
+             * <p>The time when the contact was last seen (either where the Intercom Messenger was installed or when specified manually)</p>
+             */
             _FinalStage lastSeenAt(Optional<Integer> lastSeenAt);
 
             _FinalStage lastSeenAt(Integer lastSeenAt);
 
+            /**
+             * <p>The id of an admin that has been assigned account ownership of the contact</p>
+             */
             _FinalStage ownerId(Optional<Integer> ownerId);
 
             _FinalStage ownerId(Integer ownerId);
 
+            /**
+             * <p>Whether the contact is unsubscribed from emails</p>
+             */
             _FinalStage unsubscribedFromEmails(Optional<Boolean> unsubscribedFromEmails);
 
             _FinalStage unsubscribedFromEmails(Boolean unsubscribedFromEmails);
 
+            /**
+             * <p>The custom attributes which are set for the contact</p>
+             */
             _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes);
 
             _FinalStage customAttributes(Map<String, Object> customAttributes);
@@ -361,7 +389,7 @@ public final class CreateContactRequest {
             }
 
             /**
-             * <p>The contacts email</p>
+             * The contacts email<p>The contacts email</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -381,6 +409,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>The custom attributes which are set for the contact</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "custom_attributes", nulls = Nulls.SKIP)
             public _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes) {
@@ -398,6 +429,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>Whether the contact is unsubscribed from emails</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "unsubscribed_from_emails", nulls = Nulls.SKIP)
             public _FinalStage unsubscribedFromEmails(Optional<Boolean> unsubscribedFromEmails) {
@@ -415,6 +449,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>The id of an admin that has been assigned account ownership of the contact</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "owner_id", nulls = Nulls.SKIP)
             public _FinalStage ownerId(Optional<Integer> ownerId) {
@@ -432,6 +469,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>The time when the contact was last seen (either where the Intercom Messenger was installed or when specified manually)</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "last_seen_at", nulls = Nulls.SKIP)
             public _FinalStage lastSeenAt(Optional<Integer> lastSeenAt) {
@@ -449,6 +489,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>The time specified for when a contact signed up</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "signed_up_at", nulls = Nulls.SKIP)
             public _FinalStage signedUpAt(Optional<Integer> signedUpAt) {
@@ -466,6 +509,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>An image URL containing the avatar of a contact</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "avatar", nulls = Nulls.SKIP)
             public _FinalStage avatar(Optional<String> avatar) {
@@ -483,6 +529,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>The contacts name</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "name", nulls = Nulls.SKIP)
             public _FinalStage name(Optional<String> name) {
@@ -500,6 +549,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>The contacts phone</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "phone", nulls = Nulls.SKIP)
             public _FinalStage phone(Optional<String> phone) {
@@ -689,6 +741,9 @@ public final class CreateContactRequest {
         }
 
         public interface RoleStage {
+            /**
+             * The role of the contact.
+             */
             _FinalStage role(@NotNull String role);
 
             Builder from(WithRole other);
@@ -697,34 +752,58 @@ public final class CreateContactRequest {
         public interface _FinalStage {
             WithRole build();
 
+            /**
+             * <p>The contacts phone</p>
+             */
             _FinalStage phone(Optional<String> phone);
 
             _FinalStage phone(String phone);
 
+            /**
+             * <p>The contacts name</p>
+             */
             _FinalStage name(Optional<String> name);
 
             _FinalStage name(String name);
 
+            /**
+             * <p>An image URL containing the avatar of a contact</p>
+             */
             _FinalStage avatar(Optional<String> avatar);
 
             _FinalStage avatar(String avatar);
 
+            /**
+             * <p>The time specified for when a contact signed up</p>
+             */
             _FinalStage signedUpAt(Optional<Integer> signedUpAt);
 
             _FinalStage signedUpAt(Integer signedUpAt);
 
+            /**
+             * <p>The time when the contact was last seen (either where the Intercom Messenger was installed or when specified manually)</p>
+             */
             _FinalStage lastSeenAt(Optional<Integer> lastSeenAt);
 
             _FinalStage lastSeenAt(Integer lastSeenAt);
 
+            /**
+             * <p>The id of an admin that has been assigned account ownership of the contact</p>
+             */
             _FinalStage ownerId(Optional<Integer> ownerId);
 
             _FinalStage ownerId(Integer ownerId);
 
+            /**
+             * <p>Whether the contact is unsubscribed from emails</p>
+             */
             _FinalStage unsubscribedFromEmails(Optional<Boolean> unsubscribedFromEmails);
 
             _FinalStage unsubscribedFromEmails(Boolean unsubscribedFromEmails);
 
+            /**
+             * <p>The custom attributes which are set for the contact</p>
+             */
             _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes);
 
             _FinalStage customAttributes(Map<String, Object> customAttributes);
@@ -770,7 +849,7 @@ public final class CreateContactRequest {
             }
 
             /**
-             * <p>The role of the contact.</p>
+             * The role of the contact.<p>The role of the contact.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -790,6 +869,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>The custom attributes which are set for the contact</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "custom_attributes", nulls = Nulls.SKIP)
             public _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes) {
@@ -807,6 +889,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>Whether the contact is unsubscribed from emails</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "unsubscribed_from_emails", nulls = Nulls.SKIP)
             public _FinalStage unsubscribedFromEmails(Optional<Boolean> unsubscribedFromEmails) {
@@ -824,6 +909,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>The id of an admin that has been assigned account ownership of the contact</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "owner_id", nulls = Nulls.SKIP)
             public _FinalStage ownerId(Optional<Integer> ownerId) {
@@ -841,6 +929,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>The time when the contact was last seen (either where the Intercom Messenger was installed or when specified manually)</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "last_seen_at", nulls = Nulls.SKIP)
             public _FinalStage lastSeenAt(Optional<Integer> lastSeenAt) {
@@ -858,6 +949,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>The time specified for when a contact signed up</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "signed_up_at", nulls = Nulls.SKIP)
             public _FinalStage signedUpAt(Optional<Integer> signedUpAt) {
@@ -875,6 +969,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>An image URL containing the avatar of a contact</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "avatar", nulls = Nulls.SKIP)
             public _FinalStage avatar(Optional<String> avatar) {
@@ -892,6 +989,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>The contacts name</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "name", nulls = Nulls.SKIP)
             public _FinalStage name(Optional<String> name) {
@@ -909,6 +1009,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>The contacts phone</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "phone", nulls = Nulls.SKIP)
             public _FinalStage phone(Optional<String> phone) {
@@ -1098,6 +1201,9 @@ public final class CreateContactRequest {
         }
 
         public interface ExternalIdStage {
+            /**
+             * A unique identifier for the contact which is given to Intercom
+             */
             _FinalStage externalId(@NotNull String externalId);
 
             Builder from(WithExternalId other);
@@ -1106,34 +1212,58 @@ public final class CreateContactRequest {
         public interface _FinalStage {
             WithExternalId build();
 
+            /**
+             * <p>The contacts phone</p>
+             */
             _FinalStage phone(Optional<String> phone);
 
             _FinalStage phone(String phone);
 
+            /**
+             * <p>The contacts name</p>
+             */
             _FinalStage name(Optional<String> name);
 
             _FinalStage name(String name);
 
+            /**
+             * <p>An image URL containing the avatar of a contact</p>
+             */
             _FinalStage avatar(Optional<String> avatar);
 
             _FinalStage avatar(String avatar);
 
+            /**
+             * <p>The time specified for when a contact signed up</p>
+             */
             _FinalStage signedUpAt(Optional<Integer> signedUpAt);
 
             _FinalStage signedUpAt(Integer signedUpAt);
 
+            /**
+             * <p>The time when the contact was last seen (either where the Intercom Messenger was installed or when specified manually)</p>
+             */
             _FinalStage lastSeenAt(Optional<Integer> lastSeenAt);
 
             _FinalStage lastSeenAt(Integer lastSeenAt);
 
+            /**
+             * <p>The id of an admin that has been assigned account ownership of the contact</p>
+             */
             _FinalStage ownerId(Optional<Integer> ownerId);
 
             _FinalStage ownerId(Integer ownerId);
 
+            /**
+             * <p>Whether the contact is unsubscribed from emails</p>
+             */
             _FinalStage unsubscribedFromEmails(Optional<Boolean> unsubscribedFromEmails);
 
             _FinalStage unsubscribedFromEmails(Boolean unsubscribedFromEmails);
 
+            /**
+             * <p>The custom attributes which are set for the contact</p>
+             */
             _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes);
 
             _FinalStage customAttributes(Map<String, Object> customAttributes);
@@ -1179,7 +1309,7 @@ public final class CreateContactRequest {
             }
 
             /**
-             * <p>A unique identifier for the contact which is given to Intercom</p>
+             * A unique identifier for the contact which is given to Intercom<p>A unique identifier for the contact which is given to Intercom</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -1199,6 +1329,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>The custom attributes which are set for the contact</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "custom_attributes", nulls = Nulls.SKIP)
             public _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes) {
@@ -1216,6 +1349,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>Whether the contact is unsubscribed from emails</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "unsubscribed_from_emails", nulls = Nulls.SKIP)
             public _FinalStage unsubscribedFromEmails(Optional<Boolean> unsubscribedFromEmails) {
@@ -1233,6 +1369,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>The id of an admin that has been assigned account ownership of the contact</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "owner_id", nulls = Nulls.SKIP)
             public _FinalStage ownerId(Optional<Integer> ownerId) {
@@ -1250,6 +1389,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>The time when the contact was last seen (either where the Intercom Messenger was installed or when specified manually)</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "last_seen_at", nulls = Nulls.SKIP)
             public _FinalStage lastSeenAt(Optional<Integer> lastSeenAt) {
@@ -1267,6 +1409,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>The time specified for when a contact signed up</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "signed_up_at", nulls = Nulls.SKIP)
             public _FinalStage signedUpAt(Optional<Integer> signedUpAt) {
@@ -1284,6 +1429,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>An image URL containing the avatar of a contact</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "avatar", nulls = Nulls.SKIP)
             public _FinalStage avatar(Optional<String> avatar) {
@@ -1301,6 +1449,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>The contacts name</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "name", nulls = Nulls.SKIP)
             public _FinalStage name(Optional<String> name) {
@@ -1318,6 +1469,9 @@ public final class CreateContactRequest {
                 return this;
             }
 
+            /**
+             * <p>The contacts phone</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "phone", nulls = Nulls.SKIP)
             public _FinalStage phone(Optional<String> phone) {

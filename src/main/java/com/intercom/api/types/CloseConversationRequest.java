@@ -84,6 +84,9 @@ public final class CloseConversationRequest {
     }
 
     public interface AdminIdStage {
+        /**
+         * The id of the admin who is performing the action.
+         */
         _FinalStage adminId(@NotNull String adminId);
 
         Builder from(CloseConversationRequest other);
@@ -92,6 +95,9 @@ public final class CloseConversationRequest {
     public interface _FinalStage {
         CloseConversationRequest build();
 
+        /**
+         * <p>Optionally you can leave a message in the conversation to provide additional context to the user and other teammates.</p>
+         */
         _FinalStage body(Optional<String> body);
 
         _FinalStage body(String body);
@@ -116,7 +122,7 @@ public final class CloseConversationRequest {
         }
 
         /**
-         * <p>The id of the admin who is performing the action.</p>
+         * The id of the admin who is performing the action.<p>The id of the admin who is performing the action.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -136,6 +142,9 @@ public final class CloseConversationRequest {
             return this;
         }
 
+        /**
+         * <p>Optionally you can leave a message in the conversation to provide additional context to the user and other teammates.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "body", nulls = Nulls.SKIP)
         public _FinalStage body(Optional<String> body) {

@@ -163,6 +163,9 @@ public final class CompanyScroll {
             return this;
         }
 
+        /**
+         * <p>The total number of companies</p>
+         */
         @JsonSetter(value = "total_count", nulls = Nulls.SKIP)
         public Builder totalCount(Optional<Integer> totalCount) {
             this.totalCount = totalCount;
@@ -174,6 +177,9 @@ public final class CompanyScroll {
             return this;
         }
 
+        /**
+         * <p>The scroll parameter to use in the next request to fetch the next page of results.</p>
+         */
         @JsonSetter(value = "scroll_param", nulls = Nulls.SKIP)
         public Builder scrollParam(Optional<String> scrollParam) {
             this.scrollParam = scrollParam;

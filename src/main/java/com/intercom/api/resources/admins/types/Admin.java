@@ -211,48 +211,78 @@ public final class Admin {
     }
 
     public interface IdStage {
+        /**
+         * The id representing the admin.
+         */
         NameStage id(@NotNull String id);
 
         Builder from(Admin other);
     }
 
     public interface NameStage {
+        /**
+         * The name of the admin.
+         */
         EmailStage name(@NotNull String name);
     }
 
     public interface EmailStage {
+        /**
+         * The email of the admin.
+         */
         JobTitleStage email(@NotNull String email);
     }
 
     public interface JobTitleStage {
+        /**
+         * The job title of the admin.
+         */
         AwayModeEnabledStage jobTitle(@NotNull String jobTitle);
     }
 
     public interface AwayModeEnabledStage {
+        /**
+         * Identifies if this admin is currently set in away mode.
+         */
         AwayModeReassignStage awayModeEnabled(boolean awayModeEnabled);
     }
 
     public interface AwayModeReassignStage {
+        /**
+         * Identifies if this admin is set to automatically reassign new conversations to the apps default inbox.
+         */
         HasInboxSeatStage awayModeReassign(boolean awayModeReassign);
     }
 
     public interface HasInboxSeatStage {
+        /**
+         * Identifies if this admin has a paid inbox seat to restrict/allow features that require them.
+         */
         _FinalStage hasInboxSeat(boolean hasInboxSeat);
     }
 
     public interface _FinalStage {
         Admin build();
 
+        /**
+         * <p>String representing the object's type. Always has the value <code>admin</code>.</p>
+         */
         _FinalStage type(Optional<String> type);
 
         _FinalStage type(String type);
 
+        /**
+         * <p>This object represents the avatar associated with the admin.</p>
+         */
         _FinalStage teamIds(List<Integer> teamIds);
 
         _FinalStage addTeamIds(Integer teamIds);
 
         _FinalStage addAllTeamIds(List<Integer> teamIds);
 
+        /**
+         * <p>The avatar object associated with the admin</p>
+         */
         _FinalStage avatar(Optional<Avatar> avatar);
 
         _FinalStage avatar(Avatar avatar);
@@ -316,7 +346,7 @@ public final class Admin {
         }
 
         /**
-         * <p>The id representing the admin.</p>
+         * The id representing the admin.<p>The id representing the admin.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -327,7 +357,7 @@ public final class Admin {
         }
 
         /**
-         * <p>The name of the admin.</p>
+         * The name of the admin.<p>The name of the admin.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -338,7 +368,7 @@ public final class Admin {
         }
 
         /**
-         * <p>The email of the admin.</p>
+         * The email of the admin.<p>The email of the admin.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -349,7 +379,7 @@ public final class Admin {
         }
 
         /**
-         * <p>The job title of the admin.</p>
+         * The job title of the admin.<p>The job title of the admin.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -360,7 +390,7 @@ public final class Admin {
         }
 
         /**
-         * <p>Identifies if this admin is currently set in away mode.</p>
+         * Identifies if this admin is currently set in away mode.<p>Identifies if this admin is currently set in away mode.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -371,7 +401,7 @@ public final class Admin {
         }
 
         /**
-         * <p>Identifies if this admin is set to automatically reassign new conversations to the apps default inbox.</p>
+         * Identifies if this admin is set to automatically reassign new conversations to the apps default inbox.<p>Identifies if this admin is set to automatically reassign new conversations to the apps default inbox.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -382,7 +412,7 @@ public final class Admin {
         }
 
         /**
-         * <p>Identifies if this admin has a paid inbox seat to restrict/allow features that require them.</p>
+         * Identifies if this admin has a paid inbox seat to restrict/allow features that require them.<p>Identifies if this admin has a paid inbox seat to restrict/allow features that require them.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -415,6 +445,9 @@ public final class Admin {
             return this;
         }
 
+        /**
+         * <p>The avatar object associated with the admin</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "avatar", nulls = Nulls.SKIP)
         public _FinalStage avatar(Optional<Avatar> avatar) {
@@ -442,6 +475,9 @@ public final class Admin {
             return this;
         }
 
+        /**
+         * <p>This object represents the avatar associated with the admin.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "team_ids", nulls = Nulls.SKIP)
         public _FinalStage teamIds(List<Integer> teamIds) {
@@ -460,6 +496,9 @@ public final class Admin {
             return this;
         }
 
+        /**
+         * <p>String representing the object's type. Always has the value <code>admin</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "type", nulls = Nulls.SKIP)
         public _FinalStage type(Optional<String> type) {
@@ -535,6 +574,9 @@ public final class Admin {
         }
 
         public interface ImageUrlStage {
+            /**
+             * URL of the admin's avatar image
+             */
             _FinalStage imageUrl(@NotNull String imageUrl);
 
             Builder from(Avatar other);
@@ -560,7 +602,7 @@ public final class Admin {
             }
 
             /**
-             * <p>URL of the admin's avatar image</p>
+             * URL of the admin's avatar image<p>URL of the admin's avatar image</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override

@@ -78,6 +78,9 @@ public final class TagMultipleUsersRequest {
     }
 
     public interface NameStage {
+        /**
+         * The name of the tag, which will be created if not found.
+         */
         _FinalStage name(@NotNull String name);
 
         Builder from(TagMultipleUsersRequest other);
@@ -112,7 +115,7 @@ public final class TagMultipleUsersRequest {
         }
 
         /**
-         * <p>The name of the tag, which will be created if not found.</p>
+         * The name of the tag, which will be created if not found.<p>The name of the tag, which will be created if not found.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -211,6 +214,9 @@ public final class TagMultipleUsersRequest {
                 return this;
             }
 
+            /**
+             * <p>The Intercom defined id representing the user.</p>
+             */
             @JsonSetter(value = "id", nulls = Nulls.SKIP)
             public Builder id(Optional<String> id) {
                 this.id = id;

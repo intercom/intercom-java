@@ -135,6 +135,9 @@ public final class TextAreaComponent {
     }
 
     public interface IdStage {
+        /**
+         * A unique identifier for the component.
+         */
         _FinalStage id(@NotNull String id);
 
         Builder from(TextAreaComponent other);
@@ -143,22 +146,37 @@ public final class TextAreaComponent {
     public interface _FinalStage {
         TextAreaComponent build();
 
+        /**
+         * <p>The text shown above the text area.</p>
+         */
         _FinalStage label(Optional<String> label);
 
         _FinalStage label(String label);
 
+        /**
+         * <p>An example value shown inside the component when it's empty.</p>
+         */
         _FinalStage placeholder(Optional<String> placeholder);
 
         _FinalStage placeholder(String placeholder);
 
+        /**
+         * <p>An entered value which is already inside the component.</p>
+         */
         _FinalStage value(Optional<String> value);
 
         _FinalStage value(String value);
 
+        /**
+         * <p>Styles the input as failed. Default is false.</p>
+         */
         _FinalStage error(Optional<Boolean> error);
 
         _FinalStage error(Boolean error);
 
+        /**
+         * <p>Styles the input and prevents the action. Default is false.</p>
+         */
         _FinalStage disabled(Optional<Boolean> disabled);
 
         _FinalStage disabled(Boolean disabled);
@@ -195,7 +213,7 @@ public final class TextAreaComponent {
         }
 
         /**
-         * <p>A unique identifier for the component.</p>
+         * A unique identifier for the component.<p>A unique identifier for the component.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -215,6 +233,9 @@ public final class TextAreaComponent {
             return this;
         }
 
+        /**
+         * <p>Styles the input and prevents the action. Default is false.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "disabled", nulls = Nulls.SKIP)
         public _FinalStage disabled(Optional<Boolean> disabled) {
@@ -232,6 +253,9 @@ public final class TextAreaComponent {
             return this;
         }
 
+        /**
+         * <p>Styles the input as failed. Default is false.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "error", nulls = Nulls.SKIP)
         public _FinalStage error(Optional<Boolean> error) {
@@ -249,6 +273,9 @@ public final class TextAreaComponent {
             return this;
         }
 
+        /**
+         * <p>An entered value which is already inside the component.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "value", nulls = Nulls.SKIP)
         public _FinalStage value(Optional<String> value) {
@@ -266,6 +293,9 @@ public final class TextAreaComponent {
             return this;
         }
 
+        /**
+         * <p>An example value shown inside the component when it's empty.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "placeholder", nulls = Nulls.SKIP)
         public _FinalStage placeholder(Optional<String> placeholder) {
@@ -283,6 +313,9 @@ public final class TextAreaComponent {
             return this;
         }
 
+        /**
+         * <p>The text shown above the text area.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "label", nulls = Nulls.SKIP)
         public _FinalStage label(Optional<String> label) {

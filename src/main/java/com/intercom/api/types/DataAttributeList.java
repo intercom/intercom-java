@@ -90,6 +90,9 @@ public final class DataAttributeList {
             return this;
         }
 
+        /**
+         * <p>A list of data attributes</p>
+         */
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
         public Builder data(List<DataAttribute> data) {
             this.data.clear();

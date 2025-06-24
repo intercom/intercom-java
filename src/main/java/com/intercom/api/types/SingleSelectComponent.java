@@ -152,6 +152,9 @@ public final class SingleSelectComponent {
     }
 
     public interface IdStage {
+        /**
+         * A unique identifier for the component.
+         */
         _FinalStage id(@NotNull String id);
 
         Builder from(SingleSelectComponent other);
@@ -160,28 +163,46 @@ public final class SingleSelectComponent {
     public interface _FinalStage {
         SingleSelectComponent build();
 
+        /**
+         * <p>The list of options. Can provide 2 to 10.</p>
+         */
         _FinalStage options(List<SingleSelectOption> options);
 
         _FinalStage addOptions(SingleSelectOption options);
 
         _FinalStage addAllOptions(List<SingleSelectOption> options);
 
+        /**
+         * <p>The text shown above the options.</p>
+         */
         _FinalStage label(Optional<String> label);
 
         _FinalStage label(String label);
 
+        /**
+         * <p>The option that is selected by default.</p>
+         */
         _FinalStage value(Optional<String> value);
 
         _FinalStage value(String value);
 
+        /**
+         * <p>Styles the input. Default is <code>unsaved</code>. Prevent action with <code>saved</code>.</p>
+         */
         _FinalStage saveState(Optional<SaveState> saveState);
 
         _FinalStage saveState(SaveState saveState);
 
+        /**
+         * <p>Styles all options and prevents the action. Default is false. Will be overridden if save_state is saved.</p>
+         */
         _FinalStage disabled(Optional<Boolean> disabled);
 
         _FinalStage disabled(Boolean disabled);
 
+        /**
+         * <p>This can be a Submit Action, URL Action, or Sheets Action.</p>
+         */
         _FinalStage action(Optional<ActionComponent> action);
 
         _FinalStage action(ActionComponent action);
@@ -221,7 +242,7 @@ public final class SingleSelectComponent {
         }
 
         /**
-         * <p>A unique identifier for the component.</p>
+         * A unique identifier for the component.<p>A unique identifier for the component.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -241,6 +262,9 @@ public final class SingleSelectComponent {
             return this;
         }
 
+        /**
+         * <p>This can be a Submit Action, URL Action, or Sheets Action.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "action", nulls = Nulls.SKIP)
         public _FinalStage action(Optional<ActionComponent> action) {
@@ -258,6 +282,9 @@ public final class SingleSelectComponent {
             return this;
         }
 
+        /**
+         * <p>Styles all options and prevents the action. Default is false. Will be overridden if save_state is saved.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "disabled", nulls = Nulls.SKIP)
         public _FinalStage disabled(Optional<Boolean> disabled) {
@@ -275,6 +302,9 @@ public final class SingleSelectComponent {
             return this;
         }
 
+        /**
+         * <p>Styles the input. Default is <code>unsaved</code>. Prevent action with <code>saved</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "save_state", nulls = Nulls.SKIP)
         public _FinalStage saveState(Optional<SaveState> saveState) {
@@ -292,6 +322,9 @@ public final class SingleSelectComponent {
             return this;
         }
 
+        /**
+         * <p>The option that is selected by default.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "value", nulls = Nulls.SKIP)
         public _FinalStage value(Optional<String> value) {
@@ -309,6 +342,9 @@ public final class SingleSelectComponent {
             return this;
         }
 
+        /**
+         * <p>The text shown above the options.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "label", nulls = Nulls.SKIP)
         public _FinalStage label(Optional<String> label) {
@@ -336,6 +372,9 @@ public final class SingleSelectComponent {
             return this;
         }
 
+        /**
+         * <p>The list of options. Can provide 2 to 10.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "options", nulls = Nulls.SKIP)
         public _FinalStage options(List<SingleSelectOption> options) {

@@ -225,6 +225,9 @@ public final class UpdateContactRequest {
     }
 
     public interface ContactIdStage {
+        /**
+         * id
+         */
         _FinalStage contactId(@NotNull String contactId);
 
         Builder from(UpdateContactRequest other);
@@ -233,46 +236,79 @@ public final class UpdateContactRequest {
     public interface _FinalStage {
         UpdateContactRequest build();
 
+        /**
+         * <p>The role of the contact.</p>
+         */
         _FinalStage role(Optional<String> role);
 
         _FinalStage role(String role);
 
+        /**
+         * <p>A unique identifier for the contact which is given to Intercom</p>
+         */
         _FinalStage externalId(Optional<String> externalId);
 
         _FinalStage externalId(String externalId);
 
+        /**
+         * <p>The contacts email</p>
+         */
         _FinalStage email(Optional<String> email);
 
         _FinalStage email(String email);
 
+        /**
+         * <p>The contacts phone</p>
+         */
         _FinalStage phone(Optional<String> phone);
 
         _FinalStage phone(String phone);
 
+        /**
+         * <p>The contacts name</p>
+         */
         _FinalStage name(Optional<String> name);
 
         _FinalStage name(String name);
 
+        /**
+         * <p>An image URL containing the avatar of a contact</p>
+         */
         _FinalStage avatar(Optional<String> avatar);
 
         _FinalStage avatar(String avatar);
 
+        /**
+         * <p>The time specified for when a contact signed up</p>
+         */
         _FinalStage signedUpAt(Optional<Integer> signedUpAt);
 
         _FinalStage signedUpAt(Integer signedUpAt);
 
+        /**
+         * <p>The time when the contact was last seen (either where the Intercom Messenger was installed or when specified manually)</p>
+         */
         _FinalStage lastSeenAt(Optional<Integer> lastSeenAt);
 
         _FinalStage lastSeenAt(Integer lastSeenAt);
 
+        /**
+         * <p>The id of an admin that has been assigned account ownership of the contact</p>
+         */
         _FinalStage ownerId(Optional<Integer> ownerId);
 
         _FinalStage ownerId(Integer ownerId);
 
+        /**
+         * <p>Whether the contact is unsubscribed from emails</p>
+         */
         _FinalStage unsubscribedFromEmails(Optional<Boolean> unsubscribedFromEmails);
 
         _FinalStage unsubscribedFromEmails(Boolean unsubscribedFromEmails);
 
+        /**
+         * <p>The custom attributes which are set for the contact</p>
+         */
         _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes);
 
         _FinalStage customAttributes(Map<String, Object> customAttributes);
@@ -327,7 +363,7 @@ public final class UpdateContactRequest {
         }
 
         /**
-         * <p>id</p>
+         * id<p>id</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -347,6 +383,9 @@ public final class UpdateContactRequest {
             return this;
         }
 
+        /**
+         * <p>The custom attributes which are set for the contact</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "custom_attributes", nulls = Nulls.SKIP)
         public _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes) {
@@ -364,6 +403,9 @@ public final class UpdateContactRequest {
             return this;
         }
 
+        /**
+         * <p>Whether the contact is unsubscribed from emails</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "unsubscribed_from_emails", nulls = Nulls.SKIP)
         public _FinalStage unsubscribedFromEmails(Optional<Boolean> unsubscribedFromEmails) {
@@ -381,6 +423,9 @@ public final class UpdateContactRequest {
             return this;
         }
 
+        /**
+         * <p>The id of an admin that has been assigned account ownership of the contact</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "owner_id", nulls = Nulls.SKIP)
         public _FinalStage ownerId(Optional<Integer> ownerId) {
@@ -398,6 +443,9 @@ public final class UpdateContactRequest {
             return this;
         }
 
+        /**
+         * <p>The time when the contact was last seen (either where the Intercom Messenger was installed or when specified manually)</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "last_seen_at", nulls = Nulls.SKIP)
         public _FinalStage lastSeenAt(Optional<Integer> lastSeenAt) {
@@ -415,6 +463,9 @@ public final class UpdateContactRequest {
             return this;
         }
 
+        /**
+         * <p>The time specified for when a contact signed up</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "signed_up_at", nulls = Nulls.SKIP)
         public _FinalStage signedUpAt(Optional<Integer> signedUpAt) {
@@ -432,6 +483,9 @@ public final class UpdateContactRequest {
             return this;
         }
 
+        /**
+         * <p>An image URL containing the avatar of a contact</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "avatar", nulls = Nulls.SKIP)
         public _FinalStage avatar(Optional<String> avatar) {
@@ -449,6 +503,9 @@ public final class UpdateContactRequest {
             return this;
         }
 
+        /**
+         * <p>The contacts name</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "name", nulls = Nulls.SKIP)
         public _FinalStage name(Optional<String> name) {
@@ -466,6 +523,9 @@ public final class UpdateContactRequest {
             return this;
         }
 
+        /**
+         * <p>The contacts phone</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "phone", nulls = Nulls.SKIP)
         public _FinalStage phone(Optional<String> phone) {
@@ -483,6 +543,9 @@ public final class UpdateContactRequest {
             return this;
         }
 
+        /**
+         * <p>The contacts email</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "email", nulls = Nulls.SKIP)
         public _FinalStage email(Optional<String> email) {
@@ -500,6 +563,9 @@ public final class UpdateContactRequest {
             return this;
         }
 
+        /**
+         * <p>A unique identifier for the contact which is given to Intercom</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "external_id", nulls = Nulls.SKIP)
         public _FinalStage externalId(Optional<String> externalId) {
@@ -517,6 +583,9 @@ public final class UpdateContactRequest {
             return this;
         }
 
+        /**
+         * <p>The role of the contact.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "role", nulls = Nulls.SKIP)
         public _FinalStage role(Optional<String> role) {

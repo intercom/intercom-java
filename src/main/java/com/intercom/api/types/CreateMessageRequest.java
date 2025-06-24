@@ -352,34 +352,55 @@ public final class CreateMessageRequest {
         }
 
         public interface SubjectStage {
+            /**
+             * The title of the email.
+             */
             BodyStage subject(@NotNull String subject);
 
             Builder from(Email other);
         }
 
         public interface BodyStage {
+            /**
+             * The content of the message. HTML and plaintext are supported.
+             */
             TemplateStage body(@NotNull String body);
         }
 
         public interface TemplateStage {
+            /**
+             * The style of the outgoing message. Possible values `plain` or `personal`.
+             */
             FromStage template(@NotNull String template);
         }
 
         public interface FromStage {
+            /**
+             * The sender of the message. If not provided, the default sender will be used.
+             */
             ToStage from(@NotNull From from);
         }
 
         public interface ToStage {
+            /**
+             * The sender of the message. If not provided, the default sender will be used.
+             */
             _FinalStage to(@NotNull To to);
         }
 
         public interface _FinalStage {
             Email build();
 
+            /**
+             * <p>The time the message was created. If not provided, the current time will be used.</p>
+             */
             _FinalStage createdAt(Optional<Integer> createdAt);
 
             _FinalStage createdAt(Integer createdAt);
 
+            /**
+             * <p>Whether a conversation should be opened in the inbox for the message without the contact replying. Defaults to false if not provided.</p>
+             */
             _FinalStage createConversationWithoutContactReply(Optional<Boolean> createConversationWithoutContactReply);
 
             _FinalStage createConversationWithoutContactReply(Boolean createConversationWithoutContactReply);
@@ -420,7 +441,7 @@ public final class CreateMessageRequest {
             }
 
             /**
-             * <p>The title of the email.</p>
+             * The title of the email.<p>The title of the email.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -431,7 +452,7 @@ public final class CreateMessageRequest {
             }
 
             /**
-             * <p>The content of the message. HTML and plaintext are supported.</p>
+             * The content of the message. HTML and plaintext are supported.<p>The content of the message. HTML and plaintext are supported.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -442,7 +463,7 @@ public final class CreateMessageRequest {
             }
 
             /**
-             * <p>The style of the outgoing message. Possible values <code>plain</code> or <code>personal</code>.</p>
+             * The style of the outgoing message. Possible values `plain` or `personal`.<p>The style of the outgoing message. Possible values <code>plain</code> or <code>personal</code>.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -453,7 +474,7 @@ public final class CreateMessageRequest {
             }
 
             /**
-             * <p>The sender of the message. If not provided, the default sender will be used.</p>
+             * The sender of the message. If not provided, the default sender will be used.<p>The sender of the message. If not provided, the default sender will be used.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -464,7 +485,7 @@ public final class CreateMessageRequest {
             }
 
             /**
-             * <p>The sender of the message. If not provided, the default sender will be used.</p>
+             * The sender of the message. If not provided, the default sender will be used.<p>The sender of the message. If not provided, the default sender will be used.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -484,6 +505,9 @@ public final class CreateMessageRequest {
                 return this;
             }
 
+            /**
+             * <p>Whether a conversation should be opened in the inbox for the message without the contact replying. Defaults to false if not provided.</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "create_conversation_without_contact_reply", nulls = Nulls.SKIP)
             public _FinalStage createConversationWithoutContactReply(
@@ -502,6 +526,9 @@ public final class CreateMessageRequest {
                 return this;
             }
 
+            /**
+             * <p>The time the message was created. If not provided, the current time will be used.</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
             public _FinalStage createdAt(Optional<Integer> createdAt) {
@@ -581,6 +608,9 @@ public final class CreateMessageRequest {
             }
 
             public interface IdStage {
+                /**
+                 * The identifier for the admin which is given by Intercom.
+                 */
                 _FinalStage id(int id);
 
                 Builder from(From other);
@@ -606,7 +636,7 @@ public final class CreateMessageRequest {
                 }
 
                 /**
-                 * <p>The identifier for the admin which is given by Intercom.</p>
+                 * The identifier for the admin which is given by Intercom.<p>The identifier for the admin which is given by Intercom.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override
@@ -684,12 +714,18 @@ public final class CreateMessageRequest {
             }
 
             public interface TypeStage {
+                /**
+                 * The role associated to the contact - `user` or `lead`.
+                 */
                 IdStage type(@NotNull Type type);
 
                 Builder from(To other);
             }
 
             public interface IdStage {
+                /**
+                 * The identifier for the contact which is given by Intercom.
+                 */
                 _FinalStage id(@NotNull String id);
             }
 
@@ -716,7 +752,7 @@ public final class CreateMessageRequest {
                 }
 
                 /**
-                 * <p>The role associated to the contact - <code>user</code> or <code>lead</code>.</p>
+                 * The role associated to the contact - `user` or `lead`.<p>The role associated to the contact - <code>user</code> or <code>lead</code>.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override
@@ -727,7 +763,7 @@ public final class CreateMessageRequest {
                 }
 
                 /**
-                 * <p>The identifier for the contact which is given by Intercom.</p>
+                 * The identifier for the contact which is given by Intercom.<p>The identifier for the contact which is given by Intercom.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override
@@ -957,34 +993,55 @@ public final class CreateMessageRequest {
         }
 
         public interface BodyStage {
+            /**
+             * The content of the message. HTML and plaintext are supported.
+             */
             FromStage body(@NotNull String body);
 
             Builder from(Inapp other);
         }
 
         public interface FromStage {
+            /**
+             * The sender of the message. If not provided, the default sender will be used.
+             */
             ToStage from(@NotNull From from);
         }
 
         public interface ToStage {
+            /**
+             * The sender of the message. If not provided, the default sender will be used.
+             */
             _FinalStage to(@NotNull To to);
         }
 
         public interface _FinalStage {
             Inapp build();
 
+            /**
+             * <p>The title of the email.</p>
+             */
             _FinalStage subject(Optional<String> subject);
 
             _FinalStage subject(String subject);
 
+            /**
+             * <p>The style of the outgoing message. Possible values <code>plain</code> or <code>personal</code>.</p>
+             */
             _FinalStage template(Optional<String> template);
 
             _FinalStage template(String template);
 
+            /**
+             * <p>The time the message was created. If not provided, the current time will be used.</p>
+             */
             _FinalStage createdAt(Optional<Integer> createdAt);
 
             _FinalStage createdAt(Integer createdAt);
 
+            /**
+             * <p>Whether a conversation should be opened in the inbox for the message without the contact replying. Defaults to false if not provided.</p>
+             */
             _FinalStage createConversationWithoutContactReply(Optional<Boolean> createConversationWithoutContactReply);
 
             _FinalStage createConversationWithoutContactReply(Boolean createConversationWithoutContactReply);
@@ -1024,7 +1081,7 @@ public final class CreateMessageRequest {
             }
 
             /**
-             * <p>The content of the message. HTML and plaintext are supported.</p>
+             * The content of the message. HTML and plaintext are supported.<p>The content of the message. HTML and plaintext are supported.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -1035,7 +1092,7 @@ public final class CreateMessageRequest {
             }
 
             /**
-             * <p>The sender of the message. If not provided, the default sender will be used.</p>
+             * The sender of the message. If not provided, the default sender will be used.<p>The sender of the message. If not provided, the default sender will be used.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -1046,7 +1103,7 @@ public final class CreateMessageRequest {
             }
 
             /**
-             * <p>The sender of the message. If not provided, the default sender will be used.</p>
+             * The sender of the message. If not provided, the default sender will be used.<p>The sender of the message. If not provided, the default sender will be used.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -1066,6 +1123,9 @@ public final class CreateMessageRequest {
                 return this;
             }
 
+            /**
+             * <p>Whether a conversation should be opened in the inbox for the message without the contact replying. Defaults to false if not provided.</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "create_conversation_without_contact_reply", nulls = Nulls.SKIP)
             public _FinalStage createConversationWithoutContactReply(
@@ -1084,6 +1144,9 @@ public final class CreateMessageRequest {
                 return this;
             }
 
+            /**
+             * <p>The time the message was created. If not provided, the current time will be used.</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
             public _FinalStage createdAt(Optional<Integer> createdAt) {
@@ -1101,6 +1164,9 @@ public final class CreateMessageRequest {
                 return this;
             }
 
+            /**
+             * <p>The style of the outgoing message. Possible values <code>plain</code> or <code>personal</code>.</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "template", nulls = Nulls.SKIP)
             public _FinalStage template(Optional<String> template) {
@@ -1118,6 +1184,9 @@ public final class CreateMessageRequest {
                 return this;
             }
 
+            /**
+             * <p>The title of the email.</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "subject", nulls = Nulls.SKIP)
             public _FinalStage subject(Optional<String> subject) {
@@ -1197,6 +1266,9 @@ public final class CreateMessageRequest {
             }
 
             public interface IdStage {
+                /**
+                 * The identifier for the admin which is given by Intercom.
+                 */
                 _FinalStage id(int id);
 
                 Builder from(From other);
@@ -1222,7 +1294,7 @@ public final class CreateMessageRequest {
                 }
 
                 /**
-                 * <p>The identifier for the admin which is given by Intercom.</p>
+                 * The identifier for the admin which is given by Intercom.<p>The identifier for the admin which is given by Intercom.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override
@@ -1300,12 +1372,18 @@ public final class CreateMessageRequest {
             }
 
             public interface TypeStage {
+                /**
+                 * The role associated to the contact - `user` or `lead`.
+                 */
                 IdStage type(@NotNull Type type);
 
                 Builder from(To other);
             }
 
             public interface IdStage {
+                /**
+                 * The identifier for the contact which is given by Intercom.
+                 */
                 _FinalStage id(@NotNull String id);
             }
 
@@ -1332,7 +1410,7 @@ public final class CreateMessageRequest {
                 }
 
                 /**
-                 * <p>The role associated to the contact - <code>user</code> or <code>lead</code>.</p>
+                 * The role associated to the contact - `user` or `lead`.<p>The role associated to the contact - <code>user</code> or <code>lead</code>.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override
@@ -1343,7 +1421,7 @@ public final class CreateMessageRequest {
                 }
 
                 /**
-                 * <p>The identifier for the contact which is given by Intercom.</p>
+                 * The identifier for the contact which is given by Intercom.<p>The identifier for the contact which is given by Intercom.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override

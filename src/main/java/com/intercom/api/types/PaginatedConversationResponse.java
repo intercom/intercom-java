@@ -101,6 +101,9 @@ public final class PaginatedConversationResponse {
     }
 
     public interface TotalCountStage {
+        /**
+         * A count of the total number of objects.
+         */
         _FinalStage totalCount(int totalCount);
 
         Builder from(PaginatedConversationResponse other);
@@ -109,6 +112,9 @@ public final class PaginatedConversationResponse {
     public interface _FinalStage {
         PaginatedConversationResponse build();
 
+        /**
+         * <p>The list of conversation objects</p>
+         */
         _FinalStage conversations(List<Conversation> conversations);
 
         _FinalStage addConversations(Conversation conversations);
@@ -142,7 +148,7 @@ public final class PaginatedConversationResponse {
         }
 
         /**
-         * <p>A count of the total number of objects.</p>
+         * A count of the total number of objects.<p>A count of the total number of objects.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -185,6 +191,9 @@ public final class PaginatedConversationResponse {
             return this;
         }
 
+        /**
+         * <p>The list of conversation objects</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "conversations", nulls = Nulls.SKIP)
         public _FinalStage conversations(List<Conversation> conversations) {

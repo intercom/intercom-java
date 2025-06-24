@@ -81,6 +81,9 @@ public final class ContentObject {
             return this;
         }
 
+        /**
+         * <p>The list of components to be rendered.</p>
+         */
         @JsonSetter(value = "components", nulls = Nulls.SKIP)
         public Builder components(List<Component> components) {
             this.components.clear();

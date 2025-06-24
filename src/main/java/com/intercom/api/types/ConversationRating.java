@@ -114,16 +114,25 @@ public final class ConversationRating {
     }
 
     public interface RatingStage {
+        /**
+         * The rating, between 1 and 5, for the conversation.
+         */
         RemarkStage rating(int rating);
 
         Builder from(ConversationRating other);
     }
 
     public interface RemarkStage {
+        /**
+         * An optional field to add a remark to correspond to the number rating
+         */
         CreatedAtStage remark(@NotNull String remark);
     }
 
     public interface CreatedAtStage {
+        /**
+         * The time the rating was requested in the conversation being rated.
+         */
         ContactStage createdAt(int createdAt);
     }
 
@@ -168,7 +177,7 @@ public final class ConversationRating {
         }
 
         /**
-         * <p>The rating, between 1 and 5, for the conversation.</p>
+         * The rating, between 1 and 5, for the conversation.<p>The rating, between 1 and 5, for the conversation.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -179,7 +188,7 @@ public final class ConversationRating {
         }
 
         /**
-         * <p>An optional field to add a remark to correspond to the number rating</p>
+         * An optional field to add a remark to correspond to the number rating<p>An optional field to add a remark to correspond to the number rating</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -190,7 +199,7 @@ public final class ConversationRating {
         }
 
         /**
-         * <p>The time the rating was requested in the conversation being rated.</p>
+         * The time the rating was requested in the conversation being rated.<p>The time the rating was requested in the conversation being rated.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

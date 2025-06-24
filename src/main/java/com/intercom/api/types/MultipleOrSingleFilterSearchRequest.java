@@ -29,6 +29,7 @@ public final class MultipleOrSingleFilterSearchRequest {
         return this.value;
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T visit(Visitor<T> visitor) {
         if (this.type == 0) {
             return visitor.visit((MultipleFilterSearchRequest) this.value);

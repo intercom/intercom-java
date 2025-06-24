@@ -66,6 +66,9 @@ public final class FindNoteRequest {
     }
 
     public interface NoteIdStage {
+        /**
+         * The unique identifier of a given note
+         */
         _FinalStage noteId(@NotNull String noteId);
 
         Builder from(FindNoteRequest other);
@@ -91,7 +94,7 @@ public final class FindNoteRequest {
         }
 
         /**
-         * <p>The unique identifier of a given note</p>
+         * The unique identifier of a given note<p>The unique identifier of a given note</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

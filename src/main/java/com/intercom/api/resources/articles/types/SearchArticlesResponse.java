@@ -98,12 +98,18 @@ public final class SearchArticlesResponse {
     }
 
     public interface TotalCountStage {
+        /**
+         * The total number of Articles matching the search query
+         */
         DataStage totalCount(int totalCount);
 
         Builder from(SearchArticlesResponse other);
     }
 
     public interface DataStage {
+        /**
+         * An object containing the results of the search.
+         */
         _FinalStage data(@NotNull Data data);
     }
 
@@ -137,7 +143,7 @@ public final class SearchArticlesResponse {
         }
 
         /**
-         * <p>The total number of Articles matching the search query</p>
+         * The total number of Articles matching the search query<p>The total number of Articles matching the search query</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -148,7 +154,7 @@ public final class SearchArticlesResponse {
         }
 
         /**
-         * <p>An object containing the results of the search.</p>
+         * An object containing the results of the search.<p>An object containing the results of the search.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -257,6 +263,9 @@ public final class SearchArticlesResponse {
                 return this;
             }
 
+            /**
+             * <p>An array of Article objects</p>
+             */
             @JsonSetter(value = "articles", nulls = Nulls.SKIP)
             public Builder articles(Optional<List<Article>> articles) {
                 this.articles = articles;
@@ -268,6 +277,9 @@ public final class SearchArticlesResponse {
                 return this;
             }
 
+            /**
+             * <p>A corresponding array of highlighted Article content</p>
+             */
             @JsonSetter(value = "highlights", nulls = Nulls.SKIP)
             public Builder highlights(Optional<List<ArticleSearchHighlights>> highlights) {
                 this.highlights = highlights;

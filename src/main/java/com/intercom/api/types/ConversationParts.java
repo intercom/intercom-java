@@ -96,6 +96,9 @@ public final class ConversationParts {
     public interface _FinalStage {
         ConversationParts build();
 
+        /**
+         * <p>A list of Conversation Part objects for each part message in the conversation. This is only returned when Retrieving a Conversation, and ignored when Listing all Conversations. There is a limit of 500 parts.</p>
+         */
         _FinalStage conversationParts(List<ConversationPart> conversationParts);
 
         _FinalStage addConversationParts(ConversationPart conversationParts);
@@ -151,6 +154,9 @@ public final class ConversationParts {
             return this;
         }
 
+        /**
+         * <p>A list of Conversation Part objects for each part message in the conversation. This is only returned when Retrieving a Conversation, and ignored when Listing all Conversations. There is a limit of 500 parts.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "conversation_parts", nulls = Nulls.SKIP)
         public _FinalStage conversationParts(List<ConversationPart> conversationParts) {

@@ -101,6 +101,9 @@ public final class ArticleList {
     }
 
     public interface TotalCountStage {
+        /**
+         * A count of the total number of articles.
+         */
         _FinalStage totalCount(int totalCount);
 
         Builder from(ArticleList other);
@@ -113,6 +116,9 @@ public final class ArticleList {
 
         _FinalStage pages(Object pages);
 
+        /**
+         * <p>An array of Article objects</p>
+         */
         _FinalStage data(List<ArticleListItem> data);
 
         _FinalStage addData(ArticleListItem data);
@@ -142,7 +148,7 @@ public final class ArticleList {
         }
 
         /**
-         * <p>A count of the total number of articles.</p>
+         * A count of the total number of articles.<p>A count of the total number of articles.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -172,6 +178,9 @@ public final class ArticleList {
             return this;
         }
 
+        /**
+         * <p>An array of Article objects</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
         public _FinalStage data(List<ArticleListItem> data) {

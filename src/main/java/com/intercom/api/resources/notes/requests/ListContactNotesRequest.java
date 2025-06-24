@@ -94,6 +94,9 @@ public final class ListContactNotesRequest {
     }
 
     public interface ContactIdStage {
+        /**
+         * The unique identifier of a contact.
+         */
         _FinalStage contactId(@NotNull String contactId);
 
         Builder from(ListContactNotesRequest other);
@@ -102,10 +105,16 @@ public final class ListContactNotesRequest {
     public interface _FinalStage {
         ListContactNotesRequest build();
 
+        /**
+         * <p>The page of results to fetch. Defaults to first page</p>
+         */
         _FinalStage page(Optional<Integer> page);
 
         _FinalStage page(Integer page);
 
+        /**
+         * <p>How many results to display per page. Defaults to 15</p>
+         */
         _FinalStage perPage(Optional<Integer> perPage);
 
         _FinalStage perPage(Integer perPage);
@@ -133,7 +142,7 @@ public final class ListContactNotesRequest {
         }
 
         /**
-         * <p>The unique identifier of a contact.</p>
+         * The unique identifier of a contact.<p>The unique identifier of a contact.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -153,6 +162,9 @@ public final class ListContactNotesRequest {
             return this;
         }
 
+        /**
+         * <p>How many results to display per page. Defaults to 15</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "per_page", nulls = Nulls.SKIP)
         public _FinalStage perPage(Optional<Integer> perPage) {
@@ -170,6 +182,9 @@ public final class ListContactNotesRequest {
             return this;
         }
 
+        /**
+         * <p>The page of results to fetch. Defaults to first page</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "page", nulls = Nulls.SKIP)
         public _FinalStage page(Optional<Integer> page) {

@@ -88,16 +88,25 @@ public final class Translation {
     }
 
     public interface NameStage {
+        /**
+         * The localised name of the subscription type.
+         */
         DescriptionStage name(@NotNull String name);
 
         Builder from(Translation other);
     }
 
     public interface DescriptionStage {
+        /**
+         * The localised description of the subscription type.
+         */
         LocaleStage description(@NotNull String description);
     }
 
     public interface LocaleStage {
+        /**
+         * The two character identifier for the language of the translation object.
+         */
         _FinalStage locale(@NotNull String locale);
     }
 
@@ -127,7 +136,7 @@ public final class Translation {
         }
 
         /**
-         * <p>The localised name of the subscription type.</p>
+         * The localised name of the subscription type.<p>The localised name of the subscription type.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -138,7 +147,7 @@ public final class Translation {
         }
 
         /**
-         * <p>The localised description of the subscription type.</p>
+         * The localised description of the subscription type.<p>The localised description of the subscription type.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -149,7 +158,7 @@ public final class Translation {
         }
 
         /**
-         * <p>The two character identifier for the language of the translation object.</p>
+         * The two character identifier for the language of the translation object.<p>The two character identifier for the language of the translation object.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

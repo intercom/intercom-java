@@ -135,6 +135,9 @@ public final class OffsetPages {
             return this;
         }
 
+        /**
+         * <p>The current offset</p>
+         */
         @JsonSetter(value = "page", nulls = Nulls.SKIP)
         public Builder page(Optional<Integer> page) {
             this.page = page;
@@ -157,6 +160,9 @@ public final class OffsetPages {
             return this;
         }
 
+        /**
+         * <p>Number of results per page</p>
+         */
         @JsonSetter(value = "per_page", nulls = Nulls.SKIP)
         public Builder perPage(Optional<Integer> perPage) {
             this.perPage = perPage;
@@ -168,6 +174,9 @@ public final class OffsetPages {
             return this;
         }
 
+        /**
+         * <p>Total number of pages</p>
+         */
         @JsonSetter(value = "total_pages", nulls = Nulls.SKIP)
         public Builder totalPages(Optional<Integer> totalPages) {
             this.totalPages = totalPages;

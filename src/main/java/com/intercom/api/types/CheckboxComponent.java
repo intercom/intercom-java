@@ -139,32 +139,50 @@ public final class CheckboxComponent {
     }
 
     public interface IdStage {
+        /**
+         * A unique identifier for the component.
+         */
         LabelStage id(@NotNull String id);
 
         Builder from(CheckboxComponent other);
     }
 
     public interface LabelStage {
+        /**
+         * The text shown above the options.
+         */
         _FinalStage label(@NotNull String label);
     }
 
     public interface _FinalStage {
         CheckboxComponent build();
 
+        /**
+         * <p>The list of options. Minimum of 1.</p>
+         */
         _FinalStage option(List<CheckboxOption> option);
 
         _FinalStage addOption(CheckboxOption option);
 
         _FinalStage addAllOption(List<CheckboxOption> option);
 
+        /**
+         * <p>The option's that are selected by default.</p>
+         */
         _FinalStage value(Optional<List<String>> value);
 
         _FinalStage value(List<String> value);
 
+        /**
+         * <p>Styles the input. Default is <code>unsaved</code>. Prevent action with <code>saved</code>.</p>
+         */
         _FinalStage saveState(Optional<SaveState> saveState);
 
         _FinalStage saveState(SaveState saveState);
 
+        /**
+         * <p>Styles all options and prevents the action. Default is false. Will be overridden if save_state is saved.</p>
+         */
         _FinalStage disabled(Optional<Boolean> disabled);
 
         _FinalStage disabled(Boolean disabled);
@@ -201,7 +219,7 @@ public final class CheckboxComponent {
         }
 
         /**
-         * <p>A unique identifier for the component.</p>
+         * A unique identifier for the component.<p>A unique identifier for the component.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -212,7 +230,7 @@ public final class CheckboxComponent {
         }
 
         /**
-         * <p>The text shown above the options.</p>
+         * The text shown above the options.<p>The text shown above the options.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -232,6 +250,9 @@ public final class CheckboxComponent {
             return this;
         }
 
+        /**
+         * <p>Styles all options and prevents the action. Default is false. Will be overridden if save_state is saved.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "disabled", nulls = Nulls.SKIP)
         public _FinalStage disabled(Optional<Boolean> disabled) {
@@ -249,6 +270,9 @@ public final class CheckboxComponent {
             return this;
         }
 
+        /**
+         * <p>Styles the input. Default is <code>unsaved</code>. Prevent action with <code>saved</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "save_state", nulls = Nulls.SKIP)
         public _FinalStage saveState(Optional<SaveState> saveState) {
@@ -266,6 +290,9 @@ public final class CheckboxComponent {
             return this;
         }
 
+        /**
+         * <p>The option's that are selected by default.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "value", nulls = Nulls.SKIP)
         public _FinalStage value(Optional<List<String>> value) {
@@ -293,6 +320,9 @@ public final class CheckboxComponent {
             return this;
         }
 
+        /**
+         * <p>The list of options. Minimum of 1.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "option", nulls = Nulls.SKIP)
         public _FinalStage option(List<CheckboxOption> option) {

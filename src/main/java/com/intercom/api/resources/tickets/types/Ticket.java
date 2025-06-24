@@ -307,20 +307,32 @@ public final class Ticket {
     }
 
     public interface IdStage {
+        /**
+         * The unique identifier for the ticket which is given by Intercom.
+         */
         TicketIdStage id(@NotNull String id);
 
         Builder from(Ticket other);
     }
 
     public interface TicketIdStage {
+        /**
+         * The ID of the Ticket used in the Intercom Inbox and Messenger. Do not use ticket_id for API queries.
+         */
         CategoryStage ticketId(@NotNull String ticketId);
     }
 
     public interface CategoryStage {
+        /**
+         * Category of the Ticket.
+         */
         TicketStateStage category(@NotNull Category category);
     }
 
     public interface TicketStateStage {
+        /**
+         * The state the ticket is currently in
+         */
         TicketTypeStage ticketState(@NotNull TicketState ticketState);
     }
 
@@ -341,26 +353,44 @@ public final class Ticket {
 
         _FinalStage ticketAttributes(String key, Object value);
 
+        /**
+         * <p>The id representing the admin assigned to the ticket.</p>
+         */
         _FinalStage adminAssigneeId(Optional<String> adminAssigneeId);
 
         _FinalStage adminAssigneeId(String adminAssigneeId);
 
+        /**
+         * <p>The id representing the team assigned to the ticket.</p>
+         */
         _FinalStage teamAssigneeId(Optional<String> teamAssigneeId);
 
         _FinalStage teamAssigneeId(String teamAssigneeId);
 
+        /**
+         * <p>The time the ticket was created as a UTC Unix timestamp.</p>
+         */
         _FinalStage createdAt(Optional<Integer> createdAt);
 
         _FinalStage createdAt(Integer createdAt);
 
+        /**
+         * <p>The last time the ticket was updated as a UTC Unix timestamp.</p>
+         */
         _FinalStage updatedAt(Optional<Integer> updatedAt);
 
         _FinalStage updatedAt(Integer updatedAt);
 
+        /**
+         * <p>Whether or not the ticket is open. If false, the ticket is closed.</p>
+         */
         _FinalStage open(Optional<Boolean> open);
 
         _FinalStage open(Boolean open);
 
+        /**
+         * <p>The time the ticket will be snoozed until as a UTC Unix timestamp. If null, the ticket is not currently snoozed.</p>
+         */
         _FinalStage snoozedUntil(Optional<Integer> snoozedUntil);
 
         _FinalStage snoozedUntil(Integer snoozedUntil);
@@ -373,14 +403,23 @@ public final class Ticket {
 
         _FinalStage ticketParts(TicketParts ticketParts);
 
+        /**
+         * <p>Whether or not the ticket is shared with the customer.</p>
+         */
         _FinalStage isShared(Optional<Boolean> isShared);
 
         _FinalStage isShared(Boolean isShared);
 
+        /**
+         * <p>The state the ticket is currently in, in a human readable form - visible in Intercom</p>
+         */
         _FinalStage ticketStateInternalLabel(Optional<String> ticketStateInternalLabel);
 
         _FinalStage ticketStateInternalLabel(String ticketStateInternalLabel);
 
+        /**
+         * <p>The state the ticket is currently in, in a human readable form - visible to customers, in the messenger, email and tickets portal.</p>
+         */
         _FinalStage ticketStateExternalLabel(Optional<String> ticketStateExternalLabel);
 
         _FinalStage ticketStateExternalLabel(String ticketStateExternalLabel);
@@ -460,7 +499,7 @@ public final class Ticket {
         }
 
         /**
-         * <p>The unique identifier for the ticket which is given by Intercom.</p>
+         * The unique identifier for the ticket which is given by Intercom.<p>The unique identifier for the ticket which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -471,7 +510,7 @@ public final class Ticket {
         }
 
         /**
-         * <p>The ID of the Ticket used in the Intercom Inbox and Messenger. Do not use ticket_id for API queries.</p>
+         * The ID of the Ticket used in the Intercom Inbox and Messenger. Do not use ticket_id for API queries.<p>The ID of the Ticket used in the Intercom Inbox and Messenger. Do not use ticket_id for API queries.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -482,7 +521,7 @@ public final class Ticket {
         }
 
         /**
-         * <p>Category of the Ticket.</p>
+         * Category of the Ticket.<p>Category of the Ticket.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -493,7 +532,7 @@ public final class Ticket {
         }
 
         /**
-         * <p>The state the ticket is currently in</p>
+         * The state the ticket is currently in<p>The state the ticket is currently in</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -527,6 +566,9 @@ public final class Ticket {
             return this;
         }
 
+        /**
+         * <p>The state the ticket is currently in, in a human readable form - visible to customers, in the messenger, email and tickets portal.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "ticket_state_external_label", nulls = Nulls.SKIP)
         public _FinalStage ticketStateExternalLabel(Optional<String> ticketStateExternalLabel) {
@@ -544,6 +586,9 @@ public final class Ticket {
             return this;
         }
 
+        /**
+         * <p>The state the ticket is currently in, in a human readable form - visible in Intercom</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "ticket_state_internal_label", nulls = Nulls.SKIP)
         public _FinalStage ticketStateInternalLabel(Optional<String> ticketStateInternalLabel) {
@@ -561,6 +606,9 @@ public final class Ticket {
             return this;
         }
 
+        /**
+         * <p>Whether or not the ticket is shared with the customer.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "is_shared", nulls = Nulls.SKIP)
         public _FinalStage isShared(Optional<Boolean> isShared) {
@@ -604,6 +652,9 @@ public final class Ticket {
             return this;
         }
 
+        /**
+         * <p>The time the ticket will be snoozed until as a UTC Unix timestamp. If null, the ticket is not currently snoozed.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "snoozed_until", nulls = Nulls.SKIP)
         public _FinalStage snoozedUntil(Optional<Integer> snoozedUntil) {
@@ -621,6 +672,9 @@ public final class Ticket {
             return this;
         }
 
+        /**
+         * <p>Whether or not the ticket is open. If false, the ticket is closed.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "open", nulls = Nulls.SKIP)
         public _FinalStage open(Optional<Boolean> open) {
@@ -638,6 +692,9 @@ public final class Ticket {
             return this;
         }
 
+        /**
+         * <p>The last time the ticket was updated as a UTC Unix timestamp.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
         public _FinalStage updatedAt(Optional<Integer> updatedAt) {
@@ -655,6 +712,9 @@ public final class Ticket {
             return this;
         }
 
+        /**
+         * <p>The time the ticket was created as a UTC Unix timestamp.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
         public _FinalStage createdAt(Optional<Integer> createdAt) {
@@ -672,6 +732,9 @@ public final class Ticket {
             return this;
         }
 
+        /**
+         * <p>The id representing the team assigned to the ticket.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "team_assignee_id", nulls = Nulls.SKIP)
         public _FinalStage teamAssigneeId(Optional<String> teamAssigneeId) {
@@ -689,6 +752,9 @@ public final class Ticket {
             return this;
         }
 
+        /**
+         * <p>The id representing the admin assigned to the ticket.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "admin_assignee_id", nulls = Nulls.SKIP)
         public _FinalStage adminAssigneeId(Optional<String> adminAssigneeId) {
