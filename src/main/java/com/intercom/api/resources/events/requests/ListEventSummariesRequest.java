@@ -97,6 +97,9 @@ public final class ListEventSummariesRequest {
             return this;
         }
 
+        /**
+         * <p>Your identifier for the user.</p>
+         */
         @JsonSetter(value = "user_id", nulls = Nulls.SKIP)
         public Builder userId(Optional<String> userId) {
             this.userId = userId;
@@ -108,6 +111,9 @@ public final class ListEventSummariesRequest {
             return this;
         }
 
+        /**
+         * <p>A list of event summaries for the user. Each event summary should contain the event name, the time the event occurred, and the number of times the event occurred. The event name should be a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
+         */
         @JsonSetter(value = "event_summaries", nulls = Nulls.SKIP)
         public Builder eventSummaries(Optional<EventSummaries> eventSummaries) {
             this.eventSummaries = eventSummaries;
@@ -237,6 +243,9 @@ public final class ListEventSummariesRequest {
                 return this;
             }
 
+            /**
+             * <p>The name of the event that occurred. A good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
+             */
             @JsonSetter(value = "event_name", nulls = Nulls.SKIP)
             public Builder eventName(Optional<String> eventName) {
                 this.eventName = eventName;
@@ -248,6 +257,9 @@ public final class ListEventSummariesRequest {
                 return this;
             }
 
+            /**
+             * <p>The number of times the event occurred.</p>
+             */
             @JsonSetter(value = "count", nulls = Nulls.SKIP)
             public Builder count(Optional<Integer> count) {
                 this.count = count;
@@ -259,6 +271,9 @@ public final class ListEventSummariesRequest {
                 return this;
             }
 
+            /**
+             * <p>The first time the event was sent</p>
+             */
             @JsonSetter(value = "first", nulls = Nulls.SKIP)
             public Builder first(Optional<Integer> first) {
                 this.first = first;
@@ -270,6 +285,9 @@ public final class ListEventSummariesRequest {
                 return this;
             }
 
+            /**
+             * <p>The last time the event was sent</p>
+             */
             @JsonSetter(value = "last", nulls = Nulls.SKIP)
             public Builder last(Optional<Integer> last) {
                 this.last = last;

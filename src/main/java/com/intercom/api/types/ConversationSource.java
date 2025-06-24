@@ -183,20 +183,32 @@ public final class ConversationSource {
     }
 
     public interface TypeStage {
+        /**
+         * This includes conversation, email, facebook, instagram, phone_call, phone_switch, push, sms, twitter and whatsapp.
+         */
         IdStage type(@NotNull Type type);
 
         Builder from(ConversationSource other);
     }
 
     public interface IdStage {
+        /**
+         * The id representing the message.
+         */
         DeliveredAsStage id(@NotNull String id);
     }
 
     public interface DeliveredAsStage {
+        /**
+         * The conversation's initiation type. Possible values are customer_initiated, campaigns_initiated (legacy campaigns), operator_initiated (Custom bot), automated (Series and other outbounds with dynamic audience message) and admin_initiated (fixed audience message, ticket initiated by an admin, group email).
+         */
         SubjectStage deliveredAs(@NotNull String deliveredAs);
     }
 
     public interface SubjectStage {
+        /**
+         * Optional. The message subject. For Twitter, this will show a generic message regarding why the subject is obscured.
+         */
         AuthorStage subject(@NotNull String subject);
     }
 
@@ -205,20 +217,32 @@ public final class ConversationSource {
     }
 
     public interface RedactedStage {
+        /**
+         * Whether or not the source message has been redacted. Only applicable for contact initiated messages.
+         */
         _FinalStage redacted(boolean redacted);
     }
 
     public interface _FinalStage {
         ConversationSource build();
 
+        /**
+         * <p>The message body, which may contain HTML. For Twitter, this will show a generic message regarding why the body is obscured.</p>
+         */
         _FinalStage body(Optional<String> body);
 
         _FinalStage body(String body);
 
+        /**
+         * <p>A list of attachments for the part.</p>
+         */
         _FinalStage attachments(Optional<List<PartAttachment>> attachments);
 
         _FinalStage attachments(List<PartAttachment> attachments);
 
+        /**
+         * <p>The URL where the conversation was started. For Twitter, Email, and Bots, this will be blank.</p>
+         */
         _FinalStage url(Optional<String> url);
 
         _FinalStage url(String url);
@@ -265,7 +289,7 @@ public final class ConversationSource {
         }
 
         /**
-         * <p>This includes conversation, email, facebook, instagram, phone_call, phone_switch, push, sms, twitter and whatsapp.</p>
+         * This includes conversation, email, facebook, instagram, phone_call, phone_switch, push, sms, twitter and whatsapp.<p>This includes conversation, email, facebook, instagram, phone_call, phone_switch, push, sms, twitter and whatsapp.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -276,7 +300,7 @@ public final class ConversationSource {
         }
 
         /**
-         * <p>The id representing the message.</p>
+         * The id representing the message.<p>The id representing the message.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -287,7 +311,7 @@ public final class ConversationSource {
         }
 
         /**
-         * <p>The conversation's initiation type. Possible values are customer_initiated, campaigns_initiated (legacy campaigns), operator_initiated (Custom bot), automated (Series and other outbounds with dynamic audience message) and admin_initiated (fixed audience message, ticket initiated by an admin, group email).</p>
+         * The conversation's initiation type. Possible values are customer_initiated, campaigns_initiated (legacy campaigns), operator_initiated (Custom bot), automated (Series and other outbounds with dynamic audience message) and admin_initiated (fixed audience message, ticket initiated by an admin, group email).<p>The conversation's initiation type. Possible values are customer_initiated, campaigns_initiated (legacy campaigns), operator_initiated (Custom bot), automated (Series and other outbounds with dynamic audience message) and admin_initiated (fixed audience message, ticket initiated by an admin, group email).</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -298,7 +322,7 @@ public final class ConversationSource {
         }
 
         /**
-         * <p>Optional. The message subject. For Twitter, this will show a generic message regarding why the subject is obscured.</p>
+         * Optional. The message subject. For Twitter, this will show a generic message regarding why the subject is obscured.<p>Optional. The message subject. For Twitter, this will show a generic message regarding why the subject is obscured.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -316,7 +340,7 @@ public final class ConversationSource {
         }
 
         /**
-         * <p>Whether or not the source message has been redacted. Only applicable for contact initiated messages.</p>
+         * Whether or not the source message has been redacted. Only applicable for contact initiated messages.<p>Whether or not the source message has been redacted. Only applicable for contact initiated messages.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -336,6 +360,9 @@ public final class ConversationSource {
             return this;
         }
 
+        /**
+         * <p>The URL where the conversation was started. For Twitter, Email, and Bots, this will be blank.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "url", nulls = Nulls.SKIP)
         public _FinalStage url(Optional<String> url) {
@@ -353,6 +380,9 @@ public final class ConversationSource {
             return this;
         }
 
+        /**
+         * <p>A list of attachments for the part.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "attachments", nulls = Nulls.SKIP)
         public _FinalStage attachments(Optional<List<PartAttachment>> attachments) {
@@ -370,6 +400,9 @@ public final class ConversationSource {
             return this;
         }
 
+        /**
+         * <p>The message body, which may contain HTML. For Twitter, this will show a generic message regarding why the body is obscured.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "body", nulls = Nulls.SKIP)
         public _FinalStage body(Optional<String> body) {

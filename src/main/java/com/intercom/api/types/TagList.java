@@ -90,6 +90,9 @@ public final class TagList {
             return this;
         }
 
+        /**
+         * <p>A list of tags objects associated with the workspace .</p>
+         */
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
         public Builder data(List<Tag> data) {
             this.data.clear();

@@ -91,16 +91,25 @@ public final class UntagConversationRequest {
     }
 
     public interface ConversationIdStage {
+        /**
+         * conversation_id
+         */
         TagIdStage conversationId(@NotNull String conversationId);
 
         Builder from(UntagConversationRequest other);
     }
 
     public interface TagIdStage {
+        /**
+         * id
+         */
         AdminIdStage tagId(@NotNull String tagId);
     }
 
     public interface AdminIdStage {
+        /**
+         * The unique identifier for the admin which is given by Intercom.
+         */
         _FinalStage adminId(@NotNull String adminId);
     }
 
@@ -130,7 +139,7 @@ public final class UntagConversationRequest {
         }
 
         /**
-         * <p>conversation_id</p>
+         * conversation_id<p>conversation_id</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -141,7 +150,7 @@ public final class UntagConversationRequest {
         }
 
         /**
-         * <p>id</p>
+         * id<p>id</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -152,7 +161,7 @@ public final class UntagConversationRequest {
         }
 
         /**
-         * <p>The unique identifier for the admin which is given by Intercom.</p>
+         * The unique identifier for the admin which is given by Intercom.<p>The unique identifier for the admin which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

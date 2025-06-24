@@ -105,6 +105,9 @@ public final class DataEventList {
             return this;
         }
 
+        /**
+         * <p>A list of data events</p>
+         */
         @JsonSetter(value = "events", nulls = Nulls.SKIP)
         public Builder events(List<DataEvent> events) {
             this.events.clear();
@@ -122,6 +125,9 @@ public final class DataEventList {
             return this;
         }
 
+        /**
+         * <p>Pagination</p>
+         */
         @JsonSetter(value = "pages", nulls = Nulls.SKIP)
         public Builder pages(Optional<Pages> pages) {
             this.pages = pages;

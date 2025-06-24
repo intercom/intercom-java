@@ -135,6 +135,9 @@ public final class ListEventsRequest {
     }
 
     public interface TypeStage {
+        /**
+         * The value must be user
+         */
         _FinalStage type(@NotNull String type);
 
         Builder from(ListEventsRequest other);
@@ -143,22 +146,37 @@ public final class ListEventsRequest {
     public interface _FinalStage {
         ListEventsRequest build();
 
+        /**
+         * <p>user_id query parameter</p>
+         */
         _FinalStage userId(Optional<String> userId);
 
         _FinalStage userId(String userId);
 
+        /**
+         * <p>intercom_user_id query parameter</p>
+         */
         _FinalStage intercomUserId(Optional<String> intercomUserId);
 
         _FinalStage intercomUserId(String intercomUserId);
 
+        /**
+         * <p>email query parameter</p>
+         */
         _FinalStage email(Optional<String> email);
 
         _FinalStage email(String email);
 
+        /**
+         * <p>summary flag</p>
+         */
         _FinalStage summary(Optional<Boolean> summary);
 
         _FinalStage summary(Boolean summary);
 
+        /**
+         * <p>How many results to display per page. Defaults to 15</p>
+         */
         _FinalStage perPage(Optional<Integer> perPage);
 
         _FinalStage perPage(Integer perPage);
@@ -195,7 +213,7 @@ public final class ListEventsRequest {
         }
 
         /**
-         * <p>The value must be user</p>
+         * The value must be user<p>The value must be user</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -215,6 +233,9 @@ public final class ListEventsRequest {
             return this;
         }
 
+        /**
+         * <p>How many results to display per page. Defaults to 15</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "per_page", nulls = Nulls.SKIP)
         public _FinalStage perPage(Optional<Integer> perPage) {
@@ -232,6 +253,9 @@ public final class ListEventsRequest {
             return this;
         }
 
+        /**
+         * <p>summary flag</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "summary", nulls = Nulls.SKIP)
         public _FinalStage summary(Optional<Boolean> summary) {
@@ -249,6 +273,9 @@ public final class ListEventsRequest {
             return this;
         }
 
+        /**
+         * <p>email query parameter</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "email", nulls = Nulls.SKIP)
         public _FinalStage email(Optional<String> email) {
@@ -266,6 +293,9 @@ public final class ListEventsRequest {
             return this;
         }
 
+        /**
+         * <p>intercom_user_id query parameter</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "intercom_user_id", nulls = Nulls.SKIP)
         public _FinalStage intercomUserId(Optional<String> intercomUserId) {
@@ -283,6 +313,9 @@ public final class ListEventsRequest {
             return this;
         }
 
+        /**
+         * <p>user_id query parameter</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "user_id", nulls = Nulls.SKIP)
         public _FinalStage userId(Optional<String> userId) {

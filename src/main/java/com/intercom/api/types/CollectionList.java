@@ -101,6 +101,9 @@ public final class CollectionList {
     }
 
     public interface TotalCountStage {
+        /**
+         * A count of the total number of collections.
+         */
         _FinalStage totalCount(int totalCount);
 
         Builder from(CollectionList other);
@@ -113,6 +116,9 @@ public final class CollectionList {
 
         _FinalStage pages(OffsetPages pages);
 
+        /**
+         * <p>An array of collection objects</p>
+         */
         _FinalStage data(List<Collection> data);
 
         _FinalStage addData(Collection data);
@@ -142,7 +148,7 @@ public final class CollectionList {
         }
 
         /**
-         * <p>A count of the total number of collections.</p>
+         * A count of the total number of collections.<p>A count of the total number of collections.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -172,6 +178,9 @@ public final class CollectionList {
             return this;
         }
 
+        /**
+         * <p>An array of collection objects</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
         public _FinalStage data(List<Collection> data) {

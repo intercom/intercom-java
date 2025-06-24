@@ -221,52 +221,85 @@ public final class AdminWithApp {
     }
 
     public interface IdStage {
+        /**
+         * The id representing the admin.
+         */
         NameStage id(@NotNull String id);
 
         Builder from(AdminWithApp other);
     }
 
     public interface NameStage {
+        /**
+         * The name of the admin.
+         */
         EmailStage name(@NotNull String name);
     }
 
     public interface EmailStage {
+        /**
+         * The email of the admin.
+         */
         JobTitleStage email(@NotNull String email);
     }
 
     public interface JobTitleStage {
+        /**
+         * The job title of the admin.
+         */
         AwayModeEnabledStage jobTitle(@NotNull String jobTitle);
     }
 
     public interface AwayModeEnabledStage {
+        /**
+         * Identifies if this admin is currently set in away mode.
+         */
         AwayModeReassignStage awayModeEnabled(boolean awayModeEnabled);
     }
 
     public interface AwayModeReassignStage {
+        /**
+         * Identifies if this admin is set to automatically reassign new conversations to the apps default inbox.
+         */
         HasInboxSeatStage awayModeReassign(boolean awayModeReassign);
     }
 
     public interface HasInboxSeatStage {
+        /**
+         * Identifies if this admin has a paid inbox seat to restrict/allow features that require them.
+         */
         _FinalStage hasInboxSeat(boolean hasInboxSeat);
     }
 
     public interface _FinalStage {
         AdminWithApp build();
 
+        /**
+         * <p>This is a list of ids of the teams that this admin is part of.</p>
+         */
         _FinalStage teamIds(List<Integer> teamIds);
 
         _FinalStage addTeamIds(Integer teamIds);
 
         _FinalStage addAllTeamIds(List<Integer> teamIds);
 
+        /**
+         * <p>This object represents the avatar associated with the admin.</p>
+         */
         _FinalStage avatar(Optional<Avatar> avatar);
 
         _FinalStage avatar(Avatar avatar);
 
+        /**
+         * <p>Identifies if this admin's email is verified.</p>
+         */
         _FinalStage emailVerified(Optional<Boolean> emailVerified);
 
         _FinalStage emailVerified(Boolean emailVerified);
 
+        /**
+         * <p>App that the admin belongs to.</p>
+         */
         _FinalStage app(Optional<App> app);
 
         _FinalStage app(App app);
@@ -326,7 +359,7 @@ public final class AdminWithApp {
         }
 
         /**
-         * <p>The id representing the admin.</p>
+         * The id representing the admin.<p>The id representing the admin.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -337,7 +370,7 @@ public final class AdminWithApp {
         }
 
         /**
-         * <p>The name of the admin.</p>
+         * The name of the admin.<p>The name of the admin.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -348,7 +381,7 @@ public final class AdminWithApp {
         }
 
         /**
-         * <p>The email of the admin.</p>
+         * The email of the admin.<p>The email of the admin.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -359,7 +392,7 @@ public final class AdminWithApp {
         }
 
         /**
-         * <p>The job title of the admin.</p>
+         * The job title of the admin.<p>The job title of the admin.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -370,7 +403,7 @@ public final class AdminWithApp {
         }
 
         /**
-         * <p>Identifies if this admin is currently set in away mode.</p>
+         * Identifies if this admin is currently set in away mode.<p>Identifies if this admin is currently set in away mode.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -381,7 +414,7 @@ public final class AdminWithApp {
         }
 
         /**
-         * <p>Identifies if this admin is set to automatically reassign new conversations to the apps default inbox.</p>
+         * Identifies if this admin is set to automatically reassign new conversations to the apps default inbox.<p>Identifies if this admin is set to automatically reassign new conversations to the apps default inbox.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -392,7 +425,7 @@ public final class AdminWithApp {
         }
 
         /**
-         * <p>Identifies if this admin has a paid inbox seat to restrict/allow features that require them.</p>
+         * Identifies if this admin has a paid inbox seat to restrict/allow features that require them.<p>Identifies if this admin has a paid inbox seat to restrict/allow features that require them.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -412,6 +445,9 @@ public final class AdminWithApp {
             return this;
         }
 
+        /**
+         * <p>App that the admin belongs to.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "app", nulls = Nulls.SKIP)
         public _FinalStage app(Optional<App> app) {
@@ -429,6 +465,9 @@ public final class AdminWithApp {
             return this;
         }
 
+        /**
+         * <p>Identifies if this admin's email is verified.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "email_verified", nulls = Nulls.SKIP)
         public _FinalStage emailVerified(Optional<Boolean> emailVerified) {
@@ -446,6 +485,9 @@ public final class AdminWithApp {
             return this;
         }
 
+        /**
+         * <p>This object represents the avatar associated with the admin.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "avatar", nulls = Nulls.SKIP)
         public _FinalStage avatar(Optional<Avatar> avatar) {
@@ -473,6 +515,9 @@ public final class AdminWithApp {
             return this;
         }
 
+        /**
+         * <p>This is a list of ids of the teams that this admin is part of.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "team_ids", nulls = Nulls.SKIP)
         public _FinalStage teamIds(List<Integer> teamIds) {
@@ -576,6 +621,9 @@ public final class AdminWithApp {
                 return this;
             }
 
+            /**
+             * <p>This is a string that identifies the type of the object. It will always have the value <code>avatar</code>.</p>
+             */
             @JsonSetter(value = "type", nulls = Nulls.SKIP)
             public Builder type(Optional<String> type) {
                 this.type = type;
@@ -587,6 +635,9 @@ public final class AdminWithApp {
                 return this;
             }
 
+            /**
+             * <p>This object represents the avatar associated with the admin.</p>
+             */
             @JsonSetter(value = "image_url", nulls = Nulls.SKIP)
             public Builder imageUrl(Optional<String> imageUrl) {
                 this.imageUrl = imageUrl;

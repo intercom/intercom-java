@@ -99,18 +99,27 @@ public final class DropdownOption {
     }
 
     public interface IdStage {
+        /**
+         * A unique identifier for the option.
+         */
         TextStage id(@NotNull String id);
 
         Builder from(DropdownOption other);
     }
 
     public interface TextStage {
+        /**
+         * The text shown within this option.
+         */
         _FinalStage text(@NotNull String text);
     }
 
     public interface _FinalStage {
         DropdownOption build();
 
+        /**
+         * <p>Styles the option and prevents the action. Default is false.</p>
+         */
         _FinalStage disabled(Optional<Boolean> disabled);
 
         _FinalStage disabled(Boolean disabled);
@@ -138,7 +147,7 @@ public final class DropdownOption {
         }
 
         /**
-         * <p>A unique identifier for the option.</p>
+         * A unique identifier for the option.<p>A unique identifier for the option.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -149,7 +158,7 @@ public final class DropdownOption {
         }
 
         /**
-         * <p>The text shown within this option.</p>
+         * The text shown within this option.<p>The text shown within this option.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -169,6 +178,9 @@ public final class DropdownOption {
             return this;
         }
 
+        /**
+         * <p>Styles the option and prevents the action. Default is false.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "disabled", nulls = Nulls.SKIP)
         public _FinalStage disabled(Optional<Boolean> disabled) {

@@ -116,6 +116,9 @@ public final class PagesLink {
     public interface _FinalStage {
         PagesLink build();
 
+        /**
+         * <p>A link to the next page of results. A response that does not contain a next link does not have further data to fetch.</p>
+         */
         _FinalStage next(Optional<String> next);
 
         _FinalStage next(String next);
@@ -176,6 +179,9 @@ public final class PagesLink {
             return this;
         }
 
+        /**
+         * <p>A link to the next page of results. A response that does not contain a next link does not have further data to fetch.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "next", nulls = Nulls.SKIP)
         public _FinalStage next(Optional<String> next) {

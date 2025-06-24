@@ -123,26 +123,41 @@ public final class ContactCompanies {
     }
 
     public interface UrlStage {
+        /**
+         * Url to get more company resources for this contact
+         */
         TotalCountStage url(@NotNull String url);
 
         Builder from(ContactCompanies other);
     }
 
     public interface TotalCountStage {
+        /**
+         * Int representing the total number of companyies attached to this contact
+         */
         HasMoreStage totalCount(int totalCount);
     }
 
     public interface HasMoreStage {
+        /**
+         * Whether there's more Addressable Objects to be viewed. If true, use the url to view all
+         */
         _FinalStage hasMore(boolean hasMore);
     }
 
     public interface _FinalStage {
         ContactCompanies build();
 
+        /**
+         * <p>The type of object</p>
+         */
         _FinalStage type(Optional<String> type);
 
         _FinalStage type(String type);
 
+        /**
+         * <p>An array containing Company Objects</p>
+         */
         _FinalStage data(Optional<List<ContactCompany>> data);
 
         _FinalStage data(List<ContactCompany> data);
@@ -176,7 +191,7 @@ public final class ContactCompanies {
         }
 
         /**
-         * <p>Url to get more company resources for this contact</p>
+         * Url to get more company resources for this contact<p>Url to get more company resources for this contact</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -187,7 +202,7 @@ public final class ContactCompanies {
         }
 
         /**
-         * <p>Int representing the total number of companyies attached to this contact</p>
+         * Int representing the total number of companyies attached to this contact<p>Int representing the total number of companyies attached to this contact</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -198,7 +213,7 @@ public final class ContactCompanies {
         }
 
         /**
-         * <p>Whether there's more Addressable Objects to be viewed. If true, use the url to view all</p>
+         * Whether there's more Addressable Objects to be viewed. If true, use the url to view all<p>Whether there's more Addressable Objects to be viewed. If true, use the url to view all</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -218,6 +233,9 @@ public final class ContactCompanies {
             return this;
         }
 
+        /**
+         * <p>An array containing Company Objects</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
         public _FinalStage data(Optional<List<ContactCompany>> data) {
@@ -235,6 +253,9 @@ public final class ContactCompanies {
             return this;
         }
 
+        /**
+         * <p>The type of object</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "type", nulls = Nulls.SKIP)
         public _FinalStage type(Optional<String> type) {

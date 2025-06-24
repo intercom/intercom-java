@@ -109,20 +109,32 @@ public final class DataExport {
     }
 
     public interface JobIdentifierStage {
+        /**
+         * The identifier for your job.
+         */
         StatusStage jobIdentifier(@NotNull String jobIdentifier);
 
         Builder from(DataExport other);
     }
 
     public interface StatusStage {
+        /**
+         * The current state of your job.
+         */
         DownloadExpiresAtStage status(@NotNull Status status);
     }
 
     public interface DownloadExpiresAtStage {
+        /**
+         * The time after which you will not be able to access the data.
+         */
         DownloadUrlStage downloadExpiresAt(@NotNull String downloadExpiresAt);
     }
 
     public interface DownloadUrlStage {
+        /**
+         * The location where you can download your data.
+         */
         _FinalStage downloadUrl(@NotNull String downloadUrl);
     }
 
@@ -156,7 +168,7 @@ public final class DataExport {
         }
 
         /**
-         * <p>The identifier for your job.</p>
+         * The identifier for your job.<p>The identifier for your job.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -167,7 +179,7 @@ public final class DataExport {
         }
 
         /**
-         * <p>The current state of your job.</p>
+         * The current state of your job.<p>The current state of your job.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -178,7 +190,7 @@ public final class DataExport {
         }
 
         /**
-         * <p>The time after which you will not be able to access the data.</p>
+         * The time after which you will not be able to access the data.<p>The time after which you will not be able to access the data.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -189,7 +201,7 @@ public final class DataExport {
         }
 
         /**
-         * <p>The location where you can download your data.</p>
+         * The location where you can download your data.<p>The location where you can download your data.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

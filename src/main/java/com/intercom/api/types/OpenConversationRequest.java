@@ -66,6 +66,9 @@ public final class OpenConversationRequest {
     }
 
     public interface AdminIdStage {
+        /**
+         * The id of the admin who is performing the action.
+         */
         _FinalStage adminId(@NotNull String adminId);
 
         Builder from(OpenConversationRequest other);
@@ -91,7 +94,7 @@ public final class OpenConversationRequest {
         }
 
         /**
-         * <p>The id of the admin who is performing the action.</p>
+         * The id of the admin who is performing the action.<p>The id of the admin who is performing the action.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

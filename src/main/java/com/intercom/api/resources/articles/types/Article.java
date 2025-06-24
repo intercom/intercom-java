@@ -294,36 +294,60 @@ public final class Article implements IArticleListItem {
     }
 
     public interface IdStage {
+        /**
+         * The unique identifier for the article which is given by Intercom.
+         */
         WorkspaceIdStage id(@NotNull String id);
 
         Builder from(Article other);
     }
 
     public interface WorkspaceIdStage {
+        /**
+         * The id of the workspace which the article belongs to.
+         */
         TitleStage workspaceId(@NotNull String workspaceId);
     }
 
     public interface TitleStage {
+        /**
+         * The title of the article. For multilingual articles, this will be the title of the default language's content.
+         */
         AuthorIdStage title(@NotNull String title);
     }
 
     public interface AuthorIdStage {
+        /**
+         * The id of the author of the article. For multilingual articles, this will be the id of the author of the default language's content. Must be a teammate on the help center's workspace.
+         */
         StateStage authorId(int authorId);
     }
 
     public interface StateStage {
+        /**
+         * Whether the article is `published` or is a `draft`. For multilingual articles, this will be the state of the default language's content.
+         */
         CreatedAtStage state(@NotNull State state);
     }
 
     public interface CreatedAtStage {
+        /**
+         * The time when the article was created. For multilingual articles, this will be the timestamp of creation of the default language's content in seconds.
+         */
         UpdatedAtStage createdAt(int createdAt);
     }
 
     public interface UpdatedAtStage {
+        /**
+         * The time when the article was last updated. For multilingual articles, this will be the timestamp of last update of the default language's content in seconds.
+         */
         DefaultLocaleStage updatedAt(int updatedAt);
     }
 
     public interface DefaultLocaleStage {
+        /**
+         * The default locale of the help center. This field is only returned for multilingual help centers.
+         */
         TranslatedContentStage defaultLocale(@NotNull String defaultLocale);
     }
 
@@ -334,30 +358,51 @@ public final class Article implements IArticleListItem {
     public interface _FinalStage {
         Article build();
 
+        /**
+         * <p>The type of object - <code>article</code>.</p>
+         */
         _FinalStage type(Optional<String> type);
 
         _FinalStage type(String type);
 
+        /**
+         * <p>The description of the article. For multilingual articles, this will be the description of the default language's content.</p>
+         */
         _FinalStage description(Optional<String> description);
 
         _FinalStage description(String description);
 
+        /**
+         * <p>The body of the article in HTML. For multilingual articles, this will be the body of the default language's content.</p>
+         */
         _FinalStage body(Optional<String> body);
 
         _FinalStage body(String body);
 
+        /**
+         * <p>The URL of the article. For multilingual articles, this will be the URL of the default language's content.</p>
+         */
         _FinalStage url(Optional<String> url);
 
         _FinalStage url(String url);
 
+        /**
+         * <p>The id of the article's parent collection or section. An article without this field stands alone.</p>
+         */
         _FinalStage parentId(Optional<Integer> parentId);
 
         _FinalStage parentId(Integer parentId);
 
+        /**
+         * <p>The ids of the article's parent collections or sections. An article without this field stands alone.</p>
+         */
         _FinalStage parentIds(Optional<List<Integer>> parentIds);
 
         _FinalStage parentIds(List<Integer> parentIds);
 
+        /**
+         * <p>The type of parent, which can either be a <code>collection</code> or <code>section</code>.</p>
+         */
         _FinalStage parentType(Optional<String> parentType);
 
         _FinalStage parentType(String parentType);
@@ -441,7 +486,7 @@ public final class Article implements IArticleListItem {
         }
 
         /**
-         * <p>The unique identifier for the article which is given by Intercom.</p>
+         * The unique identifier for the article which is given by Intercom.<p>The unique identifier for the article which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -452,7 +497,7 @@ public final class Article implements IArticleListItem {
         }
 
         /**
-         * <p>The id of the workspace which the article belongs to.</p>
+         * The id of the workspace which the article belongs to.<p>The id of the workspace which the article belongs to.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -463,7 +508,7 @@ public final class Article implements IArticleListItem {
         }
 
         /**
-         * <p>The title of the article. For multilingual articles, this will be the title of the default language's content.</p>
+         * The title of the article. For multilingual articles, this will be the title of the default language's content.<p>The title of the article. For multilingual articles, this will be the title of the default language's content.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -474,7 +519,7 @@ public final class Article implements IArticleListItem {
         }
 
         /**
-         * <p>The id of the author of the article. For multilingual articles, this will be the id of the author of the default language's content. Must be a teammate on the help center's workspace.</p>
+         * The id of the author of the article. For multilingual articles, this will be the id of the author of the default language's content. Must be a teammate on the help center's workspace.<p>The id of the author of the article. For multilingual articles, this will be the id of the author of the default language's content. Must be a teammate on the help center's workspace.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -485,7 +530,7 @@ public final class Article implements IArticleListItem {
         }
 
         /**
-         * <p>Whether the article is <code>published</code> or is a <code>draft</code>. For multilingual articles, this will be the state of the default language's content.</p>
+         * Whether the article is `published` or is a `draft`. For multilingual articles, this will be the state of the default language's content.<p>Whether the article is <code>published</code> or is a <code>draft</code>. For multilingual articles, this will be the state of the default language's content.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -496,7 +541,7 @@ public final class Article implements IArticleListItem {
         }
 
         /**
-         * <p>The time when the article was created. For multilingual articles, this will be the timestamp of creation of the default language's content in seconds.</p>
+         * The time when the article was created. For multilingual articles, this will be the timestamp of creation of the default language's content in seconds.<p>The time when the article was created. For multilingual articles, this will be the timestamp of creation of the default language's content in seconds.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -507,7 +552,7 @@ public final class Article implements IArticleListItem {
         }
 
         /**
-         * <p>The time when the article was last updated. For multilingual articles, this will be the timestamp of last update of the default language's content in seconds.</p>
+         * The time when the article was last updated. For multilingual articles, this will be the timestamp of last update of the default language's content in seconds.<p>The time when the article was last updated. For multilingual articles, this will be the timestamp of last update of the default language's content in seconds.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -518,7 +563,7 @@ public final class Article implements IArticleListItem {
         }
 
         /**
-         * <p>The default locale of the help center. This field is only returned for multilingual help centers.</p>
+         * The default locale of the help center. This field is only returned for multilingual help centers.<p>The default locale of the help center. This field is only returned for multilingual help centers.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -558,6 +603,9 @@ public final class Article implements IArticleListItem {
             return this;
         }
 
+        /**
+         * <p>The type of parent, which can either be a <code>collection</code> or <code>section</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "parent_type", nulls = Nulls.SKIP)
         public _FinalStage parentType(Optional<String> parentType) {
@@ -575,6 +623,9 @@ public final class Article implements IArticleListItem {
             return this;
         }
 
+        /**
+         * <p>The ids of the article's parent collections or sections. An article without this field stands alone.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "parent_ids", nulls = Nulls.SKIP)
         public _FinalStage parentIds(Optional<List<Integer>> parentIds) {
@@ -592,6 +643,9 @@ public final class Article implements IArticleListItem {
             return this;
         }
 
+        /**
+         * <p>The id of the article's parent collection or section. An article without this field stands alone.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "parent_id", nulls = Nulls.SKIP)
         public _FinalStage parentId(Optional<Integer> parentId) {
@@ -609,6 +663,9 @@ public final class Article implements IArticleListItem {
             return this;
         }
 
+        /**
+         * <p>The URL of the article. For multilingual articles, this will be the URL of the default language's content.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "url", nulls = Nulls.SKIP)
         public _FinalStage url(Optional<String> url) {
@@ -626,6 +683,9 @@ public final class Article implements IArticleListItem {
             return this;
         }
 
+        /**
+         * <p>The body of the article in HTML. For multilingual articles, this will be the body of the default language's content.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "body", nulls = Nulls.SKIP)
         public _FinalStage body(Optional<String> body) {
@@ -643,6 +703,9 @@ public final class Article implements IArticleListItem {
             return this;
         }
 
+        /**
+         * <p>The description of the article. For multilingual articles, this will be the description of the default language's content.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "description", nulls = Nulls.SKIP)
         public _FinalStage description(Optional<String> description) {
@@ -660,6 +723,9 @@ public final class Article implements IArticleListItem {
             return this;
         }
 
+        /**
+         * <p>The type of object - <code>article</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "type", nulls = Nulls.SKIP)
         public _FinalStage type(Optional<String> type) {

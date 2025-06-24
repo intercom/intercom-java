@@ -90,6 +90,9 @@ public final class TeamList {
             return this;
         }
 
+        /**
+         * <p>A list of team objects</p>
+         */
         @JsonSetter(value = "teams", nulls = Nulls.SKIP)
         public Builder teams(List<Team> teams) {
             this.teams.clear();

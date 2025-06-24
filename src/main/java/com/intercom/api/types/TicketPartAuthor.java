@@ -104,22 +104,34 @@ public final class TicketPartAuthor {
     }
 
     public interface TypeStage {
+        /**
+         * The type of the author
+         */
         IdStage type(@NotNull Type type);
 
         Builder from(TicketPartAuthor other);
     }
 
     public interface IdStage {
+        /**
+         * The id of the author
+         */
         EmailStage id(@NotNull String id);
     }
 
     public interface EmailStage {
+        /**
+         * The email of the author
+         */
         _FinalStage email(@NotNull String email);
     }
 
     public interface _FinalStage {
         TicketPartAuthor build();
 
+        /**
+         * <p>The name of the author</p>
+         */
         _FinalStage name(Optional<String> name);
 
         _FinalStage name(String name);
@@ -150,7 +162,7 @@ public final class TicketPartAuthor {
         }
 
         /**
-         * <p>The type of the author</p>
+         * The type of the author<p>The type of the author</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -161,7 +173,7 @@ public final class TicketPartAuthor {
         }
 
         /**
-         * <p>The id of the author</p>
+         * The id of the author<p>The id of the author</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -172,7 +184,7 @@ public final class TicketPartAuthor {
         }
 
         /**
-         * <p>The email of the author</p>
+         * The email of the author<p>The email of the author</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -192,6 +204,9 @@ public final class TicketPartAuthor {
             return this;
         }
 
+        /**
+         * <p>The name of the author</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "name", nulls = Nulls.SKIP)
         public _FinalStage name(Optional<String> name) {

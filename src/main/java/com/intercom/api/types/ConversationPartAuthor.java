@@ -100,20 +100,32 @@ public final class ConversationPartAuthor {
     }
 
     public interface TypeStage {
+        /**
+         * The type of the author
+         */
         IdStage type(@NotNull String type);
 
         Builder from(ConversationPartAuthor other);
     }
 
     public interface IdStage {
+        /**
+         * The id of the author
+         */
         NameStage id(@NotNull String id);
     }
 
     public interface NameStage {
+        /**
+         * The name of the author
+         */
         EmailStage name(@NotNull String name);
     }
 
     public interface EmailStage {
+        /**
+         * The email of the author
+         */
         _FinalStage email(@NotNull String email);
     }
 
@@ -146,7 +158,7 @@ public final class ConversationPartAuthor {
         }
 
         /**
-         * <p>The type of the author</p>
+         * The type of the author<p>The type of the author</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -157,7 +169,7 @@ public final class ConversationPartAuthor {
         }
 
         /**
-         * <p>The id of the author</p>
+         * The id of the author<p>The id of the author</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -168,7 +180,7 @@ public final class ConversationPartAuthor {
         }
 
         /**
-         * <p>The name of the author</p>
+         * The name of the author<p>The name of the author</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -179,7 +191,7 @@ public final class ConversationPartAuthor {
         }
 
         /**
-         * <p>The email of the author</p>
+         * The email of the author<p>The email of the author</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

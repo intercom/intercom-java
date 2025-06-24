@@ -38,6 +38,7 @@ public final class ConfigureResponse {
         return this.value;
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T visit(Visitor<T> visitor) {
         if (this.type == 0) {
             return visitor.visit((ResultsResponse) this.value);
@@ -151,6 +152,9 @@ public final class ConfigureResponse {
         }
 
         public interface CanvasStage {
+            /**
+             * The canvas object that defines the new UI to be shown. This will replace the previous canvas that was visible until the teammate interacted with your app.
+             */
             _FinalStage canvas(@NotNull CanvasObject canvas);
 
             Builder from(Canvas other);
@@ -176,7 +180,7 @@ public final class ConfigureResponse {
             }
 
             /**
-             * <p>The canvas object that defines the new UI to be shown. This will replace the previous canvas that was visible until the teammate interacted with your app.</p>
+             * The canvas object that defines the new UI to be shown. This will replace the previous canvas that was visible until the teammate interacted with your app.<p>The canvas object that defines the new UI to be shown. This will replace the previous canvas that was visible until the teammate interacted with your app.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override

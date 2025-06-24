@@ -116,6 +116,9 @@ public final class Error {
             return this;
         }
 
+        /**
+         * <p>An array of one or more error objects</p>
+         */
         @JsonSetter(value = "errors", nulls = Nulls.SKIP)
         public Builder errors(List<ErrorsItem> errors) {
             this.errors.clear();
@@ -214,6 +217,9 @@ public final class Error {
         }
 
         public interface CodeStage {
+            /**
+             * A string indicating the kind of error, used to further qualify the HTTP response code
+             */
             _FinalStage code(@NotNull String code);
 
             Builder from(ErrorsItem other);
@@ -222,10 +228,16 @@ public final class Error {
         public interface _FinalStage {
             ErrorsItem build();
 
+            /**
+             * <p>Optional. Human readable description of the error.</p>
+             */
             _FinalStage message(Optional<String> message);
 
             _FinalStage message(String message);
 
+            /**
+             * <p>Optional. Used to identify a particular field or query parameter that was in error.</p>
+             */
             _FinalStage field(Optional<String> field);
 
             _FinalStage field(String field);
@@ -253,7 +265,7 @@ public final class Error {
             }
 
             /**
-             * <p>A string indicating the kind of error, used to further qualify the HTTP response code</p>
+             * A string indicating the kind of error, used to further qualify the HTTP response code<p>A string indicating the kind of error, used to further qualify the HTTP response code</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -273,6 +285,9 @@ public final class Error {
                 return this;
             }
 
+            /**
+             * <p>Optional. Used to identify a particular field or query parameter that was in error.</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "field", nulls = Nulls.SKIP)
             public _FinalStage field(Optional<String> field) {
@@ -290,6 +305,9 @@ public final class Error {
                 return this;
             }
 
+            /**
+             * <p>Optional. Human readable description of the error.</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "message", nulls = Nulls.SKIP)
             public _FinalStage message(Optional<String> message) {

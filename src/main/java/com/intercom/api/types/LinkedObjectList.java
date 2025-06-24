@@ -99,18 +99,27 @@ public final class LinkedObjectList {
     }
 
     public interface TotalCountStage {
+        /**
+         * The total number of linked objects.
+         */
         HasMoreStage totalCount(int totalCount);
 
         Builder from(LinkedObjectList other);
     }
 
     public interface HasMoreStage {
+        /**
+         * Whether or not there are more linked objects than returned.
+         */
         _FinalStage hasMore(boolean hasMore);
     }
 
     public interface _FinalStage {
         LinkedObjectList build();
 
+        /**
+         * <p>An array containing the linked conversations and linked tickets.</p>
+         */
         _FinalStage data(List<LinkedObject> data);
 
         _FinalStage addData(LinkedObject data);
@@ -140,7 +149,7 @@ public final class LinkedObjectList {
         }
 
         /**
-         * <p>The total number of linked objects.</p>
+         * The total number of linked objects.<p>The total number of linked objects.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -151,7 +160,7 @@ public final class LinkedObjectList {
         }
 
         /**
-         * <p>Whether or not there are more linked objects than returned.</p>
+         * Whether or not there are more linked objects than returned.<p>Whether or not there are more linked objects than returned.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -181,6 +190,9 @@ public final class LinkedObjectList {
             return this;
         }
 
+        /**
+         * <p>An array containing the linked conversations and linked tickets.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
         public _FinalStage data(List<LinkedObject> data) {

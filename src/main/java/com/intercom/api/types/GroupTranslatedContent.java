@@ -670,6 +670,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Arabic</p>
+         */
         @JsonSetter(value = "ar", nulls = Nulls.SKIP)
         public Builder ar(Optional<GroupContent> ar) {
             this.ar = ar;
@@ -681,6 +684,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Bulgarian</p>
+         */
         @JsonSetter(value = "bg", nulls = Nulls.SKIP)
         public Builder bg(Optional<GroupContent> bg) {
             this.bg = bg;
@@ -692,6 +698,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Bosnian</p>
+         */
         @JsonSetter(value = "bs", nulls = Nulls.SKIP)
         public Builder bs(Optional<GroupContent> bs) {
             this.bs = bs;
@@ -703,6 +712,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Catalan</p>
+         */
         @JsonSetter(value = "ca", nulls = Nulls.SKIP)
         public Builder ca(Optional<GroupContent> ca) {
             this.ca = ca;
@@ -714,6 +726,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Czech</p>
+         */
         @JsonSetter(value = "cs", nulls = Nulls.SKIP)
         public Builder cs(Optional<GroupContent> cs) {
             this.cs = cs;
@@ -725,6 +740,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Danish</p>
+         */
         @JsonSetter(value = "da", nulls = Nulls.SKIP)
         public Builder da(Optional<GroupContent> da) {
             this.da = da;
@@ -736,6 +754,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in German</p>
+         */
         @JsonSetter(value = "de", nulls = Nulls.SKIP)
         public Builder de(Optional<GroupContent> de) {
             this.de = de;
@@ -747,6 +768,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Greek</p>
+         */
         @JsonSetter(value = "el", nulls = Nulls.SKIP)
         public Builder el(Optional<GroupContent> el) {
             this.el = el;
@@ -758,6 +782,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in English</p>
+         */
         @JsonSetter(value = "en", nulls = Nulls.SKIP)
         public Builder en(Optional<GroupContent> en) {
             this.en = en;
@@ -769,6 +796,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Spanish</p>
+         */
         @JsonSetter(value = "es", nulls = Nulls.SKIP)
         public Builder es(Optional<GroupContent> es) {
             this.es = es;
@@ -780,6 +810,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Estonian</p>
+         */
         @JsonSetter(value = "et", nulls = Nulls.SKIP)
         public Builder et(Optional<GroupContent> et) {
             this.et = et;
@@ -791,6 +824,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Finnish</p>
+         */
         @JsonSetter(value = "fi", nulls = Nulls.SKIP)
         public Builder fi(Optional<GroupContent> fi) {
             this.fi = fi;
@@ -802,6 +838,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in French</p>
+         */
         @JsonSetter(value = "fr", nulls = Nulls.SKIP)
         public Builder fr(Optional<GroupContent> fr) {
             this.fr = fr;
@@ -813,6 +852,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Hebrew</p>
+         */
         @JsonSetter(value = "he", nulls = Nulls.SKIP)
         public Builder he(Optional<GroupContent> he) {
             this.he = he;
@@ -824,6 +866,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Croatian</p>
+         */
         @JsonSetter(value = "hr", nulls = Nulls.SKIP)
         public Builder hr(Optional<GroupContent> hr) {
             this.hr = hr;
@@ -835,6 +880,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Hungarian</p>
+         */
         @JsonSetter(value = "hu", nulls = Nulls.SKIP)
         public Builder hu(Optional<GroupContent> hu) {
             this.hu = hu;
@@ -846,6 +894,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Indonesian</p>
+         */
         @JsonSetter(value = "id", nulls = Nulls.SKIP)
         public Builder id(Optional<GroupContent> id) {
             this.id = id;
@@ -857,6 +908,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Italian</p>
+         */
         @JsonSetter(value = "it", nulls = Nulls.SKIP)
         public Builder it(Optional<GroupContent> it) {
             this.it = it;
@@ -868,6 +922,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Japanese</p>
+         */
         @JsonSetter(value = "ja", nulls = Nulls.SKIP)
         public Builder ja(Optional<GroupContent> ja) {
             this.ja = ja;
@@ -879,6 +936,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Korean</p>
+         */
         @JsonSetter(value = "ko", nulls = Nulls.SKIP)
         public Builder ko(Optional<GroupContent> ko) {
             this.ko = ko;
@@ -890,6 +950,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Lithuanian</p>
+         */
         @JsonSetter(value = "lt", nulls = Nulls.SKIP)
         public Builder lt(Optional<GroupContent> lt) {
             this.lt = lt;
@@ -901,6 +964,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Latvian</p>
+         */
         @JsonSetter(value = "lv", nulls = Nulls.SKIP)
         public Builder lv(Optional<GroupContent> lv) {
             this.lv = lv;
@@ -912,6 +978,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Mongolian</p>
+         */
         @JsonSetter(value = "mn", nulls = Nulls.SKIP)
         public Builder mn(Optional<GroupContent> mn) {
             this.mn = mn;
@@ -923,6 +992,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Norwegian</p>
+         */
         @JsonSetter(value = "nb", nulls = Nulls.SKIP)
         public Builder nb(Optional<GroupContent> nb) {
             this.nb = nb;
@@ -934,6 +1006,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Dutch</p>
+         */
         @JsonSetter(value = "nl", nulls = Nulls.SKIP)
         public Builder nl(Optional<GroupContent> nl) {
             this.nl = nl;
@@ -945,6 +1020,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Polish</p>
+         */
         @JsonSetter(value = "pl", nulls = Nulls.SKIP)
         public Builder pl(Optional<GroupContent> pl) {
             this.pl = pl;
@@ -956,6 +1034,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Portuguese (Portugal)</p>
+         */
         @JsonSetter(value = "pt", nulls = Nulls.SKIP)
         public Builder pt(Optional<GroupContent> pt) {
             this.pt = pt;
@@ -967,6 +1048,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Romanian</p>
+         */
         @JsonSetter(value = "ro", nulls = Nulls.SKIP)
         public Builder ro(Optional<GroupContent> ro) {
             this.ro = ro;
@@ -978,6 +1062,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Russian</p>
+         */
         @JsonSetter(value = "ru", nulls = Nulls.SKIP)
         public Builder ru(Optional<GroupContent> ru) {
             this.ru = ru;
@@ -989,6 +1076,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Slovenian</p>
+         */
         @JsonSetter(value = "sl", nulls = Nulls.SKIP)
         public Builder sl(Optional<GroupContent> sl) {
             this.sl = sl;
@@ -1000,6 +1090,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Serbian</p>
+         */
         @JsonSetter(value = "sr", nulls = Nulls.SKIP)
         public Builder sr(Optional<GroupContent> sr) {
             this.sr = sr;
@@ -1011,6 +1104,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Swedish</p>
+         */
         @JsonSetter(value = "sv", nulls = Nulls.SKIP)
         public Builder sv(Optional<GroupContent> sv) {
             this.sv = sv;
@@ -1022,6 +1118,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Turkish</p>
+         */
         @JsonSetter(value = "tr", nulls = Nulls.SKIP)
         public Builder tr(Optional<GroupContent> tr) {
             this.tr = tr;
@@ -1033,6 +1132,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Vietnamese</p>
+         */
         @JsonSetter(value = "vi", nulls = Nulls.SKIP)
         public Builder vi(Optional<GroupContent> vi) {
             this.vi = vi;
@@ -1044,6 +1146,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Portuguese (Brazil)</p>
+         */
         @JsonSetter(value = "pt-BR", nulls = Nulls.SKIP)
         public Builder ptBr(Optional<GroupContent> ptBr) {
             this.ptBr = ptBr;
@@ -1055,6 +1160,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Chinese (China)</p>
+         */
         @JsonSetter(value = "zh-CN", nulls = Nulls.SKIP)
         public Builder zhCn(Optional<GroupContent> zhCn) {
             this.zhCn = zhCn;
@@ -1066,6 +1174,9 @@ public final class GroupTranslatedContent {
             return this;
         }
 
+        /**
+         * <p>The content of the group in Chinese (Taiwan)</p>
+         */
         @JsonSetter(value = "zh-TW", nulls = Nulls.SKIP)
         public Builder zhTw(Optional<GroupContent> zhTw) {
             this.zhTw = zhTw;

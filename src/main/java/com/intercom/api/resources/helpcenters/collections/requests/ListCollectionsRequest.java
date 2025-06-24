@@ -95,6 +95,9 @@ public final class ListCollectionsRequest {
             return this;
         }
 
+        /**
+         * <p>The page of results to fetch. Defaults to first page</p>
+         */
         @JsonSetter(value = "page", nulls = Nulls.SKIP)
         public Builder page(Optional<Integer> page) {
             this.page = page;
@@ -106,6 +109,9 @@ public final class ListCollectionsRequest {
             return this;
         }
 
+        /**
+         * <p>How many results to display per page. Defaults to 15</p>
+         */
         @JsonSetter(value = "per_page", nulls = Nulls.SKIP)
         public Builder perPage(Optional<Integer> perPage) {
             this.perPage = perPage;

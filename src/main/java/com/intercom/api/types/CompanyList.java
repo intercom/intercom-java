@@ -90,6 +90,9 @@ public final class CompanyList {
     }
 
     public interface TotalCountStage {
+        /**
+         * The total number of companies.
+         */
         _FinalStage totalCount(int totalCount);
 
         Builder from(CompanyList other);
@@ -102,6 +105,9 @@ public final class CompanyList {
 
         _FinalStage pages(OffsetPages pages);
 
+        /**
+         * <p>An array containing Company Objects.</p>
+         */
         _FinalStage data(List<Company> data);
 
         _FinalStage addData(Company data);
@@ -131,7 +137,7 @@ public final class CompanyList {
         }
 
         /**
-         * <p>The total number of companies.</p>
+         * The total number of companies.<p>The total number of companies.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -161,6 +167,9 @@ public final class CompanyList {
             return this;
         }
 
+        /**
+         * <p>An array containing Company Objects.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
         public _FinalStage data(List<Company> data) {

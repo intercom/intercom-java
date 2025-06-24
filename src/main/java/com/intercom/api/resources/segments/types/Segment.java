@@ -145,30 +145,48 @@ public final class Segment {
     }
 
     public interface IdStage {
+        /**
+         * The unique identifier representing the segment.
+         */
         NameStage id(@NotNull String id);
 
         Builder from(Segment other);
     }
 
     public interface NameStage {
+        /**
+         * The name of the segment.
+         */
         CreatedAtStage name(@NotNull String name);
     }
 
     public interface CreatedAtStage {
+        /**
+         * The time the segment was created.
+         */
         PersonTypeStage createdAt(int createdAt);
     }
 
     public interface PersonTypeStage {
+        /**
+         * Type of the contact: contact (lead) or user.
+         */
         _FinalStage personType(@NotNull PersonType personType);
     }
 
     public interface _FinalStage {
         Segment build();
 
+        /**
+         * <p>The time the segment was updated.</p>
+         */
         _FinalStage updatedAt(Optional<Integer> updatedAt);
 
         _FinalStage updatedAt(Integer updatedAt);
 
+        /**
+         * <p>The number of items in the user segment. It's returned when <code>include_count=true</code> is included in the request.</p>
+         */
         _FinalStage count(Optional<Integer> count);
 
         _FinalStage count(Integer count);
@@ -205,7 +223,7 @@ public final class Segment {
         }
 
         /**
-         * <p>The unique identifier representing the segment.</p>
+         * The unique identifier representing the segment.<p>The unique identifier representing the segment.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -216,7 +234,7 @@ public final class Segment {
         }
 
         /**
-         * <p>The name of the segment.</p>
+         * The name of the segment.<p>The name of the segment.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -227,7 +245,7 @@ public final class Segment {
         }
 
         /**
-         * <p>The time the segment was created.</p>
+         * The time the segment was created.<p>The time the segment was created.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -238,7 +256,7 @@ public final class Segment {
         }
 
         /**
-         * <p>Type of the contact: contact (lead) or user.</p>
+         * Type of the contact: contact (lead) or user.<p>Type of the contact: contact (lead) or user.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -258,6 +276,9 @@ public final class Segment {
             return this;
         }
 
+        /**
+         * <p>The number of items in the user segment. It's returned when <code>include_count=true</code> is included in the request.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "count", nulls = Nulls.SKIP)
         public _FinalStage count(Optional<Integer> count) {
@@ -275,6 +296,9 @@ public final class Segment {
             return this;
         }
 
+        /**
+         * <p>The time the segment was updated.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
         public _FinalStage updatedAt(Optional<Integer> updatedAt) {

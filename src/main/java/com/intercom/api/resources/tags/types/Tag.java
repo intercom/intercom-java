@@ -108,16 +108,25 @@ public final class Tag {
     }
 
     public interface IdStage {
+        /**
+         * The id of the tag
+         */
         NameStage id(@NotNull String id);
 
         Builder from(Tag other);
     }
 
     public interface NameStage {
+        /**
+         * The name of the tag
+         */
         AppliedAtStage name(@NotNull String name);
     }
 
     public interface AppliedAtStage {
+        /**
+         * The time when the tag was applied to the object
+         */
         AppliedByStage appliedAt(int appliedAt);
     }
 
@@ -154,7 +163,7 @@ public final class Tag {
         }
 
         /**
-         * <p>The id of the tag</p>
+         * The id of the tag<p>The id of the tag</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -165,7 +174,7 @@ public final class Tag {
         }
 
         /**
-         * <p>The name of the tag</p>
+         * The name of the tag<p>The name of the tag</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -176,7 +185,7 @@ public final class Tag {
         }
 
         /**
-         * <p>The time when the tag was applied to the object</p>
+         * The time when the tag was applied to the object<p>The time when the tag was applied to the object</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

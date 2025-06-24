@@ -90,6 +90,9 @@ public final class TicketTypeAttributeList {
             return this;
         }
 
+        /**
+         * <p>A list of ticket type attributes associated with a given ticket type.</p>
+         */
         @JsonSetter(value = "ticket_type_attributes", nulls = Nulls.SKIP)
         public Builder ticketTypeAttributes(List<TicketTypeAttribute> ticketTypeAttributes) {
             this.ticketTypeAttributes.clear();

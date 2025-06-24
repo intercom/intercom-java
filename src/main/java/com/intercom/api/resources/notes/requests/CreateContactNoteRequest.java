@@ -91,18 +91,27 @@ public final class CreateContactNoteRequest {
     }
 
     public interface ContactIdStage {
+        /**
+         * The unique identifier of a given contact.
+         */
         BodyStage contactId(@NotNull String contactId);
 
         Builder from(CreateContactNoteRequest other);
     }
 
     public interface BodyStage {
+        /**
+         * The text of the note.
+         */
         _FinalStage body(@NotNull String body);
     }
 
     public interface _FinalStage {
         CreateContactNoteRequest build();
 
+        /**
+         * <p>The unique identifier of a given admin.</p>
+         */
         _FinalStage adminId(Optional<String> adminId);
 
         _FinalStage adminId(String adminId);
@@ -130,7 +139,7 @@ public final class CreateContactNoteRequest {
         }
 
         /**
-         * <p>The unique identifier of a given contact.</p>
+         * The unique identifier of a given contact.<p>The unique identifier of a given contact.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -141,7 +150,7 @@ public final class CreateContactNoteRequest {
         }
 
         /**
-         * <p>The text of the note.</p>
+         * The text of the note.<p>The text of the note.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -161,6 +170,9 @@ public final class CreateContactNoteRequest {
             return this;
         }
 
+        /**
+         * <p>The unique identifier of a given admin.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "admin_id", nulls = Nulls.SKIP)
         public _FinalStage adminId(Optional<String> adminId) {

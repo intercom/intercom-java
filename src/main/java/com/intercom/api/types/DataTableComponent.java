@@ -81,6 +81,9 @@ public final class DataTableComponent {
             return this;
         }
 
+        /**
+         * <p>The items that will be rendered in the data-table.</p>
+         */
         @JsonSetter(value = "items", nulls = Nulls.SKIP)
         public Builder items(List<DataTableItem> items) {
             this.items.clear();

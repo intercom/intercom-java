@@ -93,16 +93,28 @@ public final class SlaApplied {
     }
 
     public interface TypeStage {
+        /**
+         * object type
+         */
         SlaNameStage type(@NotNull String type);
 
         Builder from(SlaApplied other);
     }
 
     public interface SlaNameStage {
+        /**
+         * The name of the SLA as given by the teammate when it was created.
+         */
         SlaStatusStage slaName(@NotNull String slaName);
     }
 
     public interface SlaStatusStage {
+        /**
+         * SLA statuses:
+         *             - `hit`: If there’s at least one hit event in the underlying sla_events table, and no “missed” or “canceled” events for the conversation.
+         *             - `missed`: If there are any missed sla_events for the conversation and no canceled events. If there’s even a single missed sla event, the status will always be missed. A missed status is not applied when the SLA expires, only the next time a teammate replies.
+         *             - `active`: An SLA has been applied to a conversation, but has not yet been fulfilled. SLA status is active only if there are no “hit, “missed”, or “canceled” events.
+         */
         _FinalStage slaStatus(@NotNull SlaStatus slaStatus);
     }
 
@@ -132,7 +144,7 @@ public final class SlaApplied {
         }
 
         /**
-         * <p>object type</p>
+         * object type<p>object type</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -143,7 +155,7 @@ public final class SlaApplied {
         }
 
         /**
-         * <p>The name of the SLA as given by the teammate when it was created.</p>
+         * The name of the SLA as given by the teammate when it was created.<p>The name of the SLA as given by the teammate when it was created.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -154,7 +166,10 @@ public final class SlaApplied {
         }
 
         /**
-         * <p>SLA statuses:
+         * SLA statuses:
+         *             - `hit`: If there’s at least one hit event in the underlying sla_events table, and no “missed” or “canceled” events for the conversation.
+         *             - `missed`: If there are any missed sla_events for the conversation and no canceled events. If there’s even a single missed sla event, the status will always be missed. A missed status is not applied when the SLA expires, only the next time a teammate replies.
+         *             - `active`: An SLA has been applied to a conversation, but has not yet been fulfilled. SLA status is active only if there are no “hit, “missed”, or “canceled” events.<p>SLA statuses:
          * - <code>hit</code>: If there’s at least one hit event in the underlying sla_events table, and no “missed” or “canceled” events for the conversation.
          * - <code>missed</code>: If there are any missed sla_events for the conversation and no canceled events. If there’s even a single missed sla event, the status will always be missed. A missed status is not applied when the SLA expires, only the next time a teammate replies.
          * - <code>active</code>: An SLA has been applied to a conversation, but has not yet been fulfilled. SLA status is active only if there are no “hit, “missed”, or “canceled” events.</p>

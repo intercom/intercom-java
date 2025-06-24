@@ -99,18 +99,27 @@ public final class ContactDeleted {
     }
 
     public interface IdStage {
+        /**
+         * The unique identifier for the contact which is given by Intercom.
+         */
         DeletedStage id(@NotNull String id);
 
         Builder from(ContactDeleted other);
     }
 
     public interface DeletedStage {
+        /**
+         * Whether the contact is deleted or not.
+         */
         _FinalStage deleted(boolean deleted);
     }
 
     public interface _FinalStage {
         ContactDeleted build();
 
+        /**
+         * <p>The unique identifier for the contact which is provided by the Client.</p>
+         */
         _FinalStage externalId(Optional<String> externalId);
 
         _FinalStage externalId(String externalId);
@@ -138,7 +147,7 @@ public final class ContactDeleted {
         }
 
         /**
-         * <p>The unique identifier for the contact which is given by Intercom.</p>
+         * The unique identifier for the contact which is given by Intercom.<p>The unique identifier for the contact which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -149,7 +158,7 @@ public final class ContactDeleted {
         }
 
         /**
-         * <p>Whether the contact is deleted or not.</p>
+         * Whether the contact is deleted or not.<p>Whether the contact is deleted or not.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -169,6 +178,9 @@ public final class ContactDeleted {
             return this;
         }
 
+        /**
+         * <p>The unique identifier for the contact which is provided by the Client.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "external_id", nulls = Nulls.SKIP)
         public _FinalStage externalId(Optional<String> externalId) {

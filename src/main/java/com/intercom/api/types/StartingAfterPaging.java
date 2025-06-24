@@ -78,6 +78,9 @@ public final class StartingAfterPaging {
     }
 
     public interface PerPageStage {
+        /**
+         * The number of results to fetch per page.
+         */
         _FinalStage perPage(int perPage);
 
         Builder from(StartingAfterPaging other);
@@ -86,6 +89,9 @@ public final class StartingAfterPaging {
     public interface _FinalStage {
         StartingAfterPaging build();
 
+        /**
+         * <p>The cursor to use in the next request to get the next page of results.</p>
+         */
         _FinalStage startingAfter(Optional<String> startingAfter);
 
         _FinalStage startingAfter(String startingAfter);
@@ -110,7 +116,7 @@ public final class StartingAfterPaging {
         }
 
         /**
-         * <p>The number of results to fetch per page.</p>
+         * The number of results to fetch per page.<p>The number of results to fetch per page.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -130,6 +136,9 @@ public final class StartingAfterPaging {
             return this;
         }
 
+        /**
+         * <p>The cursor to use in the next request to get the next page of results.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "starting_after", nulls = Nulls.SKIP)
         public _FinalStage startingAfter(Optional<String> startingAfter) {

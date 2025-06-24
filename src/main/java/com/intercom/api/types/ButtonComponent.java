@@ -124,26 +124,41 @@ public final class ButtonComponent {
     }
 
     public interface IdStage {
+        /**
+         * A unique identifier for the component.
+         */
         LabelStage id(@NotNull String id);
 
         Builder from(ButtonComponent other);
     }
 
     public interface LabelStage {
+        /**
+         * The text that will be rendered inside the button.
+         */
         ActionStage label(@NotNull String label);
     }
 
     public interface ActionStage {
+        /**
+         * This can be a Submit Action, URL Action, or Sheets Action.
+         */
         _FinalStage action(@NotNull ActionComponent action);
     }
 
     public interface _FinalStage {
         ButtonComponent build();
 
+        /**
+         * <p>Styles the button. Default is 'primary'.</p>
+         */
         _FinalStage style(Optional<Style> style);
 
         _FinalStage style(Style style);
 
+        /**
+         * <p>Styles the button and prevents the action. Default is false.</p>
+         */
         _FinalStage disabled(Optional<Boolean> disabled);
 
         _FinalStage disabled(Boolean disabled);
@@ -177,7 +192,7 @@ public final class ButtonComponent {
         }
 
         /**
-         * <p>A unique identifier for the component.</p>
+         * A unique identifier for the component.<p>A unique identifier for the component.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -188,7 +203,7 @@ public final class ButtonComponent {
         }
 
         /**
-         * <p>The text that will be rendered inside the button.</p>
+         * The text that will be rendered inside the button.<p>The text that will be rendered inside the button.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -199,7 +214,7 @@ public final class ButtonComponent {
         }
 
         /**
-         * <p>This can be a Submit Action, URL Action, or Sheets Action.</p>
+         * This can be a Submit Action, URL Action, or Sheets Action.<p>This can be a Submit Action, URL Action, or Sheets Action.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -219,6 +234,9 @@ public final class ButtonComponent {
             return this;
         }
 
+        /**
+         * <p>Styles the button and prevents the action. Default is false.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "disabled", nulls = Nulls.SKIP)
         public _FinalStage disabled(Optional<Boolean> disabled) {
@@ -236,6 +254,9 @@ public final class ButtonComponent {
             return this;
         }
 
+        /**
+         * <p>Styles the button. Default is 'primary'.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "style", nulls = Nulls.SKIP)
         public _FinalStage style(Optional<Style> style) {

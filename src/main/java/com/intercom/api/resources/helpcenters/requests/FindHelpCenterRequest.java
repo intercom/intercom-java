@@ -66,6 +66,9 @@ public final class FindHelpCenterRequest {
     }
 
     public interface HelpCenterIdStage {
+        /**
+         * The unique identifier for the Help Center which is given by Intercom.
+         */
         _FinalStage helpCenterId(@NotNull String helpCenterId);
 
         Builder from(FindHelpCenterRequest other);
@@ -91,7 +94,7 @@ public final class FindHelpCenterRequest {
         }
 
         /**
-         * <p>The unique identifier for the Help Center which is given by Intercom.</p>
+         * The unique identifier for the Help Center which is given by Intercom.<p>The unique identifier for the Help Center which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

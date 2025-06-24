@@ -38,6 +38,7 @@ public final class CustomerRequest {
         return this.value;
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T visit(Visitor<T> visitor) {
         if (this.type == 0) {
             return visitor.visit((IntercomUserId) this.value);
@@ -163,6 +164,9 @@ public final class CustomerRequest {
         }
 
         public interface IntercomUserIdStage {
+            /**
+             * The identifier for the contact as given by Intercom.
+             */
             _FinalStage intercomUserId(@NotNull String intercomUserId);
 
             Builder from(IntercomUserId other);
@@ -188,7 +192,7 @@ public final class CustomerRequest {
             }
 
             /**
-             * <p>The identifier for the contact as given by Intercom.</p>
+             * The identifier for the contact as given by Intercom.<p>The identifier for the contact as given by Intercom.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -255,6 +259,9 @@ public final class CustomerRequest {
         }
 
         public interface EmailStage {
+            /**
+             * The email you have defined for the contact who is being added as a participant.
+             */
             _FinalStage email(@NotNull String email);
 
             Builder from(Email other);
@@ -280,7 +287,7 @@ public final class CustomerRequest {
             }
 
             /**
-             * <p>The email you have defined for the contact who is being added as a participant.</p>
+             * The email you have defined for the contact who is being added as a participant.<p>The email you have defined for the contact who is being added as a participant.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -347,6 +354,9 @@ public final class CustomerRequest {
         }
 
         public interface UserIdStage {
+            /**
+             * The external_id you have defined for the contact who is being added as a participant.
+             */
             _FinalStage userId(@NotNull String userId);
 
             Builder from(UserId other);
@@ -372,7 +382,7 @@ public final class CustomerRequest {
             }
 
             /**
-             * <p>The external_id you have defined for the contact who is being added as a participant.</p>
+             * The external_id you have defined for the contact who is being added as a participant.<p>The external_id you have defined for the contact who is being added as a participant.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override

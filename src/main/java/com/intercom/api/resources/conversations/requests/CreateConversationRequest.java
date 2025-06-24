@@ -96,12 +96,18 @@ public final class CreateConversationRequest {
     }
 
     public interface BodyStage {
+        /**
+         * The content of the message. HTML is not supported.
+         */
         _FinalStage body(@NotNull String body);
     }
 
     public interface _FinalStage {
         CreateConversationRequest build();
 
+        /**
+         * <p>The time the conversation was created as a UTC Unix timestamp. If not provided, the current time will be used. This field is only recommneded for migrating past conversations from another source into Intercom.</p>
+         */
         _FinalStage createdAt(Optional<Integer> createdAt);
 
         _FinalStage createdAt(Integer createdAt);
@@ -136,7 +142,7 @@ public final class CreateConversationRequest {
         }
 
         /**
-         * <p>The content of the message. HTML is not supported.</p>
+         * The content of the message. HTML is not supported.<p>The content of the message. HTML is not supported.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -156,6 +162,9 @@ public final class CreateConversationRequest {
             return this;
         }
 
+        /**
+         * <p>The time the conversation was created as a UTC Unix timestamp. If not provided, the current time will be used. This field is only recommneded for migrating past conversations from another source into Intercom.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
         public _FinalStage createdAt(Optional<Integer> createdAt) {
@@ -230,12 +239,18 @@ public final class CreateConversationRequest {
         }
 
         public interface TypeStage {
+            /**
+             * The role associated to the contact - user or lead.
+             */
             IdStage type(@NotNull Type type);
 
             Builder from(From other);
         }
 
         public interface IdStage {
+            /**
+             * The identifier for the contact which is given by Intercom.
+             */
             _FinalStage id(@NotNull String id);
         }
 
@@ -262,7 +277,7 @@ public final class CreateConversationRequest {
             }
 
             /**
-             * <p>The role associated to the contact - user or lead.</p>
+             * The role associated to the contact - user or lead.<p>The role associated to the contact - user or lead.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -273,7 +288,7 @@ public final class CreateConversationRequest {
             }
 
             /**
-             * <p>The identifier for the contact which is given by Intercom.</p>
+             * The identifier for the contact which is given by Intercom.<p>The identifier for the contact which is given by Intercom.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override

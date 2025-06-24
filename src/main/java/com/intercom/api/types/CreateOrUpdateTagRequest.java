@@ -79,6 +79,9 @@ public final class CreateOrUpdateTagRequest {
     }
 
     public interface NameStage {
+        /**
+         * The name of the tag, which will be created if not found, or the new name for the tag if this is an update request. Names are case insensitive.
+         */
         _FinalStage name(@NotNull String name);
 
         Builder from(CreateOrUpdateTagRequest other);
@@ -87,6 +90,9 @@ public final class CreateOrUpdateTagRequest {
     public interface _FinalStage {
         CreateOrUpdateTagRequest build();
 
+        /**
+         * <p>The id of tag to updates.</p>
+         */
         _FinalStage id(Optional<String> id);
 
         _FinalStage id(String id);
@@ -111,7 +117,7 @@ public final class CreateOrUpdateTagRequest {
         }
 
         /**
-         * <p>The name of the tag, which will be created if not found, or the new name for the tag if this is an update request. Names are case insensitive.</p>
+         * The name of the tag, which will be created if not found, or the new name for the tag if this is an update request. Names are case insensitive.<p>The name of the tag, which will be created if not found, or the new name for the tag if this is an update request. Names are case insensitive.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -131,6 +137,9 @@ public final class CreateOrUpdateTagRequest {
             return this;
         }
 
+        /**
+         * <p>The id of tag to updates.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "id", nulls = Nulls.SKIP)
         public _FinalStage id(Optional<String> id) {

@@ -380,6 +380,9 @@ public final class ConversationStatistics {
             return this;
         }
 
+        /**
+         * <p>Duration until last assignment before first admin reply. In seconds.</p>
+         */
         @JsonSetter(value = "time_to_assignment", nulls = Nulls.SKIP)
         public Builder timeToAssignment(Optional<Integer> timeToAssignment) {
             this.timeToAssignment = timeToAssignment;
@@ -391,6 +394,9 @@ public final class ConversationStatistics {
             return this;
         }
 
+        /**
+         * <p>Duration until first admin reply. Subtracts out of business hours. In seconds.</p>
+         */
         @JsonSetter(value = "time_to_admin_reply", nulls = Nulls.SKIP)
         public Builder timeToAdminReply(Optional<Integer> timeToAdminReply) {
             this.timeToAdminReply = timeToAdminReply;
@@ -402,6 +408,9 @@ public final class ConversationStatistics {
             return this;
         }
 
+        /**
+         * <p>Duration until conversation was closed first time. Subtracts out of business hours. In seconds.</p>
+         */
         @JsonSetter(value = "time_to_first_close", nulls = Nulls.SKIP)
         public Builder timeToFirstClose(Optional<Integer> timeToFirstClose) {
             this.timeToFirstClose = timeToFirstClose;
@@ -413,6 +422,9 @@ public final class ConversationStatistics {
             return this;
         }
 
+        /**
+         * <p>Duration until conversation was closed last time. Subtracts out of business hours. In seconds.</p>
+         */
         @JsonSetter(value = "time_to_last_close", nulls = Nulls.SKIP)
         public Builder timeToLastClose(Optional<Integer> timeToLastClose) {
             this.timeToLastClose = timeToLastClose;
@@ -424,6 +436,9 @@ public final class ConversationStatistics {
             return this;
         }
 
+        /**
+         * <p>Median based on all admin replies after a contact reply. Subtracts out of business hours. In seconds.</p>
+         */
         @JsonSetter(value = "median_time_to_reply", nulls = Nulls.SKIP)
         public Builder medianTimeToReply(Optional<Integer> medianTimeToReply) {
             this.medianTimeToReply = medianTimeToReply;
@@ -435,6 +450,9 @@ public final class ConversationStatistics {
             return this;
         }
 
+        /**
+         * <p>Time of first text conversation part from a contact.</p>
+         */
         @JsonSetter(value = "first_contact_reply_at", nulls = Nulls.SKIP)
         public Builder firstContactReplyAt(Optional<Integer> firstContactReplyAt) {
             this.firstContactReplyAt = firstContactReplyAt;
@@ -446,6 +464,9 @@ public final class ConversationStatistics {
             return this;
         }
 
+        /**
+         * <p>Time of first assignment after first_contact_reply_at.</p>
+         */
         @JsonSetter(value = "first_assignment_at", nulls = Nulls.SKIP)
         public Builder firstAssignmentAt(Optional<Integer> firstAssignmentAt) {
             this.firstAssignmentAt = firstAssignmentAt;
@@ -457,6 +478,9 @@ public final class ConversationStatistics {
             return this;
         }
 
+        /**
+         * <p>Time of first admin reply after first_contact_reply_at.</p>
+         */
         @JsonSetter(value = "first_admin_reply_at", nulls = Nulls.SKIP)
         public Builder firstAdminReplyAt(Optional<Integer> firstAdminReplyAt) {
             this.firstAdminReplyAt = firstAdminReplyAt;
@@ -468,6 +492,9 @@ public final class ConversationStatistics {
             return this;
         }
 
+        /**
+         * <p>Time of first close after first_contact_reply_at.</p>
+         */
         @JsonSetter(value = "first_close_at", nulls = Nulls.SKIP)
         public Builder firstCloseAt(Optional<Integer> firstCloseAt) {
             this.firstCloseAt = firstCloseAt;
@@ -479,6 +506,9 @@ public final class ConversationStatistics {
             return this;
         }
 
+        /**
+         * <p>Time of last assignment after first_contact_reply_at.</p>
+         */
         @JsonSetter(value = "last_assignment_at", nulls = Nulls.SKIP)
         public Builder lastAssignmentAt(Optional<Integer> lastAssignmentAt) {
             this.lastAssignmentAt = lastAssignmentAt;
@@ -490,6 +520,9 @@ public final class ConversationStatistics {
             return this;
         }
 
+        /**
+         * <p>Time of first admin reply since most recent assignment.</p>
+         */
         @JsonSetter(value = "last_assignment_admin_reply_at", nulls = Nulls.SKIP)
         public Builder lastAssignmentAdminReplyAt(Optional<Integer> lastAssignmentAdminReplyAt) {
             this.lastAssignmentAdminReplyAt = lastAssignmentAdminReplyAt;
@@ -501,6 +534,9 @@ public final class ConversationStatistics {
             return this;
         }
 
+        /**
+         * <p>Time of the last conversation part from a contact.</p>
+         */
         @JsonSetter(value = "last_contact_reply_at", nulls = Nulls.SKIP)
         public Builder lastContactReplyAt(Optional<Integer> lastContactReplyAt) {
             this.lastContactReplyAt = lastContactReplyAt;
@@ -512,6 +548,9 @@ public final class ConversationStatistics {
             return this;
         }
 
+        /**
+         * <p>Time of the last conversation part from an admin.</p>
+         */
         @JsonSetter(value = "last_admin_reply_at", nulls = Nulls.SKIP)
         public Builder lastAdminReplyAt(Optional<Integer> lastAdminReplyAt) {
             this.lastAdminReplyAt = lastAdminReplyAt;
@@ -523,6 +562,9 @@ public final class ConversationStatistics {
             return this;
         }
 
+        /**
+         * <p>Time of the last conversation close.</p>
+         */
         @JsonSetter(value = "last_close_at", nulls = Nulls.SKIP)
         public Builder lastCloseAt(Optional<Integer> lastCloseAt) {
             this.lastCloseAt = lastCloseAt;
@@ -534,6 +576,9 @@ public final class ConversationStatistics {
             return this;
         }
 
+        /**
+         * <p>The last admin who closed the conversation. Returns a reference to an Admin object.</p>
+         */
         @JsonSetter(value = "last_closed_by_id", nulls = Nulls.SKIP)
         public Builder lastClosedById(Optional<String> lastClosedById) {
             this.lastClosedById = lastClosedById;
@@ -545,6 +590,9 @@ public final class ConversationStatistics {
             return this;
         }
 
+        /**
+         * <p>Number of reopens after first_contact_reply_at.</p>
+         */
         @JsonSetter(value = "count_reopens", nulls = Nulls.SKIP)
         public Builder countReopens(Optional<Integer> countReopens) {
             this.countReopens = countReopens;
@@ -556,6 +604,9 @@ public final class ConversationStatistics {
             return this;
         }
 
+        /**
+         * <p>Number of assignments after first_contact_reply_at.</p>
+         */
         @JsonSetter(value = "count_assignments", nulls = Nulls.SKIP)
         public Builder countAssignments(Optional<Integer> countAssignments) {
             this.countAssignments = countAssignments;
@@ -567,6 +618,9 @@ public final class ConversationStatistics {
             return this;
         }
 
+        /**
+         * <p>Total number of conversation parts.</p>
+         */
         @JsonSetter(value = "count_conversation_parts", nulls = Nulls.SKIP)
         public Builder countConversationParts(Optional<Integer> countConversationParts) {
             this.countConversationParts = countConversationParts;

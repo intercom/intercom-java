@@ -66,6 +66,9 @@ public final class FindVisitorRequest {
     }
 
     public interface UserIdStage {
+        /**
+         * The user_id of the Visitor you want to retrieve.
+         */
         _FinalStage userId(@NotNull String userId);
 
         Builder from(FindVisitorRequest other);
@@ -91,7 +94,7 @@ public final class FindVisitorRequest {
         }
 
         /**
-         * <p>The user_id of the Visitor you want to retrieve.</p>
+         * The user_id of the Visitor you want to retrieve.<p>The user_id of the Visitor you want to retrieve.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

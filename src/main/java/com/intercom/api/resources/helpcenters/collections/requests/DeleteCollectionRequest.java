@@ -66,6 +66,9 @@ public final class DeleteCollectionRequest {
     }
 
     public interface CollectionIdStage {
+        /**
+         * The unique identifier for the collection which is given by Intercom.
+         */
         _FinalStage collectionId(@NotNull String collectionId);
 
         Builder from(DeleteCollectionRequest other);
@@ -91,7 +94,7 @@ public final class DeleteCollectionRequest {
         }
 
         /**
-         * <p>The unique identifier for the collection which is given by Intercom.</p>
+         * The unique identifier for the collection which is given by Intercom.<p>The unique identifier for the collection which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

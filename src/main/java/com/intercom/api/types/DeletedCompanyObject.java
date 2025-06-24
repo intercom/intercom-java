@@ -85,12 +85,18 @@ public final class DeletedCompanyObject {
     }
 
     public interface IdStage {
+        /**
+         * The unique identifier for the company which is given by Intercom.
+         */
         DeletedStage id(@NotNull String id);
 
         Builder from(DeletedCompanyObject other);
     }
 
     public interface DeletedStage {
+        /**
+         * Whether the company was deleted successfully or not.
+         */
         _FinalStage deleted(boolean deleted);
     }
 
@@ -117,7 +123,7 @@ public final class DeletedCompanyObject {
         }
 
         /**
-         * <p>The unique identifier for the company which is given by Intercom.</p>
+         * The unique identifier for the company which is given by Intercom.<p>The unique identifier for the company which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -128,7 +134,7 @@ public final class DeletedCompanyObject {
         }
 
         /**
-         * <p>Whether the company was deleted successfully or not.</p>
+         * Whether the company was deleted successfully or not.<p>Whether the company was deleted successfully or not.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

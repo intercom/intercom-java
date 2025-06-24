@@ -120,6 +120,9 @@ public final class CreateCollectionRequest {
     }
 
     public interface NameStage {
+        /**
+         * The name of the collection. For multilingual collections, this will be the name of the default language's content.
+         */
         _FinalStage name(@NotNull String name);
 
         Builder from(CreateCollectionRequest other);
@@ -128,6 +131,9 @@ public final class CreateCollectionRequest {
     public interface _FinalStage {
         CreateCollectionRequest build();
 
+        /**
+         * <p>The description of the collection. For multilingual collections, this will be the description of the default language's content.</p>
+         */
         _FinalStage description(Optional<String> description);
 
         _FinalStage description(String description);
@@ -136,10 +142,16 @@ public final class CreateCollectionRequest {
 
         _FinalStage translatedContent(GroupTranslatedContent translatedContent);
 
+        /**
+         * <p>The id of the parent collection. If <code>null</code> then it will be created as the first level collection.</p>
+         */
         _FinalStage parentId(Optional<String> parentId);
 
         _FinalStage parentId(String parentId);
 
+        /**
+         * <p>The id of the help center where the collection will be created. If <code>null</code> then it will be created in the default help center.</p>
+         */
         _FinalStage helpCenterId(Optional<Integer> helpCenterId);
 
         _FinalStage helpCenterId(Integer helpCenterId);
@@ -173,7 +185,7 @@ public final class CreateCollectionRequest {
         }
 
         /**
-         * <p>The name of the collection. For multilingual collections, this will be the name of the default language's content.</p>
+         * The name of the collection. For multilingual collections, this will be the name of the default language's content.<p>The name of the collection. For multilingual collections, this will be the name of the default language's content.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -193,6 +205,9 @@ public final class CreateCollectionRequest {
             return this;
         }
 
+        /**
+         * <p>The id of the help center where the collection will be created. If <code>null</code> then it will be created in the default help center.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "help_center_id", nulls = Nulls.SKIP)
         public _FinalStage helpCenterId(Optional<Integer> helpCenterId) {
@@ -210,6 +225,9 @@ public final class CreateCollectionRequest {
             return this;
         }
 
+        /**
+         * <p>The id of the parent collection. If <code>null</code> then it will be created as the first level collection.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "parent_id", nulls = Nulls.SKIP)
         public _FinalStage parentId(Optional<String> parentId) {
@@ -240,6 +258,9 @@ public final class CreateCollectionRequest {
             return this;
         }
 
+        /**
+         * <p>The description of the collection. For multilingual collections, this will be the description of the default language's content.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "description", nulls = Nulls.SKIP)
         public _FinalStage description(Optional<String> description) {

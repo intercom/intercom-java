@@ -147,24 +147,39 @@ public final class AdminReplyTicketRequest {
     }
 
     public interface AdminIdStage {
+        /**
+         * The id of the admin who is authoring the comment.
+         */
         _FinalStage adminId(@NotNull String adminId);
     }
 
     public interface _FinalStage {
         AdminReplyTicketRequest build();
 
+        /**
+         * <p>The text body of the reply. Notes accept some HTML formatting. Must be present for comment and note message types.</p>
+         */
         _FinalStage body(Optional<String> body);
 
         _FinalStage body(String body);
 
+        /**
+         * <p>The time the reply was created. If not provided, the current time will be used.</p>
+         */
         _FinalStage createdAt(Optional<Integer> createdAt);
 
         _FinalStage createdAt(Integer createdAt);
 
+        /**
+         * <p>The quick reply options to display. Must be present for quick_reply message types.</p>
+         */
         _FinalStage replyOptions(Optional<List<ReplyOptionsItem>> replyOptions);
 
         _FinalStage replyOptions(List<ReplyOptionsItem> replyOptions);
 
+        /**
+         * <p>A list of image URLs that will be added as attachments. You can include up to 10 URLs.</p>
+         */
         _FinalStage attachmentUrls(Optional<List<String>> attachmentUrls);
 
         _FinalStage attachmentUrls(List<String> attachmentUrls);
@@ -208,7 +223,7 @@ public final class AdminReplyTicketRequest {
         }
 
         /**
-         * <p>The id of the admin who is authoring the comment.</p>
+         * The id of the admin who is authoring the comment.<p>The id of the admin who is authoring the comment.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -228,6 +243,9 @@ public final class AdminReplyTicketRequest {
             return this;
         }
 
+        /**
+         * <p>A list of image URLs that will be added as attachments. You can include up to 10 URLs.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "attachment_urls", nulls = Nulls.SKIP)
         public _FinalStage attachmentUrls(Optional<List<String>> attachmentUrls) {
@@ -245,6 +263,9 @@ public final class AdminReplyTicketRequest {
             return this;
         }
 
+        /**
+         * <p>The quick reply options to display. Must be present for quick_reply message types.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "reply_options", nulls = Nulls.SKIP)
         public _FinalStage replyOptions(Optional<List<ReplyOptionsItem>> replyOptions) {
@@ -262,6 +283,9 @@ public final class AdminReplyTicketRequest {
             return this;
         }
 
+        /**
+         * <p>The time the reply was created. If not provided, the current time will be used.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
         public _FinalStage createdAt(Optional<Integer> createdAt) {
@@ -279,6 +303,9 @@ public final class AdminReplyTicketRequest {
             return this;
         }
 
+        /**
+         * <p>The text body of the reply. Notes accept some HTML formatting. Must be present for comment and note message types.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "body", nulls = Nulls.SKIP)
         public _FinalStage body(Optional<String> body) {
@@ -440,12 +467,18 @@ public final class AdminReplyTicketRequest {
         }
 
         public interface TextStage {
+            /**
+             * The text to display in this quick reply option.
+             */
             UuidStage text(@NotNull String text);
 
             Builder from(ReplyOptionsItem other);
         }
 
         public interface UuidStage {
+            /**
+             * A unique identifier for this quick reply option. This value will be available within the metadata of the comment ticket part that is created when a user clicks on this reply option.
+             */
             _FinalStage uuid(@NotNull String uuid);
         }
 
@@ -472,7 +505,7 @@ public final class AdminReplyTicketRequest {
             }
 
             /**
-             * <p>The text to display in this quick reply option.</p>
+             * The text to display in this quick reply option.<p>The text to display in this quick reply option.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -483,7 +516,7 @@ public final class AdminReplyTicketRequest {
             }
 
             /**
-             * <p>A unique identifier for this quick reply option. This value will be available within the metadata of the comment ticket part that is created when a user clicks on this reply option.</p>
+             * A unique identifier for this quick reply option. This value will be available within the metadata of the comment ticket part that is created when a user clicks on this reply option.<p>A unique identifier for this quick reply option. This value will be available within the metadata of the comment ticket part that is created when a user clicks on this reply option.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override

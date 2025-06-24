@@ -98,6 +98,9 @@ public final class NoteList {
     }
 
     public interface TotalCountStage {
+        /**
+         * A count of the total number of notes.
+         */
         _FinalStage totalCount(int totalCount);
 
         Builder from(NoteList other);
@@ -106,6 +109,9 @@ public final class NoteList {
     public interface _FinalStage {
         NoteList build();
 
+        /**
+         * <p>An array of notes.</p>
+         */
         _FinalStage data(List<Note> data);
 
         _FinalStage addData(Note data);
@@ -139,7 +145,7 @@ public final class NoteList {
         }
 
         /**
-         * <p>A count of the total number of notes.</p>
+         * A count of the total number of notes.<p>A count of the total number of notes.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -182,6 +188,9 @@ public final class NoteList {
             return this;
         }
 
+        /**
+         * <p>An array of notes.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
         public _FinalStage data(List<Note> data) {

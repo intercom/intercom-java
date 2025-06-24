@@ -96,6 +96,9 @@ public final class TicketParts {
     public interface _FinalStage {
         TicketParts build();
 
+        /**
+         * <p>A list of Ticket Part objects for each ticket. There is a limit of 500 parts.</p>
+         */
         _FinalStage ticketParts(List<TicketPart> ticketParts);
 
         _FinalStage addTicketParts(TicketPart ticketParts);
@@ -151,6 +154,9 @@ public final class TicketParts {
             return this;
         }
 
+        /**
+         * <p>A list of Ticket Part objects for each ticket. There is a limit of 500 parts.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "ticket_parts", nulls = Nulls.SKIP)
         public _FinalStage ticketParts(List<TicketPart> ticketParts) {

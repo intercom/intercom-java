@@ -66,6 +66,9 @@ public final class DeleteTagRequest {
     }
 
     public interface TagIdStage {
+        /**
+         * The unique identifier of a given tag
+         */
         _FinalStage tagId(@NotNull String tagId);
 
         Builder from(DeleteTagRequest other);
@@ -91,7 +94,7 @@ public final class DeleteTagRequest {
         }
 
         /**
-         * <p>The unique identifier of a given tag</p>
+         * The unique identifier of a given tag<p>The unique identifier of a given tag</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

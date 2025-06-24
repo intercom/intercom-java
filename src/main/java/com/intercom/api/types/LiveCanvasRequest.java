@@ -121,24 +121,39 @@ public final class LiveCanvasRequest {
     }
 
     public interface WorkspaceIdStage {
+        /**
+         * The workspace ID of the teammate. Attribute is `app_id` for V1.2 and below.
+         */
         WorkspaceRegionStage workspaceId(@NotNull String workspaceId);
 
         Builder from(LiveCanvasRequest other);
     }
 
     public interface WorkspaceRegionStage {
+        /**
+         * The Intercom hosted region that this app is located in.
+         */
         CanvasStage workspaceRegion(@NotNull String workspaceRegion);
     }
 
     public interface CanvasStage {
+        /**
+         * The current_canvas the teammate can see.
+         */
         ContextStage canvas(@NotNull CanvasObject canvas);
     }
 
     public interface ContextStage {
+        /**
+         * The context of where the app is added, where the user last visited, and information on the Messenger settings.
+         */
         ContactStage context(@NotNull Context context);
     }
 
     public interface ContactStage {
+        /**
+         * The contact who viewed the card.
+         */
         _FinalStage contact(@NotNull Contact contact);
     }
 
@@ -175,7 +190,7 @@ public final class LiveCanvasRequest {
         }
 
         /**
-         * <p>The workspace ID of the teammate. Attribute is <code>app_id</code> for V1.2 and below.</p>
+         * The workspace ID of the teammate. Attribute is `app_id` for V1.2 and below.<p>The workspace ID of the teammate. Attribute is <code>app_id</code> for V1.2 and below.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -186,7 +201,7 @@ public final class LiveCanvasRequest {
         }
 
         /**
-         * <p>The Intercom hosted region that this app is located in.</p>
+         * The Intercom hosted region that this app is located in.<p>The Intercom hosted region that this app is located in.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -197,7 +212,7 @@ public final class LiveCanvasRequest {
         }
 
         /**
-         * <p>The current_canvas the teammate can see.</p>
+         * The current_canvas the teammate can see.<p>The current_canvas the teammate can see.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -208,7 +223,7 @@ public final class LiveCanvasRequest {
         }
 
         /**
-         * <p>The context of where the app is added, where the user last visited, and information on the Messenger settings.</p>
+         * The context of where the app is added, where the user last visited, and information on the Messenger settings.<p>The context of where the app is added, where the user last visited, and information on the Messenger settings.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -219,7 +234,7 @@ public final class LiveCanvasRequest {
         }
 
         /**
-         * <p>The contact who viewed the card.</p>
+         * The contact who viewed the card.<p>The contact who viewed the card.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

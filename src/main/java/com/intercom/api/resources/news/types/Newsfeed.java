@@ -117,22 +117,34 @@ public final class Newsfeed {
     }
 
     public interface IdStage {
+        /**
+         * The unique identifier for the newsfeed which is given by Intercom.
+         */
         NameStage id(@NotNull String id);
 
         Builder from(Newsfeed other);
     }
 
     public interface NameStage {
+        /**
+         * The name of the newsfeed. This name will never be visible to your users.
+         */
         CreatedAtStage name(@NotNull String name);
     }
 
     public interface CreatedAtStage {
+        /**
+         * Timestamp for when the newsfeed was created.
+         */
         _FinalStage createdAt(int createdAt);
     }
 
     public interface _FinalStage {
         Newsfeed build();
 
+        /**
+         * <p>Timestamp for when the newsfeed was last updated.</p>
+         */
         _FinalStage updatedAt(Optional<Integer> updatedAt);
 
         _FinalStage updatedAt(Integer updatedAt);
@@ -163,7 +175,7 @@ public final class Newsfeed {
         }
 
         /**
-         * <p>The unique identifier for the newsfeed which is given by Intercom.</p>
+         * The unique identifier for the newsfeed which is given by Intercom.<p>The unique identifier for the newsfeed which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -174,7 +186,7 @@ public final class Newsfeed {
         }
 
         /**
-         * <p>The name of the newsfeed. This name will never be visible to your users.</p>
+         * The name of the newsfeed. This name will never be visible to your users.<p>The name of the newsfeed. This name will never be visible to your users.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -185,7 +197,7 @@ public final class Newsfeed {
         }
 
         /**
-         * <p>Timestamp for when the newsfeed was created.</p>
+         * Timestamp for when the newsfeed was created.<p>Timestamp for when the newsfeed was created.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -205,6 +217,9 @@ public final class Newsfeed {
             return this;
         }
 
+        /**
+         * <p>Timestamp for when the newsfeed was last updated.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
         public _FinalStage updatedAt(Optional<Integer> updatedAt) {

@@ -177,26 +177,41 @@ public final class TicketReply {
     }
 
     public interface IdStage {
+        /**
+         * The id representing the part.
+         */
         PartTypeStage id(@NotNull String id);
 
         Builder from(TicketReply other);
     }
 
     public interface PartTypeStage {
+        /**
+         * Type of the part
+         */
         CreatedAtStage partType(@NotNull PartType partType);
     }
 
     public interface CreatedAtStage {
+        /**
+         * The time the note was created.
+         */
         _FinalStage createdAt(int createdAt);
     }
 
     public interface _FinalStage {
         TicketReply build();
 
+        /**
+         * <p>The message body, which may contain HTML.</p>
+         */
         _FinalStage body(Optional<String> body);
 
         _FinalStage body(String body);
 
+        /**
+         * <p>The last time the note was updated.</p>
+         */
         _FinalStage updatedAt(Optional<Integer> updatedAt);
 
         _FinalStage updatedAt(Integer updatedAt);
@@ -205,10 +220,16 @@ public final class TicketReply {
 
         _FinalStage author(TicketPartAuthor author);
 
+        /**
+         * <p>A list of attachments for the part.</p>
+         */
         _FinalStage attachments(Optional<List<PartAttachment>> attachments);
 
         _FinalStage attachments(List<PartAttachment> attachments);
 
+        /**
+         * <p>Whether or not the ticket part has been redacted.</p>
+         */
         _FinalStage redacted(Optional<Boolean> redacted);
 
         _FinalStage redacted(Boolean redacted);
@@ -251,7 +272,7 @@ public final class TicketReply {
         }
 
         /**
-         * <p>The id representing the part.</p>
+         * The id representing the part.<p>The id representing the part.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -262,7 +283,7 @@ public final class TicketReply {
         }
 
         /**
-         * <p>Type of the part</p>
+         * Type of the part<p>Type of the part</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -273,7 +294,7 @@ public final class TicketReply {
         }
 
         /**
-         * <p>The time the note was created.</p>
+         * The time the note was created.<p>The time the note was created.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -293,6 +314,9 @@ public final class TicketReply {
             return this;
         }
 
+        /**
+         * <p>Whether or not the ticket part has been redacted.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "redacted", nulls = Nulls.SKIP)
         public _FinalStage redacted(Optional<Boolean> redacted) {
@@ -310,6 +334,9 @@ public final class TicketReply {
             return this;
         }
 
+        /**
+         * <p>A list of attachments for the part.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "attachments", nulls = Nulls.SKIP)
         public _FinalStage attachments(Optional<List<PartAttachment>> attachments) {
@@ -340,6 +367,9 @@ public final class TicketReply {
             return this;
         }
 
+        /**
+         * <p>The last time the note was updated.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
         public _FinalStage updatedAt(Optional<Integer> updatedAt) {
@@ -357,6 +387,9 @@ public final class TicketReply {
             return this;
         }
 
+        /**
+         * <p>The message body, which may contain HTML.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "body", nulls = Nulls.SKIP)
         public _FinalStage body(Optional<String> body) {

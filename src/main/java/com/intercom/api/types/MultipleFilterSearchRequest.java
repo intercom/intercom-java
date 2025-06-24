@@ -97,6 +97,9 @@ public final class MultipleFilterSearchRequest {
             return this;
         }
 
+        /**
+         * <p>An operator to allow boolean inspection between multiple fields.</p>
+         */
         @JsonSetter(value = "operator", nulls = Nulls.SKIP)
         public Builder operator(Optional<Operator> operator) {
             this.operator = operator;

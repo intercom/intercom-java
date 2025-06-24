@@ -10,7 +10,6 @@ import com.intercom.api.resources.articles.ArticlesClient;
 import com.intercom.api.resources.companies.CompaniesClient;
 import com.intercom.api.resources.contacts.ContactsClient;
 import com.intercom.api.resources.conversations.ConversationsClient;
-import com.intercom.api.resources.customchannelevents.CustomChannelEventsClient;
 import com.intercom.api.resources.dataattributes.DataAttributesClient;
 import com.intercom.api.resources.dataexport.DataExportClient;
 import com.intercom.api.resources.events.EventsClient;
@@ -25,6 +24,7 @@ import com.intercom.api.resources.tags.TagsClient;
 import com.intercom.api.resources.teams.TeamsClient;
 import com.intercom.api.resources.tickets.TicketsClient;
 import com.intercom.api.resources.tickettypes.TicketTypesClient;
+import com.intercom.api.resources.unstable.UnstableClient;
 import com.intercom.api.resources.visitors.VisitorsClient;
 import java.util.function.Supplier;
 
@@ -69,9 +69,9 @@ public class Intercom {
 
     protected final Supplier<VisitorsClient> visitorsClient;
 
-    protected final Supplier<CustomChannelEventsClient> customChannelEventsClient;
-
     protected final Supplier<NewsClient> newsClient;
+
+    protected final Supplier<UnstableClient> unstableClient;
 
     public Intercom(ClientOptions clientOptions) {
         this.clientOptions = clientOptions;
@@ -94,8 +94,8 @@ public class Intercom {
         this.ticketTypesClient = Suppliers.memoize(() -> new TicketTypesClient(clientOptions));
         this.ticketsClient = Suppliers.memoize(() -> new TicketsClient(clientOptions));
         this.visitorsClient = Suppliers.memoize(() -> new VisitorsClient(clientOptions));
-        this.customChannelEventsClient = Suppliers.memoize(() -> new CustomChannelEventsClient(clientOptions));
         this.newsClient = Suppliers.memoize(() -> new NewsClient(clientOptions));
+        this.unstableClient = Suppliers.memoize(() -> new UnstableClient(clientOptions));
     }
 
     public AdminsClient admins() {
@@ -174,12 +174,12 @@ public class Intercom {
         return this.visitorsClient.get();
     }
 
-    public CustomChannelEventsClient customChannelEvents() {
-        return this.customChannelEventsClient.get();
-    }
-
     public NewsClient news() {
         return this.newsClient.get();
+    }
+
+    public UnstableClient unstable() {
+        return this.unstableClient.get();
     }
 
     public static IntercomBuilder builder() {

@@ -236,38 +236,62 @@ public final class TicketPart {
     }
 
     public interface IdStage {
+        /**
+         * The id representing the ticket part.
+         */
         PartTypeStage id(@NotNull String id);
 
         Builder from(TicketPart other);
     }
 
     public interface PartTypeStage {
+        /**
+         * The type of ticket part.
+         */
         TicketStateStage partType(@NotNull String partType);
     }
 
     public interface TicketStateStage {
+        /**
+         * The state of the ticket.
+         */
         CreatedAtStage ticketState(@NotNull TicketState ticketState);
     }
 
     public interface CreatedAtStage {
+        /**
+         * The time the ticket part was created.
+         */
         _FinalStage createdAt(int createdAt);
     }
 
     public interface _FinalStage {
         TicketPart build();
 
+        /**
+         * <p>The message body, which may contain HTML.</p>
+         */
         _FinalStage body(Optional<String> body);
 
         _FinalStage body(String body);
 
+        /**
+         * <p>The previous state of the ticket.</p>
+         */
         _FinalStage previousTicketState(Optional<PreviousTicketState> previousTicketState);
 
         _FinalStage previousTicketState(PreviousTicketState previousTicketState);
 
+        /**
+         * <p>The last time the ticket part was updated.</p>
+         */
         _FinalStage updatedAt(Optional<Integer> updatedAt);
 
         _FinalStage updatedAt(Integer updatedAt);
 
+        /**
+         * <p>The id of the admin that was assigned the ticket by this ticket_part (null if there has been no change in assignment.)</p>
+         */
         _FinalStage assignedTo(Optional<Reference> assignedTo);
 
         _FinalStage assignedTo(Reference assignedTo);
@@ -276,14 +300,23 @@ public final class TicketPart {
 
         _FinalStage author(TicketPartAuthor author);
 
+        /**
+         * <p>A list of attachments for the part.</p>
+         */
         _FinalStage attachments(Optional<List<PartAttachment>> attachments);
 
         _FinalStage attachments(List<PartAttachment> attachments);
 
+        /**
+         * <p>The external id of the ticket part</p>
+         */
         _FinalStage externalId(Optional<String> externalId);
 
         _FinalStage externalId(String externalId);
 
+        /**
+         * <p>Whether or not the ticket part has been redacted.</p>
+         */
         _FinalStage redacted(Optional<Boolean> redacted);
 
         _FinalStage redacted(Boolean redacted);
@@ -338,7 +371,7 @@ public final class TicketPart {
         }
 
         /**
-         * <p>The id representing the ticket part.</p>
+         * The id representing the ticket part.<p>The id representing the ticket part.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -349,7 +382,7 @@ public final class TicketPart {
         }
 
         /**
-         * <p>The type of ticket part.</p>
+         * The type of ticket part.<p>The type of ticket part.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -360,7 +393,7 @@ public final class TicketPart {
         }
 
         /**
-         * <p>The state of the ticket.</p>
+         * The state of the ticket.<p>The state of the ticket.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -371,7 +404,7 @@ public final class TicketPart {
         }
 
         /**
-         * <p>The time the ticket part was created.</p>
+         * The time the ticket part was created.<p>The time the ticket part was created.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -391,6 +424,9 @@ public final class TicketPart {
             return this;
         }
 
+        /**
+         * <p>Whether or not the ticket part has been redacted.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "redacted", nulls = Nulls.SKIP)
         public _FinalStage redacted(Optional<Boolean> redacted) {
@@ -408,6 +444,9 @@ public final class TicketPart {
             return this;
         }
 
+        /**
+         * <p>The external id of the ticket part</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "external_id", nulls = Nulls.SKIP)
         public _FinalStage externalId(Optional<String> externalId) {
@@ -425,6 +464,9 @@ public final class TicketPart {
             return this;
         }
 
+        /**
+         * <p>A list of attachments for the part.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "attachments", nulls = Nulls.SKIP)
         public _FinalStage attachments(Optional<List<PartAttachment>> attachments) {
@@ -455,6 +497,9 @@ public final class TicketPart {
             return this;
         }
 
+        /**
+         * <p>The id of the admin that was assigned the ticket by this ticket_part (null if there has been no change in assignment.)</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "assigned_to", nulls = Nulls.SKIP)
         public _FinalStage assignedTo(Optional<Reference> assignedTo) {
@@ -472,6 +517,9 @@ public final class TicketPart {
             return this;
         }
 
+        /**
+         * <p>The last time the ticket part was updated.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
         public _FinalStage updatedAt(Optional<Integer> updatedAt) {
@@ -489,6 +537,9 @@ public final class TicketPart {
             return this;
         }
 
+        /**
+         * <p>The previous state of the ticket.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "previous_ticket_state", nulls = Nulls.SKIP)
         public _FinalStage previousTicketState(Optional<PreviousTicketState> previousTicketState) {
@@ -506,6 +557,9 @@ public final class TicketPart {
             return this;
         }
 
+        /**
+         * <p>The message body, which may contain HTML.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "body", nulls = Nulls.SKIP)
         public _FinalStage body(Optional<String> body) {

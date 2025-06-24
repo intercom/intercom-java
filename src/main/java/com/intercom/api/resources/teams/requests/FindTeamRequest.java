@@ -66,6 +66,9 @@ public final class FindTeamRequest {
     }
 
     public interface TeamIdStage {
+        /**
+         * The unique identifier of a given team.
+         */
         _FinalStage teamId(@NotNull String teamId);
 
         Builder from(FindTeamRequest other);
@@ -91,7 +94,7 @@ public final class FindTeamRequest {
         }
 
         /**
-         * <p>The unique identifier of a given team.</p>
+         * The unique identifier of a given team.<p>The unique identifier of a given team.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

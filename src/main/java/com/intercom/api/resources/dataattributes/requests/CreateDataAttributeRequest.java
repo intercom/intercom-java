@@ -139,30 +139,48 @@ public final class CreateDataAttributeRequest {
     }
 
     public interface NameStage {
+        /**
+         * The name of the data attribute.
+         */
         ModelStage name(@NotNull String name);
 
         Builder from(CreateDataAttributeRequest other);
     }
 
     public interface ModelStage {
+        /**
+         * The model that the data attribute belongs to.
+         */
         DataTypeStage model(@NotNull Model model);
     }
 
     public interface DataTypeStage {
+        /**
+         * The type of data stored for this attribute.
+         */
         _FinalStage dataType(@NotNull DataType dataType);
     }
 
     public interface _FinalStage {
         CreateDataAttributeRequest build();
 
+        /**
+         * <p>The readable description you see in the UI for the attribute.</p>
+         */
         _FinalStage description(Optional<String> description);
 
         _FinalStage description(String description);
 
+        /**
+         * <p>To create list attributes. Provide a set of hashes with <code>value</code> as the key of the options you want to make. <code>data_type</code> must be <code>string</code>.</p>
+         */
         _FinalStage options(Optional<List<String>> options);
 
         _FinalStage options(List<String> options);
 
+        /**
+         * <p>Can this attribute be updated by the Messenger</p>
+         */
         _FinalStage messengerWritable(Optional<Boolean> messengerWritable);
 
         _FinalStage messengerWritable(Boolean messengerWritable);
@@ -199,7 +217,7 @@ public final class CreateDataAttributeRequest {
         }
 
         /**
-         * <p>The name of the data attribute.</p>
+         * The name of the data attribute.<p>The name of the data attribute.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -210,7 +228,7 @@ public final class CreateDataAttributeRequest {
         }
 
         /**
-         * <p>The model that the data attribute belongs to.</p>
+         * The model that the data attribute belongs to.<p>The model that the data attribute belongs to.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -221,7 +239,7 @@ public final class CreateDataAttributeRequest {
         }
 
         /**
-         * <p>The type of data stored for this attribute.</p>
+         * The type of data stored for this attribute.<p>The type of data stored for this attribute.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -241,6 +259,9 @@ public final class CreateDataAttributeRequest {
             return this;
         }
 
+        /**
+         * <p>Can this attribute be updated by the Messenger</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "messenger_writable", nulls = Nulls.SKIP)
         public _FinalStage messengerWritable(Optional<Boolean> messengerWritable) {
@@ -258,6 +279,9 @@ public final class CreateDataAttributeRequest {
             return this;
         }
 
+        /**
+         * <p>To create list attributes. Provide a set of hashes with <code>value</code> as the key of the options you want to make. <code>data_type</code> must be <code>string</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "options", nulls = Nulls.SKIP)
         public _FinalStage options(Optional<List<String>> options) {
@@ -275,6 +299,9 @@ public final class CreateDataAttributeRequest {
             return this;
         }
 
+        /**
+         * <p>The readable description you see in the UI for the attribute.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "description", nulls = Nulls.SKIP)
         public _FinalStage description(Optional<String> description) {

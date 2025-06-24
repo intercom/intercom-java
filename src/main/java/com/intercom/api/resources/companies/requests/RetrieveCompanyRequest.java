@@ -162,6 +162,9 @@ public final class RetrieveCompanyRequest {
             return this;
         }
 
+        /**
+         * <p>The <code>name</code> of the company to filter by.</p>
+         */
         @JsonSetter(value = "name", nulls = Nulls.SKIP)
         public Builder name(Optional<String> name) {
             this.name = name;
@@ -173,6 +176,9 @@ public final class RetrieveCompanyRequest {
             return this;
         }
 
+        /**
+         * <p>The <code>company_id</code> of the company to filter by.</p>
+         */
         @JsonSetter(value = "company_id", nulls = Nulls.SKIP)
         public Builder companyId(Optional<String> companyId) {
             this.companyId = companyId;
@@ -184,6 +190,9 @@ public final class RetrieveCompanyRequest {
             return this;
         }
 
+        /**
+         * <p>The <code>tag_id</code> of the company to filter by.</p>
+         */
         @JsonSetter(value = "tag_id", nulls = Nulls.SKIP)
         public Builder tagId(Optional<String> tagId) {
             this.tagId = tagId;
@@ -195,6 +204,9 @@ public final class RetrieveCompanyRequest {
             return this;
         }
 
+        /**
+         * <p>The <code>segment_id</code> of the company to filter by.</p>
+         */
         @JsonSetter(value = "segment_id", nulls = Nulls.SKIP)
         public Builder segmentId(Optional<String> segmentId) {
             this.segmentId = segmentId;
@@ -206,6 +218,9 @@ public final class RetrieveCompanyRequest {
             return this;
         }
 
+        /**
+         * <p>The page of results to fetch. Defaults to first page</p>
+         */
         @JsonSetter(value = "page", nulls = Nulls.SKIP)
         public Builder page(Optional<Integer> page) {
             this.page = page;
@@ -217,6 +232,9 @@ public final class RetrieveCompanyRequest {
             return this;
         }
 
+        /**
+         * <p>How many results to display per page. Defaults to 15</p>
+         */
         @JsonSetter(value = "per_page", nulls = Nulls.SKIP)
         public Builder perPage(Optional<Integer> perPage) {
             this.perPage = perPage;

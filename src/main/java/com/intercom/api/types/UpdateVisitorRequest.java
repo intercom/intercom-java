@@ -40,6 +40,7 @@ public final class UpdateVisitorRequest {
         return this.value;
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T visit(Visitor<T> visitor) {
         if (this.type == 0) {
             return visitor.visit((WithId) this.value);
@@ -181,6 +182,9 @@ public final class UpdateVisitorRequest {
         }
 
         public interface UserIdStage {
+            /**
+             * A unique identified for the visitor which is given by you.
+             */
             _FinalStage userId(@NotNull String userId);
 
             Builder from(WithUserId other);
@@ -189,10 +193,16 @@ public final class UpdateVisitorRequest {
         public interface _FinalStage {
             WithUserId build();
 
+            /**
+             * <p>The visitor's name.</p>
+             */
             _FinalStage name(Optional<String> name);
 
             _FinalStage name(String name);
 
+            /**
+             * <p>The custom attributes which are set for the visitor.</p>
+             */
             _FinalStage customAttributes(Optional<Map<String, String>> customAttributes);
 
             _FinalStage customAttributes(Map<String, String> customAttributes);
@@ -220,7 +230,7 @@ public final class UpdateVisitorRequest {
             }
 
             /**
-             * <p>A unique identified for the visitor which is given by you.</p>
+             * A unique identified for the visitor which is given by you.<p>A unique identified for the visitor which is given by you.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -240,6 +250,9 @@ public final class UpdateVisitorRequest {
                 return this;
             }
 
+            /**
+             * <p>The custom attributes which are set for the visitor.</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "custom_attributes", nulls = Nulls.SKIP)
             public _FinalStage customAttributes(Optional<Map<String, String>> customAttributes) {
@@ -257,6 +270,9 @@ public final class UpdateVisitorRequest {
                 return this;
             }
 
+            /**
+             * <p>The visitor's name.</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "name", nulls = Nulls.SKIP)
             public _FinalStage name(Optional<String> name) {
@@ -347,6 +363,9 @@ public final class UpdateVisitorRequest {
         }
 
         public interface IdStage {
+            /**
+             * A unique identified for the visitor which is given by Intercom.
+             */
             _FinalStage id(@NotNull String id);
 
             Builder from(WithId other);
@@ -355,10 +374,16 @@ public final class UpdateVisitorRequest {
         public interface _FinalStage {
             WithId build();
 
+            /**
+             * <p>The visitor's name.</p>
+             */
             _FinalStage name(Optional<String> name);
 
             _FinalStage name(String name);
 
+            /**
+             * <p>The custom attributes which are set for the visitor.</p>
+             */
             _FinalStage customAttributes(Optional<Map<String, String>> customAttributes);
 
             _FinalStage customAttributes(Map<String, String> customAttributes);
@@ -386,7 +411,7 @@ public final class UpdateVisitorRequest {
             }
 
             /**
-             * <p>A unique identified for the visitor which is given by Intercom.</p>
+             * A unique identified for the visitor which is given by Intercom.<p>A unique identified for the visitor which is given by Intercom.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -406,6 +431,9 @@ public final class UpdateVisitorRequest {
                 return this;
             }
 
+            /**
+             * <p>The custom attributes which are set for the visitor.</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "custom_attributes", nulls = Nulls.SKIP)
             public _FinalStage customAttributes(Optional<Map<String, String>> customAttributes) {
@@ -423,6 +451,9 @@ public final class UpdateVisitorRequest {
                 return this;
             }
 
+            /**
+             * <p>The visitor's name.</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "name", nulls = Nulls.SKIP)
             public _FinalStage name(Optional<String> name) {

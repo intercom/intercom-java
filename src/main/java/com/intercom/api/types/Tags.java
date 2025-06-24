@@ -90,6 +90,9 @@ public final class Tags {
             return this;
         }
 
+        /**
+         * <p>A list of tags objects associated with the conversation.</p>
+         */
         @JsonSetter(value = "tags", nulls = Nulls.SKIP)
         public Builder tags(List<Tag> tags) {
             this.tags.clear();

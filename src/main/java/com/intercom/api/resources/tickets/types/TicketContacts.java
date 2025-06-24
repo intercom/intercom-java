@@ -90,6 +90,9 @@ public final class TicketContacts {
             return this;
         }
 
+        /**
+         * <p>The list of contacts affected by this ticket.</p>
+         */
         @JsonSetter(value = "contacts", nulls = Nulls.SKIP)
         public Builder contacts(List<ContactReference> contacts) {
             this.contacts.clear();

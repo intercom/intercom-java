@@ -80,6 +80,9 @@ public final class FindConversationRequest {
     }
 
     public interface ConversationIdStage {
+        /**
+         * The id of the conversation to target
+         */
         _FinalStage conversationId(@NotNull String conversationId);
 
         Builder from(FindConversationRequest other);
@@ -88,6 +91,9 @@ public final class FindConversationRequest {
     public interface _FinalStage {
         FindConversationRequest build();
 
+        /**
+         * <p>Set to plaintext to retrieve conversation messages in plain text.</p>
+         */
         _FinalStage displayAs(Optional<String> displayAs);
 
         _FinalStage displayAs(String displayAs);
@@ -112,7 +118,7 @@ public final class FindConversationRequest {
         }
 
         /**
-         * <p>The id of the conversation to target</p>
+         * The id of the conversation to target<p>The id of the conversation to target</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -132,6 +138,9 @@ public final class FindConversationRequest {
             return this;
         }
 
+        /**
+         * <p>Set to plaintext to retrieve conversation messages in plain text.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "display_as", nulls = Nulls.SKIP)
         public _FinalStage displayAs(Optional<String> displayAs) {

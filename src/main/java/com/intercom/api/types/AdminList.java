@@ -90,6 +90,9 @@ public final class AdminList {
             return this;
         }
 
+        /**
+         * <p>A list of admins associated with a given workspace.</p>
+         */
         @JsonSetter(value = "admins", nulls = Nulls.SKIP)
         public Builder admins(List<Admin> admins) {
             this.admins.clear();

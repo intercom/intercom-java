@@ -146,28 +146,46 @@ public final class ArticleStatistics {
     }
 
     public interface ViewsStage {
+        /**
+         * The number of total views the article has received.
+         */
         ConversionsStage views(int views);
 
         Builder from(ArticleStatistics other);
     }
 
     public interface ConversionsStage {
+        /**
+         * The number of conversations started from the article.
+         */
         ReactionsStage conversions(int conversions);
     }
 
     public interface ReactionsStage {
+        /**
+         * The number of total reactions the article has received.
+         */
         HappyReactionPercentageStage reactions(int reactions);
     }
 
     public interface HappyReactionPercentageStage {
+        /**
+         * The percentage of happy reactions the article has received against other types of reaction.
+         */
         NeutralReactionPercentageStage happyReactionPercentage(float happyReactionPercentage);
     }
 
     public interface NeutralReactionPercentageStage {
+        /**
+         * The percentage of neutral reactions the article has received against other types of reaction.
+         */
         SadReactionPercentageStage neutralReactionPercentage(float neutralReactionPercentage);
     }
 
     public interface SadReactionPercentageStage {
+        /**
+         * The percentage of sad reactions the article has received against other types of reaction.
+         */
         _FinalStage sadReactionPercentage(float sadReactionPercentage);
     }
 
@@ -213,7 +231,7 @@ public final class ArticleStatistics {
         }
 
         /**
-         * <p>The number of total views the article has received.</p>
+         * The number of total views the article has received.<p>The number of total views the article has received.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -224,7 +242,7 @@ public final class ArticleStatistics {
         }
 
         /**
-         * <p>The number of conversations started from the article.</p>
+         * The number of conversations started from the article.<p>The number of conversations started from the article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -235,7 +253,7 @@ public final class ArticleStatistics {
         }
 
         /**
-         * <p>The number of total reactions the article has received.</p>
+         * The number of total reactions the article has received.<p>The number of total reactions the article has received.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -246,7 +264,7 @@ public final class ArticleStatistics {
         }
 
         /**
-         * <p>The percentage of happy reactions the article has received against other types of reaction.</p>
+         * The percentage of happy reactions the article has received against other types of reaction.<p>The percentage of happy reactions the article has received against other types of reaction.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -257,7 +275,7 @@ public final class ArticleStatistics {
         }
 
         /**
-         * <p>The percentage of neutral reactions the article has received against other types of reaction.</p>
+         * The percentage of neutral reactions the article has received against other types of reaction.<p>The percentage of neutral reactions the article has received against other types of reaction.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -268,7 +286,7 @@ public final class ArticleStatistics {
         }
 
         /**
-         * <p>The percentage of sad reactions the article has received against other types of reaction.</p>
+         * The percentage of sad reactions the article has received against other types of reaction.<p>The percentage of sad reactions the article has received against other types of reaction.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

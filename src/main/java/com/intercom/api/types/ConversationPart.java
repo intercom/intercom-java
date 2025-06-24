@@ -217,20 +217,32 @@ public final class ConversationPart {
     }
 
     public interface IdStage {
+        /**
+         * The id representing the conversation part.
+         */
         PartTypeStage id(@NotNull String id);
 
         Builder from(ConversationPart other);
     }
 
     public interface PartTypeStage {
+        /**
+         * The type of conversation part.
+         */
         CreatedAtStage partType(@NotNull String partType);
     }
 
     public interface CreatedAtStage {
+        /**
+         * The time the conversation part was created.
+         */
         NotifiedAtStage createdAt(int createdAt);
     }
 
     public interface NotifiedAtStage {
+        /**
+         * The time the user was notified with the conversation part.
+         */
         AuthorStage notifiedAt(int notifiedAt);
     }
 
@@ -239,28 +251,46 @@ public final class ConversationPart {
     }
 
     public interface RedactedStage {
+        /**
+         * Whether or not the conversation part has been redacted.
+         */
         _FinalStage redacted(boolean redacted);
     }
 
     public interface _FinalStage {
         ConversationPart build();
 
+        /**
+         * <p>The message body, which may contain HTML. For Twitter, this will show a generic message regarding why the body is obscured.</p>
+         */
         _FinalStage body(Optional<String> body);
 
         _FinalStage body(String body);
 
+        /**
+         * <p>The last time the conversation part was updated.</p>
+         */
         _FinalStage updatedAt(Optional<Integer> updatedAt);
 
         _FinalStage updatedAt(Integer updatedAt);
 
+        /**
+         * <p>The id of the admin that was assigned the conversation by this conversation_part (null if there has been no change in assignment.)</p>
+         */
         _FinalStage assignedTo(Optional<Reference> assignedTo);
 
         _FinalStage assignedTo(Reference assignedTo);
 
+        /**
+         * <p>A list of attachments for the part.</p>
+         */
         _FinalStage attachments(Optional<List<PartAttachment>> attachments);
 
         _FinalStage attachments(List<PartAttachment> attachments);
 
+        /**
+         * <p>The external id of the conversation part</p>
+         */
         _FinalStage externalId(Optional<String> externalId);
 
         _FinalStage externalId(String externalId);
@@ -319,7 +349,7 @@ public final class ConversationPart {
         }
 
         /**
-         * <p>The id representing the conversation part.</p>
+         * The id representing the conversation part.<p>The id representing the conversation part.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -330,7 +360,7 @@ public final class ConversationPart {
         }
 
         /**
-         * <p>The type of conversation part.</p>
+         * The type of conversation part.<p>The type of conversation part.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -341,7 +371,7 @@ public final class ConversationPart {
         }
 
         /**
-         * <p>The time the conversation part was created.</p>
+         * The time the conversation part was created.<p>The time the conversation part was created.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -352,7 +382,7 @@ public final class ConversationPart {
         }
 
         /**
-         * <p>The time the user was notified with the conversation part.</p>
+         * The time the user was notified with the conversation part.<p>The time the user was notified with the conversation part.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -370,7 +400,7 @@ public final class ConversationPart {
         }
 
         /**
-         * <p>Whether or not the conversation part has been redacted.</p>
+         * Whether or not the conversation part has been redacted.<p>Whether or not the conversation part has been redacted.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -390,6 +420,9 @@ public final class ConversationPart {
             return this;
         }
 
+        /**
+         * <p>The external id of the conversation part</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "external_id", nulls = Nulls.SKIP)
         public _FinalStage externalId(Optional<String> externalId) {
@@ -407,6 +440,9 @@ public final class ConversationPart {
             return this;
         }
 
+        /**
+         * <p>A list of attachments for the part.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "attachments", nulls = Nulls.SKIP)
         public _FinalStage attachments(Optional<List<PartAttachment>> attachments) {
@@ -424,6 +460,9 @@ public final class ConversationPart {
             return this;
         }
 
+        /**
+         * <p>The id of the admin that was assigned the conversation by this conversation_part (null if there has been no change in assignment.)</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "assigned_to", nulls = Nulls.SKIP)
         public _FinalStage assignedTo(Optional<Reference> assignedTo) {
@@ -441,6 +480,9 @@ public final class ConversationPart {
             return this;
         }
 
+        /**
+         * <p>The last time the conversation part was updated.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
         public _FinalStage updatedAt(Optional<Integer> updatedAt) {
@@ -458,6 +500,9 @@ public final class ConversationPart {
             return this;
         }
 
+        /**
+         * <p>The message body, which may contain HTML. For Twitter, this will show a generic message regarding why the body is obscured.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "body", nulls = Nulls.SKIP)
         public _FinalStage body(Optional<String> body) {

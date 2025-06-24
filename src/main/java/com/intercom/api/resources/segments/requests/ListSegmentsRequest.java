@@ -80,6 +80,9 @@ public final class ListSegmentsRequest {
             return this;
         }
 
+        /**
+         * <p>It includes the count of contacts that belong to each segment.</p>
+         */
         @JsonSetter(value = "include_count", nulls = Nulls.SKIP)
         public Builder includeCount(Optional<Boolean> includeCount) {
             this.includeCount = includeCount;

@@ -80,6 +80,9 @@ public final class ListAllActivityLogsRequest {
     }
 
     public interface CreatedAtAfterStage {
+        /**
+         * The start date that you request data for. It must be formatted as a UNIX timestamp.
+         */
         _FinalStage createdAtAfter(@NotNull String createdAtAfter);
 
         Builder from(ListAllActivityLogsRequest other);
@@ -88,6 +91,9 @@ public final class ListAllActivityLogsRequest {
     public interface _FinalStage {
         ListAllActivityLogsRequest build();
 
+        /**
+         * <p>The end date that you request data for. It must be formatted as a UNIX timestamp.</p>
+         */
         _FinalStage createdAtBefore(Optional<String> createdAtBefore);
 
         _FinalStage createdAtBefore(String createdAtBefore);
@@ -112,7 +118,7 @@ public final class ListAllActivityLogsRequest {
         }
 
         /**
-         * <p>The start date that you request data for. It must be formatted as a UNIX timestamp.</p>
+         * The start date that you request data for. It must be formatted as a UNIX timestamp.<p>The start date that you request data for. It must be formatted as a UNIX timestamp.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -132,6 +138,9 @@ public final class ListAllActivityLogsRequest {
             return this;
         }
 
+        /**
+         * <p>The end date that you request data for. It must be formatted as a UNIX timestamp.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "created_at_before", nulls = Nulls.SKIP)
         public _FinalStage createdAtBefore(Optional<String> createdAtBefore) {

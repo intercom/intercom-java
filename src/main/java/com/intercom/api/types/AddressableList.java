@@ -88,16 +88,25 @@ public final class AddressableList {
     }
 
     public interface TypeStage {
+        /**
+         * The addressable object type
+         */
         IdStage type(@NotNull String type);
 
         Builder from(AddressableList other);
     }
 
     public interface IdStage {
+        /**
+         * The id of the addressable object
+         */
         UrlStage id(@NotNull String id);
     }
 
     public interface UrlStage {
+        /**
+         * Url to get more company resources for this contact
+         */
         _FinalStage url(@NotNull String url);
     }
 
@@ -127,7 +136,7 @@ public final class AddressableList {
         }
 
         /**
-         * <p>The addressable object type</p>
+         * The addressable object type<p>The addressable object type</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -138,7 +147,7 @@ public final class AddressableList {
         }
 
         /**
-         * <p>The id of the addressable object</p>
+         * The id of the addressable object<p>The id of the addressable object</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -149,7 +158,7 @@ public final class AddressableList {
         }
 
         /**
-         * <p>Url to get more company resources for this contact</p>
+         * Url to get more company resources for this contact<p>Url to get more company resources for this contact</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

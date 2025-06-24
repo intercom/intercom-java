@@ -102,6 +102,9 @@ public final class ListComponent {
             return this;
         }
 
+        /**
+         * <p>The items that will be rendered in the list.</p>
+         */
         @JsonSetter(value = "items", nulls = Nulls.SKIP)
         public Builder items(List<ItemsItem> items) {
             this.items.clear();
@@ -119,6 +122,9 @@ public final class ListComponent {
             return this;
         }
 
+        /**
+         * <p>Styles all list items and prevents the action. Default is <code>false</code>.</p>
+         */
         @JsonSetter(value = "disabled", nulls = Nulls.SKIP)
         public Builder disabled(Optional<Boolean> disabled) {
             this.disabled = disabled;
@@ -151,6 +157,7 @@ public final class ListComponent {
             return this.value;
         }
 
+        @SuppressWarnings("unchecked")
         public <T> T visit(Visitor<T> visitor) {
             if (this.type == 0) {
                 return visitor.visit((ListItemWithImage) this.value);

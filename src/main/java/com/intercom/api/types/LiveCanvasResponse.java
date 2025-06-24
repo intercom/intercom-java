@@ -66,6 +66,9 @@ public final class LiveCanvasResponse {
     }
 
     public interface ContentStage {
+        /**
+         * The content object that defines the components to be shown.
+         */
         _FinalStage content(@NotNull ContentObject content);
 
         Builder from(LiveCanvasResponse other);
@@ -91,7 +94,7 @@ public final class LiveCanvasResponse {
         }
 
         /**
-         * <p>The content object that defines the components to be shown.</p>
+         * The content object that defines the components to be shown.<p>The content object that defines the components to be shown.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

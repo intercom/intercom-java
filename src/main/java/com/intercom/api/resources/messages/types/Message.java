@@ -149,32 +149,53 @@ public final class Message {
     }
 
     public interface TypeStage {
+        /**
+         * The type of the message
+         */
         IdStage type(@NotNull String type);
 
         Builder from(Message other);
     }
 
     public interface IdStage {
+        /**
+         * The id representing the message.
+         */
         CreatedAtStage id(@NotNull String id);
     }
 
     public interface CreatedAtStage {
+        /**
+         * The time the conversation was created.
+         */
         SubjectStage createdAt(int createdAt);
     }
 
     public interface SubjectStage {
+        /**
+         * The subject of the message. Only present if message_type: email.
+         */
         BodyStage subject(@NotNull String subject);
     }
 
     public interface BodyStage {
+        /**
+         * The message body, which may contain HTML.
+         */
         MessageTypeStage body(@NotNull String body);
     }
 
     public interface MessageTypeStage {
+        /**
+         * The type of message that was sent. Can be email, inapp, facebook or twitter.
+         */
         ConversationIdStage messageType(@NotNull MessageType messageType);
     }
 
     public interface ConversationIdStage {
+        /**
+         * The associated conversation_id
+         */
         _FinalStage conversationId(@NotNull String conversationId);
     }
 
@@ -224,7 +245,7 @@ public final class Message {
         }
 
         /**
-         * <p>The type of the message</p>
+         * The type of the message<p>The type of the message</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -235,7 +256,7 @@ public final class Message {
         }
 
         /**
-         * <p>The id representing the message.</p>
+         * The id representing the message.<p>The id representing the message.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -246,7 +267,7 @@ public final class Message {
         }
 
         /**
-         * <p>The time the conversation was created.</p>
+         * The time the conversation was created.<p>The time the conversation was created.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -257,7 +278,7 @@ public final class Message {
         }
 
         /**
-         * <p>The subject of the message. Only present if message_type: email.</p>
+         * The subject of the message. Only present if message_type: email.<p>The subject of the message. Only present if message_type: email.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -268,7 +289,7 @@ public final class Message {
         }
 
         /**
-         * <p>The message body, which may contain HTML.</p>
+         * The message body, which may contain HTML.<p>The message body, which may contain HTML.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -279,7 +300,7 @@ public final class Message {
         }
 
         /**
-         * <p>The type of message that was sent. Can be email, inapp, facebook or twitter.</p>
+         * The type of message that was sent. Can be email, inapp, facebook or twitter.<p>The type of message that was sent. Can be email, inapp, facebook or twitter.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -290,7 +311,7 @@ public final class Message {
         }
 
         /**
-         * <p>The associated conversation_id</p>
+         * The associated conversation_id<p>The associated conversation_id</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

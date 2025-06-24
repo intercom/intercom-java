@@ -6,11 +6,11 @@ package com.intercom.api.resources.tickets;
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.RequestOptions;
 import com.intercom.api.core.pagination.SyncPagingIterable;
-import com.intercom.api.resources.tickets.requests.CreateTicketRequest;
 import com.intercom.api.resources.tickets.requests.FindTicketRequest;
 import com.intercom.api.resources.tickets.requests.ReplyToTicketRequest;
 import com.intercom.api.resources.tickets.requests.UpdateTicketRequest;
 import com.intercom.api.resources.tickets.types.Ticket;
+import com.intercom.api.types.CreateTicketRequest;
 import com.intercom.api.types.SearchRequest;
 import com.intercom.api.types.TicketReply;
 

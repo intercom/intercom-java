@@ -169,34 +169,55 @@ public final class CreateArticleRequest {
     }
 
     public interface TitleStage {
+        /**
+         * The title of the article.For multilingual articles, this will be the title of the default language's content.
+         */
         AuthorIdStage title(@NotNull String title);
 
         Builder from(CreateArticleRequest other);
     }
 
     public interface AuthorIdStage {
+        /**
+         * The id of the author of the article. For multilingual articles, this will be the id of the author of the default language's content. Must be a teammate on the help center's workspace.
+         */
         _FinalStage authorId(int authorId);
     }
 
     public interface _FinalStage {
         CreateArticleRequest build();
 
+        /**
+         * <p>The description of the article. For multilingual articles, this will be the description of the default language's content.</p>
+         */
         _FinalStage description(Optional<String> description);
 
         _FinalStage description(String description);
 
+        /**
+         * <p>The content of the article. For multilingual articles, this will be the body of the default language's content.</p>
+         */
         _FinalStage body(Optional<String> body);
 
         _FinalStage body(String body);
 
+        /**
+         * <p>Whether the article will be <code>published</code> or will be a <code>draft</code>. Defaults to draft. For multilingual articles, this will be the state of the default language's content.</p>
+         */
         _FinalStage state(Optional<State> state);
 
         _FinalStage state(State state);
 
+        /**
+         * <p>The id of the article's parent collection or section. An article without this field stands alone.</p>
+         */
         _FinalStage parentId(Optional<Integer> parentId);
 
         _FinalStage parentId(Integer parentId);
 
+        /**
+         * <p>The type of parent, which can either be a <code>collection</code> or <code>section</code>.</p>
+         */
         _FinalStage parentType(Optional<ParentType> parentType);
 
         _FinalStage parentType(ParentType parentType);
@@ -243,7 +264,7 @@ public final class CreateArticleRequest {
         }
 
         /**
-         * <p>The title of the article.For multilingual articles, this will be the title of the default language's content.</p>
+         * The title of the article.For multilingual articles, this will be the title of the default language's content.<p>The title of the article.For multilingual articles, this will be the title of the default language's content.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -254,7 +275,7 @@ public final class CreateArticleRequest {
         }
 
         /**
-         * <p>The id of the author of the article. For multilingual articles, this will be the id of the author of the default language's content. Must be a teammate on the help center's workspace.</p>
+         * The id of the author of the article. For multilingual articles, this will be the id of the author of the default language's content. Must be a teammate on the help center's workspace.<p>The id of the author of the article. For multilingual articles, this will be the id of the author of the default language's content. Must be a teammate on the help center's workspace.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -287,6 +308,9 @@ public final class CreateArticleRequest {
             return this;
         }
 
+        /**
+         * <p>The type of parent, which can either be a <code>collection</code> or <code>section</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "parent_type", nulls = Nulls.SKIP)
         public _FinalStage parentType(Optional<ParentType> parentType) {
@@ -304,6 +328,9 @@ public final class CreateArticleRequest {
             return this;
         }
 
+        /**
+         * <p>The id of the article's parent collection or section. An article without this field stands alone.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "parent_id", nulls = Nulls.SKIP)
         public _FinalStage parentId(Optional<Integer> parentId) {
@@ -321,6 +348,9 @@ public final class CreateArticleRequest {
             return this;
         }
 
+        /**
+         * <p>Whether the article will be <code>published</code> or will be a <code>draft</code>. Defaults to draft. For multilingual articles, this will be the state of the default language's content.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "state", nulls = Nulls.SKIP)
         public _FinalStage state(Optional<State> state) {
@@ -338,6 +368,9 @@ public final class CreateArticleRequest {
             return this;
         }
 
+        /**
+         * <p>The content of the article. For multilingual articles, this will be the body of the default language's content.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "body", nulls = Nulls.SKIP)
         public _FinalStage body(Optional<String> body) {
@@ -355,6 +388,9 @@ public final class CreateArticleRequest {
             return this;
         }
 
+        /**
+         * <p>The description of the article. For multilingual articles, this will be the description of the default language's content.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "description", nulls = Nulls.SKIP)
         public _FinalStage description(Optional<String> description) {

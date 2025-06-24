@@ -10,7 +10,6 @@ import com.intercom.api.resources.articles.AsyncArticlesClient;
 import com.intercom.api.resources.companies.AsyncCompaniesClient;
 import com.intercom.api.resources.contacts.AsyncContactsClient;
 import com.intercom.api.resources.conversations.AsyncConversationsClient;
-import com.intercom.api.resources.customchannelevents.AsyncCustomChannelEventsClient;
 import com.intercom.api.resources.dataattributes.AsyncDataAttributesClient;
 import com.intercom.api.resources.dataexport.AsyncDataExportClient;
 import com.intercom.api.resources.events.AsyncEventsClient;
@@ -25,6 +24,7 @@ import com.intercom.api.resources.tags.AsyncTagsClient;
 import com.intercom.api.resources.teams.AsyncTeamsClient;
 import com.intercom.api.resources.tickets.AsyncTicketsClient;
 import com.intercom.api.resources.tickettypes.AsyncTicketTypesClient;
+import com.intercom.api.resources.unstable.AsyncUnstableClient;
 import com.intercom.api.resources.visitors.AsyncVisitorsClient;
 import java.util.function.Supplier;
 
@@ -69,9 +69,9 @@ public class AsyncIntercom {
 
     protected final Supplier<AsyncVisitorsClient> visitorsClient;
 
-    protected final Supplier<AsyncCustomChannelEventsClient> customChannelEventsClient;
-
     protected final Supplier<AsyncNewsClient> newsClient;
+
+    protected final Supplier<AsyncUnstableClient> unstableClient;
 
     public AsyncIntercom(ClientOptions clientOptions) {
         this.clientOptions = clientOptions;
@@ -94,8 +94,8 @@ public class AsyncIntercom {
         this.ticketTypesClient = Suppliers.memoize(() -> new AsyncTicketTypesClient(clientOptions));
         this.ticketsClient = Suppliers.memoize(() -> new AsyncTicketsClient(clientOptions));
         this.visitorsClient = Suppliers.memoize(() -> new AsyncVisitorsClient(clientOptions));
-        this.customChannelEventsClient = Suppliers.memoize(() -> new AsyncCustomChannelEventsClient(clientOptions));
         this.newsClient = Suppliers.memoize(() -> new AsyncNewsClient(clientOptions));
+        this.unstableClient = Suppliers.memoize(() -> new AsyncUnstableClient(clientOptions));
     }
 
     public AsyncAdminsClient admins() {
@@ -174,12 +174,12 @@ public class AsyncIntercom {
         return this.visitorsClient.get();
     }
 
-    public AsyncCustomChannelEventsClient customChannelEvents() {
-        return this.customChannelEventsClient.get();
-    }
-
     public AsyncNewsClient news() {
         return this.newsClient.get();
+    }
+
+    public AsyncUnstableClient unstable() {
+        return this.unstableClient.get();
     }
 
     public static AsyncIntercomBuilder builder() {

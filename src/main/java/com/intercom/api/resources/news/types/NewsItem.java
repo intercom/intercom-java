@@ -250,58 +250,97 @@ public final class NewsItem {
     }
 
     public interface IdStage {
+        /**
+         * The unique identifier for the news item which is given by Intercom.
+         */
         WorkspaceIdStage id(@NotNull String id);
 
         Builder from(NewsItem other);
     }
 
     public interface WorkspaceIdStage {
+        /**
+         * The id of the workspace which the news item belongs to.
+         */
         TitleStage workspaceId(@NotNull String workspaceId);
     }
 
     public interface TitleStage {
+        /**
+         * The title of the news item.
+         */
         BodyStage title(@NotNull String title);
     }
 
     public interface BodyStage {
+        /**
+         * The news item body, which may contain HTML.
+         */
         SenderIdStage body(@NotNull String body);
     }
 
     public interface SenderIdStage {
+        /**
+         * The id of the sender of the news item. Must be a teammate on the workspace.
+         */
         StateStage senderId(int senderId);
     }
 
     public interface StateStage {
+        /**
+         * News items will not be visible to your users in the assigned newsfeeds until they are set live.
+         */
         CreatedAtStage state(@NotNull State state);
     }
 
     public interface CreatedAtStage {
+        /**
+         * Timestamp for when the news item was created.
+         */
         _FinalStage createdAt(int createdAt);
     }
 
     public interface _FinalStage {
         NewsItem build();
 
+        /**
+         * <p>A list of newsfeed_assignments to assign to the specified newsfeed.</p>
+         */
         _FinalStage newsfeedAssignments(Optional<List<NewsfeedAssignment>> newsfeedAssignments);
 
         _FinalStage newsfeedAssignments(List<NewsfeedAssignment> newsfeedAssignments);
 
+        /**
+         * <p>Label names displayed to users to categorize the news item.</p>
+         */
         _FinalStage labels(Optional<List<Optional<String>>> labels);
 
         _FinalStage labels(List<Optional<String>> labels);
 
+        /**
+         * <p>URL of the image used as cover. Must have .jpg or .png extension.</p>
+         */
         _FinalStage coverImageUrl(Optional<String> coverImageUrl);
 
         _FinalStage coverImageUrl(String coverImageUrl);
 
+        /**
+         * <p>Ordered list of emoji reactions to the news item. When empty, reactions are disabled.</p>
+         */
         _FinalStage reactions(Optional<List<Optional<String>>> reactions);
 
         _FinalStage reactions(List<Optional<String>> reactions);
 
+        /**
+         * <p>When set to true, the news item will appear in the messenger newsfeed without showing a notification badge.</p>
+         */
         _FinalStage deliverSilently(Optional<Boolean> deliverSilently);
 
         _FinalStage deliverSilently(Boolean deliverSilently);
 
+        /**
+         * <p>Timestamp for when the news item was last updated.</p>
+         */
         _FinalStage updatedAt(Optional<Integer> updatedAt);
 
         _FinalStage updatedAt(Integer updatedAt);
@@ -367,7 +406,7 @@ public final class NewsItem {
         }
 
         /**
-         * <p>The unique identifier for the news item which is given by Intercom.</p>
+         * The unique identifier for the news item which is given by Intercom.<p>The unique identifier for the news item which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -378,7 +417,7 @@ public final class NewsItem {
         }
 
         /**
-         * <p>The id of the workspace which the news item belongs to.</p>
+         * The id of the workspace which the news item belongs to.<p>The id of the workspace which the news item belongs to.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -389,7 +428,7 @@ public final class NewsItem {
         }
 
         /**
-         * <p>The title of the news item.</p>
+         * The title of the news item.<p>The title of the news item.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -400,7 +439,7 @@ public final class NewsItem {
         }
 
         /**
-         * <p>The news item body, which may contain HTML.</p>
+         * The news item body, which may contain HTML.<p>The news item body, which may contain HTML.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -411,7 +450,7 @@ public final class NewsItem {
         }
 
         /**
-         * <p>The id of the sender of the news item. Must be a teammate on the workspace.</p>
+         * The id of the sender of the news item. Must be a teammate on the workspace.<p>The id of the sender of the news item. Must be a teammate on the workspace.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -422,7 +461,7 @@ public final class NewsItem {
         }
 
         /**
-         * <p>News items will not be visible to your users in the assigned newsfeeds until they are set live.</p>
+         * News items will not be visible to your users in the assigned newsfeeds until they are set live.<p>News items will not be visible to your users in the assigned newsfeeds until they are set live.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -433,7 +472,7 @@ public final class NewsItem {
         }
 
         /**
-         * <p>Timestamp for when the news item was created.</p>
+         * Timestamp for when the news item was created.<p>Timestamp for when the news item was created.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -453,6 +492,9 @@ public final class NewsItem {
             return this;
         }
 
+        /**
+         * <p>Timestamp for when the news item was last updated.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
         public _FinalStage updatedAt(Optional<Integer> updatedAt) {
@@ -470,6 +512,9 @@ public final class NewsItem {
             return this;
         }
 
+        /**
+         * <p>When set to true, the news item will appear in the messenger newsfeed without showing a notification badge.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "deliver_silently", nulls = Nulls.SKIP)
         public _FinalStage deliverSilently(Optional<Boolean> deliverSilently) {
@@ -487,6 +532,9 @@ public final class NewsItem {
             return this;
         }
 
+        /**
+         * <p>Ordered list of emoji reactions to the news item. When empty, reactions are disabled.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "reactions", nulls = Nulls.SKIP)
         public _FinalStage reactions(Optional<List<Optional<String>>> reactions) {
@@ -504,6 +552,9 @@ public final class NewsItem {
             return this;
         }
 
+        /**
+         * <p>URL of the image used as cover. Must have .jpg or .png extension.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "cover_image_url", nulls = Nulls.SKIP)
         public _FinalStage coverImageUrl(Optional<String> coverImageUrl) {
@@ -521,6 +572,9 @@ public final class NewsItem {
             return this;
         }
 
+        /**
+         * <p>Label names displayed to users to categorize the news item.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "labels", nulls = Nulls.SKIP)
         public _FinalStage labels(Optional<List<Optional<String>>> labels) {
@@ -538,6 +592,9 @@ public final class NewsItem {
             return this;
         }
 
+        /**
+         * <p>A list of newsfeed_assignments to assign to the specified newsfeed.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "newsfeed_assignments", nulls = Nulls.SKIP)
         public _FinalStage newsfeedAssignments(Optional<List<NewsfeedAssignment>> newsfeedAssignments) {

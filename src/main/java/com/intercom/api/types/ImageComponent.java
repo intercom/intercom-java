@@ -164,38 +164,62 @@ public final class ImageComponent {
     }
 
     public interface UrlStage {
+        /**
+         * The URL where the image is located.
+         */
         WidthStage url(@NotNull String url);
 
         Builder from(ImageComponent other);
     }
 
     public interface WidthStage {
+        /**
+         * The exact width of the image in pixels.
+         */
         HeightStage width(int width);
     }
 
     public interface HeightStage {
+        /**
+         * The exact height of the image in pixels.
+         */
         _FinalStage height(int height);
     }
 
     public interface _FinalStage {
         ImageComponent build();
 
+        /**
+         * <p>A unique identifier for the component.</p>
+         */
         _FinalStage id(Optional<String> id);
 
         _FinalStage id(String id);
 
+        /**
+         * <p>Aligns the image inside the component. Default is <code>left</code>.</p>
+         */
         _FinalStage align(Optional<Align> align);
 
         _FinalStage align(Align align);
 
+        /**
+         * <p>Rounds the corners of the image. Default is <code>false</code>.</p>
+         */
         _FinalStage rounded(Optional<Boolean> rounded);
 
         _FinalStage rounded(Boolean rounded);
 
+        /**
+         * <p>Disables a component's margin-bottom of 10px.</p>
+         */
         _FinalStage bottomMargin(Optional<String> bottomMargin);
 
         _FinalStage bottomMargin(String bottomMargin);
 
+        /**
+         * <p>This can be a URL Action only.</p>
+         */
         _FinalStage action(Optional<UrlActionComponent> action);
 
         _FinalStage action(UrlActionComponent action);
@@ -238,7 +262,7 @@ public final class ImageComponent {
         }
 
         /**
-         * <p>The URL where the image is located.</p>
+         * The URL where the image is located.<p>The URL where the image is located.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -249,7 +273,7 @@ public final class ImageComponent {
         }
 
         /**
-         * <p>The exact width of the image in pixels.</p>
+         * The exact width of the image in pixels.<p>The exact width of the image in pixels.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -260,7 +284,7 @@ public final class ImageComponent {
         }
 
         /**
-         * <p>The exact height of the image in pixels.</p>
+         * The exact height of the image in pixels.<p>The exact height of the image in pixels.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -280,6 +304,9 @@ public final class ImageComponent {
             return this;
         }
 
+        /**
+         * <p>This can be a URL Action only.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "action", nulls = Nulls.SKIP)
         public _FinalStage action(Optional<UrlActionComponent> action) {
@@ -297,6 +324,9 @@ public final class ImageComponent {
             return this;
         }
 
+        /**
+         * <p>Disables a component's margin-bottom of 10px.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "bottom_margin", nulls = Nulls.SKIP)
         public _FinalStage bottomMargin(Optional<String> bottomMargin) {
@@ -314,6 +344,9 @@ public final class ImageComponent {
             return this;
         }
 
+        /**
+         * <p>Rounds the corners of the image. Default is <code>false</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "rounded", nulls = Nulls.SKIP)
         public _FinalStage rounded(Optional<Boolean> rounded) {
@@ -331,6 +364,9 @@ public final class ImageComponent {
             return this;
         }
 
+        /**
+         * <p>Aligns the image inside the component. Default is <code>left</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "align", nulls = Nulls.SKIP)
         public _FinalStage align(Optional<Align> align) {
@@ -348,6 +384,9 @@ public final class ImageComponent {
             return this;
         }
 
+        /**
+         * <p>A unique identifier for the component.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "id", nulls = Nulls.SKIP)
         public _FinalStage id(Optional<String> id) {

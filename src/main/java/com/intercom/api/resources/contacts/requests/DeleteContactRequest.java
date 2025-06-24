@@ -66,6 +66,9 @@ public final class DeleteContactRequest {
     }
 
     public interface ContactIdStage {
+        /**
+         * id
+         */
         _FinalStage contactId(@NotNull String contactId);
 
         Builder from(DeleteContactRequest other);
@@ -91,7 +94,7 @@ public final class DeleteContactRequest {
         }
 
         /**
-         * <p>id</p>
+         * id<p>id</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

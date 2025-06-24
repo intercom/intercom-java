@@ -158,34 +158,55 @@ public final class InitializeRequest {
     }
 
     public interface WorkspaceIdStage {
+        /**
+         * The workspace ID of the teammate. Attribute is `app_id` for V1.2 and below.
+         */
         WorkspaceRegionStage workspaceId(@NotNull String workspaceId);
 
         Builder from(InitializeRequest other);
     }
 
     public interface WorkspaceRegionStage {
+        /**
+         * The Intercom hosted region that this app is located in.
+         */
         AdminStage workspaceRegion(@NotNull String workspaceRegion);
     }
 
     public interface AdminStage {
+        /**
+         * The Intercom teammate viewing the conversation.
+         */
         ContextStage admin(@NotNull Admin admin);
     }
 
     public interface ContextStage {
+        /**
+         * The context of where the app is added, where the user last visited, and information on the Messenger settings.
+         */
         ConversationStage context(@NotNull Context context);
     }
 
     public interface ConversationStage {
+        /**
+         * The conversation your app is being shown for.
+         */
         ContactStage conversation(@NotNull Conversation conversation);
     }
 
     public interface ContactStage {
+        /**
+         * The contact which is currently being viewed by the teammate in the conversation details panel. We send an individual initialize request for each customer when it's a group conversation.
+         */
         _FinalStage contact(@NotNull Contact contact);
     }
 
     public interface _FinalStage {
         InitializeRequest build();
 
+        /**
+         * <p>Key-value pairs which were given as results in response to the Configure request.</p>
+         */
         _FinalStage cardCreationOptions(Map<String, Object> cardCreationOptions);
 
         _FinalStage putAllCardCreationOptions(Map<String, Object> cardCreationOptions);
@@ -234,7 +255,7 @@ public final class InitializeRequest {
         }
 
         /**
-         * <p>The workspace ID of the teammate. Attribute is <code>app_id</code> for V1.2 and below.</p>
+         * The workspace ID of the teammate. Attribute is `app_id` for V1.2 and below.<p>The workspace ID of the teammate. Attribute is <code>app_id</code> for V1.2 and below.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -245,7 +266,7 @@ public final class InitializeRequest {
         }
 
         /**
-         * <p>The Intercom hosted region that this app is located in.</p>
+         * The Intercom hosted region that this app is located in.<p>The Intercom hosted region that this app is located in.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -256,7 +277,7 @@ public final class InitializeRequest {
         }
 
         /**
-         * <p>The Intercom teammate viewing the conversation.</p>
+         * The Intercom teammate viewing the conversation.<p>The Intercom teammate viewing the conversation.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -267,7 +288,7 @@ public final class InitializeRequest {
         }
 
         /**
-         * <p>The context of where the app is added, where the user last visited, and information on the Messenger settings.</p>
+         * The context of where the app is added, where the user last visited, and information on the Messenger settings.<p>The context of where the app is added, where the user last visited, and information on the Messenger settings.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -278,7 +299,7 @@ public final class InitializeRequest {
         }
 
         /**
-         * <p>The conversation your app is being shown for.</p>
+         * The conversation your app is being shown for.<p>The conversation your app is being shown for.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -289,7 +310,7 @@ public final class InitializeRequest {
         }
 
         /**
-         * <p>The contact which is currently being viewed by the teammate in the conversation details panel. We send an individual initialize request for each customer when it's a group conversation.</p>
+         * The contact which is currently being viewed by the teammate in the conversation details panel. We send an individual initialize request for each customer when it's a group conversation.<p>The contact which is currently being viewed by the teammate in the conversation details panel. We send an individual initialize request for each customer when it's a group conversation.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -319,6 +340,9 @@ public final class InitializeRequest {
             return this;
         }
 
+        /**
+         * <p>Key-value pairs which were given as results in response to the Configure request.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "card_creation_options", nulls = Nulls.SKIP)
         public _FinalStage cardCreationOptions(Map<String, Object> cardCreationOptions) {

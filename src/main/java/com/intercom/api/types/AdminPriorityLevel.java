@@ -98,6 +98,9 @@ public final class AdminPriorityLevel {
             return this;
         }
 
+        /**
+         * <p>The primary admin ids for the team</p>
+         */
         @JsonSetter(value = "primary_admin_ids", nulls = Nulls.SKIP)
         public Builder primaryAdminIds(Optional<List<Integer>> primaryAdminIds) {
             this.primaryAdminIds = primaryAdminIds;
@@ -109,6 +112,9 @@ public final class AdminPriorityLevel {
             return this;
         }
 
+        /**
+         * <p>The secondary admin ids for the team</p>
+         */
         @JsonSetter(value = "secondary_admin_ids", nulls = Nulls.SKIP)
         public Builder secondaryAdminIds(Optional<List<Integer>> secondaryAdminIds) {
             this.secondaryAdminIds = secondaryAdminIds;

@@ -272,12 +272,18 @@ public final class RedactConversationRequest {
         }
 
         public interface ConversationIdStage {
+            /**
+             * The id of the conversation.
+             */
             ConversationPartIdStage conversationId(@NotNull String conversationId);
 
             Builder from(ConversationPart other);
         }
 
         public interface ConversationPartIdStage {
+            /**
+             * The id of the conversation_part.
+             */
             _FinalStage conversationPartId(@NotNull String conversationPartId);
         }
 
@@ -304,7 +310,7 @@ public final class RedactConversationRequest {
             }
 
             /**
-             * <p>The id of the conversation.</p>
+             * The id of the conversation.<p>The id of the conversation.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -315,7 +321,7 @@ public final class RedactConversationRequest {
             }
 
             /**
-             * <p>The id of the conversation_part.</p>
+             * The id of the conversation_part.<p>The id of the conversation_part.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -394,12 +400,18 @@ public final class RedactConversationRequest {
         }
 
         public interface ConversationIdStage {
+            /**
+             * The id of the conversation.
+             */
             SourceIdStage conversationId(@NotNull String conversationId);
 
             Builder from(Source other);
         }
 
         public interface SourceIdStage {
+            /**
+             * The id of the source.
+             */
             _FinalStage sourceId(@NotNull String sourceId);
         }
 
@@ -426,7 +438,7 @@ public final class RedactConversationRequest {
             }
 
             /**
-             * <p>The id of the conversation.</p>
+             * The id of the conversation.<p>The id of the conversation.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -437,7 +449,7 @@ public final class RedactConversationRequest {
             }
 
             /**
-             * <p>The id of the source.</p>
+             * The id of the source.<p>The id of the source.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override

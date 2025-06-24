@@ -179,38 +179,62 @@ public final class ArticleContent {
     }
 
     public interface TitleStage {
+        /**
+         * The title of the article.
+         */
         DescriptionStage title(@NotNull String title);
 
         Builder from(ArticleContent other);
     }
 
     public interface DescriptionStage {
+        /**
+         * The description of the article.
+         */
         BodyStage description(@NotNull String description);
     }
 
     public interface BodyStage {
+        /**
+         * The body of the article.
+         */
         AuthorIdStage body(@NotNull String body);
     }
 
     public interface AuthorIdStage {
+        /**
+         * The ID of the author of the article.
+         */
         StateStage authorId(int authorId);
     }
 
     public interface StateStage {
+        /**
+         * Whether the article is `published` or is a `draft` .
+         */
         _FinalStage state(@NotNull State state);
     }
 
     public interface _FinalStage {
         ArticleContent build();
 
+        /**
+         * <p>The time when the article was created (seconds).</p>
+         */
         _FinalStage createdAt(Optional<Integer> createdAt);
 
         _FinalStage createdAt(Integer createdAt);
 
+        /**
+         * <p>The time when the article was last updated (seconds).</p>
+         */
         _FinalStage updatedAt(Optional<Integer> updatedAt);
 
         _FinalStage updatedAt(Integer updatedAt);
 
+        /**
+         * <p>The URL of the article.</p>
+         */
         _FinalStage url(Optional<String> url);
 
         _FinalStage url(String url);
@@ -254,7 +278,7 @@ public final class ArticleContent {
         }
 
         /**
-         * <p>The title of the article.</p>
+         * The title of the article.<p>The title of the article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -265,7 +289,7 @@ public final class ArticleContent {
         }
 
         /**
-         * <p>The description of the article.</p>
+         * The description of the article.<p>The description of the article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -276,7 +300,7 @@ public final class ArticleContent {
         }
 
         /**
-         * <p>The body of the article.</p>
+         * The body of the article.<p>The body of the article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -287,7 +311,7 @@ public final class ArticleContent {
         }
 
         /**
-         * <p>The ID of the author of the article.</p>
+         * The ID of the author of the article.<p>The ID of the author of the article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -298,7 +322,7 @@ public final class ArticleContent {
         }
 
         /**
-         * <p>Whether the article is <code>published</code> or is a <code>draft</code> .</p>
+         * Whether the article is `published` or is a `draft` .<p>Whether the article is <code>published</code> or is a <code>draft</code> .</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -318,6 +342,9 @@ public final class ArticleContent {
             return this;
         }
 
+        /**
+         * <p>The URL of the article.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "url", nulls = Nulls.SKIP)
         public _FinalStage url(Optional<String> url) {
@@ -335,6 +362,9 @@ public final class ArticleContent {
             return this;
         }
 
+        /**
+         * <p>The time when the article was last updated (seconds).</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
         public _FinalStage updatedAt(Optional<Integer> updatedAt) {
@@ -352,6 +382,9 @@ public final class ArticleContent {
             return this;
         }
 
+        /**
+         * <p>The time when the article was created (seconds).</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
         public _FinalStage createdAt(Optional<Integer> createdAt) {

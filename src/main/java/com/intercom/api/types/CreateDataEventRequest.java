@@ -40,6 +40,7 @@ public final class CreateDataEventRequest {
         return this.value;
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T visit(Visitor<T> visitor) {
         if (this.type == 0) {
             return visitor.visit((WithId) this.value);
@@ -206,22 +207,34 @@ public final class CreateDataEventRequest {
         }
 
         public interface UserIdStage {
+            /**
+             * Your identifier for the user.
+             */
             EventNameStage userId(@NotNull String userId);
 
             Builder from(WithUserId other);
         }
 
         public interface EventNameStage {
+            /**
+             * The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example `updated-plan`.
+             */
             CreatedAtStage eventName(@NotNull String eventName);
         }
 
         public interface CreatedAtStage {
+            /**
+             * The time the event occurred as a UTC Unix timestamp
+             */
             _FinalStage createdAt(int createdAt);
         }
 
         public interface _FinalStage {
             WithUserId build();
 
+            /**
+             * <p>Optional metadata about the event.</p>
+             */
             _FinalStage metadata(Optional<Map<String, String>> metadata);
 
             _FinalStage metadata(Map<String, String> metadata);
@@ -252,7 +265,7 @@ public final class CreateDataEventRequest {
             }
 
             /**
-             * <p>Your identifier for the user.</p>
+             * Your identifier for the user.<p>Your identifier for the user.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -263,7 +276,7 @@ public final class CreateDataEventRequest {
             }
 
             /**
-             * <p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
+             * The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example `updated-plan`.<p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -274,7 +287,7 @@ public final class CreateDataEventRequest {
             }
 
             /**
-             * <p>The time the event occurred as a UTC Unix timestamp</p>
+             * The time the event occurred as a UTC Unix timestamp<p>The time the event occurred as a UTC Unix timestamp</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -294,6 +307,9 @@ public final class CreateDataEventRequest {
                 return this;
             }
 
+            /**
+             * <p>Optional metadata about the event.</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "metadata", nulls = Nulls.SKIP)
             public _FinalStage metadata(Optional<Map<String, String>> metadata) {
@@ -399,22 +415,34 @@ public final class CreateDataEventRequest {
         }
 
         public interface EmailStage {
+            /**
+             * An email address for your user. An email should only be used where your application uses email to uniquely identify users.
+             */
             EventNameStage email(@NotNull String email);
 
             Builder from(WithEmail other);
         }
 
         public interface EventNameStage {
+            /**
+             * The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example `updated-plan`.
+             */
             CreatedAtStage eventName(@NotNull String eventName);
         }
 
         public interface CreatedAtStage {
+            /**
+             * The time the event occurred as a UTC Unix timestamp
+             */
             _FinalStage createdAt(int createdAt);
         }
 
         public interface _FinalStage {
             WithEmail build();
 
+            /**
+             * <p>Optional metadata about the event.</p>
+             */
             _FinalStage metadata(Optional<Map<String, String>> metadata);
 
             _FinalStage metadata(Map<String, String> metadata);
@@ -445,7 +473,7 @@ public final class CreateDataEventRequest {
             }
 
             /**
-             * <p>An email address for your user. An email should only be used where your application uses email to uniquely identify users.</p>
+             * An email address for your user. An email should only be used where your application uses email to uniquely identify users.<p>An email address for your user. An email should only be used where your application uses email to uniquely identify users.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -456,7 +484,7 @@ public final class CreateDataEventRequest {
             }
 
             /**
-             * <p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
+             * The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example `updated-plan`.<p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -467,7 +495,7 @@ public final class CreateDataEventRequest {
             }
 
             /**
-             * <p>The time the event occurred as a UTC Unix timestamp</p>
+             * The time the event occurred as a UTC Unix timestamp<p>The time the event occurred as a UTC Unix timestamp</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -487,6 +515,9 @@ public final class CreateDataEventRequest {
                 return this;
             }
 
+            /**
+             * <p>Optional metadata about the event.</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "metadata", nulls = Nulls.SKIP)
             public _FinalStage metadata(Optional<Map<String, String>> metadata) {
@@ -592,22 +623,34 @@ public final class CreateDataEventRequest {
         }
 
         public interface IdStage {
+            /**
+             * The unique identifier for the contact (lead or user) which is given by Intercom.
+             */
             EventNameStage id(@NotNull String id);
 
             Builder from(WithId other);
         }
 
         public interface EventNameStage {
+            /**
+             * The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example `updated-plan`.
+             */
             CreatedAtStage eventName(@NotNull String eventName);
         }
 
         public interface CreatedAtStage {
+            /**
+             * The time the event occurred as a UTC Unix timestamp
+             */
             _FinalStage createdAt(int createdAt);
         }
 
         public interface _FinalStage {
             WithId build();
 
+            /**
+             * <p>Optional metadata about the event.</p>
+             */
             _FinalStage metadata(Optional<Map<String, String>> metadata);
 
             _FinalStage metadata(Map<String, String> metadata);
@@ -638,7 +681,7 @@ public final class CreateDataEventRequest {
             }
 
             /**
-             * <p>The unique identifier for the contact (lead or user) which is given by Intercom.</p>
+             * The unique identifier for the contact (lead or user) which is given by Intercom.<p>The unique identifier for the contact (lead or user) which is given by Intercom.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -649,7 +692,7 @@ public final class CreateDataEventRequest {
             }
 
             /**
-             * <p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
+             * The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example `updated-plan`.<p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -660,7 +703,7 @@ public final class CreateDataEventRequest {
             }
 
             /**
-             * <p>The time the event occurred as a UTC Unix timestamp</p>
+             * The time the event occurred as a UTC Unix timestamp<p>The time the event occurred as a UTC Unix timestamp</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -680,6 +723,9 @@ public final class CreateDataEventRequest {
                 return this;
             }
 
+            /**
+             * <p>Optional metadata about the event.</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "metadata", nulls = Nulls.SKIP)
             public _FinalStage metadata(Optional<Map<String, String>> metadata) {

@@ -146,32 +146,53 @@ public final class PartAttachment {
     }
 
     public interface TypeStage {
+        /**
+         * The type of attachment
+         */
         NameStage type(@NotNull String type);
 
         Builder from(PartAttachment other);
     }
 
     public interface NameStage {
+        /**
+         * The name of the attachment
+         */
         UrlStage name(@NotNull String name);
     }
 
     public interface UrlStage {
+        /**
+         * The URL of the attachment
+         */
         ContentTypeStage url(@NotNull String url);
     }
 
     public interface ContentTypeStage {
+        /**
+         * The content type of the attachment
+         */
         FilesizeStage contentType(@NotNull String contentType);
     }
 
     public interface FilesizeStage {
+        /**
+         * The size of the attachment
+         */
         WidthStage filesize(int filesize);
     }
 
     public interface WidthStage {
+        /**
+         * The width of the attachment
+         */
         HeightStage width(int width);
     }
 
     public interface HeightStage {
+        /**
+         * The height of the attachment
+         */
         _FinalStage height(int height);
     }
 
@@ -221,7 +242,7 @@ public final class PartAttachment {
         }
 
         /**
-         * <p>The type of attachment</p>
+         * The type of attachment<p>The type of attachment</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -232,7 +253,7 @@ public final class PartAttachment {
         }
 
         /**
-         * <p>The name of the attachment</p>
+         * The name of the attachment<p>The name of the attachment</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -243,7 +264,7 @@ public final class PartAttachment {
         }
 
         /**
-         * <p>The URL of the attachment</p>
+         * The URL of the attachment<p>The URL of the attachment</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -254,7 +275,7 @@ public final class PartAttachment {
         }
 
         /**
-         * <p>The content type of the attachment</p>
+         * The content type of the attachment<p>The content type of the attachment</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -265,7 +286,7 @@ public final class PartAttachment {
         }
 
         /**
-         * <p>The size of the attachment</p>
+         * The size of the attachment<p>The size of the attachment</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -276,7 +297,7 @@ public final class PartAttachment {
         }
 
         /**
-         * <p>The width of the attachment</p>
+         * The width of the attachment<p>The width of the attachment</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -287,7 +308,7 @@ public final class PartAttachment {
         }
 
         /**
-         * <p>The height of the attachment</p>
+         * The height of the attachment<p>The height of the attachment</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

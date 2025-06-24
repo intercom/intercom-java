@@ -154,6 +154,9 @@ public final class UpdateTicketRequest {
     }
 
     public interface TicketIdStage {
+        /**
+         * The unique identifier for the ticket which is given by Intercom
+         */
         _FinalStage ticketId(@NotNull String ticketId);
 
         Builder from(UpdateTicketRequest other);
@@ -162,22 +165,37 @@ public final class UpdateTicketRequest {
     public interface _FinalStage {
         UpdateTicketRequest build();
 
+        /**
+         * <p>The attributes set on the ticket.</p>
+         */
         _FinalStage ticketAttributes(Optional<Map<String, Object>> ticketAttributes);
 
         _FinalStage ticketAttributes(Map<String, Object> ticketAttributes);
 
+        /**
+         * <p>The state of the ticket.</p>
+         */
         _FinalStage state(Optional<State> state);
 
         _FinalStage state(State state);
 
+        /**
+         * <p>Specify if a ticket is open. Set to false to close a ticket. Closing a ticket will also unsnooze it.</p>
+         */
         _FinalStage open(Optional<Boolean> open);
 
         _FinalStage open(Boolean open);
 
+        /**
+         * <p>Specify whether the ticket is visible to users.</p>
+         */
         _FinalStage isShared(Optional<Boolean> isShared);
 
         _FinalStage isShared(Boolean isShared);
 
+        /**
+         * <p>The time you want the ticket to reopen.</p>
+         */
         _FinalStage snoozedUntil(Optional<Integer> snoozedUntil);
 
         _FinalStage snoozedUntil(Integer snoozedUntil);
@@ -221,7 +239,7 @@ public final class UpdateTicketRequest {
         }
 
         /**
-         * <p>The unique identifier for the ticket which is given by Intercom</p>
+         * The unique identifier for the ticket which is given by Intercom<p>The unique identifier for the ticket which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -254,6 +272,9 @@ public final class UpdateTicketRequest {
             return this;
         }
 
+        /**
+         * <p>The time you want the ticket to reopen.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "snoozed_until", nulls = Nulls.SKIP)
         public _FinalStage snoozedUntil(Optional<Integer> snoozedUntil) {
@@ -271,6 +292,9 @@ public final class UpdateTicketRequest {
             return this;
         }
 
+        /**
+         * <p>Specify whether the ticket is visible to users.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "is_shared", nulls = Nulls.SKIP)
         public _FinalStage isShared(Optional<Boolean> isShared) {
@@ -288,6 +312,9 @@ public final class UpdateTicketRequest {
             return this;
         }
 
+        /**
+         * <p>Specify if a ticket is open. Set to false to close a ticket. Closing a ticket will also unsnooze it.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "open", nulls = Nulls.SKIP)
         public _FinalStage open(Optional<Boolean> open) {
@@ -305,6 +332,9 @@ public final class UpdateTicketRequest {
             return this;
         }
 
+        /**
+         * <p>The state of the ticket.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "state", nulls = Nulls.SKIP)
         public _FinalStage state(Optional<State> state) {
@@ -322,6 +352,9 @@ public final class UpdateTicketRequest {
             return this;
         }
 
+        /**
+         * <p>The attributes set on the ticket.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "ticket_attributes", nulls = Nulls.SKIP)
         public _FinalStage ticketAttributes(Optional<Map<String, Object>> ticketAttributes) {
@@ -499,6 +532,9 @@ public final class UpdateTicketRequest {
                 return this;
             }
 
+            /**
+             * <p>The ID of the admin performing the action.</p>
+             */
             @JsonSetter(value = "admin_id", nulls = Nulls.SKIP)
             public Builder adminId(Optional<String> adminId) {
                 this.adminId = adminId;
@@ -510,6 +546,9 @@ public final class UpdateTicketRequest {
                 return this;
             }
 
+            /**
+             * <p>The ID of the admin or team to which the ticket is assigned. Set this 0 to unassign it.</p>
+             */
             @JsonSetter(value = "assignee_id", nulls = Nulls.SKIP)
             public Builder assigneeId(Optional<String> assigneeId) {
                 this.assigneeId = assigneeId;

@@ -99,18 +99,27 @@ public final class ContactArchived {
     }
 
     public interface IdStage {
+        /**
+         * The unique identifier for the contact which is given by Intercom.
+         */
         ArchivedStage id(@NotNull String id);
 
         Builder from(ContactArchived other);
     }
 
     public interface ArchivedStage {
+        /**
+         * Whether the contact is archived or not.
+         */
         _FinalStage archived(boolean archived);
     }
 
     public interface _FinalStage {
         ContactArchived build();
 
+        /**
+         * <p>The unique identifier for the contact which is provided by the Client.</p>
+         */
         _FinalStage externalId(Optional<String> externalId);
 
         _FinalStage externalId(String externalId);
@@ -138,7 +147,7 @@ public final class ContactArchived {
         }
 
         /**
-         * <p>The unique identifier for the contact which is given by Intercom.</p>
+         * The unique identifier for the contact which is given by Intercom.<p>The unique identifier for the contact which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -149,7 +158,7 @@ public final class ContactArchived {
         }
 
         /**
-         * <p>Whether the contact is archived or not.</p>
+         * Whether the contact is archived or not.<p>Whether the contact is archived or not.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -169,6 +178,9 @@ public final class ContactArchived {
             return this;
         }
 
+        /**
+         * <p>The unique identifier for the contact which is provided by the Client.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "external_id", nulls = Nulls.SKIP)
         public _FinalStage externalId(Optional<String> externalId) {

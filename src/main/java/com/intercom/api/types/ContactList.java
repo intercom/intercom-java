@@ -98,6 +98,9 @@ public final class ContactList {
     }
 
     public interface TotalCountStage {
+        /**
+         * A count of the total number of objects.
+         */
         _FinalStage totalCount(int totalCount);
 
         Builder from(ContactList other);
@@ -106,6 +109,9 @@ public final class ContactList {
     public interface _FinalStage {
         ContactList build();
 
+        /**
+         * <p>The list of contact objects</p>
+         */
         _FinalStage data(List<Contact> data);
 
         _FinalStage addData(Contact data);
@@ -139,7 +145,7 @@ public final class ContactList {
         }
 
         /**
-         * <p>A count of the total number of objects.</p>
+         * A count of the total number of objects.<p>A count of the total number of objects.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -182,6 +188,9 @@ public final class ContactList {
             return this;
         }
 
+        /**
+         * <p>The list of contact objects</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
         public _FinalStage data(List<Contact> data) {

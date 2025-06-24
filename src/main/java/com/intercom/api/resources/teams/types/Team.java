@@ -117,18 +117,27 @@ public final class Team {
     }
 
     public interface IdStage {
+        /**
+         * The id of the team
+         */
         NameStage id(@NotNull String id);
 
         Builder from(Team other);
     }
 
     public interface NameStage {
+        /**
+         * The name of the team
+         */
         _FinalStage name(@NotNull String name);
     }
 
     public interface _FinalStage {
         Team build();
 
+        /**
+         * <p>The list of admin IDs that are a part of the team.</p>
+         */
         _FinalStage adminIds(List<Integer> adminIds);
 
         _FinalStage addAdminIds(Integer adminIds);
@@ -165,7 +174,7 @@ public final class Team {
         }
 
         /**
-         * <p>The id of the team</p>
+         * The id of the team<p>The id of the team</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -176,7 +185,7 @@ public final class Team {
         }
 
         /**
-         * <p>The name of the team</p>
+         * The name of the team<p>The name of the team</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -219,6 +228,9 @@ public final class Team {
             return this;
         }
 
+        /**
+         * <p>The list of admin IDs that are a part of the team.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "admin_ids", nulls = Nulls.SKIP)
         public _FinalStage adminIds(List<Integer> adminIds) {

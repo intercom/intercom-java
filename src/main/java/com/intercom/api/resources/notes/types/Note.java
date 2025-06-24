@@ -131,26 +131,41 @@ public final class Note {
     }
 
     public interface IdStage {
+        /**
+         * The id of the note.
+         */
         CreatedAtStage id(@NotNull String id);
 
         Builder from(Note other);
     }
 
     public interface CreatedAtStage {
+        /**
+         * The time the note was created.
+         */
         AuthorStage createdAt(int createdAt);
     }
 
     public interface AuthorStage {
+        /**
+         * Optional. Represents the Admin that created the note.
+         */
         BodyStage author(@NotNull Admin author);
     }
 
     public interface BodyStage {
+        /**
+         * The body text of the note.
+         */
         _FinalStage body(@NotNull String body);
     }
 
     public interface _FinalStage {
         Note build();
 
+        /**
+         * <p>Represents the contact that the note was created about.</p>
+         */
         _FinalStage contact(Optional<Contact> contact);
 
         _FinalStage contact(Contact contact);
@@ -184,7 +199,7 @@ public final class Note {
         }
 
         /**
-         * <p>The id of the note.</p>
+         * The id of the note.<p>The id of the note.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -195,7 +210,7 @@ public final class Note {
         }
 
         /**
-         * <p>The time the note was created.</p>
+         * The time the note was created.<p>The time the note was created.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -206,7 +221,7 @@ public final class Note {
         }
 
         /**
-         * <p>Optional. Represents the Admin that created the note.</p>
+         * Optional. Represents the Admin that created the note.<p>Optional. Represents the Admin that created the note.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -217,7 +232,7 @@ public final class Note {
         }
 
         /**
-         * <p>The body text of the note.</p>
+         * The body text of the note.<p>The body text of the note.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -237,6 +252,9 @@ public final class Note {
             return this;
         }
 
+        /**
+         * <p>Represents the contact that the note was created about.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "contact", nulls = Nulls.SKIP)
         public _FinalStage contact(Optional<Contact> contact) {
@@ -327,6 +345,9 @@ public final class Note {
                 return this;
             }
 
+            /**
+             * <p>String representing the object's type. Always has the value <code>contact</code>.</p>
+             */
             @JsonSetter(value = "type", nulls = Nulls.SKIP)
             public Builder type(Optional<String> type) {
                 this.type = type;
@@ -338,6 +359,9 @@ public final class Note {
                 return this;
             }
 
+            /**
+             * <p>The id of the contact.</p>
+             */
             @JsonSetter(value = "id", nulls = Nulls.SKIP)
             public Builder id(Optional<String> id) {
                 this.id = id;

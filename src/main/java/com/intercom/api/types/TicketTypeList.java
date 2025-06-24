@@ -90,6 +90,9 @@ public final class TicketTypeList {
             return this;
         }
 
+        /**
+         * <p>A list of ticket_types associated with a given workspace.</p>
+         */
         @JsonSetter(value = "ticket_types", nulls = Nulls.SKIP)
         public Builder ticketTypes(List<TicketType> ticketTypes) {
             this.ticketTypes.clear();

@@ -77,12 +77,18 @@ public final class UntagContactRequest {
     }
 
     public interface ContactIdStage {
+        /**
+         * The unique identifier for the contact which is given by Intercom
+         */
         TagIdStage contactId(@NotNull String contactId);
 
         Builder from(UntagContactRequest other);
     }
 
     public interface TagIdStage {
+        /**
+         * The unique identifier for the tag which is given by Intercom
+         */
         _FinalStage tagId(@NotNull String tagId);
     }
 
@@ -109,7 +115,7 @@ public final class UntagContactRequest {
         }
 
         /**
-         * <p>The unique identifier for the contact which is given by Intercom</p>
+         * The unique identifier for the contact which is given by Intercom<p>The unique identifier for the contact which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -120,7 +126,7 @@ public final class UntagContactRequest {
         }
 
         /**
-         * <p>The unique identifier for the tag which is given by Intercom</p>
+         * The unique identifier for the tag which is given by Intercom<p>The unique identifier for the tag which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

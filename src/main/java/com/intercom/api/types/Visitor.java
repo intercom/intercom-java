@@ -497,46 +497,76 @@ public final class Visitor {
     }
 
     public interface IdStage {
+        /**
+         * The Intercom defined id representing the Visitor.
+         */
         UserIdStage id(@NotNull String id);
 
         Builder from(Visitor other);
     }
 
     public interface UserIdStage {
+        /**
+         * Automatically generated identifier for the Visitor.
+         */
         AnonymousStage userId(@NotNull String userId);
     }
 
     public interface AnonymousStage {
+        /**
+         * Identifies if this visitor is anonymous.
+         */
         EmailStage anonymous(boolean anonymous);
     }
 
     public interface EmailStage {
+        /**
+         * The email of the visitor.
+         */
         AppIdStage email(@NotNull String email);
     }
 
     public interface AppIdStage {
+        /**
+         * The id of the app the visitor is associated with.
+         */
         CreatedAtStage appId(@NotNull String appId);
     }
 
     public interface CreatedAtStage {
+        /**
+         * The time the Visitor was added to Intercom.
+         */
         SignedUpAtStage createdAt(int createdAt);
     }
 
     public interface SignedUpAtStage {
+        /**
+         * The time the Visitor signed up for your product.
+         */
         _FinalStage signedUpAt(int signedUpAt);
     }
 
     public interface _FinalStage {
         Visitor build();
 
+        /**
+         * <p>The phone number of the visitor.</p>
+         */
         _FinalStage phone(Optional<String> phone);
 
         _FinalStage phone(String phone);
 
+        /**
+         * <p>The name of the visitor.</p>
+         */
         _FinalStage name(Optional<String> name);
 
         _FinalStage name(String name);
 
+        /**
+         * <p>The pseudonym of the visitor.</p>
+         */
         _FinalStage pseudonym(Optional<String> pseudonym);
 
         _FinalStage pseudonym(String pseudonym);
@@ -553,18 +583,30 @@ public final class Visitor {
 
         _FinalStage locationData(LocationData locationData);
 
+        /**
+         * <p>The time the Lead last recorded making a request.</p>
+         */
         _FinalStage lasRequestAt(Optional<Integer> lasRequestAt);
 
         _FinalStage lasRequestAt(Integer lasRequestAt);
 
+        /**
+         * <p>The time the Visitor was added to Intercom.</p>
+         */
         _FinalStage remoteCreatedAt(Optional<Integer> remoteCreatedAt);
 
         _FinalStage remoteCreatedAt(Integer remoteCreatedAt);
 
+        /**
+         * <p>The last time the Visitor was updated.</p>
+         */
         _FinalStage updatedAt(Optional<Integer> updatedAt);
 
         _FinalStage updatedAt(Integer updatedAt);
 
+        /**
+         * <p>The number of sessions the Visitor has had.</p>
+         */
         _FinalStage sessionCount(Optional<Integer> sessionCount);
 
         _FinalStage sessionCount(Integer sessionCount);
@@ -573,18 +615,30 @@ public final class Visitor {
 
         _FinalStage socialProfiles(SocialProfiles socialProfiles);
 
+        /**
+         * <p>The id of the admin that owns the Visitor.</p>
+         */
         _FinalStage ownerId(Optional<String> ownerId);
 
         _FinalStage ownerId(String ownerId);
 
+        /**
+         * <p>Whether the Visitor is unsubscribed from emails.</p>
+         */
         _FinalStage unsubscribedFromEmails(Optional<Boolean> unsubscribedFromEmails);
 
         _FinalStage unsubscribedFromEmails(Boolean unsubscribedFromEmails);
 
+        /**
+         * <p>Identifies if this visitor has marked an email as spam.</p>
+         */
         _FinalStage markedEmailAsSpam(Optional<Boolean> markedEmailAsSpam);
 
         _FinalStage markedEmailAsSpam(Boolean markedEmailAsSpam);
 
+        /**
+         * <p>Identifies if this visitor has had a hard bounce.</p>
+         */
         _FinalStage hasHardBounced(Optional<Boolean> hasHardBounced);
 
         _FinalStage hasHardBounced(Boolean hasHardBounced);
@@ -597,34 +651,58 @@ public final class Visitor {
 
         _FinalStage segments(Segments segments);
 
+        /**
+         * <p>The custom attributes you have set on the Visitor.</p>
+         */
         _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes);
 
         _FinalStage customAttributes(Map<String, Object> customAttributes);
 
+        /**
+         * <p>The referer of the visitor.</p>
+         */
         _FinalStage referrer(Optional<String> referrer);
 
         _FinalStage referrer(String referrer);
 
+        /**
+         * <p>The utm_campaign of the visitor.</p>
+         */
         _FinalStage utmCampaign(Optional<String> utmCampaign);
 
         _FinalStage utmCampaign(String utmCampaign);
 
+        /**
+         * <p>The utm_content of the visitor.</p>
+         */
         _FinalStage utmContent(Optional<String> utmContent);
 
         _FinalStage utmContent(String utmContent);
 
+        /**
+         * <p>The utm_medium of the visitor.</p>
+         */
         _FinalStage utmMedium(Optional<String> utmMedium);
 
         _FinalStage utmMedium(String utmMedium);
 
+        /**
+         * <p>The utm_source of the visitor.</p>
+         */
         _FinalStage utmSource(Optional<String> utmSource);
 
         _FinalStage utmSource(String utmSource);
 
+        /**
+         * <p>The utm_term of the visitor.</p>
+         */
         _FinalStage utmTerm(Optional<String> utmTerm);
 
         _FinalStage utmTerm(String utmTerm);
 
+        /**
+         * <p>Identifies if this visitor has do not track enabled.</p>
+         */
         _FinalStage doNotTrack(Optional<Boolean> doNotTrack);
 
         _FinalStage doNotTrack(Boolean doNotTrack);
@@ -747,7 +825,7 @@ public final class Visitor {
         }
 
         /**
-         * <p>The Intercom defined id representing the Visitor.</p>
+         * The Intercom defined id representing the Visitor.<p>The Intercom defined id representing the Visitor.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -758,7 +836,7 @@ public final class Visitor {
         }
 
         /**
-         * <p>Automatically generated identifier for the Visitor.</p>
+         * Automatically generated identifier for the Visitor.<p>Automatically generated identifier for the Visitor.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -769,7 +847,7 @@ public final class Visitor {
         }
 
         /**
-         * <p>Identifies if this visitor is anonymous.</p>
+         * Identifies if this visitor is anonymous.<p>Identifies if this visitor is anonymous.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -780,7 +858,7 @@ public final class Visitor {
         }
 
         /**
-         * <p>The email of the visitor.</p>
+         * The email of the visitor.<p>The email of the visitor.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -791,7 +869,7 @@ public final class Visitor {
         }
 
         /**
-         * <p>The id of the app the visitor is associated with.</p>
+         * The id of the app the visitor is associated with.<p>The id of the app the visitor is associated with.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -802,7 +880,7 @@ public final class Visitor {
         }
 
         /**
-         * <p>The time the Visitor was added to Intercom.</p>
+         * The time the Visitor was added to Intercom.<p>The time the Visitor was added to Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -813,7 +891,7 @@ public final class Visitor {
         }
 
         /**
-         * <p>The time the Visitor signed up for your product.</p>
+         * The time the Visitor signed up for your product.<p>The time the Visitor signed up for your product.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -833,6 +911,9 @@ public final class Visitor {
             return this;
         }
 
+        /**
+         * <p>Identifies if this visitor has do not track enabled.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "do_not_track", nulls = Nulls.SKIP)
         public _FinalStage doNotTrack(Optional<Boolean> doNotTrack) {
@@ -850,6 +931,9 @@ public final class Visitor {
             return this;
         }
 
+        /**
+         * <p>The utm_term of the visitor.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "utm_term", nulls = Nulls.SKIP)
         public _FinalStage utmTerm(Optional<String> utmTerm) {
@@ -867,6 +951,9 @@ public final class Visitor {
             return this;
         }
 
+        /**
+         * <p>The utm_source of the visitor.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "utm_source", nulls = Nulls.SKIP)
         public _FinalStage utmSource(Optional<String> utmSource) {
@@ -884,6 +971,9 @@ public final class Visitor {
             return this;
         }
 
+        /**
+         * <p>The utm_medium of the visitor.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "utm_medium", nulls = Nulls.SKIP)
         public _FinalStage utmMedium(Optional<String> utmMedium) {
@@ -901,6 +991,9 @@ public final class Visitor {
             return this;
         }
 
+        /**
+         * <p>The utm_content of the visitor.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "utm_content", nulls = Nulls.SKIP)
         public _FinalStage utmContent(Optional<String> utmContent) {
@@ -918,6 +1011,9 @@ public final class Visitor {
             return this;
         }
 
+        /**
+         * <p>The utm_campaign of the visitor.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "utm_campaign", nulls = Nulls.SKIP)
         public _FinalStage utmCampaign(Optional<String> utmCampaign) {
@@ -935,6 +1031,9 @@ public final class Visitor {
             return this;
         }
 
+        /**
+         * <p>The referer of the visitor.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "referrer", nulls = Nulls.SKIP)
         public _FinalStage referrer(Optional<String> referrer) {
@@ -952,6 +1051,9 @@ public final class Visitor {
             return this;
         }
 
+        /**
+         * <p>The custom attributes you have set on the Visitor.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "custom_attributes", nulls = Nulls.SKIP)
         public _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes) {
@@ -995,6 +1097,9 @@ public final class Visitor {
             return this;
         }
 
+        /**
+         * <p>Identifies if this visitor has had a hard bounce.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "has_hard_bounced", nulls = Nulls.SKIP)
         public _FinalStage hasHardBounced(Optional<Boolean> hasHardBounced) {
@@ -1012,6 +1117,9 @@ public final class Visitor {
             return this;
         }
 
+        /**
+         * <p>Identifies if this visitor has marked an email as spam.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "marked_email_as_spam", nulls = Nulls.SKIP)
         public _FinalStage markedEmailAsSpam(Optional<Boolean> markedEmailAsSpam) {
@@ -1029,6 +1137,9 @@ public final class Visitor {
             return this;
         }
 
+        /**
+         * <p>Whether the Visitor is unsubscribed from emails.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "unsubscribed_from_emails", nulls = Nulls.SKIP)
         public _FinalStage unsubscribedFromEmails(Optional<Boolean> unsubscribedFromEmails) {
@@ -1046,6 +1157,9 @@ public final class Visitor {
             return this;
         }
 
+        /**
+         * <p>The id of the admin that owns the Visitor.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "owner_id", nulls = Nulls.SKIP)
         public _FinalStage ownerId(Optional<String> ownerId) {
@@ -1076,6 +1190,9 @@ public final class Visitor {
             return this;
         }
 
+        /**
+         * <p>The number of sessions the Visitor has had.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "session_count", nulls = Nulls.SKIP)
         public _FinalStage sessionCount(Optional<Integer> sessionCount) {
@@ -1093,6 +1210,9 @@ public final class Visitor {
             return this;
         }
 
+        /**
+         * <p>The last time the Visitor was updated.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
         public _FinalStage updatedAt(Optional<Integer> updatedAt) {
@@ -1110,6 +1230,9 @@ public final class Visitor {
             return this;
         }
 
+        /**
+         * <p>The time the Visitor was added to Intercom.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "remote_created_at", nulls = Nulls.SKIP)
         public _FinalStage remoteCreatedAt(Optional<Integer> remoteCreatedAt) {
@@ -1127,6 +1250,9 @@ public final class Visitor {
             return this;
         }
 
+        /**
+         * <p>The time the Lead last recorded making a request.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "las_request_at", nulls = Nulls.SKIP)
         public _FinalStage lasRequestAt(Optional<Integer> lasRequestAt) {
@@ -1183,6 +1309,9 @@ public final class Visitor {
             return this;
         }
 
+        /**
+         * <p>The pseudonym of the visitor.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "pseudonym", nulls = Nulls.SKIP)
         public _FinalStage pseudonym(Optional<String> pseudonym) {
@@ -1200,6 +1329,9 @@ public final class Visitor {
             return this;
         }
 
+        /**
+         * <p>The name of the visitor.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "name", nulls = Nulls.SKIP)
         public _FinalStage name(Optional<String> name) {
@@ -1217,6 +1349,9 @@ public final class Visitor {
             return this;
         }
 
+        /**
+         * <p>The phone number of the visitor.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "phone", nulls = Nulls.SKIP)
         public _FinalStage phone(Optional<String> phone) {
@@ -1351,6 +1486,9 @@ public final class Visitor {
                 return this;
             }
 
+            /**
+             * <p>This object represents the avatar associated with the visitor.</p>
+             */
             @JsonSetter(value = "image_url", nulls = Nulls.SKIP)
             public Builder imageUrl(Optional<String> imageUrl) {
                 this.imageUrl = imageUrl;
@@ -1443,6 +1581,9 @@ public final class Visitor {
                 return this;
             }
 
+            /**
+             * <p>The type of the object</p>
+             */
             @JsonSetter(value = "type", nulls = Nulls.SKIP)
             public Builder type(Optional<String> type) {
                 this.type = type;
@@ -1546,6 +1687,9 @@ public final class Visitor {
                 return this;
             }
 
+            /**
+             * <p>The type of the object</p>
+             */
             @JsonSetter(value = "type", nulls = Nulls.SKIP)
             public Builder type(Optional<String> type) {
                 this.type = type;
@@ -1770,6 +1914,9 @@ public final class Visitor {
                 return this;
             }
 
+            /**
+             * <p>The city name of the visitor.</p>
+             */
             @JsonSetter(value = "city_name", nulls = Nulls.SKIP)
             public Builder cityName(Optional<String> cityName) {
                 this.cityName = cityName;
@@ -1781,6 +1928,9 @@ public final class Visitor {
                 return this;
             }
 
+            /**
+             * <p>The continent code of the visitor.</p>
+             */
             @JsonSetter(value = "continent_code", nulls = Nulls.SKIP)
             public Builder continentCode(Optional<String> continentCode) {
                 this.continentCode = continentCode;
@@ -1792,6 +1942,9 @@ public final class Visitor {
                 return this;
             }
 
+            /**
+             * <p>The country code of the visitor.</p>
+             */
             @JsonSetter(value = "country_code", nulls = Nulls.SKIP)
             public Builder countryCode(Optional<String> countryCode) {
                 this.countryCode = countryCode;
@@ -1803,6 +1956,9 @@ public final class Visitor {
                 return this;
             }
 
+            /**
+             * <p>The country name of the visitor.</p>
+             */
             @JsonSetter(value = "country_name", nulls = Nulls.SKIP)
             public Builder countryName(Optional<String> countryName) {
                 this.countryName = countryName;
@@ -1814,6 +1970,9 @@ public final class Visitor {
                 return this;
             }
 
+            /**
+             * <p>The postal code of the visitor.</p>
+             */
             @JsonSetter(value = "postal_code", nulls = Nulls.SKIP)
             public Builder postalCode(Optional<String> postalCode) {
                 this.postalCode = postalCode;
@@ -1825,6 +1984,9 @@ public final class Visitor {
                 return this;
             }
 
+            /**
+             * <p>The region name of the visitor.</p>
+             */
             @JsonSetter(value = "region_name", nulls = Nulls.SKIP)
             public Builder regionName(Optional<String> regionName) {
                 this.regionName = regionName;
@@ -1836,6 +1998,9 @@ public final class Visitor {
                 return this;
             }
 
+            /**
+             * <p>The timezone of the visitor.</p>
+             */
             @JsonSetter(value = "timezone", nulls = Nulls.SKIP)
             public Builder timezone(Optional<String> timezone) {
                 this.timezone = timezone;
@@ -1936,6 +2101,9 @@ public final class Visitor {
                 return this;
             }
 
+            /**
+             * <p>The type of the object</p>
+             */
             @JsonSetter(value = "type", nulls = Nulls.SKIP)
             public Builder type(Optional<String> type) {
                 this.type = type;
@@ -2058,6 +2226,9 @@ public final class Visitor {
                     return this;
                 }
 
+                /**
+                 * <p>The type of the object</p>
+                 */
                 @JsonSetter(value = "type", nulls = Nulls.SKIP)
                 public Builder type(Optional<String> type) {
                     this.type = type;
@@ -2069,6 +2240,9 @@ public final class Visitor {
                     return this;
                 }
 
+                /**
+                 * <p>The id of the tag.</p>
+                 */
                 @JsonSetter(value = "id", nulls = Nulls.SKIP)
                 public Builder id(Optional<String> id) {
                     this.id = id;
@@ -2080,6 +2254,9 @@ public final class Visitor {
                     return this;
                 }
 
+                /**
+                 * <p>The name of the tag.</p>
+                 */
                 @JsonSetter(value = "name", nulls = Nulls.SKIP)
                 public Builder name(Optional<String> name) {
                     this.name = name;
@@ -2175,6 +2352,9 @@ public final class Visitor {
                 return this;
             }
 
+            /**
+             * <p>The type of the object</p>
+             */
             @JsonSetter(value = "type", nulls = Nulls.SKIP)
             public Builder type(Optional<String> type) {
                 this.type = type;

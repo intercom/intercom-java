@@ -77,12 +77,18 @@ public final class MergeContactsRequest {
     }
 
     public interface LeadIdStage {
+        /**
+         * The unique identifier for the contact to merge away from. Must be a lead.
+         */
         ContactIdStage leadId(@NotNull String leadId);
 
         Builder from(MergeContactsRequest other);
     }
 
     public interface ContactIdStage {
+        /**
+         * The unique identifier for the contact to merge into. Must be a user.
+         */
         _FinalStage contactId(@NotNull String contactId);
     }
 
@@ -109,7 +115,7 @@ public final class MergeContactsRequest {
         }
 
         /**
-         * <p>The unique identifier for the contact to merge away from. Must be a lead.</p>
+         * The unique identifier for the contact to merge away from. Must be a lead.<p>The unique identifier for the contact to merge away from. Must be a lead.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -120,7 +126,7 @@ public final class MergeContactsRequest {
         }
 
         /**
-         * <p>The unique identifier for the contact to merge into. Must be a user.</p>
+         * The unique identifier for the contact to merge into. Must be a user.<p>The unique identifier for the contact to merge into. Must be a user.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

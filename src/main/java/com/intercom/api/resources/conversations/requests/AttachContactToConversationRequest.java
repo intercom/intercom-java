@@ -101,6 +101,9 @@ public final class AttachContactToConversationRequest {
     }
 
     public interface ConversationIdStage {
+        /**
+         * The identifier for the conversation as given by Intercom.
+         */
         _FinalStage conversationId(@NotNull String conversationId);
 
         Builder from(AttachContactToConversationRequest other);
@@ -109,6 +112,9 @@ public final class AttachContactToConversationRequest {
     public interface _FinalStage {
         AttachContactToConversationRequest build();
 
+        /**
+         * <p>The <code>id</code> of the admin who is adding the new participant.</p>
+         */
         _FinalStage adminId(Optional<String> adminId);
 
         _FinalStage adminId(String adminId);
@@ -140,7 +146,7 @@ public final class AttachContactToConversationRequest {
         }
 
         /**
-         * <p>The identifier for the conversation as given by Intercom.</p>
+         * The identifier for the conversation as given by Intercom.<p>The identifier for the conversation as given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -173,6 +179,9 @@ public final class AttachContactToConversationRequest {
             return this;
         }
 
+        /**
+         * <p>The <code>id</code> of the admin who is adding the new participant.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "admin_id", nulls = Nulls.SKIP)
         public _FinalStage adminId(Optional<String> adminId) {
@@ -202,6 +211,7 @@ public final class AttachContactToConversationRequest {
             return this.value;
         }
 
+        @SuppressWarnings("unchecked")
         public <T> T visit(Visitor<T> visitor) {
             if (this.type == 0) {
                 return visitor.visit((IntercomUserId) this.value);
@@ -336,6 +346,9 @@ public final class AttachContactToConversationRequest {
             }
 
             public interface UserIdStage {
+                /**
+                 * The external_id you have defined for the contact who is being added as a participant.
+                 */
                 _FinalStage userId(@NotNull String userId);
 
                 Builder from(UserId other);
@@ -368,7 +381,7 @@ public final class AttachContactToConversationRequest {
                 }
 
                 /**
-                 * <p>The external_id you have defined for the contact who is being added as a participant.</p>
+                 * The external_id you have defined for the contact who is being added as a participant.<p>The external_id you have defined for the contact who is being added as a participant.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override
@@ -457,6 +470,9 @@ public final class AttachContactToConversationRequest {
             }
 
             public interface EmailStage {
+                /**
+                 * The email you have defined for the contact who is being added as a participant.
+                 */
                 _FinalStage email(@NotNull String email);
 
                 Builder from(Customer_ other);
@@ -489,7 +505,7 @@ public final class AttachContactToConversationRequest {
                 }
 
                 /**
-                 * <p>The email you have defined for the contact who is being added as a participant.</p>
+                 * The email you have defined for the contact who is being added as a participant.<p>The email you have defined for the contact who is being added as a participant.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override
@@ -580,6 +596,9 @@ public final class AttachContactToConversationRequest {
             }
 
             public interface IntercomUserIdStage {
+                /**
+                 * The identifier for the contact as given by Intercom.
+                 */
                 _FinalStage intercomUserId(@NotNull String intercomUserId);
 
                 Builder from(IntercomUserId other);
@@ -612,7 +631,7 @@ public final class AttachContactToConversationRequest {
                 }
 
                 /**
-                 * <p>The identifier for the contact as given by Intercom.</p>
+                 * The identifier for the contact as given by Intercom.<p>The identifier for the contact as given by Intercom.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override

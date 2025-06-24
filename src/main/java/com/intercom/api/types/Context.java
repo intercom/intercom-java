@@ -170,6 +170,9 @@ public final class Context {
             return this;
         }
 
+        /**
+         * <p>The id of the conversation where the app is added or being used.</p>
+         */
         @JsonSetter(value = "conversation_id", nulls = Nulls.SKIP)
         public Builder conversationId(Optional<Integer> conversationId) {
             this.conversationId = conversationId;
@@ -181,6 +184,9 @@ public final class Context {
             return this;
         }
 
+        /**
+         * <p>Where the app is added or the action took place. Can be either 'conversation', 'home', 'message', or 'operator'.</p>
+         */
         @JsonSetter(value = "location", nulls = Nulls.SKIP)
         public Builder location(Optional<Location> location) {
             this.location = location;
@@ -192,6 +198,9 @@ public final class Context {
             return this;
         }
 
+        /**
+         * <p>The default end-user language of the Messenger. Use to localise Messenger App content.</p>
+         */
         @JsonSetter(value = "locale", nulls = Nulls.SKIP)
         public Builder locale(Optional<String> locale) {
             this.locale = locale;
@@ -203,6 +212,9 @@ public final class Context {
             return this;
         }
 
+        /**
+         * <p>The messengers action colour. Use in Sheets and Icons to make a Messenger App experience feel part of the host Messenger.</p>
+         */
         @JsonSetter(value = "messenger_action_colour", nulls = Nulls.SKIP)
         public Builder messengerActionColour(Optional<String> messengerActionColour) {
             this.messengerActionColour = messengerActionColour;
@@ -214,6 +226,9 @@ public final class Context {
             return this;
         }
 
+        /**
+         * <p>The messengers background colour. Use in Sheets and Icons to make a Messenger App experience feel part of the host Messenger.</p>
+         */
         @JsonSetter(value = "messenger_background_colour", nulls = Nulls.SKIP)
         public Builder messengerBackgroundColour(Optional<String> messengerBackgroundColour) {
             this.messengerBackgroundColour = messengerBackgroundColour;
@@ -225,6 +240,9 @@ public final class Context {
             return this;
         }
 
+        /**
+         * <p>The current page URL where the app is being used.</p>
+         */
         @JsonSetter(value = "referrer", nulls = Nulls.SKIP)
         public Builder referrer(Optional<String> referrer) {
             this.referrer = referrer;

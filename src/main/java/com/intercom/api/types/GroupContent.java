@@ -85,12 +85,18 @@ public final class GroupContent {
     }
 
     public interface NameStage {
+        /**
+         * The name of the collection or section.
+         */
         DescriptionStage name(@NotNull String name);
 
         Builder from(GroupContent other);
     }
 
     public interface DescriptionStage {
+        /**
+         * The description of the collection. Only available for collections.
+         */
         _FinalStage description(@NotNull String description);
     }
 
@@ -117,7 +123,7 @@ public final class GroupContent {
         }
 
         /**
-         * <p>The name of the collection or section.</p>
+         * The name of the collection or section.<p>The name of the collection or section.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -128,7 +134,7 @@ public final class GroupContent {
         }
 
         /**
-         * <p>The description of the collection. Only available for collections.</p>
+         * The description of the collection. Only available for collections.<p>The description of the collection. Only available for collections.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

@@ -130,6 +130,9 @@ public final class SearchArticlesRequest {
             return this;
         }
 
+        /**
+         * <p>The phrase within your articles to search for.</p>
+         */
         @JsonSetter(value = "phrase", nulls = Nulls.SKIP)
         public Builder phrase(Optional<String> phrase) {
             this.phrase = phrase;
@@ -141,6 +144,9 @@ public final class SearchArticlesRequest {
             return this;
         }
 
+        /**
+         * <p>The state of the Articles returned. One of <code>published</code>, <code>draft</code> or <code>all</code>.</p>
+         */
         @JsonSetter(value = "state", nulls = Nulls.SKIP)
         public Builder state(Optional<String> state) {
             this.state = state;
@@ -152,6 +158,9 @@ public final class SearchArticlesRequest {
             return this;
         }
 
+        /**
+         * <p>The ID of the Help Center to search in.</p>
+         */
         @JsonSetter(value = "help_center_id", nulls = Nulls.SKIP)
         public Builder helpCenterId(Optional<Integer> helpCenterId) {
             this.helpCenterId = helpCenterId;
@@ -163,6 +172,9 @@ public final class SearchArticlesRequest {
             return this;
         }
 
+        /**
+         * <p>Return a highlighted version of the matching content within your articles. Refer to the response schema for more details.</p>
+         */
         @JsonSetter(value = "highlight", nulls = Nulls.SKIP)
         public Builder highlight(Optional<Boolean> highlight) {
             this.highlight = highlight;

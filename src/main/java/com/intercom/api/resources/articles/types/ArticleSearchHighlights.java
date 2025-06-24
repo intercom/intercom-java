@@ -100,6 +100,9 @@ public final class ArticleSearchHighlights {
     }
 
     public interface ArticleIdStage {
+        /**
+         * The ID of the corresponding article.
+         */
         _FinalStage articleId(@NotNull String articleId);
 
         Builder from(ArticleSearchHighlights other);
@@ -108,12 +111,18 @@ public final class ArticleSearchHighlights {
     public interface _FinalStage {
         ArticleSearchHighlights build();
 
+        /**
+         * <p>An Article title highlighted.</p>
+         */
         _FinalStage highlightedTitle(List<HighlightedTitleItem> highlightedTitle);
 
         _FinalStage addHighlightedTitle(HighlightedTitleItem highlightedTitle);
 
         _FinalStage addAllHighlightedTitle(List<HighlightedTitleItem> highlightedTitle);
 
+        /**
+         * <p>An Article description and body text highlighted.</p>
+         */
         _FinalStage highlightedSummary(List<List<HighlightedSummaryItemItem>> highlightedSummary);
 
         _FinalStage addHighlightedSummary(List<HighlightedSummaryItemItem> highlightedSummary);
@@ -143,7 +152,7 @@ public final class ArticleSearchHighlights {
         }
 
         /**
-         * <p>The ID of the corresponding article.</p>
+         * The ID of the corresponding article.<p>The ID of the corresponding article.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -173,6 +182,9 @@ public final class ArticleSearchHighlights {
             return this;
         }
 
+        /**
+         * <p>An Article description and body text highlighted.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "highlighted_summary", nulls = Nulls.SKIP)
         public _FinalStage highlightedSummary(List<List<HighlightedSummaryItemItem>> highlightedSummary) {
@@ -201,6 +213,9 @@ public final class ArticleSearchHighlights {
             return this;
         }
 
+        /**
+         * <p>An Article title highlighted.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "highlighted_title", nulls = Nulls.SKIP)
         public _FinalStage highlightedTitle(List<HighlightedTitleItem> highlightedTitle) {
@@ -293,6 +308,9 @@ public final class ArticleSearchHighlights {
                 return this;
             }
 
+            /**
+             * <p>The type of text - <code>highlight</code> or <code>plain</code>.</p>
+             */
             @JsonSetter(value = "type", nulls = Nulls.SKIP)
             public Builder type(Optional<Type> type) {
                 this.type = type;
@@ -304,6 +322,9 @@ public final class ArticleSearchHighlights {
                 return this;
             }
 
+            /**
+             * <p>The text of the title.</p>
+             */
             @JsonSetter(value = "text", nulls = Nulls.SKIP)
             public Builder text(Optional<String> text) {
                 this.text = text;
@@ -474,6 +495,9 @@ public final class ArticleSearchHighlights {
                 return this;
             }
 
+            /**
+             * <p>The type of text - <code>highlight</code> or <code>plain</code>.</p>
+             */
             @JsonSetter(value = "type", nulls = Nulls.SKIP)
             public Builder type(Optional<Type> type) {
                 this.type = type;
@@ -485,6 +509,9 @@ public final class ArticleSearchHighlights {
                 return this;
             }
 
+            /**
+             * <p>The text of the title.</p>
+             */
             @JsonSetter(value = "text", nulls = Nulls.SKIP)
             public Builder text(Optional<String> text) {
                 this.text = text;

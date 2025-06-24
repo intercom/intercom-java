@@ -66,6 +66,9 @@ public final class FindAdminRequest {
     }
 
     public interface AdminIdStage {
+        /**
+         * The unique identifier of a given admin
+         */
         _FinalStage adminId(@NotNull String adminId);
 
         Builder from(FindAdminRequest other);
@@ -91,7 +94,7 @@ public final class FindAdminRequest {
         }
 
         /**
-         * <p>The unique identifier of a given admin</p>
+         * The unique identifier of a given admin<p>The unique identifier of a given admin</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

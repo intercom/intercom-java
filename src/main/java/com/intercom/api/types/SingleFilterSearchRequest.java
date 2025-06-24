@@ -121,6 +121,9 @@ public final class SingleFilterSearchRequest {
             return this;
         }
 
+        /**
+         * <p>The accepted field that you want to search on.</p>
+         */
         @JsonSetter(value = "field", nulls = Nulls.SKIP)
         public Builder field(Optional<String> field) {
             this.field = field;
@@ -132,6 +135,9 @@ public final class SingleFilterSearchRequest {
             return this;
         }
 
+        /**
+         * <p>The accepted operators you can use to define how you want to search for the value.</p>
+         */
         @JsonSetter(value = "operator", nulls = Nulls.SKIP)
         public Builder operator(Optional<Operator> operator) {
             this.operator = operator;
@@ -143,6 +149,9 @@ public final class SingleFilterSearchRequest {
             return this;
         }
 
+        /**
+         * <p>The value that you want to search on.</p>
+         */
         @JsonSetter(value = "value", nulls = Nulls.SKIP)
         public Builder value(Optional<Value> value) {
             this.value = value;
@@ -330,6 +339,7 @@ public final class SingleFilterSearchRequest {
             return this.value;
         }
 
+        @SuppressWarnings("unchecked")
         public <T> T visit(Visitor<T> visitor) {
             if (this.type == 0) {
                 return visitor.visit((String) this.value);

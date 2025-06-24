@@ -76,12 +76,18 @@ public final class NewsfeedAssignment {
     }
 
     public interface NewsfeedIdStage {
+        /**
+         * The unique identifier for the newsfeed which is given by Intercom. Publish dates cannot be in the future, to schedule news items use the dedicated feature in app (see this article).
+         */
         PublishedAtStage newsfeedId(int newsfeedId);
 
         Builder from(NewsfeedAssignment other);
     }
 
     public interface PublishedAtStage {
+        /**
+         * Publish date of the news item on the newsfeed, use this field if you want to set a publish date in the past (e.g. when importing existing news items). On write, this field will be ignored if the news item state is "draft".
+         */
         _FinalStage publishedAt(int publishedAt);
     }
 
@@ -108,7 +114,7 @@ public final class NewsfeedAssignment {
         }
 
         /**
-         * <p>The unique identifier for the newsfeed which is given by Intercom. Publish dates cannot be in the future, to schedule news items use the dedicated feature in app (see this article).</p>
+         * The unique identifier for the newsfeed which is given by Intercom. Publish dates cannot be in the future, to schedule news items use the dedicated feature in app (see this article).<p>The unique identifier for the newsfeed which is given by Intercom. Publish dates cannot be in the future, to schedule news items use the dedicated feature in app (see this article).</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -119,7 +125,7 @@ public final class NewsfeedAssignment {
         }
 
         /**
-         * <p>Publish date of the news item on the newsfeed, use this field if you want to set a publish date in the past (e.g. when importing existing news items). On write, this field will be ignored if the news item state is &quot;draft&quot;.</p>
+         * Publish date of the news item on the newsfeed, use this field if you want to set a publish date in the past (e.g. when importing existing news items). On write, this field will be ignored if the news item state is "draft".<p>Publish date of the news item on the newsfeed, use this field if you want to set a publish date in the past (e.g. when importing existing news items). On write, this field will be ignored if the news item state is &quot;draft&quot;.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

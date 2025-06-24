@@ -66,6 +66,9 @@ public final class UrlActionComponent {
     }
 
     public interface UrlStage {
+        /**
+         * The link you want to open.
+         */
         _FinalStage url(@NotNull String url);
 
         Builder from(UrlActionComponent other);
@@ -91,7 +94,7 @@ public final class UrlActionComponent {
         }
 
         /**
-         * <p>The link you want to open.</p>
+         * The link you want to open.<p>The link you want to open.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

@@ -122,26 +122,41 @@ public final class DataEventSummaryItem {
     }
 
     public interface NameStage {
+        /**
+         * The name of the event
+         */
         FirstStage name(@NotNull String name);
 
         Builder from(DataEventSummaryItem other);
     }
 
     public interface FirstStage {
+        /**
+         * The first time the event was sent
+         */
         LastStage first(@NotNull String first);
     }
 
     public interface LastStage {
+        /**
+         * The last time the event was sent
+         */
         CountStage last(@NotNull String last);
     }
 
     public interface CountStage {
+        /**
+         * The number of times the event was sent
+         */
         _FinalStage count(int count);
     }
 
     public interface _FinalStage {
         DataEventSummaryItem build();
 
+        /**
+         * <p>The description of the event</p>
+         */
         _FinalStage description(Optional<String> description);
 
         _FinalStage description(String description);
@@ -175,7 +190,7 @@ public final class DataEventSummaryItem {
         }
 
         /**
-         * <p>The name of the event</p>
+         * The name of the event<p>The name of the event</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -186,7 +201,7 @@ public final class DataEventSummaryItem {
         }
 
         /**
-         * <p>The first time the event was sent</p>
+         * The first time the event was sent<p>The first time the event was sent</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -197,7 +212,7 @@ public final class DataEventSummaryItem {
         }
 
         /**
-         * <p>The last time the event was sent</p>
+         * The last time the event was sent<p>The last time the event was sent</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -208,7 +223,7 @@ public final class DataEventSummaryItem {
         }
 
         /**
-         * <p>The number of times the event was sent</p>
+         * The number of times the event was sent<p>The number of times the event was sent</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -228,6 +243,9 @@ public final class DataEventSummaryItem {
             return this;
         }
 
+        /**
+         * <p>The description of the event</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "description", nulls = Nulls.SKIP)
         public _FinalStage description(Optional<String> description) {

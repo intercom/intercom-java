@@ -173,38 +173,62 @@ public final class NewsItemRequest {
     }
 
     public interface TitleStage {
+        /**
+         * The title of the news item.
+         */
         SenderIdStage title(@NotNull String title);
 
         Builder from(NewsItemRequest other);
     }
 
     public interface SenderIdStage {
+        /**
+         * The id of the sender of the news item. Must be a teammate on the workspace.
+         */
         _FinalStage senderId(int senderId);
     }
 
     public interface _FinalStage {
         NewsItemRequest build();
 
+        /**
+         * <p>The news item body, which may contain HTML.</p>
+         */
         _FinalStage body(Optional<String> body);
 
         _FinalStage body(String body);
 
+        /**
+         * <p>News items will not be visible to your users in the assigned newsfeeds until they are set live.</p>
+         */
         _FinalStage state(Optional<State> state);
 
         _FinalStage state(State state);
 
+        /**
+         * <p>When set to <code>true</code>, the news item will appear in the messenger newsfeed without showing a notification badge.</p>
+         */
         _FinalStage deliverSilently(Optional<Boolean> deliverSilently);
 
         _FinalStage deliverSilently(Boolean deliverSilently);
 
+        /**
+         * <p>Label names displayed to users to categorize the news item.</p>
+         */
         _FinalStage labels(Optional<List<String>> labels);
 
         _FinalStage labels(List<String> labels);
 
+        /**
+         * <p>Ordered list of emoji reactions to the news item. When empty, reactions are disabled.</p>
+         */
         _FinalStage reactions(Optional<List<Optional<String>>> reactions);
 
         _FinalStage reactions(List<Optional<String>> reactions);
 
+        /**
+         * <p>A list of newsfeed_assignments to assign to the specified newsfeed.</p>
+         */
         _FinalStage newsfeedAssignments(Optional<List<NewsfeedAssignment>> newsfeedAssignments);
 
         _FinalStage newsfeedAssignments(List<NewsfeedAssignment> newsfeedAssignments);
@@ -247,7 +271,7 @@ public final class NewsItemRequest {
         }
 
         /**
-         * <p>The title of the news item.</p>
+         * The title of the news item.<p>The title of the news item.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -258,7 +282,7 @@ public final class NewsItemRequest {
         }
 
         /**
-         * <p>The id of the sender of the news item. Must be a teammate on the workspace.</p>
+         * The id of the sender of the news item. Must be a teammate on the workspace.<p>The id of the sender of the news item. Must be a teammate on the workspace.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -278,6 +302,9 @@ public final class NewsItemRequest {
             return this;
         }
 
+        /**
+         * <p>A list of newsfeed_assignments to assign to the specified newsfeed.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "newsfeed_assignments", nulls = Nulls.SKIP)
         public _FinalStage newsfeedAssignments(Optional<List<NewsfeedAssignment>> newsfeedAssignments) {
@@ -295,6 +322,9 @@ public final class NewsItemRequest {
             return this;
         }
 
+        /**
+         * <p>Ordered list of emoji reactions to the news item. When empty, reactions are disabled.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "reactions", nulls = Nulls.SKIP)
         public _FinalStage reactions(Optional<List<Optional<String>>> reactions) {
@@ -312,6 +342,9 @@ public final class NewsItemRequest {
             return this;
         }
 
+        /**
+         * <p>Label names displayed to users to categorize the news item.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "labels", nulls = Nulls.SKIP)
         public _FinalStage labels(Optional<List<String>> labels) {
@@ -329,6 +362,9 @@ public final class NewsItemRequest {
             return this;
         }
 
+        /**
+         * <p>When set to <code>true</code>, the news item will appear in the messenger newsfeed without showing a notification badge.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "deliver_silently", nulls = Nulls.SKIP)
         public _FinalStage deliverSilently(Optional<Boolean> deliverSilently) {
@@ -346,6 +382,9 @@ public final class NewsItemRequest {
             return this;
         }
 
+        /**
+         * <p>News items will not be visible to your users in the assigned newsfeeds until they are set live.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "state", nulls = Nulls.SKIP)
         public _FinalStage state(Optional<State> state) {
@@ -363,6 +402,9 @@ public final class NewsItemRequest {
             return this;
         }
 
+        /**
+         * <p>The news item body, which may contain HTML.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "body", nulls = Nulls.SKIP)
         public _FinalStage body(Optional<String> body) {

@@ -213,50 +213,83 @@ public final class CreateTicketTypeAttributeRequest {
     }
 
     public interface TicketTypeIdStage {
+        /**
+         * The unique identifier for the ticket type which is given by Intercom.
+         */
         NameStage ticketTypeId(@NotNull String ticketTypeId);
 
         Builder from(CreateTicketTypeAttributeRequest other);
     }
 
     public interface NameStage {
+        /**
+         * The name of the ticket type attribute
+         */
         DescriptionStage name(@NotNull String name);
     }
 
     public interface DescriptionStage {
+        /**
+         * The description of the attribute presented to the teammate or contact
+         */
         DataTypeStage description(@NotNull String description);
     }
 
     public interface DataTypeStage {
+        /**
+         * The data type of the attribute
+         */
         _FinalStage dataType(@NotNull DataType dataType);
     }
 
     public interface _FinalStage {
         CreateTicketTypeAttributeRequest build();
 
+        /**
+         * <p>Whether the attribute is required to be filled in when teammates are creating the ticket in Inbox.</p>
+         */
         _FinalStage requiredToCreate(Optional<Boolean> requiredToCreate);
 
         _FinalStage requiredToCreate(Boolean requiredToCreate);
 
+        /**
+         * <p>Whether the attribute is required to be filled in when contacts are creating the ticket in Messenger.</p>
+         */
         _FinalStage requiredToCreateForContacts(Optional<Boolean> requiredToCreateForContacts);
 
         _FinalStage requiredToCreateForContacts(Boolean requiredToCreateForContacts);
 
+        /**
+         * <p>Whether the attribute is visible to teammates when creating a ticket in Inbox.</p>
+         */
         _FinalStage visibleOnCreate(Optional<Boolean> visibleOnCreate);
 
         _FinalStage visibleOnCreate(Boolean visibleOnCreate);
 
+        /**
+         * <p>Whether the attribute is visible to contacts when creating a ticket in Messenger.</p>
+         */
         _FinalStage visibleToContacts(Optional<Boolean> visibleToContacts);
 
         _FinalStage visibleToContacts(Boolean visibleToContacts);
 
+        /**
+         * <p>Whether the attribute allows multiple lines of text (only applicable to string attributes)</p>
+         */
         _FinalStage multiline(Optional<Boolean> multiline);
 
         _FinalStage multiline(Boolean multiline);
 
+        /**
+         * <p>A comma delimited list of items for the attribute value (only applicable to list attributes)</p>
+         */
         _FinalStage listItems(Optional<String> listItems);
 
         _FinalStage listItems(String listItems);
 
+        /**
+         * <p>Whether the attribute allows multiple files to be attached to it (only applicable to file attributes)</p>
+         */
         _FinalStage allowMultipleValues(Optional<Boolean> allowMultipleValues);
 
         _FinalStage allowMultipleValues(Boolean allowMultipleValues);
@@ -309,7 +342,7 @@ public final class CreateTicketTypeAttributeRequest {
         }
 
         /**
-         * <p>The unique identifier for the ticket type which is given by Intercom.</p>
+         * The unique identifier for the ticket type which is given by Intercom.<p>The unique identifier for the ticket type which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -320,7 +353,7 @@ public final class CreateTicketTypeAttributeRequest {
         }
 
         /**
-         * <p>The name of the ticket type attribute</p>
+         * The name of the ticket type attribute<p>The name of the ticket type attribute</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -331,7 +364,7 @@ public final class CreateTicketTypeAttributeRequest {
         }
 
         /**
-         * <p>The description of the attribute presented to the teammate or contact</p>
+         * The description of the attribute presented to the teammate or contact<p>The description of the attribute presented to the teammate or contact</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -342,7 +375,7 @@ public final class CreateTicketTypeAttributeRequest {
         }
 
         /**
-         * <p>The data type of the attribute</p>
+         * The data type of the attribute<p>The data type of the attribute</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -362,6 +395,9 @@ public final class CreateTicketTypeAttributeRequest {
             return this;
         }
 
+        /**
+         * <p>Whether the attribute allows multiple files to be attached to it (only applicable to file attributes)</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "allow_multiple_values", nulls = Nulls.SKIP)
         public _FinalStage allowMultipleValues(Optional<Boolean> allowMultipleValues) {
@@ -379,6 +415,9 @@ public final class CreateTicketTypeAttributeRequest {
             return this;
         }
 
+        /**
+         * <p>A comma delimited list of items for the attribute value (only applicable to list attributes)</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "list_items", nulls = Nulls.SKIP)
         public _FinalStage listItems(Optional<String> listItems) {
@@ -396,6 +435,9 @@ public final class CreateTicketTypeAttributeRequest {
             return this;
         }
 
+        /**
+         * <p>Whether the attribute allows multiple lines of text (only applicable to string attributes)</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "multiline", nulls = Nulls.SKIP)
         public _FinalStage multiline(Optional<Boolean> multiline) {
@@ -413,6 +455,9 @@ public final class CreateTicketTypeAttributeRequest {
             return this;
         }
 
+        /**
+         * <p>Whether the attribute is visible to contacts when creating a ticket in Messenger.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "visible_to_contacts", nulls = Nulls.SKIP)
         public _FinalStage visibleToContacts(Optional<Boolean> visibleToContacts) {
@@ -430,6 +475,9 @@ public final class CreateTicketTypeAttributeRequest {
             return this;
         }
 
+        /**
+         * <p>Whether the attribute is visible to teammates when creating a ticket in Inbox.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "visible_on_create", nulls = Nulls.SKIP)
         public _FinalStage visibleOnCreate(Optional<Boolean> visibleOnCreate) {
@@ -447,6 +495,9 @@ public final class CreateTicketTypeAttributeRequest {
             return this;
         }
 
+        /**
+         * <p>Whether the attribute is required to be filled in when contacts are creating the ticket in Messenger.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "required_to_create_for_contacts", nulls = Nulls.SKIP)
         public _FinalStage requiredToCreateForContacts(Optional<Boolean> requiredToCreateForContacts) {
@@ -464,6 +515,9 @@ public final class CreateTicketTypeAttributeRequest {
             return this;
         }
 
+        /**
+         * <p>Whether the attribute is required to be filled in when teammates are creating the ticket in Inbox.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "required_to_create", nulls = Nulls.SKIP)
         public _FinalStage requiredToCreate(Optional<Boolean> requiredToCreate) {

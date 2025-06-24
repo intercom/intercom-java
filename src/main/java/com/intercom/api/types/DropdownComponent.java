@@ -139,6 +139,9 @@ public final class DropdownComponent {
     }
 
     public interface IdStage {
+        /**
+         * A unique identifier for the component.
+         */
         _FinalStage id(@NotNull String id);
 
         Builder from(DropdownComponent other);
@@ -147,24 +150,39 @@ public final class DropdownComponent {
     public interface _FinalStage {
         DropdownComponent build();
 
+        /**
+         * <p>The list of options. Can provide 2 to 10.</p>
+         */
         _FinalStage options(List<DropdownOption> options);
 
         _FinalStage addOptions(DropdownOption options);
 
         _FinalStage addAllOptions(List<DropdownOption> options);
 
+        /**
+         * <p>The text shown above the dropdown.</p>
+         */
         _FinalStage label(Optional<String> label);
 
         _FinalStage label(String label);
 
+        /**
+         * <p>The option that is selected by default.</p>
+         */
         _FinalStage value(Optional<String> value);
 
         _FinalStage value(String value);
 
+        /**
+         * <p>Styles all options and prevents the action. Default is <code>unsaved</code>. Will be overridden if <code>save_state</code> is <code>saved</code>.</p>
+         */
         _FinalStage saveState(Optional<SaveState> saveState);
 
         _FinalStage saveState(SaveState saveState);
 
+        /**
+         * <p>Styles all options and prevents the action. Default is false. Will be overridden if save_state is saved.</p>
+         */
         _FinalStage disabled(Optional<Boolean> disabled);
 
         _FinalStage disabled(Boolean disabled);
@@ -201,7 +219,7 @@ public final class DropdownComponent {
         }
 
         /**
-         * <p>A unique identifier for the component.</p>
+         * A unique identifier for the component.<p>A unique identifier for the component.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -221,6 +239,9 @@ public final class DropdownComponent {
             return this;
         }
 
+        /**
+         * <p>Styles all options and prevents the action. Default is false. Will be overridden if save_state is saved.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "disabled", nulls = Nulls.SKIP)
         public _FinalStage disabled(Optional<Boolean> disabled) {
@@ -238,6 +259,9 @@ public final class DropdownComponent {
             return this;
         }
 
+        /**
+         * <p>Styles all options and prevents the action. Default is <code>unsaved</code>. Will be overridden if <code>save_state</code> is <code>saved</code>.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "save_state", nulls = Nulls.SKIP)
         public _FinalStage saveState(Optional<SaveState> saveState) {
@@ -255,6 +279,9 @@ public final class DropdownComponent {
             return this;
         }
 
+        /**
+         * <p>The option that is selected by default.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "value", nulls = Nulls.SKIP)
         public _FinalStage value(Optional<String> value) {
@@ -272,6 +299,9 @@ public final class DropdownComponent {
             return this;
         }
 
+        /**
+         * <p>The text shown above the dropdown.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "label", nulls = Nulls.SKIP)
         public _FinalStage label(Optional<String> label) {
@@ -299,6 +329,9 @@ public final class DropdownComponent {
             return this;
         }
 
+        /**
+         * <p>The list of options. Can provide 2 to 10.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "options", nulls = Nulls.SKIP)
         public _FinalStage options(List<DropdownOption> options) {

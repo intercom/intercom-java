@@ -80,6 +80,9 @@ public final class UntagCompanyRequest {
     }
 
     public interface NameStage {
+        /**
+         * The name of the tag which will be untagged from the company
+         */
         _FinalStage name(@NotNull String name);
 
         Builder from(UntagCompanyRequest other);
@@ -88,6 +91,9 @@ public final class UntagCompanyRequest {
     public interface _FinalStage {
         UntagCompanyRequest build();
 
+        /**
+         * <p>The id or company_id of the company can be passed as input parameters.</p>
+         */
         _FinalStage companies(List<CompaniesItem> companies);
 
         _FinalStage addCompanies(CompaniesItem companies);
@@ -114,7 +120,7 @@ public final class UntagCompanyRequest {
         }
 
         /**
-         * <p>The name of the tag which will be untagged from the company</p>
+         * The name of the tag which will be untagged from the company<p>The name of the tag which will be untagged from the company</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -144,6 +150,9 @@ public final class UntagCompanyRequest {
             return this;
         }
 
+        /**
+         * <p>The id or company_id of the company can be passed as input parameters.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "companies", nulls = Nulls.SKIP)
         public _FinalStage companies(List<CompaniesItem> companies) {
@@ -227,12 +236,18 @@ public final class UntagCompanyRequest {
         }
 
         public interface IdStage {
+            /**
+             * The Intercom defined id representing the company.
+             */
             CompanyIdStage id(@NotNull String id);
 
             Builder from(CompaniesItem other);
         }
 
         public interface CompanyIdStage {
+            /**
+             * The company id you have defined for the company.
+             */
             _FinalStage companyId(@NotNull String companyId);
         }
 
@@ -259,7 +274,7 @@ public final class UntagCompanyRequest {
             }
 
             /**
-             * <p>The Intercom defined id representing the company.</p>
+             * The Intercom defined id representing the company.<p>The Intercom defined id representing the company.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -270,7 +285,7 @@ public final class UntagCompanyRequest {
             }
 
             /**
-             * <p>The company id you have defined for the company.</p>
+             * The company id you have defined for the company.<p>The company id you have defined for the company.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override

@@ -66,6 +66,9 @@ public final class UpdateCompanyRequest {
     }
 
     public interface CompanyIdStage {
+        /**
+         * The unique identifier for the company which is given by Intercom
+         */
         _FinalStage companyId(@NotNull String companyId);
 
         Builder from(UpdateCompanyRequest other);
@@ -91,7 +94,7 @@ public final class UpdateCompanyRequest {
         }
 
         /**
-         * <p>The unique identifier for the company which is given by Intercom</p>
+         * The unique identifier for the company which is given by Intercom<p>The unique identifier for the company which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

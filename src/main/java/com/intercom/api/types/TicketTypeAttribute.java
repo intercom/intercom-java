@@ -292,72 +292,120 @@ public final class TicketTypeAttribute {
     }
 
     public interface IdStage {
+        /**
+         * The id representing the ticket type attribute.
+         */
         WorkspaceIdStage id(@NotNull String id);
 
         Builder from(TicketTypeAttribute other);
     }
 
     public interface WorkspaceIdStage {
+        /**
+         * The id of the workspace that the ticket type attribute belongs to.
+         */
         NameStage workspaceId(@NotNull String workspaceId);
     }
 
     public interface NameStage {
+        /**
+         * The name of the ticket type attribute
+         */
         DescriptionStage name(@NotNull String name);
     }
 
     public interface DescriptionStage {
+        /**
+         * The description of the ticket type attribute
+         */
         DataTypeStage description(@NotNull String description);
     }
 
     public interface DataTypeStage {
+        /**
+         * The type of the data attribute (allowed values: "string list integer decimal boolean datetime files")
+         */
         OrderStage dataType(@NotNull DataType dataType);
     }
 
     public interface OrderStage {
+        /**
+         * The order of the attribute against other attributes
+         */
         RequiredToCreateStage order(int order);
     }
 
     public interface RequiredToCreateStage {
+        /**
+         * Whether the attribute is required or not for teammates.
+         */
         RequiredToCreateForContactsStage requiredToCreate(boolean requiredToCreate);
     }
 
     public interface RequiredToCreateForContactsStage {
+        /**
+         * Whether the attribute is required or not for contacts.
+         */
         VisibleOnCreateStage requiredToCreateForContacts(boolean requiredToCreateForContacts);
     }
 
     public interface VisibleOnCreateStage {
+        /**
+         * Whether the attribute is visible or not to teammates.
+         */
         VisibleToContactsStage visibleOnCreate(boolean visibleOnCreate);
     }
 
     public interface VisibleToContactsStage {
+        /**
+         * Whether the attribute is visible or not to contacts.
+         */
         DefaultStage visibleToContacts(boolean visibleToContacts);
     }
 
     public interface DefaultStage {
+        /**
+         * Whether the attribute is built in or not.
+         */
         TicketTypeIdStage default_(boolean default_);
     }
 
     public interface TicketTypeIdStage {
+        /**
+         * The id of the ticket type that the attribute belongs to.
+         */
         ArchivedStage ticketTypeId(int ticketTypeId);
     }
 
     public interface ArchivedStage {
+        /**
+         * Whether the ticket type attribute is archived or not.
+         */
         CreatedAtStage archived(boolean archived);
     }
 
     public interface CreatedAtStage {
+        /**
+         * The date and time the ticket type attribute was created.
+         */
         _FinalStage createdAt(int createdAt);
     }
 
     public interface _FinalStage {
         TicketTypeAttribute build();
 
+        /**
+         * <p>Input options for the attribute</p>
+         */
         _FinalStage inputOptions(Map<String, Object> inputOptions);
 
         _FinalStage putAllInputOptions(Map<String, Object> inputOptions);
 
         _FinalStage inputOptions(String key, Object value);
 
+        /**
+         * <p>The date and time the ticket type attribute was last updated.</p>
+         */
         _FinalStage updatedAt(Optional<Integer> updatedAt);
 
         _FinalStage updatedAt(Integer updatedAt);
@@ -439,7 +487,7 @@ public final class TicketTypeAttribute {
         }
 
         /**
-         * <p>The id representing the ticket type attribute.</p>
+         * The id representing the ticket type attribute.<p>The id representing the ticket type attribute.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -450,7 +498,7 @@ public final class TicketTypeAttribute {
         }
 
         /**
-         * <p>The id of the workspace that the ticket type attribute belongs to.</p>
+         * The id of the workspace that the ticket type attribute belongs to.<p>The id of the workspace that the ticket type attribute belongs to.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -461,7 +509,7 @@ public final class TicketTypeAttribute {
         }
 
         /**
-         * <p>The name of the ticket type attribute</p>
+         * The name of the ticket type attribute<p>The name of the ticket type attribute</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -472,7 +520,7 @@ public final class TicketTypeAttribute {
         }
 
         /**
-         * <p>The description of the ticket type attribute</p>
+         * The description of the ticket type attribute<p>The description of the ticket type attribute</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -483,7 +531,7 @@ public final class TicketTypeAttribute {
         }
 
         /**
-         * <p>The type of the data attribute (allowed values: &quot;string list integer decimal boolean datetime files&quot;)</p>
+         * The type of the data attribute (allowed values: "string list integer decimal boolean datetime files")<p>The type of the data attribute (allowed values: &quot;string list integer decimal boolean datetime files&quot;)</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -494,7 +542,7 @@ public final class TicketTypeAttribute {
         }
 
         /**
-         * <p>The order of the attribute against other attributes</p>
+         * The order of the attribute against other attributes<p>The order of the attribute against other attributes</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -505,7 +553,7 @@ public final class TicketTypeAttribute {
         }
 
         /**
-         * <p>Whether the attribute is required or not for teammates.</p>
+         * Whether the attribute is required or not for teammates.<p>Whether the attribute is required or not for teammates.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -516,7 +564,7 @@ public final class TicketTypeAttribute {
         }
 
         /**
-         * <p>Whether the attribute is required or not for contacts.</p>
+         * Whether the attribute is required or not for contacts.<p>Whether the attribute is required or not for contacts.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -527,7 +575,7 @@ public final class TicketTypeAttribute {
         }
 
         /**
-         * <p>Whether the attribute is visible or not to teammates.</p>
+         * Whether the attribute is visible or not to teammates.<p>Whether the attribute is visible or not to teammates.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -538,7 +586,7 @@ public final class TicketTypeAttribute {
         }
 
         /**
-         * <p>Whether the attribute is visible or not to contacts.</p>
+         * Whether the attribute is visible or not to contacts.<p>Whether the attribute is visible or not to contacts.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -549,7 +597,7 @@ public final class TicketTypeAttribute {
         }
 
         /**
-         * <p>Whether the attribute is built in or not.</p>
+         * Whether the attribute is built in or not.<p>Whether the attribute is built in or not.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -560,7 +608,7 @@ public final class TicketTypeAttribute {
         }
 
         /**
-         * <p>The id of the ticket type that the attribute belongs to.</p>
+         * The id of the ticket type that the attribute belongs to.<p>The id of the ticket type that the attribute belongs to.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -571,7 +619,7 @@ public final class TicketTypeAttribute {
         }
 
         /**
-         * <p>Whether the ticket type attribute is archived or not.</p>
+         * Whether the ticket type attribute is archived or not.<p>Whether the ticket type attribute is archived or not.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -582,7 +630,7 @@ public final class TicketTypeAttribute {
         }
 
         /**
-         * <p>The date and time the ticket type attribute was created.</p>
+         * The date and time the ticket type attribute was created.<p>The date and time the ticket type attribute was created.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -602,6 +650,9 @@ public final class TicketTypeAttribute {
             return this;
         }
 
+        /**
+         * <p>The date and time the ticket type attribute was last updated.</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
         public _FinalStage updatedAt(Optional<Integer> updatedAt) {
@@ -629,6 +680,9 @@ public final class TicketTypeAttribute {
             return this;
         }
 
+        /**
+         * <p>Input options for the attribute</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "input_options", nulls = Nulls.SKIP)
         public _FinalStage inputOptions(Map<String, Object> inputOptions) {

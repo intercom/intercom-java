@@ -41,6 +41,7 @@ public final class ConfigureRequest {
         return this.value;
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T visit(Visitor<T> visitor) {
         if (this.type == 0) {
             return visitor.visit((Zero) this.value);
@@ -176,16 +177,25 @@ public final class ConfigureRequest {
         }
 
         public interface WorkspaceIdStage {
+            /**
+             * The workspace ID of the teammate. Attribute is app_id for V1.2 and below.
+             */
             AdminStage workspaceId(@NotNull String workspaceId);
 
             Builder from(Zero other);
         }
 
         public interface AdminStage {
+            /**
+             * The Intercom teammate configuring the app.
+             */
             ContextStage admin(@NotNull Admin admin);
         }
 
         public interface ContextStage {
+            /**
+             * The context of where the app is added, where the user last visited, and information on the Messenger settings.
+             */
             _FinalStage context(@NotNull Context context);
         }
 
@@ -215,7 +225,7 @@ public final class ConfigureRequest {
             }
 
             /**
-             * <p>The workspace ID of the teammate. Attribute is app_id for V1.2 and below.</p>
+             * The workspace ID of the teammate. Attribute is app_id for V1.2 and below.<p>The workspace ID of the teammate. Attribute is app_id for V1.2 and below.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -226,7 +236,7 @@ public final class ConfigureRequest {
             }
 
             /**
-             * <p>The Intercom teammate configuring the app.</p>
+             * The Intercom teammate configuring the app.<p>The Intercom teammate configuring the app.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -237,7 +247,7 @@ public final class ConfigureRequest {
             }
 
             /**
-             * <p>The context of where the app is added, where the user last visited, and information on the Messenger settings.</p>
+             * The context of where the app is added, where the user last visited, and information on the Messenger settings.<p>The context of where the app is added, where the user last visited, and information on the Messenger settings.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -391,34 +401,55 @@ public final class ConfigureRequest {
         }
 
         public interface WorkspaceIdStage {
+            /**
+             * The workspace ID of the teammate. Attribute is app_id for V1.2 and below.
+             */
             WorkspaceRegionStage workspaceId(@NotNull String workspaceId);
 
             Builder from(ComponentId other);
         }
 
         public interface WorkspaceRegionStage {
+            /**
+             * The Intercom hosted region that this app is located in.
+             */
             ComponentIdStage workspaceRegion(@NotNull String workspaceRegion);
         }
 
         public interface ComponentIdStage {
+            /**
+             * The id of the component clicked by the teammate to trigger the request.
+             */
             AdminStage componentId(@NotNull String componentId);
         }
 
         public interface AdminStage {
+            /**
+             * The Intercom teammate configuring the app.
+             */
             ContextStage admin(@NotNull Admin admin);
         }
 
         public interface ContextStage {
+            /**
+             * The context of where the app is added, where the user last visited, and information on the Messenger settings.
+             */
             CurrentCanvasStage context(@NotNull Context context);
         }
 
         public interface CurrentCanvasStage {
+            /**
+             * The current canvas the teammate can see.
+             */
             _FinalStage currentCanvas(@NotNull CanvasObject currentCanvas);
         }
 
         public interface _FinalStage {
             ComponentId build();
 
+            /**
+             * <p>A list of key/value pairs of data, inputted by the teammate on the current canvas.</p>
+             */
             _FinalStage inputValues(Map<String, Object> inputValues);
 
             _FinalStage putAllInputValues(Map<String, Object> inputValues);
@@ -467,7 +498,7 @@ public final class ConfigureRequest {
             }
 
             /**
-             * <p>The workspace ID of the teammate. Attribute is app_id for V1.2 and below.</p>
+             * The workspace ID of the teammate. Attribute is app_id for V1.2 and below.<p>The workspace ID of the teammate. Attribute is app_id for V1.2 and below.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -478,7 +509,7 @@ public final class ConfigureRequest {
             }
 
             /**
-             * <p>The Intercom hosted region that this app is located in.</p>
+             * The Intercom hosted region that this app is located in.<p>The Intercom hosted region that this app is located in.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -489,7 +520,7 @@ public final class ConfigureRequest {
             }
 
             /**
-             * <p>The id of the component clicked by the teammate to trigger the request.</p>
+             * The id of the component clicked by the teammate to trigger the request.<p>The id of the component clicked by the teammate to trigger the request.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -500,7 +531,7 @@ public final class ConfigureRequest {
             }
 
             /**
-             * <p>The Intercom teammate configuring the app.</p>
+             * The Intercom teammate configuring the app.<p>The Intercom teammate configuring the app.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -511,7 +542,7 @@ public final class ConfigureRequest {
             }
 
             /**
-             * <p>The context of where the app is added, where the user last visited, and information on the Messenger settings.</p>
+             * The context of where the app is added, where the user last visited, and information on the Messenger settings.<p>The context of where the app is added, where the user last visited, and information on the Messenger settings.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -522,7 +553,7 @@ public final class ConfigureRequest {
             }
 
             /**
-             * <p>The current canvas the teammate can see.</p>
+             * The current canvas the teammate can see.<p>The current canvas the teammate can see.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -552,6 +583,9 @@ public final class ConfigureRequest {
                 return this;
             }
 
+            /**
+             * <p>A list of key/value pairs of data, inputted by the teammate on the current canvas.</p>
+             */
             @java.lang.Override
             @JsonSetter(value = "input_values", nulls = Nulls.SKIP)
             public _FinalStage inputValues(Map<String, Object> inputValues) {

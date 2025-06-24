@@ -66,6 +66,9 @@ public final class UnarchiveContactRequest {
     }
 
     public interface ContactIdStage {
+        /**
+         * id
+         */
         _FinalStage contactId(@NotNull String contactId);
 
         Builder from(UnarchiveContactRequest other);
@@ -91,7 +94,7 @@ public final class UnarchiveContactRequest {
         }
 
         /**
-         * <p>id</p>
+         * id<p>id</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

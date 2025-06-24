@@ -66,6 +66,9 @@ public final class ListTagsAttachedToContactRequest {
     }
 
     public interface ContactIdStage {
+        /**
+         * The unique identifier for the contact which is given by Intercom
+         */
         _FinalStage contactId(@NotNull String contactId);
 
         Builder from(ListTagsAttachedToContactRequest other);
@@ -91,7 +94,7 @@ public final class ListTagsAttachedToContactRequest {
         }
 
         /**
-         * <p>The unique identifier for the contact which is given by Intercom</p>
+         * The unique identifier for the contact which is given by Intercom<p>The unique identifier for the contact which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

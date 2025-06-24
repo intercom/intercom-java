@@ -94,6 +94,9 @@ public final class ListAttachedContactsRequest {
     }
 
     public interface CompanyIdStage {
+        /**
+         * The unique identifier for the company which is given by Intercom
+         */
         _FinalStage companyId(@NotNull String companyId);
 
         Builder from(ListAttachedContactsRequest other);
@@ -102,10 +105,16 @@ public final class ListAttachedContactsRequest {
     public interface _FinalStage {
         ListAttachedContactsRequest build();
 
+        /**
+         * <p>The page of results to fetch. Defaults to first page</p>
+         */
         _FinalStage page(Optional<Integer> page);
 
         _FinalStage page(Integer page);
 
+        /**
+         * <p>How many results to return per page. Defaults to 15</p>
+         */
         _FinalStage perPage(Optional<Integer> perPage);
 
         _FinalStage perPage(Integer perPage);
@@ -133,7 +142,7 @@ public final class ListAttachedContactsRequest {
         }
 
         /**
-         * <p>The unique identifier for the company which is given by Intercom</p>
+         * The unique identifier for the company which is given by Intercom<p>The unique identifier for the company which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -153,6 +162,9 @@ public final class ListAttachedContactsRequest {
             return this;
         }
 
+        /**
+         * <p>How many results to return per page. Defaults to 15</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "per_page", nulls = Nulls.SKIP)
         public _FinalStage perPage(Optional<Integer> perPage) {
@@ -170,6 +182,9 @@ public final class ListAttachedContactsRequest {
             return this;
         }
 
+        /**
+         * <p>The page of results to fetch. Defaults to first page</p>
+         */
         @java.lang.Override
         @JsonSetter(value = "page", nulls = Nulls.SKIP)
         public _FinalStage page(Optional<Integer> page) {

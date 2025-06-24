@@ -95,6 +95,9 @@ public final class ListConversationsRequest {
             return this;
         }
 
+        /**
+         * <p>How many results per page</p>
+         */
         @JsonSetter(value = "per_page", nulls = Nulls.SKIP)
         public Builder perPage(Optional<Integer> perPage) {
             this.perPage = perPage;
@@ -106,6 +109,9 @@ public final class ListConversationsRequest {
             return this;
         }
 
+        /**
+         * <p>String used to get the next page of conversations.</p>
+         */
         @JsonSetter(value = "starting_after", nulls = Nulls.SKIP)
         public Builder startingAfter(Optional<String> startingAfter) {
             this.startingAfter = startingAfter;

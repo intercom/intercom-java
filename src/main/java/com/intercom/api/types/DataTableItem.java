@@ -85,12 +85,18 @@ public final class DataTableItem {
     }
 
     public interface FieldStage {
+        /**
+         * The text of the key in your key-value pair.
+         */
         ValueStage field(@NotNull String field);
 
         Builder from(DataTableItem other);
     }
 
     public interface ValueStage {
+        /**
+         * The text of the value in your key-value pair.
+         */
         _FinalStage value(@NotNull String value);
     }
 
@@ -117,7 +123,7 @@ public final class DataTableItem {
         }
 
         /**
-         * <p>The text of the key in your key-value pair.</p>
+         * The text of the key in your key-value pair.<p>The text of the key in your key-value pair.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -128,7 +134,7 @@ public final class DataTableItem {
         }
 
         /**
-         * <p>The text of the value in your key-value pair.</p>
+         * The text of the value in your key-value pair.<p>The text of the value in your key-value pair.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
