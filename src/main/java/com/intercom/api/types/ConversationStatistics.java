@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -20,6 +21,8 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ConversationStatistics.Builder.class)
 public final class ConversationStatistics {
+    private final Optional<String> type;
+
     private final Optional<Integer> timeToAssignment;
 
     private final Optional<Integer> timeToAdminReply;
@@ -56,9 +59,16 @@ public final class ConversationStatistics {
 
     private final Optional<Integer> countConversationParts;
 
+    private final Optional<List<ConversationResponseTime>> assignedTeamFirstResponseTimeByTeam;
+
+    private final Optional<List<ConversationResponseTime>> assignedTeamFirstResponseTimeInOfficeHours;
+
+    private final Optional<Integer> handlingTime;
+
     private final Map<String, Object> additionalProperties;
 
     private ConversationStatistics(
+            Optional<String> type,
             Optional<Integer> timeToAssignment,
             Optional<Integer> timeToAdminReply,
             Optional<Integer> timeToFirstClose,
@@ -77,7 +87,11 @@ public final class ConversationStatistics {
             Optional<Integer> countReopens,
             Optional<Integer> countAssignments,
             Optional<Integer> countConversationParts,
+            Optional<List<ConversationResponseTime>> assignedTeamFirstResponseTimeByTeam,
+            Optional<List<ConversationResponseTime>> assignedTeamFirstResponseTimeInOfficeHours,
+            Optional<Integer> handlingTime,
             Map<String, Object> additionalProperties) {
+        this.type = type;
         this.timeToAssignment = timeToAssignment;
         this.timeToAdminReply = timeToAdminReply;
         this.timeToFirstClose = timeToFirstClose;
@@ -96,6 +110,9 @@ public final class ConversationStatistics {
         this.countReopens = countReopens;
         this.countAssignments = countAssignments;
         this.countConversationParts = countConversationParts;
+        this.assignedTeamFirstResponseTimeByTeam = assignedTeamFirstResponseTimeByTeam;
+        this.assignedTeamFirstResponseTimeInOfficeHours = assignedTeamFirstResponseTimeInOfficeHours;
+        this.handlingTime = handlingTime;
         this.additionalProperties = additionalProperties;
     }
 
@@ -103,8 +120,8 @@ public final class ConversationStatistics {
      * @return
      */
     @JsonProperty("type")
-    public String getType() {
-        return "conversation_statistics";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
@@ -251,6 +268,30 @@ public final class ConversationStatistics {
         return countConversationParts;
     }
 
+    /**
+     * @return An array of conversation response time objects
+     */
+    @JsonProperty("assigned_team_first_response_time_by_team")
+    public Optional<List<ConversationResponseTime>> getAssignedTeamFirstResponseTimeByTeam() {
+        return assignedTeamFirstResponseTimeByTeam;
+    }
+
+    /**
+     * @return An array of conversation response time objects within office hours
+     */
+    @JsonProperty("assigned_team_first_response_time_in_office_hours")
+    public Optional<List<ConversationResponseTime>> getAssignedTeamFirstResponseTimeInOfficeHours() {
+        return assignedTeamFirstResponseTimeInOfficeHours;
+    }
+
+    /**
+     * @return Time from conversation assignment to conversation close in seconds.
+     */
+    @JsonProperty("handling_time")
+    public Optional<Integer> getHandlingTime() {
+        return handlingTime;
+    }
+
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
@@ -263,7 +304,8 @@ public final class ConversationStatistics {
     }
 
     private boolean equalTo(ConversationStatistics other) {
-        return timeToAssignment.equals(other.timeToAssignment)
+        return type.equals(other.type)
+                && timeToAssignment.equals(other.timeToAssignment)
                 && timeToAdminReply.equals(other.timeToAdminReply)
                 && timeToFirstClose.equals(other.timeToFirstClose)
                 && timeToLastClose.equals(other.timeToLastClose)
@@ -280,12 +322,16 @@ public final class ConversationStatistics {
                 && lastClosedById.equals(other.lastClosedById)
                 && countReopens.equals(other.countReopens)
                 && countAssignments.equals(other.countAssignments)
-                && countConversationParts.equals(other.countConversationParts);
+                && countConversationParts.equals(other.countConversationParts)
+                && assignedTeamFirstResponseTimeByTeam.equals(other.assignedTeamFirstResponseTimeByTeam)
+                && assignedTeamFirstResponseTimeInOfficeHours.equals(other.assignedTeamFirstResponseTimeInOfficeHours)
+                && handlingTime.equals(other.handlingTime);
     }
 
     @java.lang.Override
     public int hashCode() {
         return Objects.hash(
+                this.type,
                 this.timeToAssignment,
                 this.timeToAdminReply,
                 this.timeToFirstClose,
@@ -303,7 +349,10 @@ public final class ConversationStatistics {
                 this.lastClosedById,
                 this.countReopens,
                 this.countAssignments,
-                this.countConversationParts);
+                this.countConversationParts,
+                this.assignedTeamFirstResponseTimeByTeam,
+                this.assignedTeamFirstResponseTimeInOfficeHours,
+                this.handlingTime);
     }
 
     @java.lang.Override
@@ -317,6 +366,8 @@ public final class ConversationStatistics {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
+        private Optional<String> type = Optional.empty();
+
         private Optional<Integer> timeToAssignment = Optional.empty();
 
         private Optional<Integer> timeToAdminReply = Optional.empty();
@@ -353,12 +404,19 @@ public final class ConversationStatistics {
 
         private Optional<Integer> countConversationParts = Optional.empty();
 
+        private Optional<List<ConversationResponseTime>> assignedTeamFirstResponseTimeByTeam = Optional.empty();
+
+        private Optional<List<ConversationResponseTime>> assignedTeamFirstResponseTimeInOfficeHours = Optional.empty();
+
+        private Optional<Integer> handlingTime = Optional.empty();
+
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
         public Builder from(ConversationStatistics other) {
+            type(other.getType());
             timeToAssignment(other.getTimeToAssignment());
             timeToAdminReply(other.getTimeToAdminReply());
             timeToFirstClose(other.getTimeToFirstClose());
@@ -377,6 +435,20 @@ public final class ConversationStatistics {
             countReopens(other.getCountReopens());
             countAssignments(other.getCountAssignments());
             countConversationParts(other.getCountConversationParts());
+            assignedTeamFirstResponseTimeByTeam(other.getAssignedTeamFirstResponseTimeByTeam());
+            assignedTeamFirstResponseTimeInOfficeHours(other.getAssignedTeamFirstResponseTimeInOfficeHours());
+            handlingTime(other.getHandlingTime());
+            return this;
+        }
+
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
@@ -632,8 +704,56 @@ public final class ConversationStatistics {
             return this;
         }
 
+        /**
+         * <p>An array of conversation response time objects</p>
+         */
+        @JsonSetter(value = "assigned_team_first_response_time_by_team", nulls = Nulls.SKIP)
+        public Builder assignedTeamFirstResponseTimeByTeam(
+                Optional<List<ConversationResponseTime>> assignedTeamFirstResponseTimeByTeam) {
+            this.assignedTeamFirstResponseTimeByTeam = assignedTeamFirstResponseTimeByTeam;
+            return this;
+        }
+
+        public Builder assignedTeamFirstResponseTimeByTeam(
+                List<ConversationResponseTime> assignedTeamFirstResponseTimeByTeam) {
+            this.assignedTeamFirstResponseTimeByTeam = Optional.ofNullable(assignedTeamFirstResponseTimeByTeam);
+            return this;
+        }
+
+        /**
+         * <p>An array of conversation response time objects within office hours</p>
+         */
+        @JsonSetter(value = "assigned_team_first_response_time_in_office_hours", nulls = Nulls.SKIP)
+        public Builder assignedTeamFirstResponseTimeInOfficeHours(
+                Optional<List<ConversationResponseTime>> assignedTeamFirstResponseTimeInOfficeHours) {
+            this.assignedTeamFirstResponseTimeInOfficeHours = assignedTeamFirstResponseTimeInOfficeHours;
+            return this;
+        }
+
+        public Builder assignedTeamFirstResponseTimeInOfficeHours(
+                List<ConversationResponseTime> assignedTeamFirstResponseTimeInOfficeHours) {
+            this.assignedTeamFirstResponseTimeInOfficeHours =
+                    Optional.ofNullable(assignedTeamFirstResponseTimeInOfficeHours);
+            return this;
+        }
+
+        /**
+         * <p>Time from conversation assignment to conversation close in seconds.</p>
+         */
+        @JsonSetter(value = "handling_time", nulls = Nulls.SKIP)
+        public Builder handlingTime(Optional<Integer> handlingTime) {
+            this.handlingTime = handlingTime;
+            return this;
+        }
+
+        public Builder handlingTime(Integer handlingTime) {
+            this.handlingTime = Optional.ofNullable(handlingTime);
+            return this;
+        }
+
         public ConversationStatistics build() {
             return new ConversationStatistics(
+                    type,
                     timeToAssignment,
                     timeToAdminReply,
                     timeToFirstClose,
@@ -652,6 +772,9 @@ public final class ConversationStatistics {
                     countReopens,
                     countAssignments,
                     countConversationParts,
+                    assignedTeamFirstResponseTimeByTeam,
+                    assignedTeamFirstResponseTimeInOfficeHours,
+                    handlingTime,
                     additionalProperties);
         }
     }

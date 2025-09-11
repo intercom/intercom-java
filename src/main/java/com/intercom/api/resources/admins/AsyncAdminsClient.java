@@ -12,6 +12,7 @@ import com.intercom.api.resources.admins.types.Admin;
 import com.intercom.api.types.ActivityLogList;
 import com.intercom.api.types.AdminList;
 import com.intercom.api.types.AdminWithApp;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class AsyncAdminsClient {
@@ -38,7 +39,7 @@ public class AsyncAdminsClient {
      * <p>If you are building a custom &quot;Log in with Intercom&quot; flow for your site, and you call the <code>/me</code> endpoint to identify the logged-in user, you should not accept any sign-ins from users with unverified email addresses as it poses a potential impersonation security risk.</p>
      * </blockquote>
      */
-    public CompletableFuture<AdminWithApp> identify() {
+    public CompletableFuture<Optional<AdminWithApp>> identify() {
         return this.rawClient.identify().thenApply(response -> response.body());
     }
 
@@ -49,21 +50,21 @@ public class AsyncAdminsClient {
      * <p>If you are building a custom &quot;Log in with Intercom&quot; flow for your site, and you call the <code>/me</code> endpoint to identify the logged-in user, you should not accept any sign-ins from users with unverified email addresses as it poses a potential impersonation security risk.</p>
      * </blockquote>
      */
-    public CompletableFuture<AdminWithApp> identify(RequestOptions requestOptions) {
+    public CompletableFuture<Optional<AdminWithApp>> identify(RequestOptions requestOptions) {
         return this.rawClient.identify(requestOptions).thenApply(response -> response.body());
     }
 
     /**
      * You can set an Admin as away for the Inbox.
      */
-    public CompletableFuture<Admin> away(ConfigureAwayAdminRequest request) {
+    public CompletableFuture<Optional<Admin>> away(ConfigureAwayAdminRequest request) {
         return this.rawClient.away(request).thenApply(response -> response.body());
     }
 
     /**
      * You can set an Admin as away for the Inbox.
      */
-    public CompletableFuture<Admin> away(ConfigureAwayAdminRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<Optional<Admin>> away(ConfigureAwayAdminRequest request, RequestOptions requestOptions) {
         return this.rawClient.away(request, requestOptions).thenApply(response -> response.body());
     }
 
@@ -99,14 +100,14 @@ public class AsyncAdminsClient {
     /**
      * You can retrieve the details of a single admin.
      */
-    public CompletableFuture<Admin> find(FindAdminRequest request) {
+    public CompletableFuture<Optional<Admin>> find(FindAdminRequest request) {
         return this.rawClient.find(request).thenApply(response -> response.body());
     }
 
     /**
      * You can retrieve the details of a single admin.
      */
-    public CompletableFuture<Admin> find(FindAdminRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<Optional<Admin>> find(FindAdminRequest request, RequestOptions requestOptions) {
         return this.rawClient.find(request, requestOptions).thenApply(response -> response.body());
     }
 }

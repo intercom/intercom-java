@@ -33,19 +33,19 @@ public final class Company {
 
     private final String companyId;
 
-    private final int remoteCreatedAt;
+    private final Optional<Integer> remoteCreatedAt;
 
     private final int createdAt;
 
     private final int updatedAt;
 
-    private final int lastRequestAt;
+    private final Optional<Integer> lastRequestAt;
 
-    private final int size;
+    private final Optional<Integer> size;
 
-    private final String website;
+    private final Optional<String> website;
 
-    private final String industry;
+    private final Optional<String> industry;
 
     private final int monthlySpend;
 
@@ -67,13 +67,13 @@ public final class Company {
             String appId,
             Optional<Plan> plan,
             String companyId,
-            int remoteCreatedAt,
+            Optional<Integer> remoteCreatedAt,
             int createdAt,
             int updatedAt,
-            int lastRequestAt,
-            int size,
-            String website,
-            String industry,
+            Optional<Integer> lastRequestAt,
+            Optional<Integer> size,
+            Optional<String> website,
+            Optional<String> industry,
             int monthlySpend,
             int sessionCount,
             int userCount,
@@ -143,7 +143,7 @@ public final class Company {
      * @return The time the company was created by you.
      */
     @JsonProperty("remote_created_at")
-    public int getRemoteCreatedAt() {
+    public Optional<Integer> getRemoteCreatedAt() {
         return remoteCreatedAt;
     }
 
@@ -167,7 +167,7 @@ public final class Company {
      * @return The time the company last recorded making a request.
      */
     @JsonProperty("last_request_at")
-    public int getLastRequestAt() {
+    public Optional<Integer> getLastRequestAt() {
         return lastRequestAt;
     }
 
@@ -175,7 +175,7 @@ public final class Company {
      * @return The number of employees in the company.
      */
     @JsonProperty("size")
-    public int getSize() {
+    public Optional<Integer> getSize() {
         return size;
     }
 
@@ -183,7 +183,7 @@ public final class Company {
      * @return The URL for the company website.
      */
     @JsonProperty("website")
-    public String getWebsite() {
+    public Optional<String> getWebsite() {
         return website;
     }
 
@@ -191,7 +191,7 @@ public final class Company {
      * @return The industry that the company operates in.
      */
     @JsonProperty("industry")
-    public String getIndustry() {
+    public Optional<String> getIndustry() {
         return industry;
     }
 
@@ -260,11 +260,11 @@ public final class Company {
                 && appId.equals(other.appId)
                 && plan.equals(other.plan)
                 && companyId.equals(other.companyId)
-                && remoteCreatedAt == other.remoteCreatedAt
+                && remoteCreatedAt.equals(other.remoteCreatedAt)
                 && createdAt == other.createdAt
                 && updatedAt == other.updatedAt
-                && lastRequestAt == other.lastRequestAt
-                && size == other.size
+                && lastRequestAt.equals(other.lastRequestAt)
+                && size.equals(other.size)
                 && website.equals(other.website)
                 && industry.equals(other.industry)
                 && monthlySpend == other.monthlySpend
@@ -334,14 +334,7 @@ public final class Company {
         /**
          * The company id you have defined for the company.
          */
-        RemoteCreatedAtStage companyId(@NotNull String companyId);
-    }
-
-    public interface RemoteCreatedAtStage {
-        /**
-         * The time the company was created by you.
-         */
-        CreatedAtStage remoteCreatedAt(int remoteCreatedAt);
+        CreatedAtStage companyId(@NotNull String companyId);
     }
 
     public interface CreatedAtStage {
@@ -355,35 +348,7 @@ public final class Company {
         /**
          * The last time the company was updated.
          */
-        LastRequestAtStage updatedAt(int updatedAt);
-    }
-
-    public interface LastRequestAtStage {
-        /**
-         * The time the company last recorded making a request.
-         */
-        SizeStage lastRequestAt(int lastRequestAt);
-    }
-
-    public interface SizeStage {
-        /**
-         * The number of employees in the company.
-         */
-        WebsiteStage size(int size);
-    }
-
-    public interface WebsiteStage {
-        /**
-         * The URL for the company website.
-         */
-        IndustryStage website(@NotNull String website);
-    }
-
-    public interface IndustryStage {
-        /**
-         * The industry that the company operates in.
-         */
-        MonthlySpendStage industry(@NotNull String industry);
+        MonthlySpendStage updatedAt(int updatedAt);
     }
 
     public interface MonthlySpendStage {
@@ -415,6 +380,41 @@ public final class Company {
         _FinalStage plan(Plan plan);
 
         /**
+         * <p>The time the company was created by you.</p>
+         */
+        _FinalStage remoteCreatedAt(Optional<Integer> remoteCreatedAt);
+
+        _FinalStage remoteCreatedAt(Integer remoteCreatedAt);
+
+        /**
+         * <p>The time the company last recorded making a request.</p>
+         */
+        _FinalStage lastRequestAt(Optional<Integer> lastRequestAt);
+
+        _FinalStage lastRequestAt(Integer lastRequestAt);
+
+        /**
+         * <p>The number of employees in the company.</p>
+         */
+        _FinalStage size(Optional<Integer> size);
+
+        _FinalStage size(Integer size);
+
+        /**
+         * <p>The URL for the company website.</p>
+         */
+        _FinalStage website(Optional<String> website);
+
+        _FinalStage website(String website);
+
+        /**
+         * <p>The industry that the company operates in.</p>
+         */
+        _FinalStage industry(Optional<String> industry);
+
+        _FinalStage industry(String industry);
+
+        /**
          * <p>The custom attributes you have set on the company.</p>
          */
         _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes);
@@ -442,13 +442,8 @@ public final class Company {
                     NameStage,
                     AppIdStage,
                     CompanyIdStage,
-                    RemoteCreatedAtStage,
                     CreatedAtStage,
                     UpdatedAtStage,
-                    LastRequestAtStage,
-                    SizeStage,
-                    WebsiteStage,
-                    IndustryStage,
                     MonthlySpendStage,
                     SessionCountStage,
                     UserCountStage,
@@ -461,19 +456,9 @@ public final class Company {
 
         private String companyId;
 
-        private int remoteCreatedAt;
-
         private int createdAt;
 
         private int updatedAt;
-
-        private int lastRequestAt;
-
-        private int size;
-
-        private String website;
-
-        private String industry;
 
         private int monthlySpend;
 
@@ -486,6 +471,16 @@ public final class Company {
         private Optional<Tags> tags = Optional.empty();
 
         private Optional<Map<String, Object>> customAttributes = Optional.empty();
+
+        private Optional<String> industry = Optional.empty();
+
+        private Optional<String> website = Optional.empty();
+
+        private Optional<Integer> size = Optional.empty();
+
+        private Optional<Integer> lastRequestAt = Optional.empty();
+
+        private Optional<Integer> remoteCreatedAt = Optional.empty();
 
         private Optional<Plan> plan = Optional.empty();
 
@@ -556,19 +551,8 @@ public final class Company {
          */
         @java.lang.Override
         @JsonSetter("company_id")
-        public RemoteCreatedAtStage companyId(@NotNull String companyId) {
+        public CreatedAtStage companyId(@NotNull String companyId) {
             this.companyId = Objects.requireNonNull(companyId, "companyId must not be null");
-            return this;
-        }
-
-        /**
-         * The time the company was created by you.<p>The time the company was created by you.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("remote_created_at")
-        public CreatedAtStage remoteCreatedAt(int remoteCreatedAt) {
-            this.remoteCreatedAt = remoteCreatedAt;
             return this;
         }
 
@@ -589,52 +573,8 @@ public final class Company {
          */
         @java.lang.Override
         @JsonSetter("updated_at")
-        public LastRequestAtStage updatedAt(int updatedAt) {
+        public MonthlySpendStage updatedAt(int updatedAt) {
             this.updatedAt = updatedAt;
-            return this;
-        }
-
-        /**
-         * The time the company last recorded making a request.<p>The time the company last recorded making a request.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("last_request_at")
-        public SizeStage lastRequestAt(int lastRequestAt) {
-            this.lastRequestAt = lastRequestAt;
-            return this;
-        }
-
-        /**
-         * The number of employees in the company.<p>The number of employees in the company.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("size")
-        public WebsiteStage size(int size) {
-            this.size = size;
-            return this;
-        }
-
-        /**
-         * The URL for the company website.<p>The URL for the company website.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("website")
-        public IndustryStage website(@NotNull String website) {
-            this.website = Objects.requireNonNull(website, "website must not be null");
-            return this;
-        }
-
-        /**
-         * The industry that the company operates in.<p>The industry that the company operates in.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("industry")
-        public MonthlySpendStage industry(@NotNull String industry) {
-            this.industry = Objects.requireNonNull(industry, "industry must not be null");
             return this;
         }
 
@@ -728,6 +668,106 @@ public final class Company {
         @JsonSetter(value = "custom_attributes", nulls = Nulls.SKIP)
         public _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes) {
             this.customAttributes = customAttributes;
+            return this;
+        }
+
+        /**
+         * <p>The industry that the company operates in.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage industry(String industry) {
+            this.industry = Optional.ofNullable(industry);
+            return this;
+        }
+
+        /**
+         * <p>The industry that the company operates in.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "industry", nulls = Nulls.SKIP)
+        public _FinalStage industry(Optional<String> industry) {
+            this.industry = industry;
+            return this;
+        }
+
+        /**
+         * <p>The URL for the company website.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage website(String website) {
+            this.website = Optional.ofNullable(website);
+            return this;
+        }
+
+        /**
+         * <p>The URL for the company website.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "website", nulls = Nulls.SKIP)
+        public _FinalStage website(Optional<String> website) {
+            this.website = website;
+            return this;
+        }
+
+        /**
+         * <p>The number of employees in the company.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage size(Integer size) {
+            this.size = Optional.ofNullable(size);
+            return this;
+        }
+
+        /**
+         * <p>The number of employees in the company.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "size", nulls = Nulls.SKIP)
+        public _FinalStage size(Optional<Integer> size) {
+            this.size = size;
+            return this;
+        }
+
+        /**
+         * <p>The time the company last recorded making a request.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage lastRequestAt(Integer lastRequestAt) {
+            this.lastRequestAt = Optional.ofNullable(lastRequestAt);
+            return this;
+        }
+
+        /**
+         * <p>The time the company last recorded making a request.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "last_request_at", nulls = Nulls.SKIP)
+        public _FinalStage lastRequestAt(Optional<Integer> lastRequestAt) {
+            this.lastRequestAt = lastRequestAt;
+            return this;
+        }
+
+        /**
+         * <p>The time the company was created by you.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage remoteCreatedAt(Integer remoteCreatedAt) {
+            this.remoteCreatedAt = Optional.ofNullable(remoteCreatedAt);
+            return this;
+        }
+
+        /**
+         * <p>The time the company was created by you.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "remote_created_at", nulls = Nulls.SKIP)
+        public _FinalStage remoteCreatedAt(Optional<Integer> remoteCreatedAt) {
+            this.remoteCreatedAt = remoteCreatedAt;
             return this;
         }
 

@@ -28,6 +28,8 @@ public final class ContactReplyTicketIntercomUserIdRequest implements IContactRe
 
     private final Optional<List<String>> attachmentUrls;
 
+    private final Optional<List<ReplyOptionsItem>> replyOptions;
+
     private final String intercomUserId;
 
     private final Map<String, Object> additionalProperties;
@@ -36,11 +38,13 @@ public final class ContactReplyTicketIntercomUserIdRequest implements IContactRe
             String body,
             Optional<Integer> createdAt,
             Optional<List<String>> attachmentUrls,
+            Optional<List<ReplyOptionsItem>> replyOptions,
             String intercomUserId,
             Map<String, Object> additionalProperties) {
         this.body = body;
         this.createdAt = createdAt;
         this.attachmentUrls = attachmentUrls;
+        this.replyOptions = replyOptions;
         this.intercomUserId = intercomUserId;
         this.additionalProperties = additionalProperties;
     }
@@ -80,6 +84,14 @@ public final class ContactReplyTicketIntercomUserIdRequest implements IContactRe
     }
 
     /**
+     * @return The quick reply selection the contact wishes to respond with. These map to buttons displayed in the Messenger UI if sent by a bot, or the reply options sent by an Admin via the API.
+     */
+    @JsonProperty("reply_options")
+    public Optional<List<ReplyOptionsItem>> getReplyOptions() {
+        return replyOptions;
+    }
+
+    /**
      * @return The identifier for the contact as given by Intercom.
      */
     @JsonProperty("intercom_user_id")
@@ -103,12 +115,13 @@ public final class ContactReplyTicketIntercomUserIdRequest implements IContactRe
         return body.equals(other.body)
                 && createdAt.equals(other.createdAt)
                 && attachmentUrls.equals(other.attachmentUrls)
+                && replyOptions.equals(other.replyOptions)
                 && intercomUserId.equals(other.intercomUserId);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.body, this.createdAt, this.attachmentUrls, this.intercomUserId);
+        return Objects.hash(this.body, this.createdAt, this.attachmentUrls, this.replyOptions, this.intercomUserId);
     }
 
     @java.lang.Override
@@ -152,6 +165,13 @@ public final class ContactReplyTicketIntercomUserIdRequest implements IContactRe
         _FinalStage attachmentUrls(Optional<List<String>> attachmentUrls);
 
         _FinalStage attachmentUrls(List<String> attachmentUrls);
+
+        /**
+         * <p>The quick reply selection the contact wishes to respond with. These map to buttons displayed in the Messenger UI if sent by a bot, or the reply options sent by an Admin via the API.</p>
+         */
+        _FinalStage replyOptions(Optional<List<ReplyOptionsItem>> replyOptions);
+
+        _FinalStage replyOptions(List<ReplyOptionsItem> replyOptions);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -159,6 +179,8 @@ public final class ContactReplyTicketIntercomUserIdRequest implements IContactRe
         private String body;
 
         private String intercomUserId;
+
+        private Optional<List<ReplyOptionsItem>> replyOptions = Optional.empty();
 
         private Optional<List<String>> attachmentUrls = Optional.empty();
 
@@ -174,6 +196,7 @@ public final class ContactReplyTicketIntercomUserIdRequest implements IContactRe
             body(other.getBody());
             createdAt(other.getCreatedAt());
             attachmentUrls(other.getAttachmentUrls());
+            replyOptions(other.getReplyOptions());
             intercomUserId(other.getIntercomUserId());
             return this;
         }
@@ -197,6 +220,26 @@ public final class ContactReplyTicketIntercomUserIdRequest implements IContactRe
         @JsonSetter("intercom_user_id")
         public _FinalStage intercomUserId(@NotNull String intercomUserId) {
             this.intercomUserId = Objects.requireNonNull(intercomUserId, "intercomUserId must not be null");
+            return this;
+        }
+
+        /**
+         * <p>The quick reply selection the contact wishes to respond with. These map to buttons displayed in the Messenger UI if sent by a bot, or the reply options sent by an Admin via the API.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage replyOptions(List<ReplyOptionsItem> replyOptions) {
+            this.replyOptions = Optional.ofNullable(replyOptions);
+            return this;
+        }
+
+        /**
+         * <p>The quick reply selection the contact wishes to respond with. These map to buttons displayed in the Messenger UI if sent by a bot, or the reply options sent by an Admin via the API.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "reply_options", nulls = Nulls.SKIP)
+        public _FinalStage replyOptions(Optional<List<ReplyOptionsItem>> replyOptions) {
+            this.replyOptions = replyOptions;
             return this;
         }
 
@@ -243,7 +286,134 @@ public final class ContactReplyTicketIntercomUserIdRequest implements IContactRe
         @java.lang.Override
         public ContactReplyTicketIntercomUserIdRequest build() {
             return new ContactReplyTicketIntercomUserIdRequest(
-                    body, createdAt, attachmentUrls, intercomUserId, additionalProperties);
+                    body, createdAt, attachmentUrls, replyOptions, intercomUserId, additionalProperties);
+        }
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_ABSENT)
+    @JsonDeserialize(builder = ReplyOptionsItem.Builder.class)
+    public static final class ReplyOptionsItem {
+        private final String text;
+
+        private final String uuid;
+
+        private final Map<String, Object> additionalProperties;
+
+        private ReplyOptionsItem(String text, String uuid, Map<String, Object> additionalProperties) {
+            this.text = text;
+            this.uuid = uuid;
+            this.additionalProperties = additionalProperties;
+        }
+
+        /**
+         * @return The text of the chosen reply option.
+         */
+        @JsonProperty("text")
+        public String getText() {
+            return text;
+        }
+
+        /**
+         * @return The unique identifier for the quick reply option selected.
+         */
+        @JsonProperty("uuid")
+        public String getUuid() {
+            return uuid;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            if (this == other) return true;
+            return other instanceof ReplyOptionsItem && equalTo((ReplyOptionsItem) other);
+        }
+
+        @JsonAnyGetter
+        public Map<String, Object> getAdditionalProperties() {
+            return this.additionalProperties;
+        }
+
+        private boolean equalTo(ReplyOptionsItem other) {
+            return text.equals(other.text) && uuid.equals(other.uuid);
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return Objects.hash(this.text, this.uuid);
+        }
+
+        @java.lang.Override
+        public String toString() {
+            return ObjectMappers.stringify(this);
+        }
+
+        public static TextStage builder() {
+            return new Builder();
+        }
+
+        public interface TextStage {
+            /**
+             * The text of the chosen reply option.
+             */
+            UuidStage text(@NotNull String text);
+
+            Builder from(ReplyOptionsItem other);
+        }
+
+        public interface UuidStage {
+            /**
+             * The unique identifier for the quick reply option selected.
+             */
+            _FinalStage uuid(@NotNull String uuid);
+        }
+
+        public interface _FinalStage {
+            ReplyOptionsItem build();
+        }
+
+        @JsonIgnoreProperties(ignoreUnknown = true)
+        public static final class Builder implements TextStage, UuidStage, _FinalStage {
+            private String text;
+
+            private String uuid;
+
+            @JsonAnySetter
+            private Map<String, Object> additionalProperties = new HashMap<>();
+
+            private Builder() {}
+
+            @java.lang.Override
+            public Builder from(ReplyOptionsItem other) {
+                text(other.getText());
+                uuid(other.getUuid());
+                return this;
+            }
+
+            /**
+             * The text of the chosen reply option.<p>The text of the chosen reply option.</p>
+             * @return Reference to {@code this} so that method calls can be chained together.
+             */
+            @java.lang.Override
+            @JsonSetter("text")
+            public UuidStage text(@NotNull String text) {
+                this.text = Objects.requireNonNull(text, "text must not be null");
+                return this;
+            }
+
+            /**
+             * The unique identifier for the quick reply option selected.<p>The unique identifier for the quick reply option selected.</p>
+             * @return Reference to {@code this} so that method calls can be chained together.
+             */
+            @java.lang.Override
+            @JsonSetter("uuid")
+            public _FinalStage uuid(@NotNull String uuid) {
+                this.uuid = Objects.requireNonNull(uuid, "uuid must not be null");
+                return this;
+            }
+
+            @java.lang.Override
+            public ReplyOptionsItem build() {
+                return new ReplyOptionsItem(text, uuid, additionalProperties);
+            }
         }
     }
 }

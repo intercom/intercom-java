@@ -14,29 +14,27 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ArticleSearchHighlights.Builder.class)
 public final class ArticleSearchHighlights {
-    private final String articleId;
+    private final Optional<String> articleId;
 
-    private final List<HighlightedTitleItem> highlightedTitle;
+    private final Optional<List<HighlightedTitleItem>> highlightedTitle;
 
-    private final List<List<HighlightedSummaryItemItem>> highlightedSummary;
+    private final Optional<List<List<HighlightedSummaryItemItem>>> highlightedSummary;
 
     private final Map<String, Object> additionalProperties;
 
     private ArticleSearchHighlights(
-            String articleId,
-            List<HighlightedTitleItem> highlightedTitle,
-            List<List<HighlightedSummaryItemItem>> highlightedSummary,
+            Optional<String> articleId,
+            Optional<List<HighlightedTitleItem>> highlightedTitle,
+            Optional<List<List<HighlightedSummaryItemItem>>> highlightedSummary,
             Map<String, Object> additionalProperties) {
         this.articleId = articleId;
         this.highlightedTitle = highlightedTitle;
@@ -48,7 +46,7 @@ public final class ArticleSearchHighlights {
      * @return The ID of the corresponding article.
      */
     @JsonProperty("article_id")
-    public String getArticleId() {
+    public Optional<String> getArticleId() {
         return articleId;
     }
 
@@ -56,7 +54,7 @@ public final class ArticleSearchHighlights {
      * @return An Article title highlighted.
      */
     @JsonProperty("highlighted_title")
-    public List<HighlightedTitleItem> getHighlightedTitle() {
+    public Optional<List<HighlightedTitleItem>> getHighlightedTitle() {
         return highlightedTitle;
     }
 
@@ -64,7 +62,7 @@ public final class ArticleSearchHighlights {
      * @return An Article description and body text highlighted.
      */
     @JsonProperty("highlighted_summary")
-    public List<List<HighlightedSummaryItemItem>> getHighlightedSummary() {
+    public Optional<List<List<HighlightedSummaryItemItem>>> getHighlightedSummary() {
         return highlightedSummary;
     }
 
@@ -95,55 +93,23 @@ public final class ArticleSearchHighlights {
         return ObjectMappers.stringify(this);
     }
 
-    public static ArticleIdStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface ArticleIdStage {
-        /**
-         * The ID of the corresponding article.
-         */
-        _FinalStage articleId(@NotNull String articleId);
-
-        Builder from(ArticleSearchHighlights other);
-    }
-
-    public interface _FinalStage {
-        ArticleSearchHighlights build();
-
-        /**
-         * <p>An Article title highlighted.</p>
-         */
-        _FinalStage highlightedTitle(List<HighlightedTitleItem> highlightedTitle);
-
-        _FinalStage addHighlightedTitle(HighlightedTitleItem highlightedTitle);
-
-        _FinalStage addAllHighlightedTitle(List<HighlightedTitleItem> highlightedTitle);
-
-        /**
-         * <p>An Article description and body text highlighted.</p>
-         */
-        _FinalStage highlightedSummary(List<List<HighlightedSummaryItemItem>> highlightedSummary);
-
-        _FinalStage addHighlightedSummary(List<HighlightedSummaryItemItem> highlightedSummary);
-
-        _FinalStage addAllHighlightedSummary(List<List<HighlightedSummaryItemItem>> highlightedSummary);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements ArticleIdStage, _FinalStage {
-        private String articleId;
+    public static final class Builder {
+        private Optional<String> articleId = Optional.empty();
 
-        private List<List<HighlightedSummaryItemItem>> highlightedSummary = new ArrayList<>();
+        private Optional<List<HighlightedTitleItem>> highlightedTitle = Optional.empty();
 
-        private List<HighlightedTitleItem> highlightedTitle = new ArrayList<>();
+        private Optional<List<List<HighlightedSummaryItemItem>>> highlightedSummary = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(ArticleSearchHighlights other) {
             articleId(other.getArticleId());
             highlightedTitle(other.getHighlightedTitle());
@@ -152,79 +118,47 @@ public final class ArticleSearchHighlights {
         }
 
         /**
-         * The ID of the corresponding article.<p>The ID of the corresponding article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The ID of the corresponding article.</p>
          */
-        @java.lang.Override
-        @JsonSetter("article_id")
-        public _FinalStage articleId(@NotNull String articleId) {
-            this.articleId = Objects.requireNonNull(articleId, "articleId must not be null");
+        @JsonSetter(value = "article_id", nulls = Nulls.SKIP)
+        public Builder articleId(Optional<String> articleId) {
+            this.articleId = articleId;
             return this;
         }
 
-        /**
-         * <p>An Article description and body text highlighted.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addAllHighlightedSummary(List<List<HighlightedSummaryItemItem>> highlightedSummary) {
-            this.highlightedSummary.addAll(highlightedSummary);
-            return this;
-        }
-
-        /**
-         * <p>An Article description and body text highlighted.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addHighlightedSummary(List<HighlightedSummaryItemItem> highlightedSummary) {
-            this.highlightedSummary.add(highlightedSummary);
-            return this;
-        }
-
-        /**
-         * <p>An Article description and body text highlighted.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "highlighted_summary", nulls = Nulls.SKIP)
-        public _FinalStage highlightedSummary(List<List<HighlightedSummaryItemItem>> highlightedSummary) {
-            this.highlightedSummary.clear();
-            this.highlightedSummary.addAll(highlightedSummary);
-            return this;
-        }
-
-        /**
-         * <p>An Article title highlighted.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addAllHighlightedTitle(List<HighlightedTitleItem> highlightedTitle) {
-            this.highlightedTitle.addAll(highlightedTitle);
-            return this;
-        }
-
-        /**
-         * <p>An Article title highlighted.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addHighlightedTitle(HighlightedTitleItem highlightedTitle) {
-            this.highlightedTitle.add(highlightedTitle);
+        public Builder articleId(String articleId) {
+            this.articleId = Optional.ofNullable(articleId);
             return this;
         }
 
         /**
          * <p>An Article title highlighted.</p>
          */
-        @java.lang.Override
         @JsonSetter(value = "highlighted_title", nulls = Nulls.SKIP)
-        public _FinalStage highlightedTitle(List<HighlightedTitleItem> highlightedTitle) {
-            this.highlightedTitle.clear();
-            this.highlightedTitle.addAll(highlightedTitle);
+        public Builder highlightedTitle(Optional<List<HighlightedTitleItem>> highlightedTitle) {
+            this.highlightedTitle = highlightedTitle;
             return this;
         }
 
-        @java.lang.Override
+        public Builder highlightedTitle(List<HighlightedTitleItem> highlightedTitle) {
+            this.highlightedTitle = Optional.ofNullable(highlightedTitle);
+            return this;
+        }
+
+        /**
+         * <p>An Article description and body text highlighted.</p>
+         */
+        @JsonSetter(value = "highlighted_summary", nulls = Nulls.SKIP)
+        public Builder highlightedSummary(Optional<List<List<HighlightedSummaryItemItem>>> highlightedSummary) {
+            this.highlightedSummary = highlightedSummary;
+            return this;
+        }
+
+        public Builder highlightedSummary(List<List<HighlightedSummaryItemItem>> highlightedSummary) {
+            this.highlightedSummary = Optional.ofNullable(highlightedSummary);
+            return this;
+        }
+
         public ArticleSearchHighlights build() {
             return new ArticleSearchHighlights(articleId, highlightedTitle, highlightedSummary, additionalProperties);
         }

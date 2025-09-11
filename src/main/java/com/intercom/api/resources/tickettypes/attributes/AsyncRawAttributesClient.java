@@ -4,6 +4,7 @@
 package com.intercom.api.resources.tickettypes.attributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.IntercomApiException;
 import com.intercom.api.core.IntercomException;
@@ -17,6 +18,7 @@ import com.intercom.api.resources.tickettypes.attributes.requests.UpdateTicketTy
 import com.intercom.api.types.Error;
 import com.intercom.api.types.TicketTypeAttribute;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -39,7 +41,7 @@ public class AsyncRawAttributesClient {
     /**
      * You can create a new attribute for a ticket type.
      */
-    public CompletableFuture<IntercomHttpResponse<TicketTypeAttribute>> create(
+    public CompletableFuture<IntercomHttpResponse<Optional<TicketTypeAttribute>>> create(
             CreateTicketTypeAttributeRequest request) {
         return create(request, null);
     }
@@ -47,7 +49,7 @@ public class AsyncRawAttributesClient {
     /**
      * You can create a new attribute for a ticket type.
      */
-    public CompletableFuture<IntercomHttpResponse<TicketTypeAttribute>> create(
+    public CompletableFuture<IntercomHttpResponse<Optional<TicketTypeAttribute>>> create(
             CreateTicketTypeAttributeRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
@@ -73,14 +75,15 @@ public class AsyncRawAttributesClient {
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<IntercomHttpResponse<TicketTypeAttribute>> future = new CompletableFuture<>();
+        CompletableFuture<IntercomHttpResponse<Optional<TicketTypeAttribute>>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), TicketTypeAttribute.class),
+                                ObjectMappers.JSON_MAPPER.readValue(
+                                        responseBody.string(), new TypeReference<Optional<TicketTypeAttribute>>() {}),
                                 response));
                         return;
                     }
@@ -116,7 +119,7 @@ public class AsyncRawAttributesClient {
     /**
      * You can update an existing attribute for a ticket type.
      */
-    public CompletableFuture<IntercomHttpResponse<TicketTypeAttribute>> update(
+    public CompletableFuture<IntercomHttpResponse<Optional<TicketTypeAttribute>>> update(
             UpdateTicketTypeAttributeRequest request) {
         return update(request, null);
     }
@@ -124,7 +127,7 @@ public class AsyncRawAttributesClient {
     /**
      * You can update an existing attribute for a ticket type.
      */
-    public CompletableFuture<IntercomHttpResponse<TicketTypeAttribute>> update(
+    public CompletableFuture<IntercomHttpResponse<Optional<TicketTypeAttribute>>> update(
             UpdateTicketTypeAttributeRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
@@ -151,14 +154,15 @@ public class AsyncRawAttributesClient {
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<IntercomHttpResponse<TicketTypeAttribute>> future = new CompletableFuture<>();
+        CompletableFuture<IntercomHttpResponse<Optional<TicketTypeAttribute>>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), TicketTypeAttribute.class),
+                                ObjectMappers.JSON_MAPPER.readValue(
+                                        responseBody.string(), new TypeReference<Optional<TicketTypeAttribute>>() {}),
                                 response));
                         return;
                     }

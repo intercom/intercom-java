@@ -16,21 +16,26 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = FindConversationRequest.Builder.class)
 public final class FindConversationRequest {
-    private final String conversationId;
+    private final int conversationId;
 
     private final Optional<String> displayAs;
+
+    private final Optional<Boolean> includeTranslations;
 
     private final Map<String, Object> additionalProperties;
 
     private FindConversationRequest(
-            String conversationId, Optional<String> displayAs, Map<String, Object> additionalProperties) {
+            int conversationId,
+            Optional<String> displayAs,
+            Optional<Boolean> includeTranslations,
+            Map<String, Object> additionalProperties) {
         this.conversationId = conversationId;
         this.displayAs = displayAs;
+        this.includeTranslations = includeTranslations;
         this.additionalProperties = additionalProperties;
     }
 
@@ -38,7 +43,7 @@ public final class FindConversationRequest {
      * @return The id of the conversation to target
      */
     @JsonProperty("conversation_id")
-    public String getConversationId() {
+    public int getConversationId() {
         return conversationId;
     }
 
@@ -48,6 +53,14 @@ public final class FindConversationRequest {
     @JsonProperty("display_as")
     public Optional<String> getDisplayAs() {
         return displayAs;
+    }
+
+    /**
+     * @return If set to true, conversation parts will be translated to the detected language of the conversation.
+     */
+    @JsonProperty("include_translations")
+    public Optional<Boolean> getIncludeTranslations() {
+        return includeTranslations;
     }
 
     @java.lang.Override
@@ -62,12 +75,14 @@ public final class FindConversationRequest {
     }
 
     private boolean equalTo(FindConversationRequest other) {
-        return conversationId.equals(other.conversationId) && displayAs.equals(other.displayAs);
+        return conversationId == other.conversationId
+                && displayAs.equals(other.displayAs)
+                && includeTranslations.equals(other.includeTranslations);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.conversationId, this.displayAs);
+        return Objects.hash(this.conversationId, this.displayAs, this.includeTranslations);
     }
 
     @java.lang.Override
@@ -83,7 +98,7 @@ public final class FindConversationRequest {
         /**
          * The id of the conversation to target
          */
-        _FinalStage conversationId(@NotNull String conversationId);
+        _FinalStage conversationId(int conversationId);
 
         Builder from(FindConversationRequest other);
     }
@@ -97,11 +112,20 @@ public final class FindConversationRequest {
         _FinalStage displayAs(Optional<String> displayAs);
 
         _FinalStage displayAs(String displayAs);
+
+        /**
+         * <p>If set to true, conversation parts will be translated to the detected language of the conversation.</p>
+         */
+        _FinalStage includeTranslations(Optional<Boolean> includeTranslations);
+
+        _FinalStage includeTranslations(Boolean includeTranslations);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder implements ConversationIdStage, _FinalStage {
-        private String conversationId;
+        private int conversationId;
+
+        private Optional<Boolean> includeTranslations = Optional.empty();
 
         private Optional<String> displayAs = Optional.empty();
 
@@ -114,6 +138,7 @@ public final class FindConversationRequest {
         public Builder from(FindConversationRequest other) {
             conversationId(other.getConversationId());
             displayAs(other.getDisplayAs());
+            includeTranslations(other.getIncludeTranslations());
             return this;
         }
 
@@ -123,8 +148,28 @@ public final class FindConversationRequest {
          */
         @java.lang.Override
         @JsonSetter("conversation_id")
-        public _FinalStage conversationId(@NotNull String conversationId) {
-            this.conversationId = Objects.requireNonNull(conversationId, "conversationId must not be null");
+        public _FinalStage conversationId(int conversationId) {
+            this.conversationId = conversationId;
+            return this;
+        }
+
+        /**
+         * <p>If set to true, conversation parts will be translated to the detected language of the conversation.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage includeTranslations(Boolean includeTranslations) {
+            this.includeTranslations = Optional.ofNullable(includeTranslations);
+            return this;
+        }
+
+        /**
+         * <p>If set to true, conversation parts will be translated to the detected language of the conversation.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "include_translations", nulls = Nulls.SKIP)
+        public _FinalStage includeTranslations(Optional<Boolean> includeTranslations) {
+            this.includeTranslations = includeTranslations;
             return this;
         }
 
@@ -150,7 +195,7 @@ public final class FindConversationRequest {
 
         @java.lang.Override
         public FindConversationRequest build() {
-            return new FindConversationRequest(conversationId, displayAs, additionalProperties);
+            return new FindConversationRequest(conversationId, displayAs, includeTranslations, additionalProperties);
         }
     }
 }

@@ -9,6 +9,8 @@ import com.intercom.api.resources.unstable.admins.AdminsClient;
 import com.intercom.api.resources.unstable.aicontent.AiContentClient;
 import com.intercom.api.resources.unstable.articles.ArticlesClient;
 import com.intercom.api.resources.unstable.awaystatusreasons.AwayStatusReasonsClient;
+import com.intercom.api.resources.unstable.brands.BrandsClient;
+import com.intercom.api.resources.unstable.calls.CallsClient;
 import com.intercom.api.resources.unstable.companies.CompaniesClient;
 import com.intercom.api.resources.unstable.contacts.ContactsClient;
 import com.intercom.api.resources.unstable.conversations.ConversationsClient;
@@ -17,9 +19,12 @@ import com.intercom.api.resources.unstable.customobjectinstances.CustomObjectIns
 import com.intercom.api.resources.unstable.dataattributes.DataAttributesClient;
 import com.intercom.api.resources.unstable.dataevents.DataEventsClient;
 import com.intercom.api.resources.unstable.dataexport.DataExportClient;
+import com.intercom.api.resources.unstable.emails.EmailsClient;
 import com.intercom.api.resources.unstable.export.ExportClient;
 import com.intercom.api.resources.unstable.helpcenter.HelpCenterClient;
+import com.intercom.api.resources.unstable.internalarticles.InternalArticlesClient;
 import com.intercom.api.resources.unstable.jobs.JobsClient;
+import com.intercom.api.resources.unstable.macros.MacrosClient;
 import com.intercom.api.resources.unstable.messages.MessagesClient;
 import com.intercom.api.resources.unstable.news.NewsClient;
 import com.intercom.api.resources.unstable.notes.NotesClient;
@@ -50,6 +55,8 @@ public class UnstableClient {
 
     protected final Supplier<HelpCenterClient> helpCenterClient;
 
+    protected final Supplier<InternalArticlesClient> internalArticlesClient;
+
     protected final Supplier<CompaniesClient> companiesClient;
 
     protected final Supplier<ContactsClient> contactsClient;
@@ -74,6 +81,8 @@ public class UnstableClient {
 
     protected final Supplier<JobsClient> jobsClient;
 
+    protected final Supplier<MacrosClient> macrosClient;
+
     protected final Supplier<MessagesClient> messagesClient;
 
     protected final Supplier<NewsClient> newsClient;
@@ -81,6 +90,8 @@ public class UnstableClient {
     protected final Supplier<SegmentsClient> segmentsClient;
 
     protected final Supplier<SwitchClient> switchClient;
+
+    protected final Supplier<CallsClient> callsClient;
 
     protected final Supplier<TeamsClient> teamsClient;
 
@@ -94,6 +105,10 @@ public class UnstableClient {
 
     protected final Supplier<VisitorsClient> visitorsClient;
 
+    protected final Supplier<BrandsClient> brandsClient;
+
+    protected final Supplier<EmailsClient> emailsClient;
+
     public UnstableClient(ClientOptions clientOptions) {
         this.clientOptions = clientOptions;
         this.adminsClient = Suppliers.memoize(() -> new AdminsClient(clientOptions));
@@ -102,6 +117,7 @@ public class UnstableClient {
         this.awayStatusReasonsClient = Suppliers.memoize(() -> new AwayStatusReasonsClient(clientOptions));
         this.exportClient = Suppliers.memoize(() -> new ExportClient(clientOptions));
         this.helpCenterClient = Suppliers.memoize(() -> new HelpCenterClient(clientOptions));
+        this.internalArticlesClient = Suppliers.memoize(() -> new InternalArticlesClient(clientOptions));
         this.companiesClient = Suppliers.memoize(() -> new CompaniesClient(clientOptions));
         this.contactsClient = Suppliers.memoize(() -> new ContactsClient(clientOptions));
         this.notesClient = Suppliers.memoize(() -> new NotesClient(clientOptions));
@@ -114,16 +130,20 @@ public class UnstableClient {
         this.dataEventsClient = Suppliers.memoize(() -> new DataEventsClient(clientOptions));
         this.dataExportClient = Suppliers.memoize(() -> new DataExportClient(clientOptions));
         this.jobsClient = Suppliers.memoize(() -> new JobsClient(clientOptions));
+        this.macrosClient = Suppliers.memoize(() -> new MacrosClient(clientOptions));
         this.messagesClient = Suppliers.memoize(() -> new MessagesClient(clientOptions));
         this.newsClient = Suppliers.memoize(() -> new NewsClient(clientOptions));
         this.segmentsClient = Suppliers.memoize(() -> new SegmentsClient(clientOptions));
         this.switchClient = Suppliers.memoize(() -> new SwitchClient(clientOptions));
+        this.callsClient = Suppliers.memoize(() -> new CallsClient(clientOptions));
         this.teamsClient = Suppliers.memoize(() -> new TeamsClient(clientOptions));
         this.ticketStatesClient = Suppliers.memoize(() -> new TicketStatesClient(clientOptions));
         this.ticketTypeAttributesClient = Suppliers.memoize(() -> new TicketTypeAttributesClient(clientOptions));
         this.ticketTypesClient = Suppliers.memoize(() -> new TicketTypesClient(clientOptions));
         this.ticketsClient = Suppliers.memoize(() -> new TicketsClient(clientOptions));
         this.visitorsClient = Suppliers.memoize(() -> new VisitorsClient(clientOptions));
+        this.brandsClient = Suppliers.memoize(() -> new BrandsClient(clientOptions));
+        this.emailsClient = Suppliers.memoize(() -> new EmailsClient(clientOptions));
     }
 
     public AdminsClient admins() {
@@ -148,6 +168,10 @@ public class UnstableClient {
 
     public HelpCenterClient helpCenter() {
         return this.helpCenterClient.get();
+    }
+
+    public InternalArticlesClient internalArticles() {
+        return this.internalArticlesClient.get();
     }
 
     public CompaniesClient companies() {
@@ -198,6 +222,10 @@ public class UnstableClient {
         return this.jobsClient.get();
     }
 
+    public MacrosClient macros() {
+        return this.macrosClient.get();
+    }
+
     public MessagesClient messages() {
         return this.messagesClient.get();
     }
@@ -212,6 +240,10 @@ public class UnstableClient {
 
     public SwitchClient switch_() {
         return this.switchClient.get();
+    }
+
+    public CallsClient calls() {
+        return this.callsClient.get();
     }
 
     public TeamsClient teams() {
@@ -236,5 +268,13 @@ public class UnstableClient {
 
     public VisitorsClient visitors() {
         return this.visitorsClient.get();
+    }
+
+    public BrandsClient brands() {
+        return this.brandsClient.get();
+    }
+
+    public EmailsClient emails() {
+        return this.emailsClient.get();
     }
 }

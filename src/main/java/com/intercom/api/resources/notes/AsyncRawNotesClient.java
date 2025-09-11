@@ -22,6 +22,7 @@ import com.intercom.api.resources.notes.types.Note;
 import com.intercom.api.types.Error;
 import com.intercom.api.types.NoteList;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -93,7 +94,7 @@ public class AsyncRawNotesClient {
                                 .from(request)
                                 .page(newPageNumber)
                                 .build();
-                        List<Note> result = parsedResponse.getData();
+                        List<Note> result = parsedResponse.getData().orElse(Collections.emptyList());
                         future.complete(new IntercomHttpResponse<>(
                                 new SyncPagingIterable<Note>(true, result, () -> {
                                     try {
@@ -225,7 +226,7 @@ public class AsyncRawNotesClient {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("notes")
-                .addPathSegment(request.getNoteId())
+                .addPathSegment(Integer.toString(request.getNoteId()))
                 .build();
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl)

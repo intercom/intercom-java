@@ -9,24 +9,32 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = VisitorDeletedObject.Builder.class)
 public final class VisitorDeletedObject {
-    private final String id;
+    private final Optional<String> id;
 
-    private final String userId;
+    private final Optional<String> type;
+
+    private final Optional<String> userId;
 
     private final Map<String, Object> additionalProperties;
 
-    private VisitorDeletedObject(String id, String userId, Map<String, Object> additionalProperties) {
+    private VisitorDeletedObject(
+            Optional<String> id,
+            Optional<String> type,
+            Optional<String> userId,
+            Map<String, Object> additionalProperties) {
         this.id = id;
+        this.type = type;
         this.userId = userId;
         this.additionalProperties = additionalProperties;
     }
@@ -35,7 +43,7 @@ public final class VisitorDeletedObject {
      * @return The unique identifier for the visitor which is given by Intercom.
      */
     @JsonProperty("id")
-    public String getId() {
+    public Optional<String> getId() {
         return id;
     }
 
@@ -43,15 +51,15 @@ public final class VisitorDeletedObject {
      * @return The type of object which was deleted
      */
     @JsonProperty("type")
-    public String getType() {
-        return "visitor";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return Automatically generated identifier for the Visitor.
      */
     @JsonProperty("user_id")
-    public String getUserId() {
+    public Optional<String> getUserId() {
         return userId;
     }
 
@@ -67,12 +75,12 @@ public final class VisitorDeletedObject {
     }
 
     private boolean equalTo(VisitorDeletedObject other) {
-        return id.equals(other.id) && userId.equals(other.userId);
+        return id.equals(other.id) && type.equals(other.type) && userId.equals(other.userId);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.id, this.userId);
+        return Objects.hash(this.id, this.type, this.userId);
     }
 
     @java.lang.Override
@@ -80,73 +88,74 @@ public final class VisitorDeletedObject {
         return ObjectMappers.stringify(this);
     }
 
-    public static IdStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface IdStage {
-        /**
-         * The unique identifier for the visitor which is given by Intercom.
-         */
-        UserIdStage id(@NotNull String id);
-
-        Builder from(VisitorDeletedObject other);
-    }
-
-    public interface UserIdStage {
-        /**
-         * Automatically generated identifier for the Visitor.
-         */
-        _FinalStage userId(@NotNull String userId);
-    }
-
-    public interface _FinalStage {
-        VisitorDeletedObject build();
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements IdStage, UserIdStage, _FinalStage {
-        private String id;
+    public static final class Builder {
+        private Optional<String> id = Optional.empty();
 
-        private String userId;
+        private Optional<String> type = Optional.empty();
+
+        private Optional<String> userId = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(VisitorDeletedObject other) {
             id(other.getId());
+            type(other.getType());
             userId(other.getUserId());
             return this;
         }
 
         /**
-         * The unique identifier for the visitor which is given by Intercom.<p>The unique identifier for the visitor which is given by Intercom.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The unique identifier for the visitor which is given by Intercom.</p>
          */
-        @java.lang.Override
-        @JsonSetter("id")
-        public UserIdStage id(@NotNull String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+        @JsonSetter(value = "id", nulls = Nulls.SKIP)
+        public Builder id(Optional<String> id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder id(String id) {
+            this.id = Optional.ofNullable(id);
             return this;
         }
 
         /**
-         * Automatically generated identifier for the Visitor.<p>Automatically generated identifier for the Visitor.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The type of object which was deleted</p>
          */
-        @java.lang.Override
-        @JsonSetter("user_id")
-        public _FinalStage userId(@NotNull String userId) {
-            this.userId = Objects.requireNonNull(userId, "userId must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
             return this;
         }
 
-        @java.lang.Override
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
+            return this;
+        }
+
+        /**
+         * <p>Automatically generated identifier for the Visitor.</p>
+         */
+        @JsonSetter(value = "user_id", nulls = Nulls.SKIP)
+        public Builder userId(Optional<String> userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public Builder userId(String userId) {
+            this.userId = Optional.ofNullable(userId);
+            return this;
+        }
+
         public VisitorDeletedObject build() {
-            return new VisitorDeletedObject(id, userId, additionalProperties);
+            return new VisitorDeletedObject(id, type, userId, additionalProperties);
         }
     }
 }

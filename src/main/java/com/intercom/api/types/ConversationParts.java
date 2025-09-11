@@ -12,23 +12,29 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ConversationParts.Builder.class)
 public final class ConversationParts {
-    private final List<ConversationPart> conversationParts;
+    private final Optional<String> type;
 
-    private final int totalCount;
+    private final Optional<List<ConversationPart>> conversationParts;
+
+    private final Optional<Integer> totalCount;
 
     private final Map<String, Object> additionalProperties;
 
     private ConversationParts(
-            List<ConversationPart> conversationParts, int totalCount, Map<String, Object> additionalProperties) {
+            Optional<String> type,
+            Optional<List<ConversationPart>> conversationParts,
+            Optional<Integer> totalCount,
+            Map<String, Object> additionalProperties) {
+        this.type = type;
         this.conversationParts = conversationParts;
         this.totalCount = totalCount;
         this.additionalProperties = additionalProperties;
@@ -38,15 +44,15 @@ public final class ConversationParts {
      * @return
      */
     @JsonProperty("type")
-    public String getType() {
-        return "conversation_part.list";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return A list of Conversation Part objects for each part message in the conversation. This is only returned when Retrieving a Conversation, and ignored when Listing all Conversations. There is a limit of 500 parts.
      */
     @JsonProperty("conversation_parts")
-    public List<ConversationPart> getConversationParts() {
+    public Optional<List<ConversationPart>> getConversationParts() {
         return conversationParts;
     }
 
@@ -54,7 +60,7 @@ public final class ConversationParts {
      * @return
      */
     @JsonProperty("total_count")
-    public int getTotalCount() {
+    public Optional<Integer> getTotalCount() {
         return totalCount;
     }
 
@@ -70,12 +76,14 @@ public final class ConversationParts {
     }
 
     private boolean equalTo(ConversationParts other) {
-        return conversationParts.equals(other.conversationParts) && totalCount == other.totalCount;
+        return type.equals(other.type)
+                && conversationParts.equals(other.conversationParts)
+                && totalCount.equals(other.totalCount);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.conversationParts, this.totalCount);
+        return Objects.hash(this.type, this.conversationParts, this.totalCount);
     }
 
     @java.lang.Override
@@ -83,91 +91,68 @@ public final class ConversationParts {
         return ObjectMappers.stringify(this);
     }
 
-    public static TotalCountStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface TotalCountStage {
-        _FinalStage totalCount(int totalCount);
-
-        Builder from(ConversationParts other);
-    }
-
-    public interface _FinalStage {
-        ConversationParts build();
-
-        /**
-         * <p>A list of Conversation Part objects for each part message in the conversation. This is only returned when Retrieving a Conversation, and ignored when Listing all Conversations. There is a limit of 500 parts.</p>
-         */
-        _FinalStage conversationParts(List<ConversationPart> conversationParts);
-
-        _FinalStage addConversationParts(ConversationPart conversationParts);
-
-        _FinalStage addAllConversationParts(List<ConversationPart> conversationParts);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements TotalCountStage, _FinalStage {
-        private int totalCount;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private List<ConversationPart> conversationParts = new ArrayList<>();
+        private Optional<List<ConversationPart>> conversationParts = Optional.empty();
+
+        private Optional<Integer> totalCount = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(ConversationParts other) {
+            type(other.getType());
             conversationParts(other.getConversationParts());
             totalCount(other.getTotalCount());
             return this;
         }
 
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
+            return this;
+        }
+
         /**
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>A list of Conversation Part objects for each part message in the conversation. This is only returned when Retrieving a Conversation, and ignored when Listing all Conversations. There is a limit of 500 parts.</p>
          */
-        @java.lang.Override
-        @JsonSetter("total_count")
-        public _FinalStage totalCount(int totalCount) {
+        @JsonSetter(value = "conversation_parts", nulls = Nulls.SKIP)
+        public Builder conversationParts(Optional<List<ConversationPart>> conversationParts) {
+            this.conversationParts = conversationParts;
+            return this;
+        }
+
+        public Builder conversationParts(List<ConversationPart> conversationParts) {
+            this.conversationParts = Optional.ofNullable(conversationParts);
+            return this;
+        }
+
+        @JsonSetter(value = "total_count", nulls = Nulls.SKIP)
+        public Builder totalCount(Optional<Integer> totalCount) {
             this.totalCount = totalCount;
             return this;
         }
 
-        /**
-         * <p>A list of Conversation Part objects for each part message in the conversation. This is only returned when Retrieving a Conversation, and ignored when Listing all Conversations. There is a limit of 500 parts.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addAllConversationParts(List<ConversationPart> conversationParts) {
-            this.conversationParts.addAll(conversationParts);
+        public Builder totalCount(Integer totalCount) {
+            this.totalCount = Optional.ofNullable(totalCount);
             return this;
         }
 
-        /**
-         * <p>A list of Conversation Part objects for each part message in the conversation. This is only returned when Retrieving a Conversation, and ignored when Listing all Conversations. There is a limit of 500 parts.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addConversationParts(ConversationPart conversationParts) {
-            this.conversationParts.add(conversationParts);
-            return this;
-        }
-
-        /**
-         * <p>A list of Conversation Part objects for each part message in the conversation. This is only returned when Retrieving a Conversation, and ignored when Listing all Conversations. There is a limit of 500 parts.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "conversation_parts", nulls = Nulls.SKIP)
-        public _FinalStage conversationParts(List<ConversationPart> conversationParts) {
-            this.conversationParts.clear();
-            this.conversationParts.addAll(conversationParts);
-            return this;
-        }
-
-        @java.lang.Override
         public ConversationParts build() {
-            return new ConversationParts(conversationParts, totalCount, additionalProperties);
+            return new ConversationParts(type, conversationParts, totalCount, additionalProperties);
         }
     }
 }

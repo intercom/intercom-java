@@ -16,18 +16,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = Reference.Builder.class)
 public final class Reference {
-    private final String type;
+    private final Optional<String> type;
 
     private final Optional<String> id;
 
     private final Map<String, Object> additionalProperties;
 
-    private Reference(String type, Optional<String> id, Map<String, Object> additionalProperties) {
+    private Reference(Optional<String> type, Optional<String> id, Map<String, Object> additionalProperties) {
         this.type = type;
         this.id = id;
         this.additionalProperties = additionalProperties;
@@ -37,7 +36,7 @@ public final class Reference {
      * @return
      */
     @JsonProperty("type")
-    public String getType() {
+    public Optional<String> getType() {
         return type;
     }
 
@@ -74,27 +73,13 @@ public final class Reference {
         return ObjectMappers.stringify(this);
     }
 
-    public static TypeStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface TypeStage {
-        _FinalStage type(@NotNull String type);
-
-        Builder from(Reference other);
-    }
-
-    public interface _FinalStage {
-        Reference build();
-
-        _FinalStage id(Optional<String> id);
-
-        _FinalStage id(String id);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements TypeStage, _FinalStage {
-        private String type;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
         private Optional<String> id = Optional.empty();
 
@@ -103,40 +88,34 @@ public final class Reference {
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(Reference other) {
             type(other.getType());
             id(other.getId());
             return this;
         }
 
-        /**
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("type")
-        public _FinalStage type(@NotNull String type) {
-            this.type = Objects.requireNonNull(type, "type must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
             return this;
         }
 
-        /**
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage id(String id) {
-            this.id = Optional.ofNullable(id);
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
-        @java.lang.Override
         @JsonSetter(value = "id", nulls = Nulls.SKIP)
-        public _FinalStage id(Optional<String> id) {
+        public Builder id(Optional<String> id) {
             this.id = id;
             return this;
         }
 
-        @java.lang.Override
+        public Builder id(String id) {
+            this.id = Optional.ofNullable(id);
+            return this;
+        }
+
         public Reference build() {
             return new Reference(type, id, additionalProperties);
         }

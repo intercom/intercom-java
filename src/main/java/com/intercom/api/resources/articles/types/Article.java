@@ -54,9 +54,9 @@ public final class Article implements IArticleListItem {
 
     private final Optional<String> parentType;
 
-    private final String defaultLocale;
+    private final Optional<String> defaultLocale;
 
-    private final ArticleTranslatedContent translatedContent;
+    private final Optional<ArticleTranslatedContent> translatedContent;
 
     private final Optional<ArticleStatistics> statistics;
 
@@ -77,8 +77,8 @@ public final class Article implements IArticleListItem {
             Optional<Integer> parentId,
             Optional<List<Integer>> parentIds,
             Optional<String> parentType,
-            String defaultLocale,
-            ArticleTranslatedContent translatedContent,
+            Optional<String> defaultLocale,
+            Optional<ArticleTranslatedContent> translatedContent,
             Optional<ArticleStatistics> statistics,
             Map<String, Object> additionalProperties) {
         this.type = type;
@@ -217,12 +217,12 @@ public final class Article implements IArticleListItem {
      * @return The default locale of the help center. This field is only returned for multilingual help centers.
      */
     @JsonProperty("default_locale")
-    public String getDefaultLocale() {
+    public Optional<String> getDefaultLocale() {
         return defaultLocale;
     }
 
     @JsonProperty("translated_content")
-    public ArticleTranslatedContent getTranslatedContent() {
+    public Optional<ArticleTranslatedContent> getTranslatedContent() {
         return translatedContent;
     }
 
@@ -341,18 +341,7 @@ public final class Article implements IArticleListItem {
         /**
          * The time when the article was last updated. For multilingual articles, this will be the timestamp of last update of the default language's content in seconds.
          */
-        DefaultLocaleStage updatedAt(int updatedAt);
-    }
-
-    public interface DefaultLocaleStage {
-        /**
-         * The default locale of the help center. This field is only returned for multilingual help centers.
-         */
-        TranslatedContentStage defaultLocale(@NotNull String defaultLocale);
-    }
-
-    public interface TranslatedContentStage {
-        _FinalStage translatedContent(@NotNull ArticleTranslatedContent translatedContent);
+        _FinalStage updatedAt(int updatedAt);
     }
 
     public interface _FinalStage {
@@ -407,6 +396,17 @@ public final class Article implements IArticleListItem {
 
         _FinalStage parentType(String parentType);
 
+        /**
+         * <p>The default locale of the help center. This field is only returned for multilingual help centers.</p>
+         */
+        _FinalStage defaultLocale(Optional<String> defaultLocale);
+
+        _FinalStage defaultLocale(String defaultLocale);
+
+        _FinalStage translatedContent(Optional<ArticleTranslatedContent> translatedContent);
+
+        _FinalStage translatedContent(ArticleTranslatedContent translatedContent);
+
         _FinalStage statistics(Optional<ArticleStatistics> statistics);
 
         _FinalStage statistics(ArticleStatistics statistics);
@@ -421,8 +421,6 @@ public final class Article implements IArticleListItem {
                     StateStage,
                     CreatedAtStage,
                     UpdatedAtStage,
-                    DefaultLocaleStage,
-                    TranslatedContentStage,
                     _FinalStage {
         private String id;
 
@@ -438,11 +436,11 @@ public final class Article implements IArticleListItem {
 
         private int updatedAt;
 
-        private String defaultLocale;
-
-        private ArticleTranslatedContent translatedContent;
-
         private Optional<ArticleStatistics> statistics = Optional.empty();
+
+        private Optional<ArticleTranslatedContent> translatedContent = Optional.empty();
+
+        private Optional<String> defaultLocale = Optional.empty();
 
         private Optional<String> parentType = Optional.empty();
 
@@ -557,26 +555,8 @@ public final class Article implements IArticleListItem {
          */
         @java.lang.Override
         @JsonSetter("updated_at")
-        public DefaultLocaleStage updatedAt(int updatedAt) {
+        public _FinalStage updatedAt(int updatedAt) {
             this.updatedAt = updatedAt;
-            return this;
-        }
-
-        /**
-         * The default locale of the help center. This field is only returned for multilingual help centers.<p>The default locale of the help center. This field is only returned for multilingual help centers.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("default_locale")
-        public TranslatedContentStage defaultLocale(@NotNull String defaultLocale) {
-            this.defaultLocale = Objects.requireNonNull(defaultLocale, "defaultLocale must not be null");
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("translated_content")
-        public _FinalStage translatedContent(@NotNull ArticleTranslatedContent translatedContent) {
-            this.translatedContent = Objects.requireNonNull(translatedContent, "translatedContent must not be null");
             return this;
         }
 
@@ -590,6 +570,39 @@ public final class Article implements IArticleListItem {
         @JsonSetter(value = "statistics", nulls = Nulls.SKIP)
         public _FinalStage statistics(Optional<ArticleStatistics> statistics) {
             this.statistics = statistics;
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage translatedContent(ArticleTranslatedContent translatedContent) {
+            this.translatedContent = Optional.ofNullable(translatedContent);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "translated_content", nulls = Nulls.SKIP)
+        public _FinalStage translatedContent(Optional<ArticleTranslatedContent> translatedContent) {
+            this.translatedContent = translatedContent;
+            return this;
+        }
+
+        /**
+         * <p>The default locale of the help center. This field is only returned for multilingual help centers.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage defaultLocale(String defaultLocale) {
+            this.defaultLocale = Optional.ofNullable(defaultLocale);
+            return this;
+        }
+
+        /**
+         * <p>The default locale of the help center. This field is only returned for multilingual help centers.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "default_locale", nulls = Nulls.SKIP)
+        public _FinalStage defaultLocale(Optional<String> defaultLocale) {
+            this.defaultLocale = defaultLocale;
             return this;
         }
 

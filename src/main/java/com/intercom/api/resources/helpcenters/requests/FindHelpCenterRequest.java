@@ -14,25 +14,24 @@ import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = FindHelpCenterRequest.Builder.class)
 public final class FindHelpCenterRequest {
-    private final String helpCenterId;
+    private final int helpCenterId;
 
     private final Map<String, Object> additionalProperties;
 
-    private FindHelpCenterRequest(String helpCenterId, Map<String, Object> additionalProperties) {
+    private FindHelpCenterRequest(int helpCenterId, Map<String, Object> additionalProperties) {
         this.helpCenterId = helpCenterId;
         this.additionalProperties = additionalProperties;
     }
 
     /**
-     * @return The unique identifier for the Help Center which is given by Intercom.
+     * @return The unique identifier for the collection which is given by Intercom.
      */
     @JsonProperty("help_center_id")
-    public String getHelpCenterId() {
+    public int getHelpCenterId() {
         return helpCenterId;
     }
 
@@ -48,7 +47,7 @@ public final class FindHelpCenterRequest {
     }
 
     private boolean equalTo(FindHelpCenterRequest other) {
-        return helpCenterId.equals(other.helpCenterId);
+        return helpCenterId == other.helpCenterId;
     }
 
     @java.lang.Override
@@ -67,9 +66,9 @@ public final class FindHelpCenterRequest {
 
     public interface HelpCenterIdStage {
         /**
-         * The unique identifier for the Help Center which is given by Intercom.
+         * The unique identifier for the collection which is given by Intercom.
          */
-        _FinalStage helpCenterId(@NotNull String helpCenterId);
+        _FinalStage helpCenterId(int helpCenterId);
 
         Builder from(FindHelpCenterRequest other);
     }
@@ -80,7 +79,7 @@ public final class FindHelpCenterRequest {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder implements HelpCenterIdStage, _FinalStage {
-        private String helpCenterId;
+        private int helpCenterId;
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -94,13 +93,13 @@ public final class FindHelpCenterRequest {
         }
 
         /**
-         * The unique identifier for the Help Center which is given by Intercom.<p>The unique identifier for the Help Center which is given by Intercom.</p>
+         * The unique identifier for the collection which is given by Intercom.<p>The unique identifier for the collection which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
         @JsonSetter("help_center_id")
-        public _FinalStage helpCenterId(@NotNull String helpCenterId) {
-            this.helpCenterId = Objects.requireNonNull(helpCenterId, "helpCenterId must not be null");
+        public _FinalStage helpCenterId(int helpCenterId) {
+            this.helpCenterId = helpCenterId;
             return this;
         }
 

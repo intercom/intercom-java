@@ -5,7 +5,6 @@ package com.intercom.api.resources.unstable.dataattributes;
 
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.RequestOptions;
-import com.intercom.api.resources.unstable.dataattributes.requests.CreateDataAttributeRequest;
 import com.intercom.api.resources.unstable.dataattributes.requests.LisDataAttributesRequest;
 import com.intercom.api.resources.unstable.dataattributes.requests.UpdateDataAttributeRequest;
 import com.intercom.api.resources.unstable.dataattributes.types.DataAttribute;
@@ -54,15 +53,14 @@ public class AsyncDataAttributesClient {
     /**
      * You can create a data attributes for a <code>contact</code> or a <code>company</code>.
      */
-    public CompletableFuture<DataAttribute> createDataAttribute(CreateDataAttributeRequest request) {
+    public CompletableFuture<DataAttribute> createDataAttribute(Object request) {
         return this.rawClient.createDataAttribute(request).thenApply(response -> response.body());
     }
 
     /**
      * You can create a data attributes for a <code>contact</code> or a <code>company</code>.
      */
-    public CompletableFuture<DataAttribute> createDataAttribute(
-            CreateDataAttributeRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<DataAttribute> createDataAttribute(Object request, RequestOptions requestOptions) {
         return this.rawClient.createDataAttribute(request, requestOptions).thenApply(response -> response.body());
     }
 

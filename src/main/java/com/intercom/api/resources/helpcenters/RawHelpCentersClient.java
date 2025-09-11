@@ -20,6 +20,7 @@ import com.intercom.api.resources.helpcenters.requests.FindHelpCenterRequest;
 import com.intercom.api.resources.helpcenters.requests.ListHelpCentersRequest;
 import com.intercom.api.types.Error;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
@@ -49,7 +50,7 @@ public class RawHelpCentersClient {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("help_center/help_centers")
-                .addPathSegment(request.getHelpCenterId())
+                .addPathSegment(Integer.toString(request.getHelpCenterId()))
                 .build();
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl)
@@ -142,7 +143,7 @@ public class RawHelpCentersClient {
                         .from(request)
                         .page(newPageNumber)
                         .build();
-                List<HelpCenter> result = parsedResponse.getData();
+                List<HelpCenter> result = parsedResponse.getData().orElse(Collections.emptyList());
                 return new IntercomHttpResponse<>(
                         new SyncPagingIterable<HelpCenter>(true, result, () -> list(nextRequest, requestOptions)
                                 .body()),

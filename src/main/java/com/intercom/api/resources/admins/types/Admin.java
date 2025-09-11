@@ -32,17 +32,19 @@ public final class Admin {
 
     private final String email;
 
-    private final String jobTitle;
+    private final Optional<String> jobTitle;
 
     private final boolean awayModeEnabled;
 
     private final boolean awayModeReassign;
 
+    private final Optional<Integer> awayStatusReasonId;
+
     private final boolean hasInboxSeat;
 
     private final List<Integer> teamIds;
 
-    private final Optional<Avatar> avatar;
+    private final Optional<String> avatar;
 
     private final Optional<TeamPriorityLevel> teamPriorityLevel;
 
@@ -53,12 +55,13 @@ public final class Admin {
             String id,
             String name,
             String email,
-            String jobTitle,
+            Optional<String> jobTitle,
             boolean awayModeEnabled,
             boolean awayModeReassign,
+            Optional<Integer> awayStatusReasonId,
             boolean hasInboxSeat,
             List<Integer> teamIds,
-            Optional<Avatar> avatar,
+            Optional<String> avatar,
             Optional<TeamPriorityLevel> teamPriorityLevel,
             Map<String, Object> additionalProperties) {
         this.type = type;
@@ -68,6 +71,7 @@ public final class Admin {
         this.jobTitle = jobTitle;
         this.awayModeEnabled = awayModeEnabled;
         this.awayModeReassign = awayModeReassign;
+        this.awayStatusReasonId = awayStatusReasonId;
         this.hasInboxSeat = hasInboxSeat;
         this.teamIds = teamIds;
         this.avatar = avatar;
@@ -111,7 +115,7 @@ public final class Admin {
      * @return The job title of the admin.
      */
     @JsonProperty("job_title")
-    public String getJobTitle() {
+    public Optional<String> getJobTitle() {
         return jobTitle;
     }
 
@@ -132,6 +136,14 @@ public final class Admin {
     }
 
     /**
+     * @return The unique identifier of the away status reason
+     */
+    @JsonProperty("away_status_reason_id")
+    public Optional<Integer> getAwayStatusReasonId() {
+        return awayStatusReasonId;
+    }
+
+    /**
      * @return Identifies if this admin has a paid inbox seat to restrict/allow features that require them.
      */
     @JsonProperty("has_inbox_seat")
@@ -148,10 +160,10 @@ public final class Admin {
     }
 
     /**
-     * @return The avatar object associated with the admin
+     * @return Image for the associated team or teammate
      */
     @JsonProperty("avatar")
-    public Optional<Avatar> getAvatar() {
+    public Optional<String> getAvatar() {
         return avatar;
     }
 
@@ -179,6 +191,7 @@ public final class Admin {
                 && jobTitle.equals(other.jobTitle)
                 && awayModeEnabled == other.awayModeEnabled
                 && awayModeReassign == other.awayModeReassign
+                && awayStatusReasonId.equals(other.awayStatusReasonId)
                 && hasInboxSeat == other.hasInboxSeat
                 && teamIds.equals(other.teamIds)
                 && avatar.equals(other.avatar)
@@ -195,6 +208,7 @@ public final class Admin {
                 this.jobTitle,
                 this.awayModeEnabled,
                 this.awayModeReassign,
+                this.awayStatusReasonId,
                 this.hasInboxSeat,
                 this.teamIds,
                 this.avatar,
@@ -230,14 +244,7 @@ public final class Admin {
         /**
          * The email of the admin.
          */
-        JobTitleStage email(@NotNull String email);
-    }
-
-    public interface JobTitleStage {
-        /**
-         * The job title of the admin.
-         */
-        AwayModeEnabledStage jobTitle(@NotNull String jobTitle);
+        AwayModeEnabledStage email(@NotNull String email);
     }
 
     public interface AwayModeEnabledStage {
@@ -272,6 +279,20 @@ public final class Admin {
         _FinalStage type(String type);
 
         /**
+         * <p>The job title of the admin.</p>
+         */
+        _FinalStage jobTitle(Optional<String> jobTitle);
+
+        _FinalStage jobTitle(String jobTitle);
+
+        /**
+         * <p>The unique identifier of the away status reason</p>
+         */
+        _FinalStage awayStatusReasonId(Optional<Integer> awayStatusReasonId);
+
+        _FinalStage awayStatusReasonId(Integer awayStatusReasonId);
+
+        /**
          * <p>This object represents the avatar associated with the admin.</p>
          */
         _FinalStage teamIds(List<Integer> teamIds);
@@ -281,11 +302,11 @@ public final class Admin {
         _FinalStage addAllTeamIds(List<Integer> teamIds);
 
         /**
-         * <p>The avatar object associated with the admin</p>
+         * <p>Image for the associated team or teammate</p>
          */
-        _FinalStage avatar(Optional<Avatar> avatar);
+        _FinalStage avatar(Optional<String> avatar);
 
-        _FinalStage avatar(Avatar avatar);
+        _FinalStage avatar(String avatar);
 
         _FinalStage teamPriorityLevel(Optional<TeamPriorityLevel> teamPriorityLevel);
 
@@ -297,7 +318,6 @@ public final class Admin {
             implements IdStage,
                     NameStage,
                     EmailStage,
-                    JobTitleStage,
                     AwayModeEnabledStage,
                     AwayModeReassignStage,
                     HasInboxSeatStage,
@@ -308,8 +328,6 @@ public final class Admin {
 
         private String email;
 
-        private String jobTitle;
-
         private boolean awayModeEnabled;
 
         private boolean awayModeReassign;
@@ -318,9 +336,13 @@ public final class Admin {
 
         private Optional<TeamPriorityLevel> teamPriorityLevel = Optional.empty();
 
-        private Optional<Avatar> avatar = Optional.empty();
+        private Optional<String> avatar = Optional.empty();
 
         private List<Integer> teamIds = new ArrayList<>();
+
+        private Optional<Integer> awayStatusReasonId = Optional.empty();
+
+        private Optional<String> jobTitle = Optional.empty();
 
         private Optional<String> type = Optional.empty();
 
@@ -338,6 +360,7 @@ public final class Admin {
             jobTitle(other.getJobTitle());
             awayModeEnabled(other.getAwayModeEnabled());
             awayModeReassign(other.getAwayModeReassign());
+            awayStatusReasonId(other.getAwayStatusReasonId());
             hasInboxSeat(other.getHasInboxSeat());
             teamIds(other.getTeamIds());
             avatar(other.getAvatar());
@@ -373,19 +396,8 @@ public final class Admin {
          */
         @java.lang.Override
         @JsonSetter("email")
-        public JobTitleStage email(@NotNull String email) {
+        public AwayModeEnabledStage email(@NotNull String email) {
             this.email = Objects.requireNonNull(email, "email must not be null");
-            return this;
-        }
-
-        /**
-         * The job title of the admin.<p>The job title of the admin.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("job_title")
-        public AwayModeEnabledStage jobTitle(@NotNull String jobTitle) {
-            this.jobTitle = Objects.requireNonNull(jobTitle, "jobTitle must not be null");
             return this;
         }
 
@@ -436,21 +448,21 @@ public final class Admin {
         }
 
         /**
-         * <p>The avatar object associated with the admin</p>
+         * <p>Image for the associated team or teammate</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
-        public _FinalStage avatar(Avatar avatar) {
+        public _FinalStage avatar(String avatar) {
             this.avatar = Optional.ofNullable(avatar);
             return this;
         }
 
         /**
-         * <p>The avatar object associated with the admin</p>
+         * <p>Image for the associated team or teammate</p>
          */
         @java.lang.Override
         @JsonSetter(value = "avatar", nulls = Nulls.SKIP)
-        public _FinalStage avatar(Optional<Avatar> avatar) {
+        public _FinalStage avatar(Optional<String> avatar) {
             this.avatar = avatar;
             return this;
         }
@@ -487,6 +499,46 @@ public final class Admin {
         }
 
         /**
+         * <p>The unique identifier of the away status reason</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage awayStatusReasonId(Integer awayStatusReasonId) {
+            this.awayStatusReasonId = Optional.ofNullable(awayStatusReasonId);
+            return this;
+        }
+
+        /**
+         * <p>The unique identifier of the away status reason</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "away_status_reason_id", nulls = Nulls.SKIP)
+        public _FinalStage awayStatusReasonId(Optional<Integer> awayStatusReasonId) {
+            this.awayStatusReasonId = awayStatusReasonId;
+            return this;
+        }
+
+        /**
+         * <p>The job title of the admin.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage jobTitle(String jobTitle) {
+            this.jobTitle = Optional.ofNullable(jobTitle);
+            return this;
+        }
+
+        /**
+         * <p>The job title of the admin.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "job_title", nulls = Nulls.SKIP)
+        public _FinalStage jobTitle(Optional<String> jobTitle) {
+            this.jobTitle = jobTitle;
+            return this;
+        }
+
+        /**
          * <p>String representing the object's type. Always has the value <code>admin</code>.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -516,106 +568,12 @@ public final class Admin {
                     jobTitle,
                     awayModeEnabled,
                     awayModeReassign,
+                    awayStatusReasonId,
                     hasInboxSeat,
                     teamIds,
                     avatar,
                     teamPriorityLevel,
                     additionalProperties);
-        }
-    }
-
-    @JsonInclude(JsonInclude.Include.NON_ABSENT)
-    @JsonDeserialize(builder = Avatar.Builder.class)
-    public static final class Avatar {
-        private final String imageUrl;
-
-        private final Map<String, Object> additionalProperties;
-
-        private Avatar(String imageUrl, Map<String, Object> additionalProperties) {
-            this.imageUrl = imageUrl;
-            this.additionalProperties = additionalProperties;
-        }
-
-        /**
-         * @return URL of the admin's avatar image
-         */
-        @JsonProperty("image_url")
-        public String getImageUrl() {
-            return imageUrl;
-        }
-
-        @java.lang.Override
-        public boolean equals(Object other) {
-            if (this == other) return true;
-            return other instanceof Avatar && equalTo((Avatar) other);
-        }
-
-        @JsonAnyGetter
-        public Map<String, Object> getAdditionalProperties() {
-            return this.additionalProperties;
-        }
-
-        private boolean equalTo(Avatar other) {
-            return imageUrl.equals(other.imageUrl);
-        }
-
-        @java.lang.Override
-        public int hashCode() {
-            return Objects.hash(this.imageUrl);
-        }
-
-        @java.lang.Override
-        public String toString() {
-            return ObjectMappers.stringify(this);
-        }
-
-        public static ImageUrlStage builder() {
-            return new Builder();
-        }
-
-        public interface ImageUrlStage {
-            /**
-             * URL of the admin's avatar image
-             */
-            _FinalStage imageUrl(@NotNull String imageUrl);
-
-            Builder from(Avatar other);
-        }
-
-        public interface _FinalStage {
-            Avatar build();
-        }
-
-        @JsonIgnoreProperties(ignoreUnknown = true)
-        public static final class Builder implements ImageUrlStage, _FinalStage {
-            private String imageUrl;
-
-            @JsonAnySetter
-            private Map<String, Object> additionalProperties = new HashMap<>();
-
-            private Builder() {}
-
-            @java.lang.Override
-            public Builder from(Avatar other) {
-                imageUrl(other.getImageUrl());
-                return this;
-            }
-
-            /**
-             * URL of the admin's avatar image<p>URL of the admin's avatar image</p>
-             * @return Reference to {@code this} so that method calls can be chained together.
-             */
-            @java.lang.Override
-            @JsonSetter("image_url")
-            public _FinalStage imageUrl(@NotNull String imageUrl) {
-                this.imageUrl = Objects.requireNonNull(imageUrl, "imageUrl must not be null");
-                return this;
-            }
-
-            @java.lang.Override
-            public Avatar build() {
-                return new Avatar(imageUrl, additionalProperties);
-            }
         }
     }
 }

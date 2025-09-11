@@ -17,31 +17,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ContactCompanies.Builder.class)
 public final class ContactCompanies {
-    private final Optional<String> type;
+    private final Optional<List<CompanyData>> data;
 
-    private final Optional<List<ContactCompany>> data;
+    private final Optional<String> url;
 
-    private final String url;
+    private final Optional<Integer> totalCount;
 
-    private final int totalCount;
-
-    private final boolean hasMore;
+    private final Optional<Boolean> hasMore;
 
     private final Map<String, Object> additionalProperties;
 
     private ContactCompanies(
-            Optional<String> type,
-            Optional<List<ContactCompany>> data,
-            String url,
-            int totalCount,
-            boolean hasMore,
+            Optional<List<CompanyData>> data,
+            Optional<String> url,
+            Optional<Integer> totalCount,
+            Optional<Boolean> hasMore,
             Map<String, Object> additionalProperties) {
-        this.type = type;
         this.data = data;
         this.url = url;
         this.totalCount = totalCount;
@@ -50,18 +45,10 @@ public final class ContactCompanies {
     }
 
     /**
-     * @return The type of object
-     */
-    @JsonProperty("type")
-    public Optional<String> getType() {
-        return type;
-    }
-
-    /**
-     * @return An array containing Company Objects
+     * @return An array of company data objects attached to the contact.
      */
     @JsonProperty("data")
-    public Optional<List<ContactCompany>> getData() {
+    public Optional<List<CompanyData>> getData() {
         return data;
     }
 
@@ -69,15 +56,15 @@ public final class ContactCompanies {
      * @return Url to get more company resources for this contact
      */
     @JsonProperty("url")
-    public String getUrl() {
+    public Optional<String> getUrl() {
         return url;
     }
 
     /**
-     * @return Int representing the total number of companyies attached to this contact
+     * @return Integer representing the total number of companies attached to this contact
      */
     @JsonProperty("total_count")
-    public int getTotalCount() {
+    public Optional<Integer> getTotalCount() {
         return totalCount;
     }
 
@@ -85,7 +72,7 @@ public final class ContactCompanies {
      * @return Whether there's more Addressable Objects to be viewed. If true, use the url to view all
      */
     @JsonProperty("has_more")
-    public boolean getHasMore() {
+    public Optional<Boolean> getHasMore() {
         return hasMore;
     }
 
@@ -101,16 +88,15 @@ public final class ContactCompanies {
     }
 
     private boolean equalTo(ContactCompanies other) {
-        return type.equals(other.type)
-                && data.equals(other.data)
+        return data.equals(other.data)
                 && url.equals(other.url)
-                && totalCount == other.totalCount
-                && hasMore == other.hasMore;
+                && totalCount.equals(other.totalCount)
+                && hasMore.equals(other.hasMore);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.type, this.data, this.url, this.totalCount, this.hasMore);
+        return Objects.hash(this.data, this.url, this.totalCount, this.hasMore);
     }
 
     @java.lang.Override
@@ -118,71 +104,26 @@ public final class ContactCompanies {
         return ObjectMappers.stringify(this);
     }
 
-    public static UrlStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface UrlStage {
-        /**
-         * Url to get more company resources for this contact
-         */
-        TotalCountStage url(@NotNull String url);
-
-        Builder from(ContactCompanies other);
-    }
-
-    public interface TotalCountStage {
-        /**
-         * Int representing the total number of companyies attached to this contact
-         */
-        HasMoreStage totalCount(int totalCount);
-    }
-
-    public interface HasMoreStage {
-        /**
-         * Whether there's more Addressable Objects to be viewed. If true, use the url to view all
-         */
-        _FinalStage hasMore(boolean hasMore);
-    }
-
-    public interface _FinalStage {
-        ContactCompanies build();
-
-        /**
-         * <p>The type of object</p>
-         */
-        _FinalStage type(Optional<String> type);
-
-        _FinalStage type(String type);
-
-        /**
-         * <p>An array containing Company Objects</p>
-         */
-        _FinalStage data(Optional<List<ContactCompany>> data);
-
-        _FinalStage data(List<ContactCompany> data);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements UrlStage, TotalCountStage, HasMoreStage, _FinalStage {
-        private String url;
+    public static final class Builder {
+        private Optional<List<CompanyData>> data = Optional.empty();
 
-        private int totalCount;
+        private Optional<String> url = Optional.empty();
 
-        private boolean hasMore;
+        private Optional<Integer> totalCount = Optional.empty();
 
-        private Optional<List<ContactCompany>> data = Optional.empty();
-
-        private Optional<String> type = Optional.empty();
+        private Optional<Boolean> hasMore = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(ContactCompanies other) {
-            type(other.getType());
             data(other.getData());
             url(other.getUrl());
             totalCount(other.getTotalCount());
@@ -191,81 +132,63 @@ public final class ContactCompanies {
         }
 
         /**
-         * Url to get more company resources for this contact<p>Url to get more company resources for this contact</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>An array of company data objects attached to the contact.</p>
          */
-        @java.lang.Override
-        @JsonSetter("url")
-        public TotalCountStage url(@NotNull String url) {
-            this.url = Objects.requireNonNull(url, "url must not be null");
+        @JsonSetter(value = "data", nulls = Nulls.SKIP)
+        public Builder data(Optional<List<CompanyData>> data) {
+            this.data = data;
             return this;
         }
 
-        /**
-         * Int representing the total number of companyies attached to this contact<p>Int representing the total number of companyies attached to this contact</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("total_count")
-        public HasMoreStage totalCount(int totalCount) {
-            this.totalCount = totalCount;
-            return this;
-        }
-
-        /**
-         * Whether there's more Addressable Objects to be viewed. If true, use the url to view all<p>Whether there's more Addressable Objects to be viewed. If true, use the url to view all</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("has_more")
-        public _FinalStage hasMore(boolean hasMore) {
-            this.hasMore = hasMore;
-            return this;
-        }
-
-        /**
-         * <p>An array containing Company Objects</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage data(List<ContactCompany> data) {
+        public Builder data(List<CompanyData> data) {
             this.data = Optional.ofNullable(data);
             return this;
         }
 
         /**
-         * <p>An array containing Company Objects</p>
+         * <p>Url to get more company resources for this contact</p>
          */
-        @java.lang.Override
-        @JsonSetter(value = "data", nulls = Nulls.SKIP)
-        public _FinalStage data(Optional<List<ContactCompany>> data) {
-            this.data = data;
+        @JsonSetter(value = "url", nulls = Nulls.SKIP)
+        public Builder url(Optional<String> url) {
+            this.url = url;
+            return this;
+        }
+
+        public Builder url(String url) {
+            this.url = Optional.ofNullable(url);
             return this;
         }
 
         /**
-         * <p>The type of object</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Integer representing the total number of companies attached to this contact</p>
          */
-        @java.lang.Override
-        public _FinalStage type(String type) {
-            this.type = Optional.ofNullable(type);
+        @JsonSetter(value = "total_count", nulls = Nulls.SKIP)
+        public Builder totalCount(Optional<Integer> totalCount) {
+            this.totalCount = totalCount;
+            return this;
+        }
+
+        public Builder totalCount(Integer totalCount) {
+            this.totalCount = Optional.ofNullable(totalCount);
             return this;
         }
 
         /**
-         * <p>The type of object</p>
+         * <p>Whether there's more Addressable Objects to be viewed. If true, use the url to view all</p>
          */
-        @java.lang.Override
-        @JsonSetter(value = "type", nulls = Nulls.SKIP)
-        public _FinalStage type(Optional<String> type) {
-            this.type = type;
+        @JsonSetter(value = "has_more", nulls = Nulls.SKIP)
+        public Builder hasMore(Optional<Boolean> hasMore) {
+            this.hasMore = hasMore;
             return this;
         }
 
-        @java.lang.Override
+        public Builder hasMore(Boolean hasMore) {
+            this.hasMore = Optional.ofNullable(hasMore);
+            return this;
+        }
+
         public ContactCompanies build() {
-            return new ContactCompanies(type, data, url, totalCount, hasMore, additionalProperties);
+            return new ContactCompanies(data, url, totalCount, hasMore, additionalProperties);
         }
     }
 }

@@ -12,8 +12,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.Nulls;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.intercom.api.core.ObjectMappers;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,14 +31,12 @@ import java.util.Optional;
 public final class MultipleFilterSearchRequest {
     private final Optional<Operator> operator;
 
-    private final Optional<List<MultipleOrSingleFilterSearchRequest>> value;
+    private final Optional<Value> value;
 
     private final Map<String, Object> additionalProperties;
 
     private MultipleFilterSearchRequest(
-            Optional<Operator> operator,
-            Optional<List<MultipleOrSingleFilterSearchRequest>> value,
-            Map<String, Object> additionalProperties) {
+            Optional<Operator> operator, Optional<Value> value, Map<String, Object> additionalProperties) {
         this.operator = operator;
         this.value = value;
         this.additionalProperties = additionalProperties;
@@ -47,7 +51,7 @@ public final class MultipleFilterSearchRequest {
     }
 
     @JsonProperty("value")
-    public Optional<List<MultipleOrSingleFilterSearchRequest>> getValue() {
+    public Optional<Value> getValue() {
         return value;
     }
 
@@ -84,7 +88,7 @@ public final class MultipleFilterSearchRequest {
     public static final class Builder {
         private Optional<Operator> operator = Optional.empty();
 
-        private Optional<List<MultipleOrSingleFilterSearchRequest>> value = Optional.empty();
+        private Optional<Value> value = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -112,12 +116,12 @@ public final class MultipleFilterSearchRequest {
         }
 
         @JsonSetter(value = "value", nulls = Nulls.SKIP)
-        public Builder value(Optional<List<MultipleOrSingleFilterSearchRequest>> value) {
+        public Builder value(Optional<Value> value) {
             this.value = value;
             return this;
         }
 
-        public Builder value(List<MultipleOrSingleFilterSearchRequest> value) {
+        public Builder value(Value value) {
             this.value = Optional.ofNullable(value);
             return this;
         }
@@ -199,6 +203,89 @@ public final class MultipleFilterSearchRequest {
             T visitOr();
 
             T visitUnknown(String unknownType);
+        }
+    }
+
+    @JsonDeserialize(using = Value.Deserializer.class)
+    public static final class Value {
+        private final Object value;
+
+        private final int type;
+
+        private Value(Object value, int type) {
+            this.value = value;
+            this.type = type;
+        }
+
+        @JsonValue
+        public Object get() {
+            return this.value;
+        }
+
+        @SuppressWarnings("unchecked")
+        public <T> T visit(Visitor<T> visitor) {
+            if (this.type == 0) {
+                return visitor.visitListOfMultipleFilterSearchRequest((List<MultipleFilterSearchRequest>) this.value);
+            } else if (this.type == 1) {
+                return visitor.visitListOfSingleFilterSearchRequest((List<SingleFilterSearchRequest>) this.value);
+            }
+            throw new IllegalStateException("Failed to visit value. This should never happen.");
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            if (this == other) return true;
+            return other instanceof Value && equalTo((Value) other);
+        }
+
+        private boolean equalTo(Value other) {
+            return value.equals(other.value);
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return Objects.hash(this.value);
+        }
+
+        @java.lang.Override
+        public String toString() {
+            return this.value.toString();
+        }
+
+        public static Value ofListOfMultipleFilterSearchRequest(List<MultipleFilterSearchRequest> value) {
+            return new Value(value, 0);
+        }
+
+        public static Value ofListOfSingleFilterSearchRequest(List<SingleFilterSearchRequest> value) {
+            return new Value(value, 1);
+        }
+
+        public interface Visitor<T> {
+            T visitListOfMultipleFilterSearchRequest(List<MultipleFilterSearchRequest> value);
+
+            T visitListOfSingleFilterSearchRequest(List<SingleFilterSearchRequest> value);
+        }
+
+        static final class Deserializer extends StdDeserializer<Value> {
+            Deserializer() {
+                super(Value.class);
+            }
+
+            @java.lang.Override
+            public Value deserialize(JsonParser p, DeserializationContext context) throws IOException {
+                Object value = p.readValueAs(Object.class);
+                try {
+                    return ofListOfMultipleFilterSearchRequest(ObjectMappers.JSON_MAPPER.convertValue(
+                            value, new TypeReference<List<MultipleFilterSearchRequest>>() {}));
+                } catch (IllegalArgumentException e) {
+                }
+                try {
+                    return ofListOfSingleFilterSearchRequest(ObjectMappers.JSON_MAPPER.convertValue(
+                            value, new TypeReference<List<SingleFilterSearchRequest>>() {}));
+                } catch (IllegalArgumentException e) {
+                }
+                throw new JsonParseException(p, "Failed to deserialize");
+            }
         }
     }
 }

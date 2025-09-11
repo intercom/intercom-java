@@ -16,10 +16,10 @@ import com.intercom.api.errors.BadRequestError;
 import com.intercom.api.errors.NotFoundError;
 import com.intercom.api.errors.UnauthorizedError;
 import com.intercom.api.errors.UnprocessableEntityError;
-import com.intercom.api.resources.dataattributes.requests.CreateDataAttributeRequest;
 import com.intercom.api.resources.dataattributes.requests.ListDataAttributesRequest;
 import com.intercom.api.resources.dataattributes.requests.UpdateDataAttributeRequest;
 import com.intercom.api.resources.dataattributes.types.DataAttribute;
+import com.intercom.api.types.CreateDataAttributeRequest;
 import com.intercom.api.types.DataAttributeList;
 import com.intercom.api.types.Error;
 import java.io.IOException;
@@ -230,12 +230,12 @@ public class AsyncRawDataAttributesClient {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("data_attributes")
-                .addPathSegment(request.getDataAttributeId())
+                .addPathSegment(Integer.toString(request.getDataAttributeId()))
                 .build();
         RequestBody body;
         try {
             body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request.getBody()), MediaTypes.APPLICATION_JSON);
         } catch (JsonProcessingException e) {
             throw new IntercomException("Failed to serialize request", e);
         }

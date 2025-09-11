@@ -18,6 +18,7 @@ import com.intercom.api.errors.UnauthorizedError;
 import com.intercom.api.resources.companies.types.Company;
 import com.intercom.api.resources.contacts.requests.ArchiveContactRequest;
 import com.intercom.api.resources.contacts.requests.AttachSubscriptionToContactRequest;
+import com.intercom.api.resources.contacts.requests.BlockContactRequest;
 import com.intercom.api.resources.contacts.requests.DeleteContactRequest;
 import com.intercom.api.resources.contacts.requests.DetachSubscriptionFromContactRequest;
 import com.intercom.api.resources.contacts.requests.FindContactRequest;
@@ -27,12 +28,19 @@ import com.intercom.api.resources.contacts.requests.ListContactsRequest;
 import com.intercom.api.resources.contacts.requests.ListSegmentsAttachedToContactRequest;
 import com.intercom.api.resources.contacts.requests.ListTagsAttachedToContactRequest;
 import com.intercom.api.resources.contacts.requests.MergeContactsRequest;
+import com.intercom.api.resources.contacts.requests.ShowContactByExternalIdRequest;
 import com.intercom.api.resources.contacts.requests.UnarchiveContactRequest;
 import com.intercom.api.resources.contacts.requests.UpdateContactRequest;
 import com.intercom.api.resources.contacts.types.Contact;
+import com.intercom.api.resources.contacts.types.ContactsCreateResponse;
+import com.intercom.api.resources.contacts.types.ContactsFindResponse;
+import com.intercom.api.resources.contacts.types.ContactsMergeLeadInUserResponse;
+import com.intercom.api.resources.contacts.types.ContactsUpdateResponse;
+import com.intercom.api.resources.contacts.types.ShowContactByExternalIdResponse;
 import com.intercom.api.resources.subscriptiontypes.types.SubscriptionType;
 import com.intercom.api.types.ContactArchived;
 import com.intercom.api.types.ContactAttachedCompanies;
+import com.intercom.api.types.ContactBlocked;
 import com.intercom.api.types.ContactDeleted;
 import com.intercom.api.types.ContactList;
 import com.intercom.api.types.ContactSegments;
@@ -45,6 +53,7 @@ import com.intercom.api.types.StartingAfterPaging;
 import com.intercom.api.types.SubscriptionTypeList;
 import com.intercom.api.types.TagList;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import okhttp3.Headers;
@@ -109,7 +118,7 @@ public class RawContactsClient {
                         .from(request)
                         .page(newPageNumber)
                         .build();
-                List<Company> result = parsedResponse.getCompanies();
+                List<Company> result = parsedResponse.getCompanies().orElse(Collections.emptyList());
                 return new IntercomHttpResponse<>(
                         new SyncPagingIterable<Company>(
                                 true, result, () -> listAttachedCompanies(nextRequest, requestOptions)
@@ -456,14 +465,14 @@ public class RawContactsClient {
     /**
      * You can fetch the details of a single contact.
      */
-    public IntercomHttpResponse<Contact> find(FindContactRequest request) {
+    public IntercomHttpResponse<ContactsFindResponse> find(FindContactRequest request) {
         return find(request, null);
     }
 
     /**
      * You can fetch the details of a single contact.
      */
-    public IntercomHttpResponse<Contact> find(FindContactRequest request, RequestOptions requestOptions) {
+    public IntercomHttpResponse<ContactsFindResponse> find(FindContactRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("contacts")
@@ -484,7 +493,8 @@ public class RawContactsClient {
             ResponseBody responseBody = response.body();
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Contact.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), ContactsFindResponse.class),
+                        response);
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
@@ -507,15 +517,24 @@ public class RawContactsClient {
 
     /**
      * You can update an existing contact (ie. user or lead).
+     * <p>{% admonition type=&quot;info&quot; %}
+     * This endpoint handles both <strong>contact updates</strong> and <strong>custom object associations</strong>.</p>
+     * <p>See <em><code>update a contact with an association to a custom object instance</code></em> in the request/response examples to see the custom object association format.
+     * {% /admonition %}</p>
      */
-    public IntercomHttpResponse<Contact> update(UpdateContactRequest request) {
+    public IntercomHttpResponse<ContactsUpdateResponse> update(UpdateContactRequest request) {
         return update(request, null);
     }
 
     /**
      * You can update an existing contact (ie. user or lead).
+     * <p>{% admonition type=&quot;info&quot; %}
+     * This endpoint handles both <strong>contact updates</strong> and <strong>custom object associations</strong>.</p>
+     * <p>See <em><code>update a contact with an association to a custom object instance</code></em> in the request/response examples to see the custom object association format.
+     * {% /admonition %}</p>
      */
-    public IntercomHttpResponse<Contact> update(UpdateContactRequest request, RequestOptions requestOptions) {
+    public IntercomHttpResponse<ContactsUpdateResponse> update(
+            UpdateContactRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("contacts")
@@ -543,7 +562,8 @@ public class RawContactsClient {
             ResponseBody responseBody = response.body();
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Contact.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), ContactsUpdateResponse.class),
+                        response);
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
@@ -619,14 +639,22 @@ public class RawContactsClient {
     /**
      * You can merge a contact with a <code>role</code> of <code>lead</code> into a contact with a <code>role</code> of <code>user</code>.
      */
-    public IntercomHttpResponse<Contact> mergeLeadInUser(MergeContactsRequest request) {
+    public IntercomHttpResponse<ContactsMergeLeadInUserResponse> mergeLeadInUser() {
+        return mergeLeadInUser(MergeContactsRequest.builder().build());
+    }
+
+    /**
+     * You can merge a contact with a <code>role</code> of <code>lead</code> into a contact with a <code>role</code> of <code>user</code>.
+     */
+    public IntercomHttpResponse<ContactsMergeLeadInUserResponse> mergeLeadInUser(MergeContactsRequest request) {
         return mergeLeadInUser(request, null);
     }
 
     /**
      * You can merge a contact with a <code>role</code> of <code>lead</code> into a contact with a <code>role</code> of <code>user</code>.
      */
-    public IntercomHttpResponse<Contact> mergeLeadInUser(MergeContactsRequest request, RequestOptions requestOptions) {
+    public IntercomHttpResponse<ContactsMergeLeadInUserResponse> mergeLeadInUser(
+            MergeContactsRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("contacts/merge")
@@ -653,7 +681,9 @@ public class RawContactsClient {
             ResponseBody responseBody = response.body();
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Contact.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(
+                                responseBody.string(), ContactsMergeLeadInUserResponse.class),
+                        response);
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
@@ -896,7 +926,7 @@ public class RawContactsClient {
                         .from(request)
                         .pagination(pagination)
                         .build();
-                List<Contact> result = parsedResponse.getData();
+                List<Contact> result = parsedResponse.getData().orElse(Collections.emptyList());
                 return new IntercomHttpResponse<>(
                         new SyncPagingIterable<Contact>(
                                 startingAfter.isPresent(), result, () -> search(nextRequest, requestOptions)
@@ -992,7 +1022,7 @@ public class RawContactsClient {
                         .from(request)
                         .startingAfter(startingAfter)
                         .build();
-                List<Contact> result = parsedResponse.getData();
+                List<Contact> result = parsedResponse.getData().orElse(Collections.emptyList());
                 return new IntercomHttpResponse<>(
                         new SyncPagingIterable<Contact>(
                                 startingAfter.isPresent(), result, () -> list(nextRequest, requestOptions)
@@ -1021,14 +1051,15 @@ public class RawContactsClient {
     /**
      * You can create a new contact (ie. user or lead).
      */
-    public IntercomHttpResponse<Contact> create(CreateContactRequest request) {
+    public IntercomHttpResponse<ContactsCreateResponse> create(CreateContactRequest request) {
         return create(request, null);
     }
 
     /**
      * You can create a new contact (ie. user or lead).
      */
-    public IntercomHttpResponse<Contact> create(CreateContactRequest request, RequestOptions requestOptions) {
+    public IntercomHttpResponse<ContactsCreateResponse> create(
+            CreateContactRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("contacts")
@@ -1055,7 +1086,64 @@ public class RawContactsClient {
             ResponseBody responseBody = response.body();
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Contact.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), ContactsCreateResponse.class),
+                        response);
+            }
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+            try {
+                if (response.code() == 401) {
+                    throw new UnauthorizedError(
+                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class), response);
+                }
+            } catch (JsonProcessingException ignored) {
+                // unable to map error response, throwing generic error
+            }
+            throw new IntercomApiException(
+                    "Error with status code " + response.code(),
+                    response.code(),
+                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
+                    response);
+        } catch (IOException e) {
+            throw new IntercomException("Network error executing HTTP request", e);
+        }
+    }
+
+    /**
+     * You can fetch the details of a single contact by external ID. Note that this endpoint only supports users and not leads.
+     */
+    public IntercomHttpResponse<ShowContactByExternalIdResponse> showContactByExternalId(
+            ShowContactByExternalIdRequest request) {
+        return showContactByExternalId(request, null);
+    }
+
+    /**
+     * You can fetch the details of a single contact by external ID. Note that this endpoint only supports users and not leads.
+     */
+    public IntercomHttpResponse<ShowContactByExternalIdResponse> showContactByExternalId(
+            ShowContactByExternalIdRequest request, RequestOptions requestOptions) {
+        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+                .newBuilder()
+                .addPathSegments("contacts/find_by_external_id")
+                .addPathSegment(request.getExternalId())
+                .build();
+        Request.Builder _requestBuilder = new Request.Builder()
+                .url(httpUrl)
+                .method("GET", null)
+                .headers(Headers.of(clientOptions.headers(requestOptions)))
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept", "application/json");
+        Request okhttpRequest = _requestBuilder.build();
+        OkHttpClient client = clientOptions.httpClient();
+        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+            client = clientOptions.httpClientWithTimeout(requestOptions);
+        }
+        try (Response response = client.newCall(okhttpRequest).execute()) {
+            ResponseBody responseBody = response.body();
+            if (response.isSuccessful()) {
+                return new IntercomHttpResponse<>(
+                        ObjectMappers.JSON_MAPPER.readValue(
+                                responseBody.string(), ShowContactByExternalIdResponse.class),
+                        response);
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
@@ -1155,6 +1243,52 @@ public class RawContactsClient {
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
                         ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), ContactUnarchived.class), response);
+            }
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+            throw new IntercomApiException(
+                    "Error with status code " + response.code(),
+                    response.code(),
+                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
+                    response);
+        } catch (IOException e) {
+            throw new IntercomException("Network error executing HTTP request", e);
+        }
+    }
+
+    /**
+     * Block a single contact.&lt;br&gt;<strong>Note:</strong> conversations of the contact will also be archived during the process.&lt;br&gt;More details in <a href="https://www.intercom.com/help/en/articles/8838656-inbox-faqs">FAQ How do I block Inbox spam?</a>
+     */
+    public IntercomHttpResponse<ContactBlocked> blockContact(BlockContactRequest request) {
+        return blockContact(request, null);
+    }
+
+    /**
+     * Block a single contact.&lt;br&gt;<strong>Note:</strong> conversations of the contact will also be archived during the process.&lt;br&gt;More details in <a href="https://www.intercom.com/help/en/articles/8838656-inbox-faqs">FAQ How do I block Inbox spam?</a>
+     */
+    public IntercomHttpResponse<ContactBlocked> blockContact(
+            BlockContactRequest request, RequestOptions requestOptions) {
+        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+                .newBuilder()
+                .addPathSegments("contacts")
+                .addPathSegment(request.getContactId())
+                .addPathSegments("block")
+                .build();
+        Request.Builder _requestBuilder = new Request.Builder()
+                .url(httpUrl)
+                .method("POST", RequestBody.create("", null))
+                .headers(Headers.of(clientOptions.headers(requestOptions)))
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept", "application/json");
+        Request okhttpRequest = _requestBuilder.build();
+        OkHttpClient client = clientOptions.httpClient();
+        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+            client = clientOptions.httpClientWithTimeout(requestOptions);
+        }
+        try (Response response = client.newCall(okhttpRequest).execute()) {
+            ResponseBody responseBody = response.body();
+            if (response.isSuccessful()) {
+                return new IntercomHttpResponse<>(
+                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), ContactBlocked.class), response);
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             throw new IntercomApiException(

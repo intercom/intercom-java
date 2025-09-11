@@ -6,7 +6,6 @@ package com.intercom.api.resources.articles;
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.RequestOptions;
 import com.intercom.api.core.pagination.SyncPagingIterable;
-import com.intercom.api.resources.articles.requests.CreateArticleRequest;
 import com.intercom.api.resources.articles.requests.DeleteArticleRequest;
 import com.intercom.api.resources.articles.requests.FindArticleRequest;
 import com.intercom.api.resources.articles.requests.ListArticlesRequest;
@@ -14,8 +13,10 @@ import com.intercom.api.resources.articles.requests.SearchArticlesRequest;
 import com.intercom.api.resources.articles.requests.UpdateArticleRequest;
 import com.intercom.api.resources.articles.types.Article;
 import com.intercom.api.resources.articles.types.ArticleListItem;
-import com.intercom.api.resources.articles.types.SearchArticlesResponse;
+import com.intercom.api.resources.articles.types.ArticleSearchResponse;
+import com.intercom.api.types.CreateArticleRequest;
 import com.intercom.api.types.DeletedArticleObject;
+import java.util.Optional;
 
 public class ArticlesClient {
     protected final ClientOptions clientOptions;
@@ -70,14 +71,21 @@ public class ArticlesClient {
     /**
      * You can create a new article by making a POST request to <code>https://api.intercom.io/articles</code>.
      */
-    public Article create(CreateArticleRequest request) {
+    public Article create() {
+        return this.rawClient.create().body();
+    }
+
+    /**
+     * You can create a new article by making a POST request to <code>https://api.intercom.io/articles</code>.
+     */
+    public Article create(Optional<CreateArticleRequest> request) {
         return this.rawClient.create(request).body();
     }
 
     /**
      * You can create a new article by making a POST request to <code>https://api.intercom.io/articles</code>.
      */
-    public Article create(CreateArticleRequest request, RequestOptions requestOptions) {
+    public Article create(Optional<CreateArticleRequest> request, RequestOptions requestOptions) {
         return this.rawClient.create(request, requestOptions).body();
     }
 
@@ -126,21 +134,21 @@ public class ArticlesClient {
     /**
      * You can search for articles by making a GET request to <code>https://api.intercom.io/articles/search</code>.
      */
-    public SearchArticlesResponse search() {
+    public ArticleSearchResponse search() {
         return this.rawClient.search().body();
     }
 
     /**
      * You can search for articles by making a GET request to <code>https://api.intercom.io/articles/search</code>.
      */
-    public SearchArticlesResponse search(SearchArticlesRequest request) {
+    public ArticleSearchResponse search(SearchArticlesRequest request) {
         return this.rawClient.search(request).body();
     }
 
     /**
      * You can search for articles by making a GET request to <code>https://api.intercom.io/articles/search</code>.
      */
-    public SearchArticlesResponse search(SearchArticlesRequest request, RequestOptions requestOptions) {
+    public ArticleSearchResponse search(SearchArticlesRequest request, RequestOptions requestOptions) {
         return this.rawClient.search(request, requestOptions).body();
     }
 }

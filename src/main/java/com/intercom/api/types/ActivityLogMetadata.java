@@ -38,6 +38,10 @@ public final class ActivityLogMetadata {
 
     private final Optional<String> updateByName;
 
+    private final Optional<Integer> conversationAssignmentLimit;
+
+    private final Optional<Integer> ticketAssignmentLimit;
+
     private final Map<String, Object> additionalProperties;
 
     private ActivityLogMetadata(
@@ -50,6 +54,8 @@ public final class ActivityLogMetadata {
             Optional<String> autoChanged,
             Optional<Integer> updateBy,
             Optional<String> updateByName,
+            Optional<Integer> conversationAssignmentLimit,
+            Optional<Integer> ticketAssignmentLimit,
             Map<String, Object> additionalProperties) {
         this.signInMethod = signInMethod;
         this.externalId = externalId;
@@ -60,6 +66,8 @@ public final class ActivityLogMetadata {
         this.autoChanged = autoChanged;
         this.updateBy = updateBy;
         this.updateByName = updateByName;
+        this.conversationAssignmentLimit = conversationAssignmentLimit;
+        this.ticketAssignmentLimit = ticketAssignmentLimit;
         this.additionalProperties = additionalProperties;
     }
 
@@ -135,6 +143,22 @@ public final class ActivityLogMetadata {
         return updateByName;
     }
 
+    /**
+     * @return The conversation assignment limit value for an admin.
+     */
+    @JsonProperty("conversation_assignment_limit")
+    public Optional<Integer> getConversationAssignmentLimit() {
+        return conversationAssignmentLimit;
+    }
+
+    /**
+     * @return The ticket assignment limit value for an admin.
+     */
+    @JsonProperty("ticket_assignment_limit")
+    public Optional<Integer> getTicketAssignmentLimit() {
+        return ticketAssignmentLimit;
+    }
+
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
@@ -155,7 +179,9 @@ public final class ActivityLogMetadata {
                 && source.equals(other.source)
                 && autoChanged.equals(other.autoChanged)
                 && updateBy.equals(other.updateBy)
-                && updateByName.equals(other.updateByName);
+                && updateByName.equals(other.updateByName)
+                && conversationAssignmentLimit.equals(other.conversationAssignmentLimit)
+                && ticketAssignmentLimit.equals(other.ticketAssignmentLimit);
     }
 
     @java.lang.Override
@@ -169,7 +195,9 @@ public final class ActivityLogMetadata {
                 this.source,
                 this.autoChanged,
                 this.updateBy,
-                this.updateByName);
+                this.updateByName,
+                this.conversationAssignmentLimit,
+                this.ticketAssignmentLimit);
     }
 
     @java.lang.Override
@@ -201,6 +229,10 @@ public final class ActivityLogMetadata {
 
         private Optional<String> updateByName = Optional.empty();
 
+        private Optional<Integer> conversationAssignmentLimit = Optional.empty();
+
+        private Optional<Integer> ticketAssignmentLimit = Optional.empty();
+
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -216,6 +248,8 @@ public final class ActivityLogMetadata {
             autoChanged(other.getAutoChanged());
             updateBy(other.getUpdateBy());
             updateByName(other.getUpdateByName());
+            conversationAssignmentLimit(other.getConversationAssignmentLimit());
+            ticketAssignmentLimit(other.getTicketAssignmentLimit());
             return this;
         }
 
@@ -345,6 +379,34 @@ public final class ActivityLogMetadata {
             return this;
         }
 
+        /**
+         * <p>The conversation assignment limit value for an admin.</p>
+         */
+        @JsonSetter(value = "conversation_assignment_limit", nulls = Nulls.SKIP)
+        public Builder conversationAssignmentLimit(Optional<Integer> conversationAssignmentLimit) {
+            this.conversationAssignmentLimit = conversationAssignmentLimit;
+            return this;
+        }
+
+        public Builder conversationAssignmentLimit(Integer conversationAssignmentLimit) {
+            this.conversationAssignmentLimit = Optional.ofNullable(conversationAssignmentLimit);
+            return this;
+        }
+
+        /**
+         * <p>The ticket assignment limit value for an admin.</p>
+         */
+        @JsonSetter(value = "ticket_assignment_limit", nulls = Nulls.SKIP)
+        public Builder ticketAssignmentLimit(Optional<Integer> ticketAssignmentLimit) {
+            this.ticketAssignmentLimit = ticketAssignmentLimit;
+            return this;
+        }
+
+        public Builder ticketAssignmentLimit(Integer ticketAssignmentLimit) {
+            this.ticketAssignmentLimit = Optional.ofNullable(ticketAssignmentLimit);
+            return this;
+        }
+
         public ActivityLogMetadata build() {
             return new ActivityLogMetadata(
                     signInMethod,
@@ -356,6 +418,8 @@ public final class ActivityLogMetadata {
                     autoChanged,
                     updateBy,
                     updateByName,
+                    conversationAssignmentLimit,
+                    ticketAssignmentLimit,
                     additionalProperties);
         }
     }

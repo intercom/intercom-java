@@ -8,8 +8,7 @@ import com.intercom.api.core.RequestOptions;
 import com.intercom.api.resources.news.feeds.requests.FindNewsFeedRequest;
 import com.intercom.api.resources.news.feeds.requests.ListNewsFeedItemsRequest;
 import com.intercom.api.resources.news.types.Newsfeed;
-import com.intercom.api.types.PaginatedNewsItemResponse;
-import com.intercom.api.types.PaginatedNewsfeedResponse;
+import com.intercom.api.types.PaginatedResponse;
 
 public class FeedsClient {
     protected final ClientOptions clientOptions;
@@ -31,28 +30,28 @@ public class FeedsClient {
     /**
      * You can fetch a list of all news items that are live on a given newsfeed
      */
-    public PaginatedNewsItemResponse listItems(ListNewsFeedItemsRequest request) {
+    public PaginatedResponse listItems(ListNewsFeedItemsRequest request) {
         return this.rawClient.listItems(request).body();
     }
 
     /**
      * You can fetch a list of all news items that are live on a given newsfeed
      */
-    public PaginatedNewsItemResponse listItems(ListNewsFeedItemsRequest request, RequestOptions requestOptions) {
+    public PaginatedResponse listItems(ListNewsFeedItemsRequest request, RequestOptions requestOptions) {
         return this.rawClient.listItems(request, requestOptions).body();
     }
 
     /**
      * You can fetch a list of all newsfeeds
      */
-    public PaginatedNewsfeedResponse list() {
+    public PaginatedResponse list() {
         return this.rawClient.list().body();
     }
 
     /**
      * You can fetch a list of all newsfeeds
      */
-    public PaginatedNewsfeedResponse list(RequestOptions requestOptions) {
+    public PaginatedResponse list(RequestOptions requestOptions) {
         return this.rawClient.list(requestOptions).body();
     }
 

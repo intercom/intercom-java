@@ -40,7 +40,7 @@ public final class Collection {
 
     private final int order;
 
-    private final String defaultLocale;
+    private final Optional<String> defaultLocale;
 
     private final Optional<GroupTranslatedContent> translatedContent;
 
@@ -60,7 +60,7 @@ public final class Collection {
             Optional<String> url,
             Optional<String> icon,
             int order,
-            String defaultLocale,
+            Optional<String> defaultLocale,
             Optional<GroupTranslatedContent> translatedContent,
             Optional<String> parentId,
             Optional<Integer> helpCenterId,
@@ -157,7 +157,7 @@ public final class Collection {
      * @return The default locale of the help center. This field is only returned for multilingual help centers.
      */
     @JsonProperty("default_locale")
-    public String getDefaultLocale() {
+    public Optional<String> getDefaultLocale() {
         return defaultLocale;
     }
 
@@ -270,14 +270,7 @@ public final class Collection {
         /**
          * The order of the section in relation to others sections within a collection. Values go from `0` upwards. `0` is the default if there's no order.
          */
-        DefaultLocaleStage order(int order);
-    }
-
-    public interface DefaultLocaleStage {
-        /**
-         * The default locale of the help center. This field is only returned for multilingual help centers.
-         */
-        _FinalStage defaultLocale(@NotNull String defaultLocale);
+        _FinalStage order(int order);
     }
 
     public interface _FinalStage {
@@ -311,6 +304,13 @@ public final class Collection {
 
         _FinalStage icon(String icon);
 
+        /**
+         * <p>The default locale of the help center. This field is only returned for multilingual help centers.</p>
+         */
+        _FinalStage defaultLocale(Optional<String> defaultLocale);
+
+        _FinalStage defaultLocale(String defaultLocale);
+
         _FinalStage translatedContent(Optional<GroupTranslatedContent> translatedContent);
 
         _FinalStage translatedContent(GroupTranslatedContent translatedContent);
@@ -332,13 +332,7 @@ public final class Collection {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder
-            implements IdStage,
-                    WorkspaceIdStage,
-                    NameStage,
-                    CreatedAtStage,
-                    OrderStage,
-                    DefaultLocaleStage,
-                    _FinalStage {
+            implements IdStage, WorkspaceIdStage, NameStage, CreatedAtStage, OrderStage, _FinalStage {
         private String id;
 
         private String workspaceId;
@@ -349,13 +343,13 @@ public final class Collection {
 
         private int order;
 
-        private String defaultLocale;
-
         private Optional<Integer> helpCenterId = Optional.empty();
 
         private Optional<String> parentId = Optional.empty();
 
         private Optional<GroupTranslatedContent> translatedContent = Optional.empty();
+
+        private Optional<String> defaultLocale = Optional.empty();
 
         private Optional<String> icon = Optional.empty();
 
@@ -438,19 +432,8 @@ public final class Collection {
          */
         @java.lang.Override
         @JsonSetter("order")
-        public DefaultLocaleStage order(int order) {
+        public _FinalStage order(int order) {
             this.order = order;
-            return this;
-        }
-
-        /**
-         * The default locale of the help center. This field is only returned for multilingual help centers.<p>The default locale of the help center. This field is only returned for multilingual help centers.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("default_locale")
-        public _FinalStage defaultLocale(@NotNull String defaultLocale) {
-            this.defaultLocale = Objects.requireNonNull(defaultLocale, "defaultLocale must not be null");
             return this;
         }
 
@@ -504,6 +487,26 @@ public final class Collection {
         @JsonSetter(value = "translated_content", nulls = Nulls.SKIP)
         public _FinalStage translatedContent(Optional<GroupTranslatedContent> translatedContent) {
             this.translatedContent = translatedContent;
+            return this;
+        }
+
+        /**
+         * <p>The default locale of the help center. This field is only returned for multilingual help centers.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage defaultLocale(String defaultLocale) {
+            this.defaultLocale = Optional.ofNullable(defaultLocale);
+            return this;
+        }
+
+        /**
+         * <p>The default locale of the help center. This field is only returned for multilingual help centers.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "default_locale", nulls = Nulls.SKIP)
+        public _FinalStage defaultLocale(Optional<String> defaultLocale) {
+            this.defaultLocale = defaultLocale;
             return this;
         }
 

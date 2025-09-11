@@ -9,6 +9,7 @@ import com.intercom.api.core.pagination.SyncPagingIterable;
 import com.intercom.api.resources.companies.types.Company;
 import com.intercom.api.resources.contacts.requests.ArchiveContactRequest;
 import com.intercom.api.resources.contacts.requests.AttachSubscriptionToContactRequest;
+import com.intercom.api.resources.contacts.requests.BlockContactRequest;
 import com.intercom.api.resources.contacts.requests.DeleteContactRequest;
 import com.intercom.api.resources.contacts.requests.DetachSubscriptionFromContactRequest;
 import com.intercom.api.resources.contacts.requests.FindContactRequest;
@@ -18,11 +19,18 @@ import com.intercom.api.resources.contacts.requests.ListContactsRequest;
 import com.intercom.api.resources.contacts.requests.ListSegmentsAttachedToContactRequest;
 import com.intercom.api.resources.contacts.requests.ListTagsAttachedToContactRequest;
 import com.intercom.api.resources.contacts.requests.MergeContactsRequest;
+import com.intercom.api.resources.contacts.requests.ShowContactByExternalIdRequest;
 import com.intercom.api.resources.contacts.requests.UnarchiveContactRequest;
 import com.intercom.api.resources.contacts.requests.UpdateContactRequest;
 import com.intercom.api.resources.contacts.types.Contact;
+import com.intercom.api.resources.contacts.types.ContactsCreateResponse;
+import com.intercom.api.resources.contacts.types.ContactsFindResponse;
+import com.intercom.api.resources.contacts.types.ContactsMergeLeadInUserResponse;
+import com.intercom.api.resources.contacts.types.ContactsUpdateResponse;
+import com.intercom.api.resources.contacts.types.ShowContactByExternalIdResponse;
 import com.intercom.api.resources.subscriptiontypes.types.SubscriptionType;
 import com.intercom.api.types.ContactArchived;
+import com.intercom.api.types.ContactBlocked;
 import com.intercom.api.types.ContactDeleted;
 import com.intercom.api.types.ContactSegments;
 import com.intercom.api.types.ContactUnarchived;
@@ -154,28 +162,36 @@ public class ContactsClient {
     /**
      * You can fetch the details of a single contact.
      */
-    public Contact find(FindContactRequest request) {
+    public ContactsFindResponse find(FindContactRequest request) {
         return this.rawClient.find(request).body();
     }
 
     /**
      * You can fetch the details of a single contact.
      */
-    public Contact find(FindContactRequest request, RequestOptions requestOptions) {
+    public ContactsFindResponse find(FindContactRequest request, RequestOptions requestOptions) {
         return this.rawClient.find(request, requestOptions).body();
     }
 
     /**
      * You can update an existing contact (ie. user or lead).
+     * <p>{% admonition type=&quot;info&quot; %}
+     * This endpoint handles both <strong>contact updates</strong> and <strong>custom object associations</strong>.</p>
+     * <p>See <em><code>update a contact with an association to a custom object instance</code></em> in the request/response examples to see the custom object association format.
+     * {% /admonition %}</p>
      */
-    public Contact update(UpdateContactRequest request) {
+    public ContactsUpdateResponse update(UpdateContactRequest request) {
         return this.rawClient.update(request).body();
     }
 
     /**
      * You can update an existing contact (ie. user or lead).
+     * <p>{% admonition type=&quot;info&quot; %}
+     * This endpoint handles both <strong>contact updates</strong> and <strong>custom object associations</strong>.</p>
+     * <p>See <em><code>update a contact with an association to a custom object instance</code></em> in the request/response examples to see the custom object association format.
+     * {% /admonition %}</p>
      */
-    public Contact update(UpdateContactRequest request, RequestOptions requestOptions) {
+    public ContactsUpdateResponse update(UpdateContactRequest request, RequestOptions requestOptions) {
         return this.rawClient.update(request, requestOptions).body();
     }
 
@@ -196,14 +212,22 @@ public class ContactsClient {
     /**
      * You can merge a contact with a <code>role</code> of <code>lead</code> into a contact with a <code>role</code> of <code>user</code>.
      */
-    public Contact mergeLeadInUser(MergeContactsRequest request) {
+    public ContactsMergeLeadInUserResponse mergeLeadInUser() {
+        return this.rawClient.mergeLeadInUser().body();
+    }
+
+    /**
+     * You can merge a contact with a <code>role</code> of <code>lead</code> into a contact with a <code>role</code> of <code>user</code>.
+     */
+    public ContactsMergeLeadInUserResponse mergeLeadInUser(MergeContactsRequest request) {
         return this.rawClient.mergeLeadInUser(request).body();
     }
 
     /**
      * You can merge a contact with a <code>role</code> of <code>lead</code> into a contact with a <code>role</code> of <code>user</code>.
      */
-    public Contact mergeLeadInUser(MergeContactsRequest request, RequestOptions requestOptions) {
+    public ContactsMergeLeadInUserResponse mergeLeadInUser(
+            MergeContactsRequest request, RequestOptions requestOptions) {
         return this.rawClient.mergeLeadInUser(request, requestOptions).body();
     }
 
@@ -427,15 +451,30 @@ public class ContactsClient {
     /**
      * You can create a new contact (ie. user or lead).
      */
-    public Contact create(CreateContactRequest request) {
+    public ContactsCreateResponse create(CreateContactRequest request) {
         return this.rawClient.create(request).body();
     }
 
     /**
      * You can create a new contact (ie. user or lead).
      */
-    public Contact create(CreateContactRequest request, RequestOptions requestOptions) {
+    public ContactsCreateResponse create(CreateContactRequest request, RequestOptions requestOptions) {
         return this.rawClient.create(request, requestOptions).body();
+    }
+
+    /**
+     * You can fetch the details of a single contact by external ID. Note that this endpoint only supports users and not leads.
+     */
+    public ShowContactByExternalIdResponse showContactByExternalId(ShowContactByExternalIdRequest request) {
+        return this.rawClient.showContactByExternalId(request).body();
+    }
+
+    /**
+     * You can fetch the details of a single contact by external ID. Note that this endpoint only supports users and not leads.
+     */
+    public ShowContactByExternalIdResponse showContactByExternalId(
+            ShowContactByExternalIdRequest request, RequestOptions requestOptions) {
+        return this.rawClient.showContactByExternalId(request, requestOptions).body();
     }
 
     /**
@@ -464,5 +503,19 @@ public class ContactsClient {
      */
     public ContactUnarchived unarchive(UnarchiveContactRequest request, RequestOptions requestOptions) {
         return this.rawClient.unarchive(request, requestOptions).body();
+    }
+
+    /**
+     * Block a single contact.&lt;br&gt;<strong>Note:</strong> conversations of the contact will also be archived during the process.&lt;br&gt;More details in <a href="https://www.intercom.com/help/en/articles/8838656-inbox-faqs">FAQ How do I block Inbox spam?</a>
+     */
+    public ContactBlocked blockContact(BlockContactRequest request) {
+        return this.rawClient.blockContact(request).body();
+    }
+
+    /**
+     * Block a single contact.&lt;br&gt;<strong>Note:</strong> conversations of the contact will also be archived during the process.&lt;br&gt;More details in <a href="https://www.intercom.com/help/en/articles/8838656-inbox-faqs">FAQ How do I block Inbox spam?</a>
+     */
+    public ContactBlocked blockContact(BlockContactRequest request, RequestOptions requestOptions) {
+        return this.rawClient.blockContact(request, requestOptions).body();
     }
 }

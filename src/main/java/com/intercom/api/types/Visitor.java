@@ -18,18 +18,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = Visitor.Builder.class)
 public final class Visitor {
-    private final String id;
+    private final Optional<String> type;
 
-    private final String userId;
+    private final Optional<String> id;
 
-    private final boolean anonymous;
+    private final Optional<String> userId;
 
-    private final String email;
+    private final Optional<Boolean> anonymous;
+
+    private final Optional<String> email;
 
     private final Optional<String> phone;
 
@@ -39,7 +40,7 @@ public final class Visitor {
 
     private final Optional<Avatar> avatar;
 
-    private final String appId;
+    private final Optional<String> appId;
 
     private final Optional<Companies> companies;
 
@@ -47,11 +48,11 @@ public final class Visitor {
 
     private final Optional<Integer> lasRequestAt;
 
-    private final int createdAt;
+    private final Optional<Integer> createdAt;
 
     private final Optional<Integer> remoteCreatedAt;
 
-    private final int signedUpAt;
+    private final Optional<Integer> signedUpAt;
 
     private final Optional<Integer> updatedAt;
 
@@ -90,21 +91,22 @@ public final class Visitor {
     private final Map<String, Object> additionalProperties;
 
     private Visitor(
-            String id,
-            String userId,
-            boolean anonymous,
-            String email,
+            Optional<String> type,
+            Optional<String> id,
+            Optional<String> userId,
+            Optional<Boolean> anonymous,
+            Optional<String> email,
             Optional<String> phone,
             Optional<String> name,
             Optional<String> pseudonym,
             Optional<Avatar> avatar,
-            String appId,
+            Optional<String> appId,
             Optional<Companies> companies,
             Optional<LocationData> locationData,
             Optional<Integer> lasRequestAt,
-            int createdAt,
+            Optional<Integer> createdAt,
             Optional<Integer> remoteCreatedAt,
-            int signedUpAt,
+            Optional<Integer> signedUpAt,
             Optional<Integer> updatedAt,
             Optional<Integer> sessionCount,
             Optional<SocialProfiles> socialProfiles,
@@ -123,6 +125,7 @@ public final class Visitor {
             Optional<String> utmTerm,
             Optional<Boolean> doNotTrack,
             Map<String, Object> additionalProperties) {
+        this.type = type;
         this.id = id;
         this.userId = userId;
         this.anonymous = anonymous;
@@ -162,15 +165,15 @@ public final class Visitor {
      * @return Value is 'visitor'
      */
     @JsonProperty("type")
-    public String getType() {
-        return "visitor";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The Intercom defined id representing the Visitor.
      */
     @JsonProperty("id")
-    public String getId() {
+    public Optional<String> getId() {
         return id;
     }
 
@@ -178,7 +181,7 @@ public final class Visitor {
      * @return Automatically generated identifier for the Visitor.
      */
     @JsonProperty("user_id")
-    public String getUserId() {
+    public Optional<String> getUserId() {
         return userId;
     }
 
@@ -186,7 +189,7 @@ public final class Visitor {
      * @return Identifies if this visitor is anonymous.
      */
     @JsonProperty("anonymous")
-    public boolean getAnonymous() {
+    public Optional<Boolean> getAnonymous() {
         return anonymous;
     }
 
@@ -194,7 +197,7 @@ public final class Visitor {
      * @return The email of the visitor.
      */
     @JsonProperty("email")
-    public String getEmail() {
+    public Optional<String> getEmail() {
         return email;
     }
 
@@ -231,7 +234,7 @@ public final class Visitor {
      * @return The id of the app the visitor is associated with.
      */
     @JsonProperty("app_id")
-    public String getAppId() {
+    public Optional<String> getAppId() {
         return appId;
     }
 
@@ -257,7 +260,7 @@ public final class Visitor {
      * @return The time the Visitor was added to Intercom.
      */
     @JsonProperty("created_at")
-    public int getCreatedAt() {
+    public Optional<Integer> getCreatedAt() {
         return createdAt;
     }
 
@@ -273,7 +276,7 @@ public final class Visitor {
      * @return The time the Visitor signed up for your product.
      */
     @JsonProperty("signed_up_at")
-    public int getSignedUpAt() {
+    public Optional<Integer> getSignedUpAt() {
         return signedUpAt;
     }
 
@@ -416,9 +419,10 @@ public final class Visitor {
     }
 
     private boolean equalTo(Visitor other) {
-        return id.equals(other.id)
+        return type.equals(other.type)
+                && id.equals(other.id)
                 && userId.equals(other.userId)
-                && anonymous == other.anonymous
+                && anonymous.equals(other.anonymous)
                 && email.equals(other.email)
                 && phone.equals(other.phone)
                 && name.equals(other.name)
@@ -428,9 +432,9 @@ public final class Visitor {
                 && companies.equals(other.companies)
                 && locationData.equals(other.locationData)
                 && lasRequestAt.equals(other.lasRequestAt)
-                && createdAt == other.createdAt
+                && createdAt.equals(other.createdAt)
                 && remoteCreatedAt.equals(other.remoteCreatedAt)
-                && signedUpAt == other.signedUpAt
+                && signedUpAt.equals(other.signedUpAt)
                 && updatedAt.equals(other.updatedAt)
                 && sessionCount.equals(other.sessionCount)
                 && socialProfiles.equals(other.socialProfiles)
@@ -453,6 +457,7 @@ public final class Visitor {
     @java.lang.Override
     public int hashCode() {
         return Objects.hash(
+                this.type,
                 this.id,
                 this.userId,
                 this.anonymous,
@@ -492,303 +497,85 @@ public final class Visitor {
         return ObjectMappers.stringify(this);
     }
 
-    public static IdStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface IdStage {
-        /**
-         * The Intercom defined id representing the Visitor.
-         */
-        UserIdStage id(@NotNull String id);
-
-        Builder from(Visitor other);
-    }
-
-    public interface UserIdStage {
-        /**
-         * Automatically generated identifier for the Visitor.
-         */
-        AnonymousStage userId(@NotNull String userId);
-    }
-
-    public interface AnonymousStage {
-        /**
-         * Identifies if this visitor is anonymous.
-         */
-        EmailStage anonymous(boolean anonymous);
-    }
-
-    public interface EmailStage {
-        /**
-         * The email of the visitor.
-         */
-        AppIdStage email(@NotNull String email);
-    }
-
-    public interface AppIdStage {
-        /**
-         * The id of the app the visitor is associated with.
-         */
-        CreatedAtStage appId(@NotNull String appId);
-    }
-
-    public interface CreatedAtStage {
-        /**
-         * The time the Visitor was added to Intercom.
-         */
-        SignedUpAtStage createdAt(int createdAt);
-    }
-
-    public interface SignedUpAtStage {
-        /**
-         * The time the Visitor signed up for your product.
-         */
-        _FinalStage signedUpAt(int signedUpAt);
-    }
-
-    public interface _FinalStage {
-        Visitor build();
-
-        /**
-         * <p>The phone number of the visitor.</p>
-         */
-        _FinalStage phone(Optional<String> phone);
-
-        _FinalStage phone(String phone);
-
-        /**
-         * <p>The name of the visitor.</p>
-         */
-        _FinalStage name(Optional<String> name);
-
-        _FinalStage name(String name);
-
-        /**
-         * <p>The pseudonym of the visitor.</p>
-         */
-        _FinalStage pseudonym(Optional<String> pseudonym);
-
-        _FinalStage pseudonym(String pseudonym);
-
-        _FinalStage avatar(Optional<Avatar> avatar);
-
-        _FinalStage avatar(Avatar avatar);
-
-        _FinalStage companies(Optional<Companies> companies);
-
-        _FinalStage companies(Companies companies);
-
-        _FinalStage locationData(Optional<LocationData> locationData);
-
-        _FinalStage locationData(LocationData locationData);
-
-        /**
-         * <p>The time the Lead last recorded making a request.</p>
-         */
-        _FinalStage lasRequestAt(Optional<Integer> lasRequestAt);
-
-        _FinalStage lasRequestAt(Integer lasRequestAt);
-
-        /**
-         * <p>The time the Visitor was added to Intercom.</p>
-         */
-        _FinalStage remoteCreatedAt(Optional<Integer> remoteCreatedAt);
-
-        _FinalStage remoteCreatedAt(Integer remoteCreatedAt);
-
-        /**
-         * <p>The last time the Visitor was updated.</p>
-         */
-        _FinalStage updatedAt(Optional<Integer> updatedAt);
-
-        _FinalStage updatedAt(Integer updatedAt);
-
-        /**
-         * <p>The number of sessions the Visitor has had.</p>
-         */
-        _FinalStage sessionCount(Optional<Integer> sessionCount);
-
-        _FinalStage sessionCount(Integer sessionCount);
-
-        _FinalStage socialProfiles(Optional<SocialProfiles> socialProfiles);
-
-        _FinalStage socialProfiles(SocialProfiles socialProfiles);
-
-        /**
-         * <p>The id of the admin that owns the Visitor.</p>
-         */
-        _FinalStage ownerId(Optional<String> ownerId);
-
-        _FinalStage ownerId(String ownerId);
-
-        /**
-         * <p>Whether the Visitor is unsubscribed from emails.</p>
-         */
-        _FinalStage unsubscribedFromEmails(Optional<Boolean> unsubscribedFromEmails);
-
-        _FinalStage unsubscribedFromEmails(Boolean unsubscribedFromEmails);
-
-        /**
-         * <p>Identifies if this visitor has marked an email as spam.</p>
-         */
-        _FinalStage markedEmailAsSpam(Optional<Boolean> markedEmailAsSpam);
-
-        _FinalStage markedEmailAsSpam(Boolean markedEmailAsSpam);
-
-        /**
-         * <p>Identifies if this visitor has had a hard bounce.</p>
-         */
-        _FinalStage hasHardBounced(Optional<Boolean> hasHardBounced);
-
-        _FinalStage hasHardBounced(Boolean hasHardBounced);
-
-        _FinalStage tags(Optional<Tags> tags);
-
-        _FinalStage tags(Tags tags);
-
-        _FinalStage segments(Optional<Segments> segments);
-
-        _FinalStage segments(Segments segments);
-
-        /**
-         * <p>The custom attributes you have set on the Visitor.</p>
-         */
-        _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes);
-
-        _FinalStage customAttributes(Map<String, Object> customAttributes);
-
-        /**
-         * <p>The referer of the visitor.</p>
-         */
-        _FinalStage referrer(Optional<String> referrer);
-
-        _FinalStage referrer(String referrer);
-
-        /**
-         * <p>The utm_campaign of the visitor.</p>
-         */
-        _FinalStage utmCampaign(Optional<String> utmCampaign);
-
-        _FinalStage utmCampaign(String utmCampaign);
-
-        /**
-         * <p>The utm_content of the visitor.</p>
-         */
-        _FinalStage utmContent(Optional<String> utmContent);
-
-        _FinalStage utmContent(String utmContent);
-
-        /**
-         * <p>The utm_medium of the visitor.</p>
-         */
-        _FinalStage utmMedium(Optional<String> utmMedium);
-
-        _FinalStage utmMedium(String utmMedium);
-
-        /**
-         * <p>The utm_source of the visitor.</p>
-         */
-        _FinalStage utmSource(Optional<String> utmSource);
-
-        _FinalStage utmSource(String utmSource);
-
-        /**
-         * <p>The utm_term of the visitor.</p>
-         */
-        _FinalStage utmTerm(Optional<String> utmTerm);
-
-        _FinalStage utmTerm(String utmTerm);
-
-        /**
-         * <p>Identifies if this visitor has do not track enabled.</p>
-         */
-        _FinalStage doNotTrack(Optional<Boolean> doNotTrack);
-
-        _FinalStage doNotTrack(Boolean doNotTrack);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder
-            implements IdStage,
-                    UserIdStage,
-                    AnonymousStage,
-                    EmailStage,
-                    AppIdStage,
-                    CreatedAtStage,
-                    SignedUpAtStage,
-                    _FinalStage {
-        private String id;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private String userId;
+        private Optional<String> id = Optional.empty();
 
-        private boolean anonymous;
+        private Optional<String> userId = Optional.empty();
 
-        private String email;
+        private Optional<Boolean> anonymous = Optional.empty();
 
-        private String appId;
+        private Optional<String> email = Optional.empty();
 
-        private int createdAt;
-
-        private int signedUpAt;
-
-        private Optional<Boolean> doNotTrack = Optional.empty();
-
-        private Optional<String> utmTerm = Optional.empty();
-
-        private Optional<String> utmSource = Optional.empty();
-
-        private Optional<String> utmMedium = Optional.empty();
-
-        private Optional<String> utmContent = Optional.empty();
-
-        private Optional<String> utmCampaign = Optional.empty();
-
-        private Optional<String> referrer = Optional.empty();
-
-        private Optional<Map<String, Object>> customAttributes = Optional.empty();
-
-        private Optional<Segments> segments = Optional.empty();
-
-        private Optional<Tags> tags = Optional.empty();
-
-        private Optional<Boolean> hasHardBounced = Optional.empty();
-
-        private Optional<Boolean> markedEmailAsSpam = Optional.empty();
-
-        private Optional<Boolean> unsubscribedFromEmails = Optional.empty();
-
-        private Optional<String> ownerId = Optional.empty();
-
-        private Optional<SocialProfiles> socialProfiles = Optional.empty();
-
-        private Optional<Integer> sessionCount = Optional.empty();
-
-        private Optional<Integer> updatedAt = Optional.empty();
-
-        private Optional<Integer> remoteCreatedAt = Optional.empty();
-
-        private Optional<Integer> lasRequestAt = Optional.empty();
-
-        private Optional<LocationData> locationData = Optional.empty();
-
-        private Optional<Companies> companies = Optional.empty();
-
-        private Optional<Avatar> avatar = Optional.empty();
-
-        private Optional<String> pseudonym = Optional.empty();
+        private Optional<String> phone = Optional.empty();
 
         private Optional<String> name = Optional.empty();
 
-        private Optional<String> phone = Optional.empty();
+        private Optional<String> pseudonym = Optional.empty();
+
+        private Optional<Avatar> avatar = Optional.empty();
+
+        private Optional<String> appId = Optional.empty();
+
+        private Optional<Companies> companies = Optional.empty();
+
+        private Optional<LocationData> locationData = Optional.empty();
+
+        private Optional<Integer> lasRequestAt = Optional.empty();
+
+        private Optional<Integer> createdAt = Optional.empty();
+
+        private Optional<Integer> remoteCreatedAt = Optional.empty();
+
+        private Optional<Integer> signedUpAt = Optional.empty();
+
+        private Optional<Integer> updatedAt = Optional.empty();
+
+        private Optional<Integer> sessionCount = Optional.empty();
+
+        private Optional<SocialProfiles> socialProfiles = Optional.empty();
+
+        private Optional<String> ownerId = Optional.empty();
+
+        private Optional<Boolean> unsubscribedFromEmails = Optional.empty();
+
+        private Optional<Boolean> markedEmailAsSpam = Optional.empty();
+
+        private Optional<Boolean> hasHardBounced = Optional.empty();
+
+        private Optional<Tags> tags = Optional.empty();
+
+        private Optional<Segments> segments = Optional.empty();
+
+        private Optional<Map<String, Object>> customAttributes = Optional.empty();
+
+        private Optional<String> referrer = Optional.empty();
+
+        private Optional<String> utmCampaign = Optional.empty();
+
+        private Optional<String> utmContent = Optional.empty();
+
+        private Optional<String> utmMedium = Optional.empty();
+
+        private Optional<String> utmSource = Optional.empty();
+
+        private Optional<String> utmTerm = Optional.empty();
+
+        private Optional<Boolean> doNotTrack = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(Visitor other) {
+            type(other.getType());
             id(other.getId());
             userId(other.getUserId());
             anonymous(other.getAnonymous());
@@ -825,543 +612,452 @@ public final class Visitor {
         }
 
         /**
-         * The Intercom defined id representing the Visitor.<p>The Intercom defined id representing the Visitor.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Value is 'visitor'</p>
          */
-        @java.lang.Override
-        @JsonSetter("id")
-        public UserIdStage id(@NotNull String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
-         * Automatically generated identifier for the Visitor.<p>Automatically generated identifier for the Visitor.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The Intercom defined id representing the Visitor.</p>
          */
-        @java.lang.Override
-        @JsonSetter("user_id")
-        public AnonymousStage userId(@NotNull String userId) {
-            this.userId = Objects.requireNonNull(userId, "userId must not be null");
+        @JsonSetter(value = "id", nulls = Nulls.SKIP)
+        public Builder id(Optional<String> id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder id(String id) {
+            this.id = Optional.ofNullable(id);
             return this;
         }
 
         /**
-         * Identifies if this visitor is anonymous.<p>Identifies if this visitor is anonymous.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Automatically generated identifier for the Visitor.</p>
          */
-        @java.lang.Override
-        @JsonSetter("anonymous")
-        public EmailStage anonymous(boolean anonymous) {
+        @JsonSetter(value = "user_id", nulls = Nulls.SKIP)
+        public Builder userId(Optional<String> userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public Builder userId(String userId) {
+            this.userId = Optional.ofNullable(userId);
+            return this;
+        }
+
+        /**
+         * <p>Identifies if this visitor is anonymous.</p>
+         */
+        @JsonSetter(value = "anonymous", nulls = Nulls.SKIP)
+        public Builder anonymous(Optional<Boolean> anonymous) {
             this.anonymous = anonymous;
             return this;
         }
 
-        /**
-         * The email of the visitor.<p>The email of the visitor.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("email")
-        public AppIdStage email(@NotNull String email) {
-            this.email = Objects.requireNonNull(email, "email must not be null");
+        public Builder anonymous(Boolean anonymous) {
+            this.anonymous = Optional.ofNullable(anonymous);
             return this;
         }
 
         /**
-         * The id of the app the visitor is associated with.<p>The id of the app the visitor is associated with.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The email of the visitor.</p>
          */
-        @java.lang.Override
-        @JsonSetter("app_id")
-        public CreatedAtStage appId(@NotNull String appId) {
-            this.appId = Objects.requireNonNull(appId, "appId must not be null");
+        @JsonSetter(value = "email", nulls = Nulls.SKIP)
+        public Builder email(Optional<String> email) {
+            this.email = email;
             return this;
         }
 
-        /**
-         * The time the Visitor was added to Intercom.<p>The time the Visitor was added to Intercom.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("created_at")
-        public SignedUpAtStage createdAt(int createdAt) {
-            this.createdAt = createdAt;
-            return this;
-        }
-
-        /**
-         * The time the Visitor signed up for your product.<p>The time the Visitor signed up for your product.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("signed_up_at")
-        public _FinalStage signedUpAt(int signedUpAt) {
-            this.signedUpAt = signedUpAt;
-            return this;
-        }
-
-        /**
-         * <p>Identifies if this visitor has do not track enabled.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage doNotTrack(Boolean doNotTrack) {
-            this.doNotTrack = Optional.ofNullable(doNotTrack);
-            return this;
-        }
-
-        /**
-         * <p>Identifies if this visitor has do not track enabled.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "do_not_track", nulls = Nulls.SKIP)
-        public _FinalStage doNotTrack(Optional<Boolean> doNotTrack) {
-            this.doNotTrack = doNotTrack;
-            return this;
-        }
-
-        /**
-         * <p>The utm_term of the visitor.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage utmTerm(String utmTerm) {
-            this.utmTerm = Optional.ofNullable(utmTerm);
-            return this;
-        }
-
-        /**
-         * <p>The utm_term of the visitor.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "utm_term", nulls = Nulls.SKIP)
-        public _FinalStage utmTerm(Optional<String> utmTerm) {
-            this.utmTerm = utmTerm;
-            return this;
-        }
-
-        /**
-         * <p>The utm_source of the visitor.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage utmSource(String utmSource) {
-            this.utmSource = Optional.ofNullable(utmSource);
-            return this;
-        }
-
-        /**
-         * <p>The utm_source of the visitor.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "utm_source", nulls = Nulls.SKIP)
-        public _FinalStage utmSource(Optional<String> utmSource) {
-            this.utmSource = utmSource;
-            return this;
-        }
-
-        /**
-         * <p>The utm_medium of the visitor.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage utmMedium(String utmMedium) {
-            this.utmMedium = Optional.ofNullable(utmMedium);
-            return this;
-        }
-
-        /**
-         * <p>The utm_medium of the visitor.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "utm_medium", nulls = Nulls.SKIP)
-        public _FinalStage utmMedium(Optional<String> utmMedium) {
-            this.utmMedium = utmMedium;
-            return this;
-        }
-
-        /**
-         * <p>The utm_content of the visitor.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage utmContent(String utmContent) {
-            this.utmContent = Optional.ofNullable(utmContent);
-            return this;
-        }
-
-        /**
-         * <p>The utm_content of the visitor.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "utm_content", nulls = Nulls.SKIP)
-        public _FinalStage utmContent(Optional<String> utmContent) {
-            this.utmContent = utmContent;
-            return this;
-        }
-
-        /**
-         * <p>The utm_campaign of the visitor.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage utmCampaign(String utmCampaign) {
-            this.utmCampaign = Optional.ofNullable(utmCampaign);
-            return this;
-        }
-
-        /**
-         * <p>The utm_campaign of the visitor.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "utm_campaign", nulls = Nulls.SKIP)
-        public _FinalStage utmCampaign(Optional<String> utmCampaign) {
-            this.utmCampaign = utmCampaign;
-            return this;
-        }
-
-        /**
-         * <p>The referer of the visitor.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage referrer(String referrer) {
-            this.referrer = Optional.ofNullable(referrer);
-            return this;
-        }
-
-        /**
-         * <p>The referer of the visitor.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "referrer", nulls = Nulls.SKIP)
-        public _FinalStage referrer(Optional<String> referrer) {
-            this.referrer = referrer;
-            return this;
-        }
-
-        /**
-         * <p>The custom attributes you have set on the Visitor.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage customAttributes(Map<String, Object> customAttributes) {
-            this.customAttributes = Optional.ofNullable(customAttributes);
-            return this;
-        }
-
-        /**
-         * <p>The custom attributes you have set on the Visitor.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "custom_attributes", nulls = Nulls.SKIP)
-        public _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes) {
-            this.customAttributes = customAttributes;
-            return this;
-        }
-
-        @java.lang.Override
-        public _FinalStage segments(Segments segments) {
-            this.segments = Optional.ofNullable(segments);
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter(value = "segments", nulls = Nulls.SKIP)
-        public _FinalStage segments(Optional<Segments> segments) {
-            this.segments = segments;
-            return this;
-        }
-
-        @java.lang.Override
-        public _FinalStage tags(Tags tags) {
-            this.tags = Optional.ofNullable(tags);
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter(value = "tags", nulls = Nulls.SKIP)
-        public _FinalStage tags(Optional<Tags> tags) {
-            this.tags = tags;
-            return this;
-        }
-
-        /**
-         * <p>Identifies if this visitor has had a hard bounce.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage hasHardBounced(Boolean hasHardBounced) {
-            this.hasHardBounced = Optional.ofNullable(hasHardBounced);
-            return this;
-        }
-
-        /**
-         * <p>Identifies if this visitor has had a hard bounce.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "has_hard_bounced", nulls = Nulls.SKIP)
-        public _FinalStage hasHardBounced(Optional<Boolean> hasHardBounced) {
-            this.hasHardBounced = hasHardBounced;
-            return this;
-        }
-
-        /**
-         * <p>Identifies if this visitor has marked an email as spam.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage markedEmailAsSpam(Boolean markedEmailAsSpam) {
-            this.markedEmailAsSpam = Optional.ofNullable(markedEmailAsSpam);
-            return this;
-        }
-
-        /**
-         * <p>Identifies if this visitor has marked an email as spam.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "marked_email_as_spam", nulls = Nulls.SKIP)
-        public _FinalStage markedEmailAsSpam(Optional<Boolean> markedEmailAsSpam) {
-            this.markedEmailAsSpam = markedEmailAsSpam;
-            return this;
-        }
-
-        /**
-         * <p>Whether the Visitor is unsubscribed from emails.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage unsubscribedFromEmails(Boolean unsubscribedFromEmails) {
-            this.unsubscribedFromEmails = Optional.ofNullable(unsubscribedFromEmails);
-            return this;
-        }
-
-        /**
-         * <p>Whether the Visitor is unsubscribed from emails.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "unsubscribed_from_emails", nulls = Nulls.SKIP)
-        public _FinalStage unsubscribedFromEmails(Optional<Boolean> unsubscribedFromEmails) {
-            this.unsubscribedFromEmails = unsubscribedFromEmails;
-            return this;
-        }
-
-        /**
-         * <p>The id of the admin that owns the Visitor.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage ownerId(String ownerId) {
-            this.ownerId = Optional.ofNullable(ownerId);
-            return this;
-        }
-
-        /**
-         * <p>The id of the admin that owns the Visitor.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "owner_id", nulls = Nulls.SKIP)
-        public _FinalStage ownerId(Optional<String> ownerId) {
-            this.ownerId = ownerId;
-            return this;
-        }
-
-        @java.lang.Override
-        public _FinalStage socialProfiles(SocialProfiles socialProfiles) {
-            this.socialProfiles = Optional.ofNullable(socialProfiles);
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter(value = "social_profiles", nulls = Nulls.SKIP)
-        public _FinalStage socialProfiles(Optional<SocialProfiles> socialProfiles) {
-            this.socialProfiles = socialProfiles;
-            return this;
-        }
-
-        /**
-         * <p>The number of sessions the Visitor has had.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage sessionCount(Integer sessionCount) {
-            this.sessionCount = Optional.ofNullable(sessionCount);
-            return this;
-        }
-
-        /**
-         * <p>The number of sessions the Visitor has had.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "session_count", nulls = Nulls.SKIP)
-        public _FinalStage sessionCount(Optional<Integer> sessionCount) {
-            this.sessionCount = sessionCount;
-            return this;
-        }
-
-        /**
-         * <p>The last time the Visitor was updated.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage updatedAt(Integer updatedAt) {
-            this.updatedAt = Optional.ofNullable(updatedAt);
-            return this;
-        }
-
-        /**
-         * <p>The last time the Visitor was updated.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
-        public _FinalStage updatedAt(Optional<Integer> updatedAt) {
-            this.updatedAt = updatedAt;
-            return this;
-        }
-
-        /**
-         * <p>The time the Visitor was added to Intercom.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage remoteCreatedAt(Integer remoteCreatedAt) {
-            this.remoteCreatedAt = Optional.ofNullable(remoteCreatedAt);
-            return this;
-        }
-
-        /**
-         * <p>The time the Visitor was added to Intercom.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "remote_created_at", nulls = Nulls.SKIP)
-        public _FinalStage remoteCreatedAt(Optional<Integer> remoteCreatedAt) {
-            this.remoteCreatedAt = remoteCreatedAt;
-            return this;
-        }
-
-        /**
-         * <p>The time the Lead last recorded making a request.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage lasRequestAt(Integer lasRequestAt) {
-            this.lasRequestAt = Optional.ofNullable(lasRequestAt);
-            return this;
-        }
-
-        /**
-         * <p>The time the Lead last recorded making a request.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "las_request_at", nulls = Nulls.SKIP)
-        public _FinalStage lasRequestAt(Optional<Integer> lasRequestAt) {
-            this.lasRequestAt = lasRequestAt;
-            return this;
-        }
-
-        @java.lang.Override
-        public _FinalStage locationData(LocationData locationData) {
-            this.locationData = Optional.ofNullable(locationData);
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter(value = "location_data", nulls = Nulls.SKIP)
-        public _FinalStage locationData(Optional<LocationData> locationData) {
-            this.locationData = locationData;
-            return this;
-        }
-
-        @java.lang.Override
-        public _FinalStage companies(Companies companies) {
-            this.companies = Optional.ofNullable(companies);
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter(value = "companies", nulls = Nulls.SKIP)
-        public _FinalStage companies(Optional<Companies> companies) {
-            this.companies = companies;
-            return this;
-        }
-
-        @java.lang.Override
-        public _FinalStage avatar(Avatar avatar) {
-            this.avatar = Optional.ofNullable(avatar);
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter(value = "avatar", nulls = Nulls.SKIP)
-        public _FinalStage avatar(Optional<Avatar> avatar) {
-            this.avatar = avatar;
-            return this;
-        }
-
-        /**
-         * <p>The pseudonym of the visitor.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage pseudonym(String pseudonym) {
-            this.pseudonym = Optional.ofNullable(pseudonym);
-            return this;
-        }
-
-        /**
-         * <p>The pseudonym of the visitor.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "pseudonym", nulls = Nulls.SKIP)
-        public _FinalStage pseudonym(Optional<String> pseudonym) {
-            this.pseudonym = pseudonym;
-            return this;
-        }
-
-        /**
-         * <p>The name of the visitor.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage name(String name) {
-            this.name = Optional.ofNullable(name);
-            return this;
-        }
-
-        /**
-         * <p>The name of the visitor.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "name", nulls = Nulls.SKIP)
-        public _FinalStage name(Optional<String> name) {
-            this.name = name;
+        public Builder email(String email) {
+            this.email = Optional.ofNullable(email);
             return this;
         }
 
         /**
          * <p>The phone number of the visitor.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @java.lang.Override
-        public _FinalStage phone(String phone) {
+        @JsonSetter(value = "phone", nulls = Nulls.SKIP)
+        public Builder phone(Optional<String> phone) {
+            this.phone = phone;
+            return this;
+        }
+
+        public Builder phone(String phone) {
             this.phone = Optional.ofNullable(phone);
             return this;
         }
 
         /**
-         * <p>The phone number of the visitor.</p>
+         * <p>The name of the visitor.</p>
          */
-        @java.lang.Override
-        @JsonSetter(value = "phone", nulls = Nulls.SKIP)
-        public _FinalStage phone(Optional<String> phone) {
-            this.phone = phone;
+        @JsonSetter(value = "name", nulls = Nulls.SKIP)
+        public Builder name(Optional<String> name) {
+            this.name = name;
             return this;
         }
 
-        @java.lang.Override
+        public Builder name(String name) {
+            this.name = Optional.ofNullable(name);
+            return this;
+        }
+
+        /**
+         * <p>The pseudonym of the visitor.</p>
+         */
+        @JsonSetter(value = "pseudonym", nulls = Nulls.SKIP)
+        public Builder pseudonym(Optional<String> pseudonym) {
+            this.pseudonym = pseudonym;
+            return this;
+        }
+
+        public Builder pseudonym(String pseudonym) {
+            this.pseudonym = Optional.ofNullable(pseudonym);
+            return this;
+        }
+
+        @JsonSetter(value = "avatar", nulls = Nulls.SKIP)
+        public Builder avatar(Optional<Avatar> avatar) {
+            this.avatar = avatar;
+            return this;
+        }
+
+        public Builder avatar(Avatar avatar) {
+            this.avatar = Optional.ofNullable(avatar);
+            return this;
+        }
+
+        /**
+         * <p>The id of the app the visitor is associated with.</p>
+         */
+        @JsonSetter(value = "app_id", nulls = Nulls.SKIP)
+        public Builder appId(Optional<String> appId) {
+            this.appId = appId;
+            return this;
+        }
+
+        public Builder appId(String appId) {
+            this.appId = Optional.ofNullable(appId);
+            return this;
+        }
+
+        @JsonSetter(value = "companies", nulls = Nulls.SKIP)
+        public Builder companies(Optional<Companies> companies) {
+            this.companies = companies;
+            return this;
+        }
+
+        public Builder companies(Companies companies) {
+            this.companies = Optional.ofNullable(companies);
+            return this;
+        }
+
+        @JsonSetter(value = "location_data", nulls = Nulls.SKIP)
+        public Builder locationData(Optional<LocationData> locationData) {
+            this.locationData = locationData;
+            return this;
+        }
+
+        public Builder locationData(LocationData locationData) {
+            this.locationData = Optional.ofNullable(locationData);
+            return this;
+        }
+
+        /**
+         * <p>The time the Lead last recorded making a request.</p>
+         */
+        @JsonSetter(value = "las_request_at", nulls = Nulls.SKIP)
+        public Builder lasRequestAt(Optional<Integer> lasRequestAt) {
+            this.lasRequestAt = lasRequestAt;
+            return this;
+        }
+
+        public Builder lasRequestAt(Integer lasRequestAt) {
+            this.lasRequestAt = Optional.ofNullable(lasRequestAt);
+            return this;
+        }
+
+        /**
+         * <p>The time the Visitor was added to Intercom.</p>
+         */
+        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
+        public Builder createdAt(Optional<Integer> createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public Builder createdAt(Integer createdAt) {
+            this.createdAt = Optional.ofNullable(createdAt);
+            return this;
+        }
+
+        /**
+         * <p>The time the Visitor was added to Intercom.</p>
+         */
+        @JsonSetter(value = "remote_created_at", nulls = Nulls.SKIP)
+        public Builder remoteCreatedAt(Optional<Integer> remoteCreatedAt) {
+            this.remoteCreatedAt = remoteCreatedAt;
+            return this;
+        }
+
+        public Builder remoteCreatedAt(Integer remoteCreatedAt) {
+            this.remoteCreatedAt = Optional.ofNullable(remoteCreatedAt);
+            return this;
+        }
+
+        /**
+         * <p>The time the Visitor signed up for your product.</p>
+         */
+        @JsonSetter(value = "signed_up_at", nulls = Nulls.SKIP)
+        public Builder signedUpAt(Optional<Integer> signedUpAt) {
+            this.signedUpAt = signedUpAt;
+            return this;
+        }
+
+        public Builder signedUpAt(Integer signedUpAt) {
+            this.signedUpAt = Optional.ofNullable(signedUpAt);
+            return this;
+        }
+
+        /**
+         * <p>The last time the Visitor was updated.</p>
+         */
+        @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
+        public Builder updatedAt(Optional<Integer> updatedAt) {
+            this.updatedAt = updatedAt;
+            return this;
+        }
+
+        public Builder updatedAt(Integer updatedAt) {
+            this.updatedAt = Optional.ofNullable(updatedAt);
+            return this;
+        }
+
+        /**
+         * <p>The number of sessions the Visitor has had.</p>
+         */
+        @JsonSetter(value = "session_count", nulls = Nulls.SKIP)
+        public Builder sessionCount(Optional<Integer> sessionCount) {
+            this.sessionCount = sessionCount;
+            return this;
+        }
+
+        public Builder sessionCount(Integer sessionCount) {
+            this.sessionCount = Optional.ofNullable(sessionCount);
+            return this;
+        }
+
+        @JsonSetter(value = "social_profiles", nulls = Nulls.SKIP)
+        public Builder socialProfiles(Optional<SocialProfiles> socialProfiles) {
+            this.socialProfiles = socialProfiles;
+            return this;
+        }
+
+        public Builder socialProfiles(SocialProfiles socialProfiles) {
+            this.socialProfiles = Optional.ofNullable(socialProfiles);
+            return this;
+        }
+
+        /**
+         * <p>The id of the admin that owns the Visitor.</p>
+         */
+        @JsonSetter(value = "owner_id", nulls = Nulls.SKIP)
+        public Builder ownerId(Optional<String> ownerId) {
+            this.ownerId = ownerId;
+            return this;
+        }
+
+        public Builder ownerId(String ownerId) {
+            this.ownerId = Optional.ofNullable(ownerId);
+            return this;
+        }
+
+        /**
+         * <p>Whether the Visitor is unsubscribed from emails.</p>
+         */
+        @JsonSetter(value = "unsubscribed_from_emails", nulls = Nulls.SKIP)
+        public Builder unsubscribedFromEmails(Optional<Boolean> unsubscribedFromEmails) {
+            this.unsubscribedFromEmails = unsubscribedFromEmails;
+            return this;
+        }
+
+        public Builder unsubscribedFromEmails(Boolean unsubscribedFromEmails) {
+            this.unsubscribedFromEmails = Optional.ofNullable(unsubscribedFromEmails);
+            return this;
+        }
+
+        /**
+         * <p>Identifies if this visitor has marked an email as spam.</p>
+         */
+        @JsonSetter(value = "marked_email_as_spam", nulls = Nulls.SKIP)
+        public Builder markedEmailAsSpam(Optional<Boolean> markedEmailAsSpam) {
+            this.markedEmailAsSpam = markedEmailAsSpam;
+            return this;
+        }
+
+        public Builder markedEmailAsSpam(Boolean markedEmailAsSpam) {
+            this.markedEmailAsSpam = Optional.ofNullable(markedEmailAsSpam);
+            return this;
+        }
+
+        /**
+         * <p>Identifies if this visitor has had a hard bounce.</p>
+         */
+        @JsonSetter(value = "has_hard_bounced", nulls = Nulls.SKIP)
+        public Builder hasHardBounced(Optional<Boolean> hasHardBounced) {
+            this.hasHardBounced = hasHardBounced;
+            return this;
+        }
+
+        public Builder hasHardBounced(Boolean hasHardBounced) {
+            this.hasHardBounced = Optional.ofNullable(hasHardBounced);
+            return this;
+        }
+
+        @JsonSetter(value = "tags", nulls = Nulls.SKIP)
+        public Builder tags(Optional<Tags> tags) {
+            this.tags = tags;
+            return this;
+        }
+
+        public Builder tags(Tags tags) {
+            this.tags = Optional.ofNullable(tags);
+            return this;
+        }
+
+        @JsonSetter(value = "segments", nulls = Nulls.SKIP)
+        public Builder segments(Optional<Segments> segments) {
+            this.segments = segments;
+            return this;
+        }
+
+        public Builder segments(Segments segments) {
+            this.segments = Optional.ofNullable(segments);
+            return this;
+        }
+
+        /**
+         * <p>The custom attributes you have set on the Visitor.</p>
+         */
+        @JsonSetter(value = "custom_attributes", nulls = Nulls.SKIP)
+        public Builder customAttributes(Optional<Map<String, Object>> customAttributes) {
+            this.customAttributes = customAttributes;
+            return this;
+        }
+
+        public Builder customAttributes(Map<String, Object> customAttributes) {
+            this.customAttributes = Optional.ofNullable(customAttributes);
+            return this;
+        }
+
+        /**
+         * <p>The referer of the visitor.</p>
+         */
+        @JsonSetter(value = "referrer", nulls = Nulls.SKIP)
+        public Builder referrer(Optional<String> referrer) {
+            this.referrer = referrer;
+            return this;
+        }
+
+        public Builder referrer(String referrer) {
+            this.referrer = Optional.ofNullable(referrer);
+            return this;
+        }
+
+        /**
+         * <p>The utm_campaign of the visitor.</p>
+         */
+        @JsonSetter(value = "utm_campaign", nulls = Nulls.SKIP)
+        public Builder utmCampaign(Optional<String> utmCampaign) {
+            this.utmCampaign = utmCampaign;
+            return this;
+        }
+
+        public Builder utmCampaign(String utmCampaign) {
+            this.utmCampaign = Optional.ofNullable(utmCampaign);
+            return this;
+        }
+
+        /**
+         * <p>The utm_content of the visitor.</p>
+         */
+        @JsonSetter(value = "utm_content", nulls = Nulls.SKIP)
+        public Builder utmContent(Optional<String> utmContent) {
+            this.utmContent = utmContent;
+            return this;
+        }
+
+        public Builder utmContent(String utmContent) {
+            this.utmContent = Optional.ofNullable(utmContent);
+            return this;
+        }
+
+        /**
+         * <p>The utm_medium of the visitor.</p>
+         */
+        @JsonSetter(value = "utm_medium", nulls = Nulls.SKIP)
+        public Builder utmMedium(Optional<String> utmMedium) {
+            this.utmMedium = utmMedium;
+            return this;
+        }
+
+        public Builder utmMedium(String utmMedium) {
+            this.utmMedium = Optional.ofNullable(utmMedium);
+            return this;
+        }
+
+        /**
+         * <p>The utm_source of the visitor.</p>
+         */
+        @JsonSetter(value = "utm_source", nulls = Nulls.SKIP)
+        public Builder utmSource(Optional<String> utmSource) {
+            this.utmSource = utmSource;
+            return this;
+        }
+
+        public Builder utmSource(String utmSource) {
+            this.utmSource = Optional.ofNullable(utmSource);
+            return this;
+        }
+
+        /**
+         * <p>The utm_term of the visitor.</p>
+         */
+        @JsonSetter(value = "utm_term", nulls = Nulls.SKIP)
+        public Builder utmTerm(Optional<String> utmTerm) {
+            this.utmTerm = utmTerm;
+            return this;
+        }
+
+        public Builder utmTerm(String utmTerm) {
+            this.utmTerm = Optional.ofNullable(utmTerm);
+            return this;
+        }
+
+        /**
+         * <p>Identifies if this visitor has do not track enabled.</p>
+         */
+        @JsonSetter(value = "do_not_track", nulls = Nulls.SKIP)
+        public Builder doNotTrack(Optional<Boolean> doNotTrack) {
+            this.doNotTrack = doNotTrack;
+            return this;
+        }
+
+        public Builder doNotTrack(Boolean doNotTrack) {
+            this.doNotTrack = Optional.ofNullable(doNotTrack);
+            return this;
+        }
+
         public Visitor build() {
             return new Visitor(
+                    type,
                     id,
                     userId,
                     anonymous,

@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.resources.notes.types.Note;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,19 +22,22 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = NoteList.Builder.class)
 public final class NoteList {
-    private final List<Note> data;
+    private final Optional<String> type;
 
-    private final int totalCount;
+    private final Optional<List<Note>> data;
 
-    private final Optional<OffsetPages> pages;
+    private final Optional<Integer> totalCount;
 
     private final Map<String, Object> additionalProperties;
 
     private NoteList(
-            List<Note> data, int totalCount, Optional<OffsetPages> pages, Map<String, Object> additionalProperties) {
+            Optional<String> type,
+            Optional<List<Note>> data,
+            Optional<Integer> totalCount,
+            Map<String, Object> additionalProperties) {
+        this.type = type;
         this.data = data;
         this.totalCount = totalCount;
-        this.pages = pages;
         this.additionalProperties = additionalProperties;
     }
 
@@ -43,15 +45,15 @@ public final class NoteList {
      * @return String representing the object's type. Always has the value <code>list</code>.
      */
     @JsonProperty("type")
-    public String getType() {
-        return "list";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return An array of notes.
      */
     @JsonProperty("data")
-    public List<Note> getData() {
+    public Optional<List<Note>> getData() {
         return data;
     }
 
@@ -59,13 +61,8 @@ public final class NoteList {
      * @return A count of the total number of notes.
      */
     @JsonProperty("total_count")
-    public int getTotalCount() {
+    public Optional<Integer> getTotalCount() {
         return totalCount;
-    }
-
-    @JsonProperty("pages")
-    public Optional<OffsetPages> getPages() {
-        return pages;
     }
 
     @java.lang.Override
@@ -80,12 +77,12 @@ public final class NoteList {
     }
 
     private boolean equalTo(NoteList other) {
-        return data.equals(other.data) && totalCount == other.totalCount && pages.equals(other.pages);
+        return type.equals(other.type) && data.equals(other.data) && totalCount.equals(other.totalCount);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.data, this.totalCount, this.pages);
+        return Objects.hash(this.type, this.data, this.totalCount);
     }
 
     @java.lang.Override
@@ -93,115 +90,74 @@ public final class NoteList {
         return ObjectMappers.stringify(this);
     }
 
-    public static TotalCountStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface TotalCountStage {
-        /**
-         * A count of the total number of notes.
-         */
-        _FinalStage totalCount(int totalCount);
-
-        Builder from(NoteList other);
-    }
-
-    public interface _FinalStage {
-        NoteList build();
-
-        /**
-         * <p>An array of notes.</p>
-         */
-        _FinalStage data(List<Note> data);
-
-        _FinalStage addData(Note data);
-
-        _FinalStage addAllData(List<Note> data);
-
-        _FinalStage pages(Optional<OffsetPages> pages);
-
-        _FinalStage pages(OffsetPages pages);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements TotalCountStage, _FinalStage {
-        private int totalCount;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private Optional<OffsetPages> pages = Optional.empty();
+        private Optional<List<Note>> data = Optional.empty();
 
-        private List<Note> data = new ArrayList<>();
+        private Optional<Integer> totalCount = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(NoteList other) {
+            type(other.getType());
             data(other.getData());
             totalCount(other.getTotalCount());
-            pages(other.getPages());
             return this;
         }
 
         /**
-         * A count of the total number of notes.<p>A count of the total number of notes.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>String representing the object's type. Always has the value <code>list</code>.</p>
          */
-        @java.lang.Override
-        @JsonSetter("total_count")
-        public _FinalStage totalCount(int totalCount) {
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
+            return this;
+        }
+
+        /**
+         * <p>An array of notes.</p>
+         */
+        @JsonSetter(value = "data", nulls = Nulls.SKIP)
+        public Builder data(Optional<List<Note>> data) {
+            this.data = data;
+            return this;
+        }
+
+        public Builder data(List<Note> data) {
+            this.data = Optional.ofNullable(data);
+            return this;
+        }
+
+        /**
+         * <p>A count of the total number of notes.</p>
+         */
+        @JsonSetter(value = "total_count", nulls = Nulls.SKIP)
+        public Builder totalCount(Optional<Integer> totalCount) {
             this.totalCount = totalCount;
             return this;
         }
 
-        @java.lang.Override
-        public _FinalStage pages(OffsetPages pages) {
-            this.pages = Optional.ofNullable(pages);
+        public Builder totalCount(Integer totalCount) {
+            this.totalCount = Optional.ofNullable(totalCount);
             return this;
         }
 
-        @java.lang.Override
-        @JsonSetter(value = "pages", nulls = Nulls.SKIP)
-        public _FinalStage pages(Optional<OffsetPages> pages) {
-            this.pages = pages;
-            return this;
-        }
-
-        /**
-         * <p>An array of notes.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addAllData(List<Note> data) {
-            this.data.addAll(data);
-            return this;
-        }
-
-        /**
-         * <p>An array of notes.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addData(Note data) {
-            this.data.add(data);
-            return this;
-        }
-
-        /**
-         * <p>An array of notes.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "data", nulls = Nulls.SKIP)
-        public _FinalStage data(List<Note> data) {
-            this.data.clear();
-            this.data.addAll(data);
-            return this;
-        }
-
-        @java.lang.Override
         public NoteList build() {
-            return new NoteList(data, totalCount, pages, additionalProperties);
+            return new NoteList(type, data, totalCount, additionalProperties);
         }
     }
 }

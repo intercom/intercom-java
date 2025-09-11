@@ -16,7 +16,6 @@ import com.intercom.api.core.pagination.SyncPagingIterable;
 import com.intercom.api.errors.BadRequestError;
 import com.intercom.api.errors.NotFoundError;
 import com.intercom.api.errors.UnauthorizedError;
-import com.intercom.api.resources.articles.requests.CreateArticleRequest;
 import com.intercom.api.resources.articles.requests.DeleteArticleRequest;
 import com.intercom.api.resources.articles.requests.FindArticleRequest;
 import com.intercom.api.resources.articles.requests.ListArticlesRequest;
@@ -24,12 +23,15 @@ import com.intercom.api.resources.articles.requests.SearchArticlesRequest;
 import com.intercom.api.resources.articles.requests.UpdateArticleRequest;
 import com.intercom.api.resources.articles.types.Article;
 import com.intercom.api.resources.articles.types.ArticleListItem;
-import com.intercom.api.resources.articles.types.SearchArticlesResponse;
+import com.intercom.api.resources.articles.types.ArticleSearchResponse;
 import com.intercom.api.types.ArticleList;
+import com.intercom.api.types.CreateArticleRequest;
 import com.intercom.api.types.DeletedArticleObject;
 import com.intercom.api.types.Error;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -108,7 +110,7 @@ public class RawArticlesClient {
                         .from(request)
                         .page(newPageNumber)
                         .build();
-                List<ArticleListItem> result = parsedResponse.getData();
+                List<ArticleListItem> result = parsedResponse.getData().orElse(Collections.emptyList());
                 return new IntercomHttpResponse<>(
                         new SyncPagingIterable<ArticleListItem>(true, result, () -> list(nextRequest, requestOptions)
                                 .body()),
@@ -136,22 +138,32 @@ public class RawArticlesClient {
     /**
      * You can create a new article by making a POST request to <code>https://api.intercom.io/articles</code>.
      */
-    public IntercomHttpResponse<Article> create(CreateArticleRequest request) {
+    public IntercomHttpResponse<Article> create() {
+        return create(Optional.empty());
+    }
+
+    /**
+     * You can create a new article by making a POST request to <code>https://api.intercom.io/articles</code>.
+     */
+    public IntercomHttpResponse<Article> create(Optional<CreateArticleRequest> request) {
         return create(request, null);
     }
 
     /**
      * You can create a new article by making a POST request to <code>https://api.intercom.io/articles</code>.
      */
-    public IntercomHttpResponse<Article> create(CreateArticleRequest request, RequestOptions requestOptions) {
+    public IntercomHttpResponse<Article> create(Optional<CreateArticleRequest> request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("articles")
                 .build();
         RequestBody body;
         try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+            body = RequestBody.create("", null);
+            if (request.isPresent()) {
+                body = RequestBody.create(
+                        ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+            }
         } catch (JsonProcessingException e) {
             throw new IntercomException("Failed to serialize request", e);
         }
@@ -209,7 +221,7 @@ public class RawArticlesClient {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("articles")
-                .addPathSegment(request.getArticleId())
+                .addPathSegment(Integer.toString(request.getArticleId()))
                 .build();
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl)
@@ -265,7 +277,7 @@ public class RawArticlesClient {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("articles")
-                .addPathSegment(request.getArticleId())
+                .addPathSegment(Integer.toString(request.getArticleId()))
                 .build();
         RequestBody body;
         try {
@@ -329,7 +341,7 @@ public class RawArticlesClient {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("articles")
-                .addPathSegment(request.getArticleId())
+                .addPathSegment(Integer.toString(request.getArticleId()))
                 .build();
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl)
@@ -375,21 +387,21 @@ public class RawArticlesClient {
     /**
      * You can search for articles by making a GET request to <code>https://api.intercom.io/articles/search</code>.
      */
-    public IntercomHttpResponse<SearchArticlesResponse> search() {
+    public IntercomHttpResponse<ArticleSearchResponse> search() {
         return search(SearchArticlesRequest.builder().build());
     }
 
     /**
      * You can search for articles by making a GET request to <code>https://api.intercom.io/articles/search</code>.
      */
-    public IntercomHttpResponse<SearchArticlesResponse> search(SearchArticlesRequest request) {
+    public IntercomHttpResponse<ArticleSearchResponse> search(SearchArticlesRequest request) {
         return search(request, null);
     }
 
     /**
      * You can search for articles by making a GET request to <code>https://api.intercom.io/articles/search</code>.
      */
-    public IntercomHttpResponse<SearchArticlesResponse> search(
+    public IntercomHttpResponse<ArticleSearchResponse> search(
             SearchArticlesRequest request, RequestOptions requestOptions) {
         HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
@@ -425,7 +437,7 @@ public class RawArticlesClient {
             ResponseBody responseBody = response.body();
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), SearchArticlesResponse.class),
+                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), ArticleSearchResponse.class),
                         response);
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";

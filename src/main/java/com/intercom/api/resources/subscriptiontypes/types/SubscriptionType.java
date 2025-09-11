@@ -15,38 +15,41 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.types.Translation;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = SubscriptionType.Builder.class)
 public final class SubscriptionType {
-    private final String id;
+    private final Optional<String> type;
 
-    private final State state;
+    private final Optional<String> id;
 
-    private final Translation defaultTranslation;
+    private final Optional<State> state;
 
-    private final List<Translation> translations;
+    private final Optional<Translation> defaultTranslation;
 
-    private final ConsentType consentType;
+    private final Optional<List<Translation>> translations;
 
-    private final List<ContentTypesItem> contentTypes;
+    private final Optional<ConsentType> consentType;
+
+    private final Optional<List<ContentTypesItem>> contentTypes;
 
     private final Map<String, Object> additionalProperties;
 
     private SubscriptionType(
-            String id,
-            State state,
-            Translation defaultTranslation,
-            List<Translation> translations,
-            ConsentType consentType,
-            List<ContentTypesItem> contentTypes,
+            Optional<String> type,
+            Optional<String> id,
+            Optional<State> state,
+            Optional<Translation> defaultTranslation,
+            Optional<List<Translation>> translations,
+            Optional<ConsentType> consentType,
+            Optional<List<ContentTypesItem>> contentTypes,
             Map<String, Object> additionalProperties) {
+        this.type = type;
         this.id = id;
         this.state = state;
         this.defaultTranslation = defaultTranslation;
@@ -60,15 +63,15 @@ public final class SubscriptionType {
      * @return The type of the object - subscription
      */
     @JsonProperty("type")
-    public String getType() {
-        return "subscription";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The unique identifier representing the subscription type.
      */
     @JsonProperty("id")
-    public String getId() {
+    public Optional<String> getId() {
         return id;
     }
 
@@ -76,12 +79,12 @@ public final class SubscriptionType {
      * @return The state of the subscription type.
      */
     @JsonProperty("state")
-    public State getState() {
+    public Optional<State> getState() {
         return state;
     }
 
     @JsonProperty("default_translation")
-    public Translation getDefaultTranslation() {
+    public Optional<Translation> getDefaultTranslation() {
         return defaultTranslation;
     }
 
@@ -89,7 +92,7 @@ public final class SubscriptionType {
      * @return An array of translations objects with the localised version of the subscription type in each available locale within your translation settings.
      */
     @JsonProperty("translations")
-    public List<Translation> getTranslations() {
+    public Optional<List<Translation>> getTranslations() {
         return translations;
     }
 
@@ -97,7 +100,7 @@ public final class SubscriptionType {
      * @return Describes the type of consent.
      */
     @JsonProperty("consent_type")
-    public ConsentType getConsentType() {
+    public Optional<ConsentType> getConsentType() {
         return consentType;
     }
 
@@ -105,7 +108,7 @@ public final class SubscriptionType {
      * @return The message types that this subscription supports - can contain <code>email</code> or <code>sms_message</code>.
      */
     @JsonProperty("content_types")
-    public List<ContentTypesItem> getContentTypes() {
+    public Optional<List<ContentTypesItem>> getContentTypes() {
         return contentTypes;
     }
 
@@ -121,7 +124,8 @@ public final class SubscriptionType {
     }
 
     private boolean equalTo(SubscriptionType other) {
-        return id.equals(other.id)
+        return type.equals(other.type)
+                && id.equals(other.id)
                 && state.equals(other.state)
                 && defaultTranslation.equals(other.defaultTranslation)
                 && translations.equals(other.translations)
@@ -132,7 +136,13 @@ public final class SubscriptionType {
     @java.lang.Override
     public int hashCode() {
         return Objects.hash(
-                this.id, this.state, this.defaultTranslation, this.translations, this.consentType, this.contentTypes);
+                this.type,
+                this.id,
+                this.state,
+                this.defaultTranslation,
+                this.translations,
+                this.consentType,
+                this.contentTypes);
     }
 
     @java.lang.Override
@@ -140,81 +150,33 @@ public final class SubscriptionType {
         return ObjectMappers.stringify(this);
     }
 
-    public static IdStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface IdStage {
-        /**
-         * The unique identifier representing the subscription type.
-         */
-        StateStage id(@NotNull String id);
-
-        Builder from(SubscriptionType other);
-    }
-
-    public interface StateStage {
-        /**
-         * The state of the subscription type.
-         */
-        DefaultTranslationStage state(@NotNull State state);
-    }
-
-    public interface DefaultTranslationStage {
-        ConsentTypeStage defaultTranslation(@NotNull Translation defaultTranslation);
-    }
-
-    public interface ConsentTypeStage {
-        /**
-         * Describes the type of consent.
-         */
-        _FinalStage consentType(@NotNull ConsentType consentType);
-    }
-
-    public interface _FinalStage {
-        SubscriptionType build();
-
-        /**
-         * <p>An array of translations objects with the localised version of the subscription type in each available locale within your translation settings.</p>
-         */
-        _FinalStage translations(List<Translation> translations);
-
-        _FinalStage addTranslations(Translation translations);
-
-        _FinalStage addAllTranslations(List<Translation> translations);
-
-        /**
-         * <p>The message types that this subscription supports - can contain <code>email</code> or <code>sms_message</code>.</p>
-         */
-        _FinalStage contentTypes(List<ContentTypesItem> contentTypes);
-
-        _FinalStage addContentTypes(ContentTypesItem contentTypes);
-
-        _FinalStage addAllContentTypes(List<ContentTypesItem> contentTypes);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder
-            implements IdStage, StateStage, DefaultTranslationStage, ConsentTypeStage, _FinalStage {
-        private String id;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private State state;
+        private Optional<String> id = Optional.empty();
 
-        private Translation defaultTranslation;
+        private Optional<State> state = Optional.empty();
 
-        private ConsentType consentType;
+        private Optional<Translation> defaultTranslation = Optional.empty();
 
-        private List<ContentTypesItem> contentTypes = new ArrayList<>();
+        private Optional<List<Translation>> translations = Optional.empty();
 
-        private List<Translation> translations = new ArrayList<>();
+        private Optional<ConsentType> consentType = Optional.empty();
+
+        private Optional<List<ContentTypesItem>> contentTypes = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(SubscriptionType other) {
+            type(other.getType());
             id(other.getId());
             state(other.getState());
             defaultTranslation(other.getDefaultTranslation());
@@ -225,111 +187,103 @@ public final class SubscriptionType {
         }
 
         /**
-         * The unique identifier representing the subscription type.<p>The unique identifier representing the subscription type.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The type of the object - subscription</p>
          */
-        @java.lang.Override
-        @JsonSetter("id")
-        public StateStage id(@NotNull String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
-         * The state of the subscription type.<p>The state of the subscription type.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The unique identifier representing the subscription type.</p>
          */
-        @java.lang.Override
-        @JsonSetter("state")
-        public DefaultTranslationStage state(@NotNull State state) {
-            this.state = Objects.requireNonNull(state, "state must not be null");
+        @JsonSetter(value = "id", nulls = Nulls.SKIP)
+        public Builder id(Optional<String> id) {
+            this.id = id;
             return this;
         }
 
-        @java.lang.Override
-        @JsonSetter("default_translation")
-        public ConsentTypeStage defaultTranslation(@NotNull Translation defaultTranslation) {
-            this.defaultTranslation = Objects.requireNonNull(defaultTranslation, "defaultTranslation must not be null");
+        public Builder id(String id) {
+            this.id = Optional.ofNullable(id);
             return this;
         }
 
         /**
-         * Describes the type of consent.<p>Describes the type of consent.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The state of the subscription type.</p>
          */
-        @java.lang.Override
-        @JsonSetter("consent_type")
-        public _FinalStage consentType(@NotNull ConsentType consentType) {
-            this.consentType = Objects.requireNonNull(consentType, "consentType must not be null");
+        @JsonSetter(value = "state", nulls = Nulls.SKIP)
+        public Builder state(Optional<State> state) {
+            this.state = state;
             return this;
         }
 
-        /**
-         * <p>The message types that this subscription supports - can contain <code>email</code> or <code>sms_message</code>.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addAllContentTypes(List<ContentTypesItem> contentTypes) {
-            this.contentTypes.addAll(contentTypes);
+        public Builder state(State state) {
+            this.state = Optional.ofNullable(state);
             return this;
         }
 
-        /**
-         * <p>The message types that this subscription supports - can contain <code>email</code> or <code>sms_message</code>.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addContentTypes(ContentTypesItem contentTypes) {
-            this.contentTypes.add(contentTypes);
+        @JsonSetter(value = "default_translation", nulls = Nulls.SKIP)
+        public Builder defaultTranslation(Optional<Translation> defaultTranslation) {
+            this.defaultTranslation = defaultTranslation;
             return this;
         }
 
-        /**
-         * <p>The message types that this subscription supports - can contain <code>email</code> or <code>sms_message</code>.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "content_types", nulls = Nulls.SKIP)
-        public _FinalStage contentTypes(List<ContentTypesItem> contentTypes) {
-            this.contentTypes.clear();
-            this.contentTypes.addAll(contentTypes);
-            return this;
-        }
-
-        /**
-         * <p>An array of translations objects with the localised version of the subscription type in each available locale within your translation settings.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addAllTranslations(List<Translation> translations) {
-            this.translations.addAll(translations);
-            return this;
-        }
-
-        /**
-         * <p>An array of translations objects with the localised version of the subscription type in each available locale within your translation settings.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addTranslations(Translation translations) {
-            this.translations.add(translations);
+        public Builder defaultTranslation(Translation defaultTranslation) {
+            this.defaultTranslation = Optional.ofNullable(defaultTranslation);
             return this;
         }
 
         /**
          * <p>An array of translations objects with the localised version of the subscription type in each available locale within your translation settings.</p>
          */
-        @java.lang.Override
         @JsonSetter(value = "translations", nulls = Nulls.SKIP)
-        public _FinalStage translations(List<Translation> translations) {
-            this.translations.clear();
-            this.translations.addAll(translations);
+        public Builder translations(Optional<List<Translation>> translations) {
+            this.translations = translations;
             return this;
         }
 
-        @java.lang.Override
+        public Builder translations(List<Translation> translations) {
+            this.translations = Optional.ofNullable(translations);
+            return this;
+        }
+
+        /**
+         * <p>Describes the type of consent.</p>
+         */
+        @JsonSetter(value = "consent_type", nulls = Nulls.SKIP)
+        public Builder consentType(Optional<ConsentType> consentType) {
+            this.consentType = consentType;
+            return this;
+        }
+
+        public Builder consentType(ConsentType consentType) {
+            this.consentType = Optional.ofNullable(consentType);
+            return this;
+        }
+
+        /**
+         * <p>The message types that this subscription supports - can contain <code>email</code> or <code>sms_message</code>.</p>
+         */
+        @JsonSetter(value = "content_types", nulls = Nulls.SKIP)
+        public Builder contentTypes(Optional<List<ContentTypesItem>> contentTypes) {
+            this.contentTypes = contentTypes;
+            return this;
+        }
+
+        public Builder contentTypes(List<ContentTypesItem> contentTypes) {
+            this.contentTypes = Optional.ofNullable(contentTypes);
+            return this;
+        }
+
         public SubscriptionType build() {
             return new SubscriptionType(
-                    id, state, defaultTranslation, translations, consentType, contentTypes, additionalProperties);
+                    type, id, state, defaultTranslation, translations, consentType, contentTypes, additionalProperties);
         }
     }
 

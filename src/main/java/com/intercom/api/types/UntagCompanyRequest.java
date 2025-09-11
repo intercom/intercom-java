@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
@@ -170,15 +171,22 @@ public final class UntagCompanyRequest {
     @JsonInclude(JsonInclude.Include.NON_ABSENT)
     @JsonDeserialize(builder = CompaniesItem.Builder.class)
     public static final class CompaniesItem {
-        private final String id;
+        private final Optional<String> id;
 
-        private final String companyId;
+        private final Optional<String> companyId;
+
+        private final Optional<Boolean> untag;
 
         private final Map<String, Object> additionalProperties;
 
-        private CompaniesItem(String id, String companyId, Map<String, Object> additionalProperties) {
+        private CompaniesItem(
+                Optional<String> id,
+                Optional<String> companyId,
+                Optional<Boolean> untag,
+                Map<String, Object> additionalProperties) {
             this.id = id;
             this.companyId = companyId;
+            this.untag = untag;
             this.additionalProperties = additionalProperties;
         }
 
@@ -186,7 +194,7 @@ public final class UntagCompanyRequest {
          * @return The Intercom defined id representing the company.
          */
         @JsonProperty("id")
-        public String getId() {
+        public Optional<String> getId() {
             return id;
         }
 
@@ -194,7 +202,7 @@ public final class UntagCompanyRequest {
          * @return The company id you have defined for the company.
          */
         @JsonProperty("company_id")
-        public String getCompanyId() {
+        public Optional<String> getCompanyId() {
             return companyId;
         }
 
@@ -202,8 +210,8 @@ public final class UntagCompanyRequest {
          * @return Always set to true
          */
         @JsonProperty("untag")
-        public Boolean getUntag() {
-            return true;
+        public Optional<Boolean> getUntag() {
+            return untag;
         }
 
         @java.lang.Override
@@ -218,12 +226,12 @@ public final class UntagCompanyRequest {
         }
 
         private boolean equalTo(CompaniesItem other) {
-            return id.equals(other.id) && companyId.equals(other.companyId);
+            return id.equals(other.id) && companyId.equals(other.companyId) && untag.equals(other.untag);
         }
 
         @java.lang.Override
         public int hashCode() {
-            return Objects.hash(this.id, this.companyId);
+            return Objects.hash(this.id, this.companyId, this.untag);
         }
 
         @java.lang.Override
@@ -231,73 +239,74 @@ public final class UntagCompanyRequest {
             return ObjectMappers.stringify(this);
         }
 
-        public static IdStage builder() {
+        public static Builder builder() {
             return new Builder();
         }
 
-        public interface IdStage {
-            /**
-             * The Intercom defined id representing the company.
-             */
-            CompanyIdStage id(@NotNull String id);
-
-            Builder from(CompaniesItem other);
-        }
-
-        public interface CompanyIdStage {
-            /**
-             * The company id you have defined for the company.
-             */
-            _FinalStage companyId(@NotNull String companyId);
-        }
-
-        public interface _FinalStage {
-            CompaniesItem build();
-        }
-
         @JsonIgnoreProperties(ignoreUnknown = true)
-        public static final class Builder implements IdStage, CompanyIdStage, _FinalStage {
-            private String id;
+        public static final class Builder {
+            private Optional<String> id = Optional.empty();
 
-            private String companyId;
+            private Optional<String> companyId = Optional.empty();
+
+            private Optional<Boolean> untag = Optional.empty();
 
             @JsonAnySetter
             private Map<String, Object> additionalProperties = new HashMap<>();
 
             private Builder() {}
 
-            @java.lang.Override
             public Builder from(CompaniesItem other) {
                 id(other.getId());
                 companyId(other.getCompanyId());
+                untag(other.getUntag());
                 return this;
             }
 
             /**
-             * The Intercom defined id representing the company.<p>The Intercom defined id representing the company.</p>
-             * @return Reference to {@code this} so that method calls can be chained together.
+             * <p>The Intercom defined id representing the company.</p>
              */
-            @java.lang.Override
-            @JsonSetter("id")
-            public CompanyIdStage id(@NotNull String id) {
-                this.id = Objects.requireNonNull(id, "id must not be null");
+            @JsonSetter(value = "id", nulls = Nulls.SKIP)
+            public Builder id(Optional<String> id) {
+                this.id = id;
+                return this;
+            }
+
+            public Builder id(String id) {
+                this.id = Optional.ofNullable(id);
                 return this;
             }
 
             /**
-             * The company id you have defined for the company.<p>The company id you have defined for the company.</p>
-             * @return Reference to {@code this} so that method calls can be chained together.
+             * <p>The company id you have defined for the company.</p>
              */
-            @java.lang.Override
-            @JsonSetter("company_id")
-            public _FinalStage companyId(@NotNull String companyId) {
-                this.companyId = Objects.requireNonNull(companyId, "companyId must not be null");
+            @JsonSetter(value = "company_id", nulls = Nulls.SKIP)
+            public Builder companyId(Optional<String> companyId) {
+                this.companyId = companyId;
                 return this;
             }
 
-            @java.lang.Override
+            public Builder companyId(String companyId) {
+                this.companyId = Optional.ofNullable(companyId);
+                return this;
+            }
+
+            /**
+             * <p>Always set to true</p>
+             */
+            @JsonSetter(value = "untag", nulls = Nulls.SKIP)
+            public Builder untag(Optional<Boolean> untag) {
+                this.untag = untag;
+                return this;
+            }
+
+            public Builder untag(Boolean untag) {
+                this.untag = Optional.ofNullable(untag);
+                return this;
+            }
+
             public CompaniesItem build() {
-                return new CompaniesItem(id, companyId, additionalProperties);
+                return new CompaniesItem(id, companyId, untag, additionalProperties);
             }
         }
     }

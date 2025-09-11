@@ -12,7 +12,6 @@ import com.intercom.api.core.MediaTypes;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.core.QueryStringMapper;
 import com.intercom.api.core.RequestOptions;
-import com.intercom.api.resources.unstable.dataattributes.requests.CreateDataAttributeRequest;
 import com.intercom.api.resources.unstable.dataattributes.requests.LisDataAttributesRequest;
 import com.intercom.api.resources.unstable.dataattributes.requests.UpdateDataAttributeRequest;
 import com.intercom.api.resources.unstable.dataattributes.types.DataAttribute;
@@ -110,15 +109,14 @@ public class RawDataAttributesClient {
     /**
      * You can create a data attributes for a <code>contact</code> or a <code>company</code>.
      */
-    public IntercomHttpResponse<DataAttribute> createDataAttribute(CreateDataAttributeRequest request) {
+    public IntercomHttpResponse<DataAttribute> createDataAttribute(Object request) {
         return createDataAttribute(request, null);
     }
 
     /**
      * You can create a data attributes for a <code>contact</code> or a <code>company</code>.
      */
-    public IntercomHttpResponse<DataAttribute> createDataAttribute(
-            CreateDataAttributeRequest request, RequestOptions requestOptions) {
+    public IntercomHttpResponse<DataAttribute> createDataAttribute(Object request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("data_attributes")
@@ -198,7 +196,7 @@ public class RawDataAttributesClient {
         RequestBody body;
         try {
             body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request.getBody()), MediaTypes.APPLICATION_JSON);
         } catch (JsonProcessingException e) {
             throw new IntercomException("Failed to serialize request", e);
         }

@@ -9,23 +9,31 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = SocialProfile.Builder.class)
 public final class SocialProfile {
-    private final String name;
+    private final Optional<String> type;
 
-    private final String url;
+    private final Optional<String> name;
+
+    private final Optional<String> url;
 
     private final Map<String, Object> additionalProperties;
 
-    private SocialProfile(String name, String url, Map<String, Object> additionalProperties) {
+    private SocialProfile(
+            Optional<String> type,
+            Optional<String> name,
+            Optional<String> url,
+            Map<String, Object> additionalProperties) {
+        this.type = type;
         this.name = name;
         this.url = url;
         this.additionalProperties = additionalProperties;
@@ -35,15 +43,15 @@ public final class SocialProfile {
      * @return value is &quot;social_profile&quot;
      */
     @JsonProperty("type")
-    public String getType() {
-        return "social_profile";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The name of the Social media profile
      */
     @JsonProperty("name")
-    public String getName() {
+    public Optional<String> getName() {
         return name;
     }
 
@@ -51,7 +59,7 @@ public final class SocialProfile {
      * @return The name of the Social media profile
      */
     @JsonProperty("url")
-    public String getUrl() {
+    public Optional<String> getUrl() {
         return url;
     }
 
@@ -67,12 +75,12 @@ public final class SocialProfile {
     }
 
     private boolean equalTo(SocialProfile other) {
-        return name.equals(other.name) && url.equals(other.url);
+        return type.equals(other.type) && name.equals(other.name) && url.equals(other.url);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.name, this.url);
+        return Objects.hash(this.type, this.name, this.url);
     }
 
     @java.lang.Override
@@ -80,73 +88,74 @@ public final class SocialProfile {
         return ObjectMappers.stringify(this);
     }
 
-    public static NameStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface NameStage {
-        /**
-         * The name of the Social media profile
-         */
-        UrlStage name(@NotNull String name);
-
-        Builder from(SocialProfile other);
-    }
-
-    public interface UrlStage {
-        /**
-         * The name of the Social media profile
-         */
-        _FinalStage url(@NotNull String url);
-    }
-
-    public interface _FinalStage {
-        SocialProfile build();
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements NameStage, UrlStage, _FinalStage {
-        private String name;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private String url;
+        private Optional<String> name = Optional.empty();
+
+        private Optional<String> url = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(SocialProfile other) {
+            type(other.getType());
             name(other.getName());
             url(other.getUrl());
             return this;
         }
 
         /**
-         * The name of the Social media profile<p>The name of the Social media profile</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>value is &quot;social_profile&quot;</p>
          */
-        @java.lang.Override
-        @JsonSetter("name")
-        public UrlStage name(@NotNull String name) {
-            this.name = Objects.requireNonNull(name, "name must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
-         * The name of the Social media profile<p>The name of the Social media profile</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The name of the Social media profile</p>
          */
-        @java.lang.Override
-        @JsonSetter("url")
-        public _FinalStage url(@NotNull String url) {
-            this.url = Objects.requireNonNull(url, "url must not be null");
+        @JsonSetter(value = "name", nulls = Nulls.SKIP)
+        public Builder name(Optional<String> name) {
+            this.name = name;
             return this;
         }
 
-        @java.lang.Override
+        public Builder name(String name) {
+            this.name = Optional.ofNullable(name);
+            return this;
+        }
+
+        /**
+         * <p>The name of the Social media profile</p>
+         */
+        @JsonSetter(value = "url", nulls = Nulls.SKIP)
+        public Builder url(Optional<String> url) {
+            this.url = url;
+            return this;
+        }
+
+        public Builder url(String url) {
+            this.url = Optional.ofNullable(url);
+            return this;
+        }
+
         public SocialProfile build() {
-            return new SocialProfile(name, url, additionalProperties);
+            return new SocialProfile(type, name, url, additionalProperties);
         }
     }
 }

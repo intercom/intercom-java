@@ -16,28 +16,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = DataEventSummaryItem.Builder.class)
 public final class DataEventSummaryItem {
-    private final String name;
+    private final Optional<String> name;
 
-    private final String first;
+    private final Optional<String> first;
 
-    private final String last;
+    private final Optional<String> last;
 
-    private final int count;
+    private final Optional<Integer> count;
 
     private final Optional<String> description;
 
     private final Map<String, Object> additionalProperties;
 
     private DataEventSummaryItem(
-            String name,
-            String first,
-            String last,
-            int count,
+            Optional<String> name,
+            Optional<String> first,
+            Optional<String> last,
+            Optional<Integer> count,
             Optional<String> description,
             Map<String, Object> additionalProperties) {
         this.name = name;
@@ -52,7 +51,7 @@ public final class DataEventSummaryItem {
      * @return The name of the event
      */
     @JsonProperty("name")
-    public String getName() {
+    public Optional<String> getName() {
         return name;
     }
 
@@ -60,7 +59,7 @@ public final class DataEventSummaryItem {
      * @return The first time the event was sent
      */
     @JsonProperty("first")
-    public String getFirst() {
+    public Optional<String> getFirst() {
         return first;
     }
 
@@ -68,7 +67,7 @@ public final class DataEventSummaryItem {
      * @return The last time the event was sent
      */
     @JsonProperty("last")
-    public String getLast() {
+    public Optional<String> getLast() {
         return last;
     }
 
@@ -76,7 +75,7 @@ public final class DataEventSummaryItem {
      * @return The number of times the event was sent
      */
     @JsonProperty("count")
-    public int getCount() {
+    public Optional<Integer> getCount() {
         return count;
     }
 
@@ -103,7 +102,7 @@ public final class DataEventSummaryItem {
         return name.equals(other.name)
                 && first.equals(other.first)
                 && last.equals(other.last)
-                && count == other.count
+                && count.equals(other.count)
                 && description.equals(other.description);
     }
 
@@ -117,60 +116,19 @@ public final class DataEventSummaryItem {
         return ObjectMappers.stringify(this);
     }
 
-    public static NameStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface NameStage {
-        /**
-         * The name of the event
-         */
-        FirstStage name(@NotNull String name);
-
-        Builder from(DataEventSummaryItem other);
-    }
-
-    public interface FirstStage {
-        /**
-         * The first time the event was sent
-         */
-        LastStage first(@NotNull String first);
-    }
-
-    public interface LastStage {
-        /**
-         * The last time the event was sent
-         */
-        CountStage last(@NotNull String last);
-    }
-
-    public interface CountStage {
-        /**
-         * The number of times the event was sent
-         */
-        _FinalStage count(int count);
-    }
-
-    public interface _FinalStage {
-        DataEventSummaryItem build();
-
-        /**
-         * <p>The description of the event</p>
-         */
-        _FinalStage description(Optional<String> description);
-
-        _FinalStage description(String description);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements NameStage, FirstStage, LastStage, CountStage, _FinalStage {
-        private String name;
+    public static final class Builder {
+        private Optional<String> name = Optional.empty();
 
-        private String first;
+        private Optional<String> first = Optional.empty();
 
-        private String last;
+        private Optional<String> last = Optional.empty();
 
-        private int count;
+        private Optional<Integer> count = Optional.empty();
 
         private Optional<String> description = Optional.empty();
 
@@ -179,7 +137,6 @@ public final class DataEventSummaryItem {
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(DataEventSummaryItem other) {
             name(other.getName());
             first(other.getFirst());
@@ -190,70 +147,75 @@ public final class DataEventSummaryItem {
         }
 
         /**
-         * The name of the event<p>The name of the event</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The name of the event</p>
          */
-        @java.lang.Override
-        @JsonSetter("name")
-        public FirstStage name(@NotNull String name) {
-            this.name = Objects.requireNonNull(name, "name must not be null");
+        @JsonSetter(value = "name", nulls = Nulls.SKIP)
+        public Builder name(Optional<String> name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = Optional.ofNullable(name);
             return this;
         }
 
         /**
-         * The first time the event was sent<p>The first time the event was sent</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The first time the event was sent</p>
          */
-        @java.lang.Override
-        @JsonSetter("first")
-        public LastStage first(@NotNull String first) {
-            this.first = Objects.requireNonNull(first, "first must not be null");
+        @JsonSetter(value = "first", nulls = Nulls.SKIP)
+        public Builder first(Optional<String> first) {
+            this.first = first;
+            return this;
+        }
+
+        public Builder first(String first) {
+            this.first = Optional.ofNullable(first);
             return this;
         }
 
         /**
-         * The last time the event was sent<p>The last time the event was sent</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The last time the event was sent</p>
          */
-        @java.lang.Override
-        @JsonSetter("last")
-        public CountStage last(@NotNull String last) {
-            this.last = Objects.requireNonNull(last, "last must not be null");
+        @JsonSetter(value = "last", nulls = Nulls.SKIP)
+        public Builder last(Optional<String> last) {
+            this.last = last;
+            return this;
+        }
+
+        public Builder last(String last) {
+            this.last = Optional.ofNullable(last);
             return this;
         }
 
         /**
-         * The number of times the event was sent<p>The number of times the event was sent</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The number of times the event was sent</p>
          */
-        @java.lang.Override
-        @JsonSetter("count")
-        public _FinalStage count(int count) {
+        @JsonSetter(value = "count", nulls = Nulls.SKIP)
+        public Builder count(Optional<Integer> count) {
             this.count = count;
             return this;
         }
 
-        /**
-         * <p>The description of the event</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage description(String description) {
-            this.description = Optional.ofNullable(description);
+        public Builder count(Integer count) {
+            this.count = Optional.ofNullable(count);
             return this;
         }
 
         /**
          * <p>The description of the event</p>
          */
-        @java.lang.Override
         @JsonSetter(value = "description", nulls = Nulls.SKIP)
-        public _FinalStage description(Optional<String> description) {
+        public Builder description(Optional<String> description) {
             this.description = description;
             return this;
         }
 
-        @java.lang.Override
+        public Builder description(String description) {
+            this.description = Optional.ofNullable(description);
+            return this;
+        }
+
         public DataEventSummaryItem build() {
             return new DataEventSummaryItem(name, first, last, count, description, additionalProperties);
         }

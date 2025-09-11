@@ -8,8 +8,11 @@ import com.intercom.api.core.RequestOptions;
 import com.intercom.api.resources.dataexport.requests.CancelDataExportRequest;
 import com.intercom.api.resources.dataexport.requests.CreateDataExportRequest;
 import com.intercom.api.resources.dataexport.requests.DownloadDataExportRequest;
+import com.intercom.api.resources.dataexport.requests.DownloadReportingDataExportRequest;
+import com.intercom.api.resources.dataexport.requests.ExportReportingDataRequest;
 import com.intercom.api.resources.dataexport.requests.FindDataExportRequest;
 import com.intercom.api.resources.dataexport.types.DataExport;
+import com.intercom.api.resources.dataexport.types.DataExportExportReportingDataResponse;
 import java.util.concurrent.CompletableFuture;
 
 public class AsyncDataExportClient {
@@ -27,6 +30,27 @@ public class AsyncDataExportClient {
      */
     public AsyncRawDataExportClient withRawResponse() {
         return this.rawClient;
+    }
+
+    public CompletableFuture<DataExportExportReportingDataResponse> exportReportingData(
+            ExportReportingDataRequest request) {
+        return this.rawClient.exportReportingData(request).thenApply(response -> response.body());
+    }
+
+    public CompletableFuture<DataExportExportReportingDataResponse> exportReportingData(
+            ExportReportingDataRequest request, RequestOptions requestOptions) {
+        return this.rawClient.exportReportingData(request, requestOptions).thenApply(response -> response.body());
+    }
+
+    public CompletableFuture<Void> downloadReportingDataExport(DownloadReportingDataExportRequest request) {
+        return this.rawClient.downloadReportingDataExport(request).thenApply(response -> response.body());
+    }
+
+    public CompletableFuture<Void> downloadReportingDataExport(
+            DownloadReportingDataExportRequest request, RequestOptions requestOptions) {
+        return this.rawClient
+                .downloadReportingDataExport(request, requestOptions)
+                .thenApply(response -> response.body());
     }
 
     /**

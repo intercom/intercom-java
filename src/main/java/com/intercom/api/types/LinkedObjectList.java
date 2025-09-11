@@ -12,25 +12,32 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = LinkedObjectList.Builder.class)
 public final class LinkedObjectList {
-    private final int totalCount;
+    private final Optional<String> type;
 
-    private final boolean hasMore;
+    private final Optional<Integer> totalCount;
 
-    private final List<LinkedObject> data;
+    private final Optional<Boolean> hasMore;
+
+    private final Optional<List<LinkedObject>> data;
 
     private final Map<String, Object> additionalProperties;
 
     private LinkedObjectList(
-            int totalCount, boolean hasMore, List<LinkedObject> data, Map<String, Object> additionalProperties) {
+            Optional<String> type,
+            Optional<Integer> totalCount,
+            Optional<Boolean> hasMore,
+            Optional<List<LinkedObject>> data,
+            Map<String, Object> additionalProperties) {
+        this.type = type;
         this.totalCount = totalCount;
         this.hasMore = hasMore;
         this.data = data;
@@ -41,15 +48,15 @@ public final class LinkedObjectList {
      * @return Always list.
      */
     @JsonProperty("type")
-    public String getType() {
-        return "list";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The total number of linked objects.
      */
     @JsonProperty("total_count")
-    public int getTotalCount() {
+    public Optional<Integer> getTotalCount() {
         return totalCount;
     }
 
@@ -57,7 +64,7 @@ public final class LinkedObjectList {
      * @return Whether or not there are more linked objects than returned.
      */
     @JsonProperty("has_more")
-    public boolean getHasMore() {
+    public Optional<Boolean> getHasMore() {
         return hasMore;
     }
 
@@ -65,7 +72,7 @@ public final class LinkedObjectList {
      * @return An array containing the linked conversations and linked tickets.
      */
     @JsonProperty("data")
-    public List<LinkedObject> getData() {
+    public Optional<List<LinkedObject>> getData() {
         return data;
     }
 
@@ -81,12 +88,15 @@ public final class LinkedObjectList {
     }
 
     private boolean equalTo(LinkedObjectList other) {
-        return totalCount == other.totalCount && hasMore == other.hasMore && data.equals(other.data);
+        return type.equals(other.type)
+                && totalCount.equals(other.totalCount)
+                && hasMore.equals(other.hasMore)
+                && data.equals(other.data);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.totalCount, this.hasMore, this.data);
+        return Objects.hash(this.type, this.totalCount, this.hasMore, this.data);
     }
 
     @java.lang.Override
@@ -94,54 +104,27 @@ public final class LinkedObjectList {
         return ObjectMappers.stringify(this);
     }
 
-    public static TotalCountStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface TotalCountStage {
-        /**
-         * The total number of linked objects.
-         */
-        HasMoreStage totalCount(int totalCount);
-
-        Builder from(LinkedObjectList other);
-    }
-
-    public interface HasMoreStage {
-        /**
-         * Whether or not there are more linked objects than returned.
-         */
-        _FinalStage hasMore(boolean hasMore);
-    }
-
-    public interface _FinalStage {
-        LinkedObjectList build();
-
-        /**
-         * <p>An array containing the linked conversations and linked tickets.</p>
-         */
-        _FinalStage data(List<LinkedObject> data);
-
-        _FinalStage addData(LinkedObject data);
-
-        _FinalStage addAllData(List<LinkedObject> data);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements TotalCountStage, HasMoreStage, _FinalStage {
-        private int totalCount;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private boolean hasMore;
+        private Optional<Integer> totalCount = Optional.empty();
 
-        private List<LinkedObject> data = new ArrayList<>();
+        private Optional<Boolean> hasMore = Optional.empty();
+
+        private Optional<List<LinkedObject>> data = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(LinkedObjectList other) {
+            type(other.getType());
             totalCount(other.getTotalCount());
             hasMore(other.getHasMore());
             data(other.getData());
@@ -149,61 +132,63 @@ public final class LinkedObjectList {
         }
 
         /**
-         * The total number of linked objects.<p>The total number of linked objects.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Always list.</p>
          */
-        @java.lang.Override
-        @JsonSetter("total_count")
-        public HasMoreStage totalCount(int totalCount) {
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
+            return this;
+        }
+
+        /**
+         * <p>The total number of linked objects.</p>
+         */
+        @JsonSetter(value = "total_count", nulls = Nulls.SKIP)
+        public Builder totalCount(Optional<Integer> totalCount) {
             this.totalCount = totalCount;
             return this;
         }
 
+        public Builder totalCount(Integer totalCount) {
+            this.totalCount = Optional.ofNullable(totalCount);
+            return this;
+        }
+
         /**
-         * Whether or not there are more linked objects than returned.<p>Whether or not there are more linked objects than returned.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Whether or not there are more linked objects than returned.</p>
          */
-        @java.lang.Override
-        @JsonSetter("has_more")
-        public _FinalStage hasMore(boolean hasMore) {
+        @JsonSetter(value = "has_more", nulls = Nulls.SKIP)
+        public Builder hasMore(Optional<Boolean> hasMore) {
             this.hasMore = hasMore;
             return this;
         }
 
-        /**
-         * <p>An array containing the linked conversations and linked tickets.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addAllData(List<LinkedObject> data) {
-            this.data.addAll(data);
-            return this;
-        }
-
-        /**
-         * <p>An array containing the linked conversations and linked tickets.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addData(LinkedObject data) {
-            this.data.add(data);
+        public Builder hasMore(Boolean hasMore) {
+            this.hasMore = Optional.ofNullable(hasMore);
             return this;
         }
 
         /**
          * <p>An array containing the linked conversations and linked tickets.</p>
          */
-        @java.lang.Override
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
-        public _FinalStage data(List<LinkedObject> data) {
-            this.data.clear();
-            this.data.addAll(data);
+        public Builder data(Optional<List<LinkedObject>> data) {
+            this.data = data;
             return this;
         }
 
-        @java.lang.Override
+        public Builder data(List<LinkedObject> data) {
+            this.data = Optional.ofNullable(data);
+            return this;
+        }
+
         public LinkedObjectList build() {
-            return new LinkedObjectList(totalCount, hasMore, data, additionalProperties);
+            return new LinkedObjectList(type, totalCount, hasMore, data, additionalProperties);
         }
     }
 }

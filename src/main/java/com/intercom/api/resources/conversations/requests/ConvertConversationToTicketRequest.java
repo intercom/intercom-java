@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ConvertConversationToTicketRequest.Builder.class)
 public final class ConvertConversationToTicketRequest {
-    private final String conversationId;
+    private final int conversationId;
 
     private final String ticketTypeId;
 
@@ -30,7 +30,7 @@ public final class ConvertConversationToTicketRequest {
     private final Map<String, Object> additionalProperties;
 
     private ConvertConversationToTicketRequest(
-            String conversationId,
+            int conversationId,
             String ticketTypeId,
             Optional<Map<String, Object>> attributes,
             Map<String, Object> additionalProperties) {
@@ -44,7 +44,7 @@ public final class ConvertConversationToTicketRequest {
      * @return The id of the conversation to target
      */
     @JsonProperty("conversation_id")
-    public String getConversationId() {
+    public int getConversationId() {
         return conversationId;
     }
 
@@ -74,7 +74,7 @@ public final class ConvertConversationToTicketRequest {
     }
 
     private boolean equalTo(ConvertConversationToTicketRequest other) {
-        return conversationId.equals(other.conversationId)
+        return conversationId == other.conversationId
                 && ticketTypeId.equals(other.ticketTypeId)
                 && attributes.equals(other.attributes);
     }
@@ -97,7 +97,7 @@ public final class ConvertConversationToTicketRequest {
         /**
          * The id of the conversation to target
          */
-        TicketTypeIdStage conversationId(@NotNull String conversationId);
+        TicketTypeIdStage conversationId(int conversationId);
 
         Builder from(ConvertConversationToTicketRequest other);
     }
@@ -119,7 +119,7 @@ public final class ConvertConversationToTicketRequest {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder implements ConversationIdStage, TicketTypeIdStage, _FinalStage {
-        private String conversationId;
+        private int conversationId;
 
         private String ticketTypeId;
 
@@ -144,8 +144,8 @@ public final class ConvertConversationToTicketRequest {
          */
         @java.lang.Override
         @JsonSetter("conversation_id")
-        public TicketTypeIdStage conversationId(@NotNull String conversationId) {
-            this.conversationId = Objects.requireNonNull(conversationId, "conversationId must not be null");
+        public TicketTypeIdStage conversationId(int conversationId) {
+            this.conversationId = conversationId;
             return this;
         }
 

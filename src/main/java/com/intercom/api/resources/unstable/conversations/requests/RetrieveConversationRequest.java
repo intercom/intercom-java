@@ -24,11 +24,18 @@ public final class RetrieveConversationRequest {
 
     private final Optional<String> displayAs;
 
+    private final Optional<Boolean> includeTranslations;
+
     private final Map<String, Object> additionalProperties;
 
-    private RetrieveConversationRequest(int id, Optional<String> displayAs, Map<String, Object> additionalProperties) {
+    private RetrieveConversationRequest(
+            int id,
+            Optional<String> displayAs,
+            Optional<Boolean> includeTranslations,
+            Map<String, Object> additionalProperties) {
         this.id = id;
         this.displayAs = displayAs;
+        this.includeTranslations = includeTranslations;
         this.additionalProperties = additionalProperties;
     }
 
@@ -48,6 +55,14 @@ public final class RetrieveConversationRequest {
         return displayAs;
     }
 
+    /**
+     * @return If set to true, conversation parts will be translated to the detected language of the conversation.
+     */
+    @JsonProperty("include_translations")
+    public Optional<Boolean> getIncludeTranslations() {
+        return includeTranslations;
+    }
+
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
@@ -60,12 +75,14 @@ public final class RetrieveConversationRequest {
     }
 
     private boolean equalTo(RetrieveConversationRequest other) {
-        return id == other.id && displayAs.equals(other.displayAs);
+        return id == other.id
+                && displayAs.equals(other.displayAs)
+                && includeTranslations.equals(other.includeTranslations);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.id, this.displayAs);
+        return Objects.hash(this.id, this.displayAs, this.includeTranslations);
     }
 
     @java.lang.Override
@@ -95,11 +112,20 @@ public final class RetrieveConversationRequest {
         _FinalStage displayAs(Optional<String> displayAs);
 
         _FinalStage displayAs(String displayAs);
+
+        /**
+         * <p>If set to true, conversation parts will be translated to the detected language of the conversation.</p>
+         */
+        _FinalStage includeTranslations(Optional<Boolean> includeTranslations);
+
+        _FinalStage includeTranslations(Boolean includeTranslations);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder implements IdStage, _FinalStage {
         private int id;
+
+        private Optional<Boolean> includeTranslations = Optional.empty();
 
         private Optional<String> displayAs = Optional.empty();
 
@@ -112,6 +138,7 @@ public final class RetrieveConversationRequest {
         public Builder from(RetrieveConversationRequest other) {
             id(other.getId());
             displayAs(other.getDisplayAs());
+            includeTranslations(other.getIncludeTranslations());
             return this;
         }
 
@@ -123,6 +150,26 @@ public final class RetrieveConversationRequest {
         @JsonSetter("id")
         public _FinalStage id(int id) {
             this.id = id;
+            return this;
+        }
+
+        /**
+         * <p>If set to true, conversation parts will be translated to the detected language of the conversation.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage includeTranslations(Boolean includeTranslations) {
+            this.includeTranslations = Optional.ofNullable(includeTranslations);
+            return this;
+        }
+
+        /**
+         * <p>If set to true, conversation parts will be translated to the detected language of the conversation.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "include_translations", nulls = Nulls.SKIP)
+        public _FinalStage includeTranslations(Optional<Boolean> includeTranslations) {
+            this.includeTranslations = includeTranslations;
             return this;
         }
 
@@ -148,7 +195,7 @@ public final class RetrieveConversationRequest {
 
         @java.lang.Override
         public RetrieveConversationRequest build() {
-            return new RetrieveConversationRequest(id, displayAs, additionalProperties);
+            return new RetrieveConversationRequest(id, displayAs, includeTranslations, additionalProperties);
         }
     }
 }

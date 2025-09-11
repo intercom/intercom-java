@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.resources.tickets.types.Ticket;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,19 +22,23 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = TicketList.Builder.class)
 public final class TicketList {
-    private final List<Ticket> tickets;
+    private final Optional<String> type;
 
-    private final int totalCount;
+    private final Optional<List<Optional<Ticket>>> tickets;
+
+    private final Optional<Integer> totalCount;
 
     private final Optional<CursorPages> pages;
 
     private final Map<String, Object> additionalProperties;
 
     private TicketList(
-            List<Ticket> tickets,
-            int totalCount,
+            Optional<String> type,
+            Optional<List<Optional<Ticket>>> tickets,
+            Optional<Integer> totalCount,
             Optional<CursorPages> pages,
             Map<String, Object> additionalProperties) {
+        this.type = type;
         this.tickets = tickets;
         this.totalCount = totalCount;
         this.pages = pages;
@@ -46,15 +49,15 @@ public final class TicketList {
      * @return Always ticket.list
      */
     @JsonProperty("type")
-    public String getType() {
-        return "ticket.list";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The list of ticket objects
      */
     @JsonProperty("tickets")
-    public List<Ticket> getTickets() {
+    public Optional<List<Optional<Ticket>>> getTickets() {
         return tickets;
     }
 
@@ -62,7 +65,7 @@ public final class TicketList {
      * @return A count of the total number of objects.
      */
     @JsonProperty("total_count")
-    public int getTotalCount() {
+    public Optional<Integer> getTotalCount() {
         return totalCount;
     }
 
@@ -83,12 +86,15 @@ public final class TicketList {
     }
 
     private boolean equalTo(TicketList other) {
-        return tickets.equals(other.tickets) && totalCount == other.totalCount && pages.equals(other.pages);
+        return type.equals(other.type)
+                && tickets.equals(other.tickets)
+                && totalCount.equals(other.totalCount)
+                && pages.equals(other.pages);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.tickets, this.totalCount, this.pages);
+        return Objects.hash(this.type, this.tickets, this.totalCount, this.pages);
     }
 
     @java.lang.Override
@@ -96,51 +102,27 @@ public final class TicketList {
         return ObjectMappers.stringify(this);
     }
 
-    public static TotalCountStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface TotalCountStage {
-        /**
-         * A count of the total number of objects.
-         */
-        _FinalStage totalCount(int totalCount);
-
-        Builder from(TicketList other);
-    }
-
-    public interface _FinalStage {
-        TicketList build();
-
-        /**
-         * <p>The list of ticket objects</p>
-         */
-        _FinalStage tickets(List<Ticket> tickets);
-
-        _FinalStage addTickets(Ticket tickets);
-
-        _FinalStage addAllTickets(List<Ticket> tickets);
-
-        _FinalStage pages(Optional<CursorPages> pages);
-
-        _FinalStage pages(CursorPages pages);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements TotalCountStage, _FinalStage {
-        private int totalCount;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
+
+        private Optional<List<Optional<Ticket>>> tickets = Optional.empty();
+
+        private Optional<Integer> totalCount = Optional.empty();
 
         private Optional<CursorPages> pages = Optional.empty();
-
-        private List<Ticket> tickets = new ArrayList<>();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(TicketList other) {
+            type(other.getType());
             tickets(other.getTickets());
             totalCount(other.getTotalCount());
             pages(other.getPages());
@@ -148,63 +130,60 @@ public final class TicketList {
         }
 
         /**
-         * A count of the total number of objects.<p>A count of the total number of objects.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Always ticket.list</p>
          */
-        @java.lang.Override
-        @JsonSetter("total_count")
-        public _FinalStage totalCount(int totalCount) {
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
+            return this;
+        }
+
+        /**
+         * <p>The list of ticket objects</p>
+         */
+        @JsonSetter(value = "tickets", nulls = Nulls.SKIP)
+        public Builder tickets(Optional<List<Optional<Ticket>>> tickets) {
+            this.tickets = tickets;
+            return this;
+        }
+
+        public Builder tickets(List<Optional<Ticket>> tickets) {
+            this.tickets = Optional.ofNullable(tickets);
+            return this;
+        }
+
+        /**
+         * <p>A count of the total number of objects.</p>
+         */
+        @JsonSetter(value = "total_count", nulls = Nulls.SKIP)
+        public Builder totalCount(Optional<Integer> totalCount) {
             this.totalCount = totalCount;
             return this;
         }
 
-        @java.lang.Override
-        public _FinalStage pages(CursorPages pages) {
-            this.pages = Optional.ofNullable(pages);
+        public Builder totalCount(Integer totalCount) {
+            this.totalCount = Optional.ofNullable(totalCount);
             return this;
         }
 
-        @java.lang.Override
         @JsonSetter(value = "pages", nulls = Nulls.SKIP)
-        public _FinalStage pages(Optional<CursorPages> pages) {
+        public Builder pages(Optional<CursorPages> pages) {
             this.pages = pages;
             return this;
         }
 
-        /**
-         * <p>The list of ticket objects</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addAllTickets(List<Ticket> tickets) {
-            this.tickets.addAll(tickets);
+        public Builder pages(CursorPages pages) {
+            this.pages = Optional.ofNullable(pages);
             return this;
         }
 
-        /**
-         * <p>The list of ticket objects</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addTickets(Ticket tickets) {
-            this.tickets.add(tickets);
-            return this;
-        }
-
-        /**
-         * <p>The list of ticket objects</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "tickets", nulls = Nulls.SKIP)
-        public _FinalStage tickets(List<Ticket> tickets) {
-            this.tickets.clear();
-            this.tickets.addAll(tickets);
-            return this;
-        }
-
-        @java.lang.Override
         public TicketList build() {
-            return new TicketList(tickets, totalCount, pages, additionalProperties);
+            return new TicketList(type, tickets, totalCount, pages, additionalProperties);
         }
     }
 }

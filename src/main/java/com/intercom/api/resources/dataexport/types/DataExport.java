@@ -11,33 +11,34 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = DataExport.Builder.class)
 public final class DataExport {
-    private final String jobIdentifier;
+    private final Optional<String> jobIdentfier;
 
-    private final Status status;
+    private final Optional<Status> status;
 
-    private final String downloadExpiresAt;
+    private final Optional<String> downloadExpiresAt;
 
-    private final String downloadUrl;
+    private final Optional<String> downloadUrl;
 
     private final Map<String, Object> additionalProperties;
 
     private DataExport(
-            String jobIdentifier,
-            Status status,
-            String downloadExpiresAt,
-            String downloadUrl,
+            Optional<String> jobIdentfier,
+            Optional<Status> status,
+            Optional<String> downloadExpiresAt,
+            Optional<String> downloadUrl,
             Map<String, Object> additionalProperties) {
-        this.jobIdentifier = jobIdentifier;
+        this.jobIdentfier = jobIdentfier;
         this.status = status;
         this.downloadExpiresAt = downloadExpiresAt;
         this.downloadUrl = downloadUrl;
@@ -47,16 +48,16 @@ public final class DataExport {
     /**
      * @return The identifier for your job.
      */
-    @JsonProperty("job_identifier")
-    public String getJobIdentifier() {
-        return jobIdentifier;
+    @JsonProperty("job_identfier")
+    public Optional<String> getJobIdentfier() {
+        return jobIdentfier;
     }
 
     /**
      * @return The current state of your job.
      */
     @JsonProperty("status")
-    public Status getStatus() {
+    public Optional<Status> getStatus() {
         return status;
     }
 
@@ -64,7 +65,7 @@ public final class DataExport {
      * @return The time after which you will not be able to access the data.
      */
     @JsonProperty("download_expires_at")
-    public String getDownloadExpiresAt() {
+    public Optional<String> getDownloadExpiresAt() {
         return downloadExpiresAt;
     }
 
@@ -72,7 +73,7 @@ public final class DataExport {
      * @return The location where you can download your data.
      */
     @JsonProperty("download_url")
-    public String getDownloadUrl() {
+    public Optional<String> getDownloadUrl() {
         return downloadUrl;
     }
 
@@ -88,7 +89,7 @@ public final class DataExport {
     }
 
     private boolean equalTo(DataExport other) {
-        return jobIdentifier.equals(other.jobIdentifier)
+        return jobIdentfier.equals(other.jobIdentfier)
                 && status.equals(other.status)
                 && downloadExpiresAt.equals(other.downloadExpiresAt)
                 && downloadUrl.equals(other.downloadUrl);
@@ -96,7 +97,7 @@ public final class DataExport {
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.jobIdentifier, this.status, this.downloadExpiresAt, this.downloadUrl);
+        return Objects.hash(this.jobIdentfier, this.status, this.downloadExpiresAt, this.downloadUrl);
     }
 
     @java.lang.Override
@@ -104,63 +105,27 @@ public final class DataExport {
         return ObjectMappers.stringify(this);
     }
 
-    public static JobIdentifierStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface JobIdentifierStage {
-        /**
-         * The identifier for your job.
-         */
-        StatusStage jobIdentifier(@NotNull String jobIdentifier);
-
-        Builder from(DataExport other);
-    }
-
-    public interface StatusStage {
-        /**
-         * The current state of your job.
-         */
-        DownloadExpiresAtStage status(@NotNull Status status);
-    }
-
-    public interface DownloadExpiresAtStage {
-        /**
-         * The time after which you will not be able to access the data.
-         */
-        DownloadUrlStage downloadExpiresAt(@NotNull String downloadExpiresAt);
-    }
-
-    public interface DownloadUrlStage {
-        /**
-         * The location where you can download your data.
-         */
-        _FinalStage downloadUrl(@NotNull String downloadUrl);
-    }
-
-    public interface _FinalStage {
-        DataExport build();
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder
-            implements JobIdentifierStage, StatusStage, DownloadExpiresAtStage, DownloadUrlStage, _FinalStage {
-        private String jobIdentifier;
+    public static final class Builder {
+        private Optional<String> jobIdentfier = Optional.empty();
 
-        private Status status;
+        private Optional<Status> status = Optional.empty();
 
-        private String downloadExpiresAt;
+        private Optional<String> downloadExpiresAt = Optional.empty();
 
-        private String downloadUrl;
+        private Optional<String> downloadUrl = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(DataExport other) {
-            jobIdentifier(other.getJobIdentifier());
+            jobIdentfier(other.getJobIdentfier());
             status(other.getStatus());
             downloadExpiresAt(other.getDownloadExpiresAt());
             downloadUrl(other.getDownloadUrl());
@@ -168,52 +133,63 @@ public final class DataExport {
         }
 
         /**
-         * The identifier for your job.<p>The identifier for your job.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The identifier for your job.</p>
          */
-        @java.lang.Override
-        @JsonSetter("job_identifier")
-        public StatusStage jobIdentifier(@NotNull String jobIdentifier) {
-            this.jobIdentifier = Objects.requireNonNull(jobIdentifier, "jobIdentifier must not be null");
+        @JsonSetter(value = "job_identfier", nulls = Nulls.SKIP)
+        public Builder jobIdentfier(Optional<String> jobIdentfier) {
+            this.jobIdentfier = jobIdentfier;
+            return this;
+        }
+
+        public Builder jobIdentfier(String jobIdentfier) {
+            this.jobIdentfier = Optional.ofNullable(jobIdentfier);
             return this;
         }
 
         /**
-         * The current state of your job.<p>The current state of your job.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The current state of your job.</p>
          */
-        @java.lang.Override
-        @JsonSetter("status")
-        public DownloadExpiresAtStage status(@NotNull Status status) {
-            this.status = Objects.requireNonNull(status, "status must not be null");
+        @JsonSetter(value = "status", nulls = Nulls.SKIP)
+        public Builder status(Optional<Status> status) {
+            this.status = status;
+            return this;
+        }
+
+        public Builder status(Status status) {
+            this.status = Optional.ofNullable(status);
             return this;
         }
 
         /**
-         * The time after which you will not be able to access the data.<p>The time after which you will not be able to access the data.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The time after which you will not be able to access the data.</p>
          */
-        @java.lang.Override
-        @JsonSetter("download_expires_at")
-        public DownloadUrlStage downloadExpiresAt(@NotNull String downloadExpiresAt) {
-            this.downloadExpiresAt = Objects.requireNonNull(downloadExpiresAt, "downloadExpiresAt must not be null");
+        @JsonSetter(value = "download_expires_at", nulls = Nulls.SKIP)
+        public Builder downloadExpiresAt(Optional<String> downloadExpiresAt) {
+            this.downloadExpiresAt = downloadExpiresAt;
+            return this;
+        }
+
+        public Builder downloadExpiresAt(String downloadExpiresAt) {
+            this.downloadExpiresAt = Optional.ofNullable(downloadExpiresAt);
             return this;
         }
 
         /**
-         * The location where you can download your data.<p>The location where you can download your data.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The location where you can download your data.</p>
          */
-        @java.lang.Override
-        @JsonSetter("download_url")
-        public _FinalStage downloadUrl(@NotNull String downloadUrl) {
-            this.downloadUrl = Objects.requireNonNull(downloadUrl, "downloadUrl must not be null");
+        @JsonSetter(value = "download_url", nulls = Nulls.SKIP)
+        public Builder downloadUrl(Optional<String> downloadUrl) {
+            this.downloadUrl = downloadUrl;
             return this;
         }
 
-        @java.lang.Override
+        public Builder downloadUrl(String downloadUrl) {
+            this.downloadUrl = Optional.ofNullable(downloadUrl);
+            return this;
+        }
+
         public DataExport build() {
-            return new DataExport(jobIdentifier, status, downloadExpiresAt, downloadUrl, additionalProperties);
+            return new DataExport(jobIdentfier, status, downloadExpiresAt, downloadUrl, additionalProperties);
         }
     }
 

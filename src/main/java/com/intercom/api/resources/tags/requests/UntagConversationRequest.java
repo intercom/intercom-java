@@ -44,7 +44,7 @@ public final class UntagConversationRequest {
     }
 
     /**
-     * @return id
+     * @return tag_id
      */
     @JsonProperty("tag_id")
     public String getTagId() {
@@ -101,7 +101,7 @@ public final class UntagConversationRequest {
 
     public interface TagIdStage {
         /**
-         * id
+         * tag_id
          */
         AdminIdStage tagId(@NotNull String tagId);
     }
@@ -150,7 +150,7 @@ public final class UntagConversationRequest {
         }
 
         /**
-         * id<p>id</p>
+         * tag_id<p>tag_id</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

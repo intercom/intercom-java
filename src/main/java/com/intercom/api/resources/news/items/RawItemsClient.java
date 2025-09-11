@@ -20,7 +20,7 @@ import com.intercom.api.resources.news.types.NewsItem;
 import com.intercom.api.types.DeletedObject;
 import com.intercom.api.types.Error;
 import com.intercom.api.types.NewsItemRequest;
-import com.intercom.api.types.PaginatedNewsItemResponse;
+import com.intercom.api.types.PaginatedResponse;
 import java.io.IOException;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
@@ -40,14 +40,14 @@ public class RawItemsClient {
     /**
      * You can fetch a list of all news items
      */
-    public IntercomHttpResponse<PaginatedNewsItemResponse> list() {
+    public IntercomHttpResponse<PaginatedResponse> list() {
         return list(null);
     }
 
     /**
      * You can fetch a list of all news items
      */
-    public IntercomHttpResponse<PaginatedNewsItemResponse> list(RequestOptions requestOptions) {
+    public IntercomHttpResponse<PaginatedResponse> list(RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("news/news_items")
@@ -67,8 +67,7 @@ public class RawItemsClient {
             ResponseBody responseBody = response.body();
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), PaginatedNewsItemResponse.class),
-                        response);
+                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), PaginatedResponse.class), response);
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
@@ -161,7 +160,7 @@ public class RawItemsClient {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("news/news_items")
-                .addPathSegment(request.getNewsItemId())
+                .addPathSegment(Integer.toString(request.getNewsItemId()))
                 .build();
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl)
@@ -211,7 +210,7 @@ public class RawItemsClient {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("news/news_items")
-                .addPathSegment(request.getNewsItemId())
+                .addPathSegment(Integer.toString(request.getNewsItemId()))
                 .build();
         RequestBody body;
         try {
@@ -274,7 +273,7 @@ public class RawItemsClient {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("news/news_items")
-                .addPathSegment(request.getNewsItemId())
+                .addPathSegment(Integer.toString(request.getNewsItemId()))
                 .build();
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl)

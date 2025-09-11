@@ -38,6 +38,8 @@ public final class UpdateConversationRequest {
 
     private final Optional<Map<String, CustomAttributesValue>> customAttributes;
 
+    private final Optional<String> companyId;
+
     private final Map<String, Object> additionalProperties;
 
     private UpdateConversationRequest(
@@ -46,12 +48,14 @@ public final class UpdateConversationRequest {
             Optional<Boolean> read,
             Optional<String> title,
             Optional<Map<String, CustomAttributesValue>> customAttributes,
+            Optional<String> companyId,
             Map<String, Object> additionalProperties) {
         this.id = id;
         this.displayAs = displayAs;
         this.read = read;
         this.title = title;
         this.customAttributes = customAttributes;
+        this.companyId = companyId;
         this.additionalProperties = additionalProperties;
     }
 
@@ -92,6 +96,14 @@ public final class UpdateConversationRequest {
         return customAttributes;
     }
 
+    /**
+     * @return The ID of the company that the conversation is associated with. The unique identifier for the company which is given by Intercom. Set to nil to remove company.
+     */
+    @JsonProperty("company_id")
+    public Optional<String> getCompanyId() {
+        return companyId;
+    }
+
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
@@ -108,12 +120,13 @@ public final class UpdateConversationRequest {
                 && displayAs.equals(other.displayAs)
                 && read.equals(other.read)
                 && title.equals(other.title)
-                && customAttributes.equals(other.customAttributes);
+                && customAttributes.equals(other.customAttributes)
+                && companyId.equals(other.companyId);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.id, this.displayAs, this.read, this.title, this.customAttributes);
+        return Objects.hash(this.id, this.displayAs, this.read, this.title, this.customAttributes, this.companyId);
     }
 
     @java.lang.Override
@@ -161,11 +174,20 @@ public final class UpdateConversationRequest {
         _FinalStage customAttributes(Optional<Map<String, CustomAttributesValue>> customAttributes);
 
         _FinalStage customAttributes(Map<String, CustomAttributesValue> customAttributes);
+
+        /**
+         * <p>The ID of the company that the conversation is associated with. The unique identifier for the company which is given by Intercom. Set to nil to remove company.</p>
+         */
+        _FinalStage companyId(Optional<String> companyId);
+
+        _FinalStage companyId(String companyId);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder implements IdStage, _FinalStage {
         private int id;
+
+        private Optional<String> companyId = Optional.empty();
 
         private Optional<Map<String, CustomAttributesValue>> customAttributes = Optional.empty();
 
@@ -187,6 +209,7 @@ public final class UpdateConversationRequest {
             read(other.getRead());
             title(other.getTitle());
             customAttributes(other.getCustomAttributes());
+            companyId(other.getCompanyId());
             return this;
         }
 
@@ -198,6 +221,26 @@ public final class UpdateConversationRequest {
         @JsonSetter("id")
         public _FinalStage id(int id) {
             this.id = id;
+            return this;
+        }
+
+        /**
+         * <p>The ID of the company that the conversation is associated with. The unique identifier for the company which is given by Intercom. Set to nil to remove company.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage companyId(String companyId) {
+            this.companyId = Optional.ofNullable(companyId);
+            return this;
+        }
+
+        /**
+         * <p>The ID of the company that the conversation is associated with. The unique identifier for the company which is given by Intercom. Set to nil to remove company.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "company_id", nulls = Nulls.SKIP)
+        public _FinalStage companyId(Optional<String> companyId) {
+            this.companyId = companyId;
             return this;
         }
 
@@ -276,7 +319,8 @@ public final class UpdateConversationRequest {
 
         @java.lang.Override
         public UpdateConversationRequest build() {
-            return new UpdateConversationRequest(id, displayAs, read, title, customAttributes, additionalProperties);
+            return new UpdateConversationRequest(
+                    id, displayAs, read, title, customAttributes, companyId, additionalProperties);
         }
     }
 

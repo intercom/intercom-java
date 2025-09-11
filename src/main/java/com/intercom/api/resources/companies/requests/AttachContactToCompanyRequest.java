@@ -19,14 +19,13 @@ import org.jetbrains.annotations.NotNull;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = AttachContactToCompanyRequest.Builder.class)
 public final class AttachContactToCompanyRequest {
-    private final String contactId;
+    private final int contactId;
 
     private final String companyId;
 
     private final Map<String, Object> additionalProperties;
 
-    private AttachContactToCompanyRequest(
-            String contactId, String companyId, Map<String, Object> additionalProperties) {
+    private AttachContactToCompanyRequest(int contactId, String companyId, Map<String, Object> additionalProperties) {
         this.contactId = contactId;
         this.companyId = companyId;
         this.additionalProperties = additionalProperties;
@@ -36,7 +35,7 @@ public final class AttachContactToCompanyRequest {
      * @return The unique identifier for the contact which is given by Intercom
      */
     @JsonProperty("contact_id")
-    public String getContactId() {
+    public int getContactId() {
         return contactId;
     }
 
@@ -60,7 +59,7 @@ public final class AttachContactToCompanyRequest {
     }
 
     private boolean equalTo(AttachContactToCompanyRequest other) {
-        return contactId.equals(other.contactId) && companyId.equals(other.companyId);
+        return contactId == other.contactId && companyId.equals(other.companyId);
     }
 
     @java.lang.Override
@@ -81,7 +80,7 @@ public final class AttachContactToCompanyRequest {
         /**
          * The unique identifier for the contact which is given by Intercom
          */
-        CompanyIdStage contactId(@NotNull String contactId);
+        CompanyIdStage contactId(int contactId);
 
         Builder from(AttachContactToCompanyRequest other);
     }
@@ -99,7 +98,7 @@ public final class AttachContactToCompanyRequest {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder implements ContactIdStage, CompanyIdStage, _FinalStage {
-        private String contactId;
+        private int contactId;
 
         private String companyId;
 
@@ -121,8 +120,8 @@ public final class AttachContactToCompanyRequest {
          */
         @java.lang.Override
         @JsonSetter("contact_id")
-        public CompanyIdStage contactId(@NotNull String contactId) {
-            this.contactId = Objects.requireNonNull(contactId, "contactId must not be null");
+        public CompanyIdStage contactId(int contactId) {
+            this.contactId = contactId;
             return this;
         }
 

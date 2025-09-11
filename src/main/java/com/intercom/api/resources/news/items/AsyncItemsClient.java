@@ -11,7 +11,7 @@ import com.intercom.api.resources.news.items.requests.UpdateNewsItemRequest;
 import com.intercom.api.resources.news.types.NewsItem;
 import com.intercom.api.types.DeletedObject;
 import com.intercom.api.types.NewsItemRequest;
-import com.intercom.api.types.PaginatedNewsItemResponse;
+import com.intercom.api.types.PaginatedResponse;
 import java.util.concurrent.CompletableFuture;
 
 public class AsyncItemsClient {
@@ -34,14 +34,14 @@ public class AsyncItemsClient {
     /**
      * You can fetch a list of all news items
      */
-    public CompletableFuture<PaginatedNewsItemResponse> list() {
+    public CompletableFuture<PaginatedResponse> list() {
         return this.rawClient.list().thenApply(response -> response.body());
     }
 
     /**
      * You can fetch a list of all news items
      */
-    public CompletableFuture<PaginatedNewsItemResponse> list(RequestOptions requestOptions) {
+    public CompletableFuture<PaginatedResponse> list(RequestOptions requestOptions) {
         return this.rawClient.list(requestOptions).thenApply(response -> response.body());
     }
 

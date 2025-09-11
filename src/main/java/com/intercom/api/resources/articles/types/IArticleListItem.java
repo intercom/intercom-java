@@ -34,7 +34,7 @@ public interface IArticleListItem {
 
     Optional<String> getParentType();
 
-    String getDefaultLocale();
+    Optional<String> getDefaultLocale();
 
-    ArticleTranslatedContent getTranslatedContent();
+    Optional<ArticleTranslatedContent> getTranslatedContent();
 }

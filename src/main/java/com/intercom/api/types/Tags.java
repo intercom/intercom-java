@@ -13,20 +13,23 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.resources.tags.types.Tag;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = Tags.Builder.class)
 public final class Tags {
-    private final List<Tag> tags;
+    private final Optional<String> type;
+
+    private final Optional<List<Tag>> tags;
 
     private final Map<String, Object> additionalProperties;
 
-    private Tags(List<Tag> tags, Map<String, Object> additionalProperties) {
+    private Tags(Optional<String> type, Optional<List<Tag>> tags, Map<String, Object> additionalProperties) {
+        this.type = type;
         this.tags = tags;
         this.additionalProperties = additionalProperties;
     }
@@ -35,15 +38,15 @@ public final class Tags {
      * @return The type of the object
      */
     @JsonProperty("type")
-    public String getType() {
-        return "tag.list";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return A list of tags objects associated with the conversation.
      */
     @JsonProperty("tags")
-    public List<Tag> getTags() {
+    public Optional<List<Tag>> getTags() {
         return tags;
     }
 
@@ -59,12 +62,12 @@ public final class Tags {
     }
 
     private boolean equalTo(Tags other) {
-        return tags.equals(other.tags);
+        return type.equals(other.type) && tags.equals(other.tags);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.tags);
+        return Objects.hash(this.type, this.tags);
     }
 
     @java.lang.Override
@@ -78,7 +81,9 @@ public final class Tags {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
-        private List<Tag> tags = new ArrayList<>();
+        private Optional<String> type = Optional.empty();
+
+        private Optional<List<Tag>> tags = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -86,7 +91,22 @@ public final class Tags {
         private Builder() {}
 
         public Builder from(Tags other) {
+            type(other.getType());
             tags(other.getTags());
+            return this;
+        }
+
+        /**
+         * <p>The type of the object</p>
+         */
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
@@ -94,24 +114,18 @@ public final class Tags {
          * <p>A list of tags objects associated with the conversation.</p>
          */
         @JsonSetter(value = "tags", nulls = Nulls.SKIP)
+        public Builder tags(Optional<List<Tag>> tags) {
+            this.tags = tags;
+            return this;
+        }
+
         public Builder tags(List<Tag> tags) {
-            this.tags.clear();
-            this.tags.addAll(tags);
-            return this;
-        }
-
-        public Builder addTags(Tag tags) {
-            this.tags.add(tags);
-            return this;
-        }
-
-        public Builder addAllTags(List<Tag> tags) {
-            this.tags.addAll(tags);
+            this.tags = Optional.ofNullable(tags);
             return this;
         }
 
         public Tags build() {
-            return new Tags(tags, additionalProperties);
+            return new Tags(type, tags, additionalProperties);
         }
     }
 }

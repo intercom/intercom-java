@@ -13,22 +13,29 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.resources.tickets.types.TicketPart;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = TicketParts.Builder.class)
 public final class TicketParts {
-    private final List<TicketPart> ticketParts;
+    private final Optional<String> type;
 
-    private final int totalCount;
+    private final Optional<List<TicketPart>> ticketParts;
+
+    private final Optional<Integer> totalCount;
 
     private final Map<String, Object> additionalProperties;
 
-    private TicketParts(List<TicketPart> ticketParts, int totalCount, Map<String, Object> additionalProperties) {
+    private TicketParts(
+            Optional<String> type,
+            Optional<List<TicketPart>> ticketParts,
+            Optional<Integer> totalCount,
+            Map<String, Object> additionalProperties) {
+        this.type = type;
         this.ticketParts = ticketParts;
         this.totalCount = totalCount;
         this.additionalProperties = additionalProperties;
@@ -38,15 +45,15 @@ public final class TicketParts {
      * @return
      */
     @JsonProperty("type")
-    public String getType() {
-        return "ticket_part.list";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return A list of Ticket Part objects for each ticket. There is a limit of 500 parts.
      */
     @JsonProperty("ticket_parts")
-    public List<TicketPart> getTicketParts() {
+    public Optional<List<TicketPart>> getTicketParts() {
         return ticketParts;
     }
 
@@ -54,7 +61,7 @@ public final class TicketParts {
      * @return
      */
     @JsonProperty("total_count")
-    public int getTotalCount() {
+    public Optional<Integer> getTotalCount() {
         return totalCount;
     }
 
@@ -70,12 +77,12 @@ public final class TicketParts {
     }
 
     private boolean equalTo(TicketParts other) {
-        return ticketParts.equals(other.ticketParts) && totalCount == other.totalCount;
+        return type.equals(other.type) && ticketParts.equals(other.ticketParts) && totalCount.equals(other.totalCount);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.ticketParts, this.totalCount);
+        return Objects.hash(this.type, this.ticketParts, this.totalCount);
     }
 
     @java.lang.Override
@@ -83,91 +90,68 @@ public final class TicketParts {
         return ObjectMappers.stringify(this);
     }
 
-    public static TotalCountStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface TotalCountStage {
-        _FinalStage totalCount(int totalCount);
-
-        Builder from(TicketParts other);
-    }
-
-    public interface _FinalStage {
-        TicketParts build();
-
-        /**
-         * <p>A list of Ticket Part objects for each ticket. There is a limit of 500 parts.</p>
-         */
-        _FinalStage ticketParts(List<TicketPart> ticketParts);
-
-        _FinalStage addTicketParts(TicketPart ticketParts);
-
-        _FinalStage addAllTicketParts(List<TicketPart> ticketParts);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements TotalCountStage, _FinalStage {
-        private int totalCount;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private List<TicketPart> ticketParts = new ArrayList<>();
+        private Optional<List<TicketPart>> ticketParts = Optional.empty();
+
+        private Optional<Integer> totalCount = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(TicketParts other) {
+            type(other.getType());
             ticketParts(other.getTicketParts());
             totalCount(other.getTotalCount());
             return this;
         }
 
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
+            return this;
+        }
+
         /**
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>A list of Ticket Part objects for each ticket. There is a limit of 500 parts.</p>
          */
-        @java.lang.Override
-        @JsonSetter("total_count")
-        public _FinalStage totalCount(int totalCount) {
+        @JsonSetter(value = "ticket_parts", nulls = Nulls.SKIP)
+        public Builder ticketParts(Optional<List<TicketPart>> ticketParts) {
+            this.ticketParts = ticketParts;
+            return this;
+        }
+
+        public Builder ticketParts(List<TicketPart> ticketParts) {
+            this.ticketParts = Optional.ofNullable(ticketParts);
+            return this;
+        }
+
+        @JsonSetter(value = "total_count", nulls = Nulls.SKIP)
+        public Builder totalCount(Optional<Integer> totalCount) {
             this.totalCount = totalCount;
             return this;
         }
 
-        /**
-         * <p>A list of Ticket Part objects for each ticket. There is a limit of 500 parts.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addAllTicketParts(List<TicketPart> ticketParts) {
-            this.ticketParts.addAll(ticketParts);
+        public Builder totalCount(Integer totalCount) {
+            this.totalCount = Optional.ofNullable(totalCount);
             return this;
         }
 
-        /**
-         * <p>A list of Ticket Part objects for each ticket. There is a limit of 500 parts.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addTicketParts(TicketPart ticketParts) {
-            this.ticketParts.add(ticketParts);
-            return this;
-        }
-
-        /**
-         * <p>A list of Ticket Part objects for each ticket. There is a limit of 500 parts.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "ticket_parts", nulls = Nulls.SKIP)
-        public _FinalStage ticketParts(List<TicketPart> ticketParts) {
-            this.ticketParts.clear();
-            this.ticketParts.addAll(ticketParts);
-            return this;
-        }
-
-        @java.lang.Override
         public TicketParts build() {
-            return new TicketParts(ticketParts, totalCount, additionalProperties);
+            return new TicketParts(type, ticketParts, totalCount, additionalProperties);
         }
     }
 }

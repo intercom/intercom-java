@@ -6,13 +6,18 @@ package com.intercom.api.resources.tickets;
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.RequestOptions;
 import com.intercom.api.core.pagination.SyncPagingIterable;
+import com.intercom.api.resources.jobs.types.Jobs;
+import com.intercom.api.resources.tickets.requests.CreateTicketRequest;
+import com.intercom.api.resources.tickets.requests.DeleteTicketRequest;
+import com.intercom.api.resources.tickets.requests.EnqueueCreateTicketRequest;
 import com.intercom.api.resources.tickets.requests.FindTicketRequest;
 import com.intercom.api.resources.tickets.requests.ReplyToTicketRequest;
 import com.intercom.api.resources.tickets.requests.UpdateTicketRequest;
+import com.intercom.api.resources.tickets.types.DeleteTicketResponse;
 import com.intercom.api.resources.tickets.types.Ticket;
-import com.intercom.api.types.CreateTicketRequest;
 import com.intercom.api.types.SearchRequest;
 import com.intercom.api.types.TicketReply;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class AsyncTicketsClient {
@@ -49,43 +54,73 @@ public class AsyncTicketsClient {
     /**
      * You can create a new ticket.
      */
-    public CompletableFuture<Ticket> create(CreateTicketRequest request) {
+    public CompletableFuture<Optional<Ticket>> create(CreateTicketRequest request) {
         return this.rawClient.create(request).thenApply(response -> response.body());
     }
 
     /**
      * You can create a new ticket.
      */
-    public CompletableFuture<Ticket> create(CreateTicketRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<Optional<Ticket>> create(CreateTicketRequest request, RequestOptions requestOptions) {
         return this.rawClient.create(request, requestOptions).thenApply(response -> response.body());
+    }
+
+    /**
+     * Enqueues ticket creation for asynchronous processing, returning if the job was enqueued successfully to be processed. We attempt to perform a best-effort validation on inputs before tasks are enqueued. If the given parameters are incorrect, we won't enqueue the job.
+     */
+    public CompletableFuture<Jobs> enqueueCreateTicket(EnqueueCreateTicketRequest request) {
+        return this.rawClient.enqueueCreateTicket(request).thenApply(response -> response.body());
+    }
+
+    /**
+     * Enqueues ticket creation for asynchronous processing, returning if the job was enqueued successfully to be processed. We attempt to perform a best-effort validation on inputs before tasks are enqueued. If the given parameters are incorrect, we won't enqueue the job.
+     */
+    public CompletableFuture<Jobs> enqueueCreateTicket(
+            EnqueueCreateTicketRequest request, RequestOptions requestOptions) {
+        return this.rawClient.enqueueCreateTicket(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
      * You can fetch the details of a single ticket.
      */
-    public CompletableFuture<Ticket> get(FindTicketRequest request) {
+    public CompletableFuture<Optional<Ticket>> get(FindTicketRequest request) {
         return this.rawClient.get(request).thenApply(response -> response.body());
     }
 
     /**
      * You can fetch the details of a single ticket.
      */
-    public CompletableFuture<Ticket> get(FindTicketRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<Optional<Ticket>> get(FindTicketRequest request, RequestOptions requestOptions) {
         return this.rawClient.get(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
      * You can update a ticket.
      */
-    public CompletableFuture<Ticket> update(UpdateTicketRequest request) {
+    public CompletableFuture<Optional<Ticket>> update(UpdateTicketRequest request) {
         return this.rawClient.update(request).thenApply(response -> response.body());
     }
 
     /**
      * You can update a ticket.
      */
-    public CompletableFuture<Ticket> update(UpdateTicketRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<Optional<Ticket>> update(UpdateTicketRequest request, RequestOptions requestOptions) {
         return this.rawClient.update(request, requestOptions).thenApply(response -> response.body());
+    }
+
+    /**
+     * You can delete a ticket using the Intercom provided ID.
+     */
+    public CompletableFuture<DeleteTicketResponse> deleteTicket(DeleteTicketRequest request) {
+        return this.rawClient.deleteTicket(request).thenApply(response -> response.body());
+    }
+
+    /**
+     * You can delete a ticket using the Intercom provided ID.
+     */
+    public CompletableFuture<DeleteTicketResponse> deleteTicket(
+            DeleteTicketRequest request, RequestOptions requestOptions) {
+        return this.rawClient.deleteTicket(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
@@ -106,7 +141,8 @@ public class AsyncTicketsClient {
      * <li>There's a limit of max 15 filters for each AND or OR group</li>
      * </ul>
      * <h3>Accepted Fields</h3>
-     * <p>Most keys listed as part of the Ticket model are searchable, whether writeable or not. The value you search for has to match the accepted type, otherwise the query will fail (ie. as <code>created_at</code> accepts a date, the <code>value</code> cannot be a string such as <code>&quot;foobar&quot;</code>).</p>
+     * <p>Most keys listed as part of the Ticket model are searchable, whether writeable or not. The value you search for has to match the accepted type, otherwise the query will fail (ie. as <code>created_at</code> accepts a date, the <code>value</code> cannot be a string such as <code>&quot;foobar&quot;</code>).
+     * The <code>source.body</code> field is unique as the search will not be performed against the entire value, but instead against every element of the value separately. For example, when searching for a conversation with a <code>&quot;I need support&quot;</code> body - the query should contain a <code>=</code> operator with the value <code>&quot;support&quot;</code> for such conversation to be returned. A query with a <code>=</code> operator and a <code>&quot;need support&quot;</code> value will not yield a result.</p>
      * <p>| Field                                     | Type                                                                                     |
      * | :---------------------------------------- | :--------------------------------------------------------------------------------------- |
      * | id                                        | String                                                                                   |
@@ -124,6 +160,14 @@ public class AsyncTicketsClient {
      * | state                                     | String                                                                                   |
      * | snoozed_until                             | Date (UNIX timestamp)                                                                    |
      * | ticket_attribute.{id}                     | String or Boolean or Date (UNIX timestamp) or Float or Integer                           |</p>
+     * <p>{% admonition type=&quot;info&quot; name=&quot;Searching by Category&quot; %}
+     * When searching for tickets by the <strong><code>category</code></strong> field, specific terms must be used instead of the category names:</p>
+     * <ul>
+     * <li>For <strong>Customer</strong> category tickets, use the term <code>request</code>.</li>
+     * <li>For <strong>Back-office</strong> category tickets, use the term <code>task</code>.</li>
+     * <li>For <strong>Tracker</strong> category tickets, use the term <code>tracker</code>.
+     * {% /admonition %}</li>
+     * </ul>
      * <h3>Accepted Operators</h3>
      * <p>{% admonition type=&quot;info&quot; name=&quot;Searching based on <code>created_at</code>&quot; %}
      * You may use the <code>&lt;=</code> or <code>&gt;=</code> operators to search by <code>created_at</code>.
@@ -142,7 +186,7 @@ public class AsyncTicketsClient {
      * | ^        | String                         | Starts With                                                  |
      * | $        | String                         | Ends With                                                    |</p>
      */
-    public CompletableFuture<SyncPagingIterable<Ticket>> search(SearchRequest request) {
+    public CompletableFuture<SyncPagingIterable<Optional<Ticket>>> search(SearchRequest request) {
         return this.rawClient.search(request).thenApply(response -> response.body());
     }
 
@@ -164,7 +208,8 @@ public class AsyncTicketsClient {
      * <li>There's a limit of max 15 filters for each AND or OR group</li>
      * </ul>
      * <h3>Accepted Fields</h3>
-     * <p>Most keys listed as part of the Ticket model are searchable, whether writeable or not. The value you search for has to match the accepted type, otherwise the query will fail (ie. as <code>created_at</code> accepts a date, the <code>value</code> cannot be a string such as <code>&quot;foobar&quot;</code>).</p>
+     * <p>Most keys listed as part of the Ticket model are searchable, whether writeable or not. The value you search for has to match the accepted type, otherwise the query will fail (ie. as <code>created_at</code> accepts a date, the <code>value</code> cannot be a string such as <code>&quot;foobar&quot;</code>).
+     * The <code>source.body</code> field is unique as the search will not be performed against the entire value, but instead against every element of the value separately. For example, when searching for a conversation with a <code>&quot;I need support&quot;</code> body - the query should contain a <code>=</code> operator with the value <code>&quot;support&quot;</code> for such conversation to be returned. A query with a <code>=</code> operator and a <code>&quot;need support&quot;</code> value will not yield a result.</p>
      * <p>| Field                                     | Type                                                                                     |
      * | :---------------------------------------- | :--------------------------------------------------------------------------------------- |
      * | id                                        | String                                                                                   |
@@ -182,6 +227,14 @@ public class AsyncTicketsClient {
      * | state                                     | String                                                                                   |
      * | snoozed_until                             | Date (UNIX timestamp)                                                                    |
      * | ticket_attribute.{id}                     | String or Boolean or Date (UNIX timestamp) or Float or Integer                           |</p>
+     * <p>{% admonition type=&quot;info&quot; name=&quot;Searching by Category&quot; %}
+     * When searching for tickets by the <strong><code>category</code></strong> field, specific terms must be used instead of the category names:</p>
+     * <ul>
+     * <li>For <strong>Customer</strong> category tickets, use the term <code>request</code>.</li>
+     * <li>For <strong>Back-office</strong> category tickets, use the term <code>task</code>.</li>
+     * <li>For <strong>Tracker</strong> category tickets, use the term <code>tracker</code>.
+     * {% /admonition %}</li>
+     * </ul>
      * <h3>Accepted Operators</h3>
      * <p>{% admonition type=&quot;info&quot; name=&quot;Searching based on <code>created_at</code>&quot; %}
      * You may use the <code>&lt;=</code> or <code>&gt;=</code> operators to search by <code>created_at</code>.
@@ -200,7 +253,8 @@ public class AsyncTicketsClient {
      * | ^        | String                         | Starts With                                                  |
      * | $        | String                         | Ends With                                                    |</p>
      */
-    public CompletableFuture<SyncPagingIterable<Ticket>> search(SearchRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<SyncPagingIterable<Optional<Ticket>>> search(
+            SearchRequest request, RequestOptions requestOptions) {
         return this.rawClient.search(request, requestOptions).thenApply(response -> response.body());
     }
 }

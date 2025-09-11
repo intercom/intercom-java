@@ -13,20 +13,26 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.types.ContactReference;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = TicketContacts.Builder.class)
 public final class TicketContacts {
-    private final List<ContactReference> contacts;
+    private final Optional<String> type;
+
+    private final Optional<List<ContactReference>> contacts;
 
     private final Map<String, Object> additionalProperties;
 
-    private TicketContacts(List<ContactReference> contacts, Map<String, Object> additionalProperties) {
+    private TicketContacts(
+            Optional<String> type,
+            Optional<List<ContactReference>> contacts,
+            Map<String, Object> additionalProperties) {
+        this.type = type;
         this.contacts = contacts;
         this.additionalProperties = additionalProperties;
     }
@@ -35,15 +41,15 @@ public final class TicketContacts {
      * @return always contact.list
      */
     @JsonProperty("type")
-    public String getType() {
-        return "contact.list";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The list of contacts affected by this ticket.
      */
     @JsonProperty("contacts")
-    public List<ContactReference> getContacts() {
+    public Optional<List<ContactReference>> getContacts() {
         return contacts;
     }
 
@@ -59,12 +65,12 @@ public final class TicketContacts {
     }
 
     private boolean equalTo(TicketContacts other) {
-        return contacts.equals(other.contacts);
+        return type.equals(other.type) && contacts.equals(other.contacts);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.contacts);
+        return Objects.hash(this.type, this.contacts);
     }
 
     @java.lang.Override
@@ -78,7 +84,9 @@ public final class TicketContacts {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
-        private List<ContactReference> contacts = new ArrayList<>();
+        private Optional<String> type = Optional.empty();
+
+        private Optional<List<ContactReference>> contacts = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -86,7 +94,22 @@ public final class TicketContacts {
         private Builder() {}
 
         public Builder from(TicketContacts other) {
+            type(other.getType());
             contacts(other.getContacts());
+            return this;
+        }
+
+        /**
+         * <p>always contact.list</p>
+         */
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
@@ -94,24 +117,18 @@ public final class TicketContacts {
          * <p>The list of contacts affected by this ticket.</p>
          */
         @JsonSetter(value = "contacts", nulls = Nulls.SKIP)
+        public Builder contacts(Optional<List<ContactReference>> contacts) {
+            this.contacts = contacts;
+            return this;
+        }
+
         public Builder contacts(List<ContactReference> contacts) {
-            this.contacts.clear();
-            this.contacts.addAll(contacts);
-            return this;
-        }
-
-        public Builder addContacts(ContactReference contacts) {
-            this.contacts.add(contacts);
-            return this;
-        }
-
-        public Builder addAllContacts(List<ContactReference> contacts) {
-            this.contacts.addAll(contacts);
+            this.contacts = Optional.ofNullable(contacts);
             return this;
         }
 
         public TicketContacts build() {
-            return new TicketContacts(contacts, additionalProperties);
+            return new TicketContacts(type, contacts, additionalProperties);
         }
     }
 }

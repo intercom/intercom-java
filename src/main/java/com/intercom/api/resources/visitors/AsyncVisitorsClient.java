@@ -10,6 +10,7 @@ import com.intercom.api.resources.visitors.requests.FindVisitorRequest;
 import com.intercom.api.resources.visitors.requests.MergeVisitorToContactRequest;
 import com.intercom.api.types.UpdateVisitorRequest;
 import com.intercom.api.types.Visitor;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class AsyncVisitorsClient {
@@ -32,14 +33,14 @@ public class AsyncVisitorsClient {
     /**
      * You can fetch the details of a single visitor.
      */
-    public CompletableFuture<Visitor> find(FindVisitorRequest request) {
+    public CompletableFuture<Optional<Visitor>> find(FindVisitorRequest request) {
         return this.rawClient.find(request).thenApply(response -> response.body());
     }
 
     /**
      * You can fetch the details of a single visitor.
      */
-    public CompletableFuture<Visitor> find(FindVisitorRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<Optional<Visitor>> find(FindVisitorRequest request, RequestOptions requestOptions) {
         return this.rawClient.find(request, requestOptions).thenApply(response -> response.body());
     }
 
@@ -48,7 +49,7 @@ public class AsyncVisitorsClient {
      * <p><strong>Option 1.</strong> You can update a visitor by passing in the <code>user_id</code> of the visitor in the Request body.</p>
      * <p><strong>Option 2.</strong> You can update a visitor by passing in the <code>id</code> of the visitor in the Request body.</p>
      */
-    public CompletableFuture<Visitor> update(UpdateVisitorRequest request) {
+    public CompletableFuture<Optional<Visitor>> update(UpdateVisitorRequest request) {
         return this.rawClient.update(request).thenApply(response -> response.body());
     }
 
@@ -57,7 +58,7 @@ public class AsyncVisitorsClient {
      * <p><strong>Option 1.</strong> You can update a visitor by passing in the <code>user_id</code> of the visitor in the Request body.</p>
      * <p><strong>Option 2.</strong> You can update a visitor by passing in the <code>id</code> of the visitor in the Request body.</p>
      */
-    public CompletableFuture<Visitor> update(UpdateVisitorRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<Optional<Visitor>> update(UpdateVisitorRequest request, RequestOptions requestOptions) {
         return this.rawClient.update(request, requestOptions).thenApply(response -> response.body());
     }
 

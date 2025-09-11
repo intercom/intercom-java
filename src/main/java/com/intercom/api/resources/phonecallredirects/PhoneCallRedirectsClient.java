@@ -5,8 +5,9 @@ package com.intercom.api.resources.phonecallredirects;
 
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.RequestOptions;
-import com.intercom.api.resources.phonecallredirects.requests.CreatePhoneCallRedirectRequest;
+import com.intercom.api.types.CreatePhoneSwitchRequest;
 import com.intercom.api.types.PhoneSwitch;
+import java.util.Optional;
 
 public class PhoneCallRedirectsClient {
     protected final ClientOptions clientOptions;
@@ -30,7 +31,16 @@ public class PhoneCallRedirectsClient {
      * Calling this endpoint will send an SMS with a link to the Messenger to the phone number specified.
      * <p>If custom attributes are specified, they will be added to the user or lead's custom data attributes.</p>
      */
-    public PhoneSwitch create(CreatePhoneCallRedirectRequest request) {
+    public Optional<PhoneSwitch> create() {
+        return this.rawClient.create().body();
+    }
+
+    /**
+     * You can use the API to deflect phone calls to the Intercom Messenger.
+     * Calling this endpoint will send an SMS with a link to the Messenger to the phone number specified.
+     * <p>If custom attributes are specified, they will be added to the user or lead's custom data attributes.</p>
+     */
+    public Optional<PhoneSwitch> create(Optional<CreatePhoneSwitchRequest> request) {
         return this.rawClient.create(request).body();
     }
 
@@ -39,7 +49,7 @@ public class PhoneCallRedirectsClient {
      * Calling this endpoint will send an SMS with a link to the Messenger to the phone number specified.
      * <p>If custom attributes are specified, they will be added to the user or lead's custom data attributes.</p>
      */
-    public PhoneSwitch create(CreatePhoneCallRedirectRequest request, RequestOptions requestOptions) {
+    public Optional<PhoneSwitch> create(Optional<CreatePhoneSwitchRequest> request, RequestOptions requestOptions) {
         return this.rawClient.create(request, requestOptions).body();
     }
 }

@@ -6,14 +6,22 @@ package com.intercom.api;
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.Suppliers;
 import com.intercom.api.resources.admins.AdminsClient;
+import com.intercom.api.resources.aicontent.AiContentClient;
 import com.intercom.api.resources.articles.ArticlesClient;
+import com.intercom.api.resources.awaystatusreasons.AwayStatusReasonsClient;
+import com.intercom.api.resources.calls.CallsClient;
 import com.intercom.api.resources.companies.CompaniesClient;
 import com.intercom.api.resources.contacts.ContactsClient;
 import com.intercom.api.resources.conversations.ConversationsClient;
+import com.intercom.api.resources.customchannelevents.CustomChannelEventsClient;
+import com.intercom.api.resources.customobjectinstances.CustomObjectInstancesClient;
 import com.intercom.api.resources.dataattributes.DataAttributesClient;
 import com.intercom.api.resources.dataexport.DataExportClient;
 import com.intercom.api.resources.events.EventsClient;
+import com.intercom.api.resources.export.ExportClient;
 import com.intercom.api.resources.helpcenters.HelpCentersClient;
+import com.intercom.api.resources.internalarticles.InternalArticlesClient;
+import com.intercom.api.resources.jobs.JobsClient;
 import com.intercom.api.resources.messages.MessagesClient;
 import com.intercom.api.resources.news.NewsClient;
 import com.intercom.api.resources.notes.NotesClient;
@@ -23,6 +31,7 @@ import com.intercom.api.resources.subscriptiontypes.SubscriptionTypesClient;
 import com.intercom.api.resources.tags.TagsClient;
 import com.intercom.api.resources.teams.TeamsClient;
 import com.intercom.api.resources.tickets.TicketsClient;
+import com.intercom.api.resources.ticketstates.TicketStatesClient;
 import com.intercom.api.resources.tickettypes.TicketTypesClient;
 import com.intercom.api.resources.unstable.UnstableClient;
 import com.intercom.api.resources.visitors.VisitorsClient;
@@ -33,9 +42,19 @@ public class Intercom {
 
     protected final Supplier<AdminsClient> adminsClient;
 
+    protected final Supplier<AiContentClient> aiContentClient;
+
     protected final Supplier<ArticlesClient> articlesClient;
 
+    protected final Supplier<AwayStatusReasonsClient> awayStatusReasonsClient;
+
+    protected final Supplier<ExportClient> exportClient;
+
+    protected final Supplier<DataExportClient> dataExportClient;
+
     protected final Supplier<HelpCentersClient> helpCentersClient;
+
+    protected final Supplier<InternalArticlesClient> internalArticlesClient;
 
     protected final Supplier<CompaniesClient> companiesClient;
 
@@ -47,11 +66,15 @@ public class Intercom {
 
     protected final Supplier<ConversationsClient> conversationsClient;
 
+    protected final Supplier<CustomChannelEventsClient> customChannelEventsClient;
+
+    protected final Supplier<CustomObjectInstancesClient> customObjectInstancesClient;
+
     protected final Supplier<DataAttributesClient> dataAttributesClient;
 
     protected final Supplier<EventsClient> eventsClient;
 
-    protected final Supplier<DataExportClient> dataExportClient;
+    protected final Supplier<JobsClient> jobsClient;
 
     protected final Supplier<MessagesClient> messagesClient;
 
@@ -61,7 +84,11 @@ public class Intercom {
 
     protected final Supplier<PhoneCallRedirectsClient> phoneCallRedirectsClient;
 
+    protected final Supplier<CallsClient> callsClient;
+
     protected final Supplier<TeamsClient> teamsClient;
+
+    protected final Supplier<TicketStatesClient> ticketStatesClient;
 
     protected final Supplier<TicketTypesClient> ticketTypesClient;
 
@@ -76,21 +103,30 @@ public class Intercom {
     public Intercom(ClientOptions clientOptions) {
         this.clientOptions = clientOptions;
         this.adminsClient = Suppliers.memoize(() -> new AdminsClient(clientOptions));
+        this.aiContentClient = Suppliers.memoize(() -> new AiContentClient(clientOptions));
         this.articlesClient = Suppliers.memoize(() -> new ArticlesClient(clientOptions));
+        this.awayStatusReasonsClient = Suppliers.memoize(() -> new AwayStatusReasonsClient(clientOptions));
+        this.exportClient = Suppliers.memoize(() -> new ExportClient(clientOptions));
+        this.dataExportClient = Suppliers.memoize(() -> new DataExportClient(clientOptions));
         this.helpCentersClient = Suppliers.memoize(() -> new HelpCentersClient(clientOptions));
+        this.internalArticlesClient = Suppliers.memoize(() -> new InternalArticlesClient(clientOptions));
         this.companiesClient = Suppliers.memoize(() -> new CompaniesClient(clientOptions));
         this.contactsClient = Suppliers.memoize(() -> new ContactsClient(clientOptions));
         this.notesClient = Suppliers.memoize(() -> new NotesClient(clientOptions));
         this.tagsClient = Suppliers.memoize(() -> new TagsClient(clientOptions));
         this.conversationsClient = Suppliers.memoize(() -> new ConversationsClient(clientOptions));
+        this.customChannelEventsClient = Suppliers.memoize(() -> new CustomChannelEventsClient(clientOptions));
+        this.customObjectInstancesClient = Suppliers.memoize(() -> new CustomObjectInstancesClient(clientOptions));
         this.dataAttributesClient = Suppliers.memoize(() -> new DataAttributesClient(clientOptions));
         this.eventsClient = Suppliers.memoize(() -> new EventsClient(clientOptions));
-        this.dataExportClient = Suppliers.memoize(() -> new DataExportClient(clientOptions));
+        this.jobsClient = Suppliers.memoize(() -> new JobsClient(clientOptions));
         this.messagesClient = Suppliers.memoize(() -> new MessagesClient(clientOptions));
         this.segmentsClient = Suppliers.memoize(() -> new SegmentsClient(clientOptions));
         this.subscriptionTypesClient = Suppliers.memoize(() -> new SubscriptionTypesClient(clientOptions));
         this.phoneCallRedirectsClient = Suppliers.memoize(() -> new PhoneCallRedirectsClient(clientOptions));
+        this.callsClient = Suppliers.memoize(() -> new CallsClient(clientOptions));
         this.teamsClient = Suppliers.memoize(() -> new TeamsClient(clientOptions));
+        this.ticketStatesClient = Suppliers.memoize(() -> new TicketStatesClient(clientOptions));
         this.ticketTypesClient = Suppliers.memoize(() -> new TicketTypesClient(clientOptions));
         this.ticketsClient = Suppliers.memoize(() -> new TicketsClient(clientOptions));
         this.visitorsClient = Suppliers.memoize(() -> new VisitorsClient(clientOptions));
@@ -102,12 +138,32 @@ public class Intercom {
         return this.adminsClient.get();
     }
 
+    public AiContentClient aiContent() {
+        return this.aiContentClient.get();
+    }
+
     public ArticlesClient articles() {
         return this.articlesClient.get();
     }
 
+    public AwayStatusReasonsClient awayStatusReasons() {
+        return this.awayStatusReasonsClient.get();
+    }
+
+    public ExportClient export() {
+        return this.exportClient.get();
+    }
+
+    public DataExportClient dataExport() {
+        return this.dataExportClient.get();
+    }
+
     public HelpCentersClient helpCenters() {
         return this.helpCentersClient.get();
+    }
+
+    public InternalArticlesClient internalArticles() {
+        return this.internalArticlesClient.get();
     }
 
     public CompaniesClient companies() {
@@ -130,6 +186,14 @@ public class Intercom {
         return this.conversationsClient.get();
     }
 
+    public CustomChannelEventsClient customChannelEvents() {
+        return this.customChannelEventsClient.get();
+    }
+
+    public CustomObjectInstancesClient customObjectInstances() {
+        return this.customObjectInstancesClient.get();
+    }
+
     public DataAttributesClient dataAttributes() {
         return this.dataAttributesClient.get();
     }
@@ -138,8 +202,8 @@ public class Intercom {
         return this.eventsClient.get();
     }
 
-    public DataExportClient dataExport() {
-        return this.dataExportClient.get();
+    public JobsClient jobs() {
+        return this.jobsClient.get();
     }
 
     public MessagesClient messages() {
@@ -158,8 +222,16 @@ public class Intercom {
         return this.phoneCallRedirectsClient.get();
     }
 
+    public CallsClient calls() {
+        return this.callsClient.get();
+    }
+
     public TeamsClient teams() {
         return this.teamsClient.get();
+    }
+
+    public TicketStatesClient ticketStates() {
+        return this.ticketStatesClient.get();
     }
 
     public TicketTypesClient ticketTypes() {

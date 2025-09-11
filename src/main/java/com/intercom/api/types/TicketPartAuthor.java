@@ -18,23 +18,26 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = TicketPartAuthor.Builder.class)
 public final class TicketPartAuthor {
-    private final Type type;
+    private final Optional<Type> type;
 
-    private final String id;
+    private final Optional<String> id;
 
     private final Optional<String> name;
 
-    private final String email;
+    private final Optional<String> email;
 
     private final Map<String, Object> additionalProperties;
 
     private TicketPartAuthor(
-            Type type, String id, Optional<String> name, String email, Map<String, Object> additionalProperties) {
+            Optional<Type> type,
+            Optional<String> id,
+            Optional<String> name,
+            Optional<String> email,
+            Map<String, Object> additionalProperties) {
         this.type = type;
         this.id = id;
         this.name = name;
@@ -46,7 +49,7 @@ public final class TicketPartAuthor {
      * @return The type of the author
      */
     @JsonProperty("type")
-    public Type getType() {
+    public Optional<Type> getType() {
         return type;
     }
 
@@ -54,7 +57,7 @@ public final class TicketPartAuthor {
      * @return The id of the author
      */
     @JsonProperty("id")
-    public String getId() {
+    public Optional<String> getId() {
         return id;
     }
 
@@ -70,7 +73,7 @@ public final class TicketPartAuthor {
      * @return The email of the author
      */
     @JsonProperty("email")
-    public String getEmail() {
+    public Optional<String> getEmail() {
         return email;
     }
 
@@ -99,60 +102,25 @@ public final class TicketPartAuthor {
         return ObjectMappers.stringify(this);
     }
 
-    public static TypeStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface TypeStage {
-        /**
-         * The type of the author
-         */
-        IdStage type(@NotNull Type type);
-
-        Builder from(TicketPartAuthor other);
-    }
-
-    public interface IdStage {
-        /**
-         * The id of the author
-         */
-        EmailStage id(@NotNull String id);
-    }
-
-    public interface EmailStage {
-        /**
-         * The email of the author
-         */
-        _FinalStage email(@NotNull String email);
-    }
-
-    public interface _FinalStage {
-        TicketPartAuthor build();
-
-        /**
-         * <p>The name of the author</p>
-         */
-        _FinalStage name(Optional<String> name);
-
-        _FinalStage name(String name);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements TypeStage, IdStage, EmailStage, _FinalStage {
-        private Type type;
+    public static final class Builder {
+        private Optional<Type> type = Optional.empty();
 
-        private String id;
-
-        private String email;
+        private Optional<String> id = Optional.empty();
 
         private Optional<String> name = Optional.empty();
+
+        private Optional<String> email = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(TicketPartAuthor other) {
             type(other.getType());
             id(other.getId());
@@ -162,59 +130,61 @@ public final class TicketPartAuthor {
         }
 
         /**
-         * The type of the author<p>The type of the author</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The type of the author</p>
          */
-        @java.lang.Override
-        @JsonSetter("type")
-        public IdStage type(@NotNull Type type) {
-            this.type = Objects.requireNonNull(type, "type must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<Type> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(Type type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
-         * The id of the author<p>The id of the author</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The id of the author</p>
          */
-        @java.lang.Override
-        @JsonSetter("id")
-        public EmailStage id(@NotNull String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+        @JsonSetter(value = "id", nulls = Nulls.SKIP)
+        public Builder id(Optional<String> id) {
+            this.id = id;
             return this;
         }
 
-        /**
-         * The email of the author<p>The email of the author</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("email")
-        public _FinalStage email(@NotNull String email) {
-            this.email = Objects.requireNonNull(email, "email must not be null");
+        public Builder id(String id) {
+            this.id = Optional.ofNullable(id);
             return this;
         }
 
         /**
          * <p>The name of the author</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @java.lang.Override
-        public _FinalStage name(String name) {
+        @JsonSetter(value = "name", nulls = Nulls.SKIP)
+        public Builder name(Optional<String> name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder name(String name) {
             this.name = Optional.ofNullable(name);
             return this;
         }
 
         /**
-         * <p>The name of the author</p>
+         * <p>The email of the author</p>
          */
-        @java.lang.Override
-        @JsonSetter(value = "name", nulls = Nulls.SKIP)
-        public _FinalStage name(Optional<String> name) {
-            this.name = name;
+        @JsonSetter(value = "email", nulls = Nulls.SKIP)
+        public Builder email(Optional<String> email) {
+            this.email = email;
             return this;
         }
 
-        @java.lang.Override
+        public Builder email(String email) {
+            this.email = Optional.ofNullable(email);
+            return this;
+        }
+
         public TicketPartAuthor build() {
             return new TicketPartAuthor(type, id, name, email, additionalProperties);
         }
