@@ -20,13 +20,14 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = StartingAfterPaging.Builder.class)
 public final class StartingAfterPaging {
-    private final int perPage;
+    private final Optional<Integer> perPage;
 
     private final Optional<String> startingAfter;
 
     private final Map<String, Object> additionalProperties;
 
-    private StartingAfterPaging(int perPage, Optional<String> startingAfter, Map<String, Object> additionalProperties) {
+    private StartingAfterPaging(
+            Optional<Integer> perPage, Optional<String> startingAfter, Map<String, Object> additionalProperties) {
         this.perPage = perPage;
         this.startingAfter = startingAfter;
         this.additionalProperties = additionalProperties;
@@ -36,7 +37,7 @@ public final class StartingAfterPaging {
      * @return The number of results to fetch per page.
      */
     @JsonProperty("per_page")
-    public int getPerPage() {
+    public Optional<Integer> getPerPage() {
         return perPage;
     }
 
@@ -60,7 +61,7 @@ public final class StartingAfterPaging {
     }
 
     private boolean equalTo(StartingAfterPaging other) {
-        return perPage == other.perPage && startingAfter.equals(other.startingAfter);
+        return perPage.equals(other.perPage) && startingAfter.equals(other.startingAfter);
     }
 
     @java.lang.Override
@@ -73,33 +74,13 @@ public final class StartingAfterPaging {
         return ObjectMappers.stringify(this);
     }
 
-    public static PerPageStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface PerPageStage {
-        /**
-         * The number of results to fetch per page.
-         */
-        _FinalStage perPage(int perPage);
-
-        Builder from(StartingAfterPaging other);
-    }
-
-    public interface _FinalStage {
-        StartingAfterPaging build();
-
-        /**
-         * <p>The cursor to use in the next request to get the next page of results.</p>
-         */
-        _FinalStage startingAfter(Optional<String> startingAfter);
-
-        _FinalStage startingAfter(String startingAfter);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements PerPageStage, _FinalStage {
-        private int perPage;
+    public static final class Builder {
+        private Optional<Integer> perPage = Optional.empty();
 
         private Optional<String> startingAfter = Optional.empty();
 
@@ -108,7 +89,6 @@ public final class StartingAfterPaging {
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(StartingAfterPaging other) {
             perPage(other.getPerPage());
             startingAfter(other.getStartingAfter());
@@ -116,37 +96,33 @@ public final class StartingAfterPaging {
         }
 
         /**
-         * The number of results to fetch per page.<p>The number of results to fetch per page.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The number of results to fetch per page.</p>
          */
-        @java.lang.Override
-        @JsonSetter("per_page")
-        public _FinalStage perPage(int perPage) {
+        @JsonSetter(value = "per_page", nulls = Nulls.SKIP)
+        public Builder perPage(Optional<Integer> perPage) {
             this.perPage = perPage;
             return this;
         }
 
-        /**
-         * <p>The cursor to use in the next request to get the next page of results.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage startingAfter(String startingAfter) {
-            this.startingAfter = Optional.ofNullable(startingAfter);
+        public Builder perPage(Integer perPage) {
+            this.perPage = Optional.ofNullable(perPage);
             return this;
         }
 
         /**
          * <p>The cursor to use in the next request to get the next page of results.</p>
          */
-        @java.lang.Override
         @JsonSetter(value = "starting_after", nulls = Nulls.SKIP)
-        public _FinalStage startingAfter(Optional<String> startingAfter) {
+        public Builder startingAfter(Optional<String> startingAfter) {
             this.startingAfter = startingAfter;
             return this;
         }
 
-        @java.lang.Override
+        public Builder startingAfter(String startingAfter) {
+            this.startingAfter = Optional.ofNullable(startingAfter);
+            return this;
+        }
+
         public StartingAfterPaging build() {
             return new StartingAfterPaging(perPage, startingAfter, additionalProperties);
         }

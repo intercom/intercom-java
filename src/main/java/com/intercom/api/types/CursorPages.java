@@ -20,6 +20,8 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = CursorPages.Builder.class)
 public final class CursorPages {
+    private final Optional<String> type;
+
     private final Optional<Integer> page;
 
     private final Optional<StartingAfterPaging> next;
@@ -31,11 +33,13 @@ public final class CursorPages {
     private final Map<String, Object> additionalProperties;
 
     private CursorPages(
+            Optional<String> type,
             Optional<Integer> page,
             Optional<StartingAfterPaging> next,
             Optional<Integer> perPage,
             Optional<Integer> totalPages,
             Map<String, Object> additionalProperties) {
+        this.type = type;
         this.page = page;
         this.next = next;
         this.perPage = perPage;
@@ -47,8 +51,8 @@ public final class CursorPages {
      * @return the type of object <code>pages</code>.
      */
     @JsonProperty("type")
-    public String getType() {
-        return "pages";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
@@ -92,7 +96,8 @@ public final class CursorPages {
     }
 
     private boolean equalTo(CursorPages other) {
-        return page.equals(other.page)
+        return type.equals(other.type)
+                && page.equals(other.page)
                 && next.equals(other.next)
                 && perPage.equals(other.perPage)
                 && totalPages.equals(other.totalPages);
@@ -100,7 +105,7 @@ public final class CursorPages {
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.page, this.next, this.perPage, this.totalPages);
+        return Objects.hash(this.type, this.page, this.next, this.perPage, this.totalPages);
     }
 
     @java.lang.Override
@@ -114,6 +119,8 @@ public final class CursorPages {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
+        private Optional<String> type = Optional.empty();
+
         private Optional<Integer> page = Optional.empty();
 
         private Optional<StartingAfterPaging> next = Optional.empty();
@@ -128,10 +135,25 @@ public final class CursorPages {
         private Builder() {}
 
         public Builder from(CursorPages other) {
+            type(other.getType());
             page(other.getPage());
             next(other.getNext());
             perPage(other.getPerPage());
             totalPages(other.getTotalPages());
+            return this;
+        }
+
+        /**
+         * <p>the type of object <code>pages</code>.</p>
+         */
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
@@ -189,7 +211,7 @@ public final class CursorPages {
         }
 
         public CursorPages build() {
-            return new CursorPages(page, next, perPage, totalPages, additionalProperties);
+            return new CursorPages(type, page, next, perPage, totalPages, additionalProperties);
         }
     }
 }

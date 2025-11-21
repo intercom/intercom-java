@@ -12,34 +12,43 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ConversationContacts.Builder.class)
 public final class ConversationContacts {
-    private final List<ContactReference> contacts;
+    private final Optional<String> type;
+
+    private final Optional<List<ContactReference>> contacts;
 
     private final Map<String, Object> additionalProperties;
 
-    private ConversationContacts(List<ContactReference> contacts, Map<String, Object> additionalProperties) {
+    private ConversationContacts(
+            Optional<String> type,
+            Optional<List<ContactReference>> contacts,
+            Map<String, Object> additionalProperties) {
+        this.type = type;
         this.contacts = contacts;
         this.additionalProperties = additionalProperties;
     }
 
+    /**
+     * @return
+     */
     @JsonProperty("type")
-    public String getType() {
-        return "contact.list";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The list of contacts (users or leads) involved in this conversation. This will only contain one customer unless more were added via the group conversation feature.
      */
     @JsonProperty("contacts")
-    public List<ContactReference> getContacts() {
+    public Optional<List<ContactReference>> getContacts() {
         return contacts;
     }
 
@@ -55,12 +64,12 @@ public final class ConversationContacts {
     }
 
     private boolean equalTo(ConversationContacts other) {
-        return contacts.equals(other.contacts);
+        return type.equals(other.type) && contacts.equals(other.contacts);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.contacts);
+        return Objects.hash(this.type, this.contacts);
     }
 
     @java.lang.Override
@@ -74,7 +83,9 @@ public final class ConversationContacts {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
-        private List<ContactReference> contacts = new ArrayList<>();
+        private Optional<String> type = Optional.empty();
+
+        private Optional<List<ContactReference>> contacts = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -82,7 +93,19 @@ public final class ConversationContacts {
         private Builder() {}
 
         public Builder from(ConversationContacts other) {
+            type(other.getType());
             contacts(other.getContacts());
+            return this;
+        }
+
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
@@ -90,24 +113,18 @@ public final class ConversationContacts {
          * <p>The list of contacts (users or leads) involved in this conversation. This will only contain one customer unless more were added via the group conversation feature.</p>
          */
         @JsonSetter(value = "contacts", nulls = Nulls.SKIP)
+        public Builder contacts(Optional<List<ContactReference>> contacts) {
+            this.contacts = contacts;
+            return this;
+        }
+
         public Builder contacts(List<ContactReference> contacts) {
-            this.contacts.clear();
-            this.contacts.addAll(contacts);
-            return this;
-        }
-
-        public Builder addContacts(ContactReference contacts) {
-            this.contacts.add(contacts);
-            return this;
-        }
-
-        public Builder addAllContacts(List<ContactReference> contacts) {
-            this.contacts.addAll(contacts);
+            this.contacts = Optional.ofNullable(contacts);
             return this;
         }
 
         public ConversationContacts build() {
-            return new ConversationContacts(contacts, additionalProperties);
+            return new ConversationContacts(type, contacts, additionalProperties);
         }
     }
 }

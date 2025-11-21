@@ -9,32 +9,37 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ConfigureAwayAdminRequest.Builder.class)
 public final class ConfigureAwayAdminRequest {
-    private final String adminId;
+    private final int adminId;
 
     private final boolean awayModeEnabled;
 
     private final boolean awayModeReassign;
 
+    private final Optional<Integer> awayStatusReasonId;
+
     private final Map<String, Object> additionalProperties;
 
     private ConfigureAwayAdminRequest(
-            String adminId,
+            int adminId,
             boolean awayModeEnabled,
             boolean awayModeReassign,
+            Optional<Integer> awayStatusReasonId,
             Map<String, Object> additionalProperties) {
         this.adminId = adminId;
         this.awayModeEnabled = awayModeEnabled;
         this.awayModeReassign = awayModeReassign;
+        this.awayStatusReasonId = awayStatusReasonId;
         this.additionalProperties = additionalProperties;
     }
 
@@ -42,7 +47,7 @@ public final class ConfigureAwayAdminRequest {
      * @return The unique identifier of a given admin
      */
     @JsonProperty("admin_id")
-    public String getAdminId() {
+    public int getAdminId() {
         return adminId;
     }
 
@@ -62,6 +67,14 @@ public final class ConfigureAwayAdminRequest {
         return awayModeReassign;
     }
 
+    /**
+     * @return The unique identifier of the away status reason
+     */
+    @JsonProperty("away_status_reason_id")
+    public Optional<Integer> getAwayStatusReasonId() {
+        return awayStatusReasonId;
+    }
+
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
@@ -74,14 +87,15 @@ public final class ConfigureAwayAdminRequest {
     }
 
     private boolean equalTo(ConfigureAwayAdminRequest other) {
-        return adminId.equals(other.adminId)
+        return adminId == other.adminId
                 && awayModeEnabled == other.awayModeEnabled
-                && awayModeReassign == other.awayModeReassign;
+                && awayModeReassign == other.awayModeReassign
+                && awayStatusReasonId.equals(other.awayStatusReasonId);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.adminId, this.awayModeEnabled, this.awayModeReassign);
+        return Objects.hash(this.adminId, this.awayModeEnabled, this.awayModeReassign, this.awayStatusReasonId);
     }
 
     @java.lang.Override
@@ -97,7 +111,7 @@ public final class ConfigureAwayAdminRequest {
         /**
          * The unique identifier of a given admin
          */
-        AwayModeEnabledStage adminId(@NotNull String adminId);
+        AwayModeEnabledStage adminId(int adminId);
 
         Builder from(ConfigureAwayAdminRequest other);
     }
@@ -118,16 +132,25 @@ public final class ConfigureAwayAdminRequest {
 
     public interface _FinalStage {
         ConfigureAwayAdminRequest build();
+
+        /**
+         * <p>The unique identifier of the away status reason</p>
+         */
+        _FinalStage awayStatusReasonId(Optional<Integer> awayStatusReasonId);
+
+        _FinalStage awayStatusReasonId(Integer awayStatusReasonId);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder
             implements AdminIdStage, AwayModeEnabledStage, AwayModeReassignStage, _FinalStage {
-        private String adminId;
+        private int adminId;
 
         private boolean awayModeEnabled;
 
         private boolean awayModeReassign;
+
+        private Optional<Integer> awayStatusReasonId = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -139,6 +162,7 @@ public final class ConfigureAwayAdminRequest {
             adminId(other.getAdminId());
             awayModeEnabled(other.getAwayModeEnabled());
             awayModeReassign(other.getAwayModeReassign());
+            awayStatusReasonId(other.getAwayStatusReasonId());
             return this;
         }
 
@@ -148,8 +172,8 @@ public final class ConfigureAwayAdminRequest {
          */
         @java.lang.Override
         @JsonSetter("admin_id")
-        public AwayModeEnabledStage adminId(@NotNull String adminId) {
-            this.adminId = Objects.requireNonNull(adminId, "adminId must not be null");
+        public AwayModeEnabledStage adminId(int adminId) {
+            this.adminId = adminId;
             return this;
         }
 
@@ -175,9 +199,30 @@ public final class ConfigureAwayAdminRequest {
             return this;
         }
 
+        /**
+         * <p>The unique identifier of the away status reason</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage awayStatusReasonId(Integer awayStatusReasonId) {
+            this.awayStatusReasonId = Optional.ofNullable(awayStatusReasonId);
+            return this;
+        }
+
+        /**
+         * <p>The unique identifier of the away status reason</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "away_status_reason_id", nulls = Nulls.SKIP)
+        public _FinalStage awayStatusReasonId(Optional<Integer> awayStatusReasonId) {
+            this.awayStatusReasonId = awayStatusReasonId;
+            return this;
+        }
+
         @java.lang.Override
         public ConfigureAwayAdminRequest build() {
-            return new ConfigureAwayAdminRequest(adminId, awayModeEnabled, awayModeReassign, additionalProperties);
+            return new ConfigureAwayAdminRequest(
+                    adminId, awayModeEnabled, awayModeReassign, awayStatusReasonId, additionalProperties);
         }
     }
 }

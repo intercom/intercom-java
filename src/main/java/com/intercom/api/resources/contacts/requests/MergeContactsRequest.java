@@ -9,23 +9,25 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = MergeContactsRequest.Builder.class)
 public final class MergeContactsRequest {
-    private final String leadId;
+    private final Optional<String> leadId;
 
-    private final String contactId;
+    private final Optional<String> contactId;
 
     private final Map<String, Object> additionalProperties;
 
-    private MergeContactsRequest(String leadId, String contactId, Map<String, Object> additionalProperties) {
+    private MergeContactsRequest(
+            Optional<String> leadId, Optional<String> contactId, Map<String, Object> additionalProperties) {
         this.leadId = leadId;
         this.contactId = contactId;
         this.additionalProperties = additionalProperties;
@@ -35,7 +37,7 @@ public final class MergeContactsRequest {
      * @return The unique identifier for the contact to merge away from. Must be a lead.
      */
     @JsonProperty("from")
-    public String getLeadId() {
+    public Optional<String> getLeadId() {
         return leadId;
     }
 
@@ -43,7 +45,7 @@ public final class MergeContactsRequest {
      * @return The unique identifier for the contact to merge into. Must be a user.
      */
     @JsonProperty("into")
-    public String getContactId() {
+    public Optional<String> getContactId() {
         return contactId;
     }
 
@@ -72,42 +74,21 @@ public final class MergeContactsRequest {
         return ObjectMappers.stringify(this);
     }
 
-    public static LeadIdStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface LeadIdStage {
-        /**
-         * The unique identifier for the contact to merge away from. Must be a lead.
-         */
-        ContactIdStage leadId(@NotNull String leadId);
-
-        Builder from(MergeContactsRequest other);
-    }
-
-    public interface ContactIdStage {
-        /**
-         * The unique identifier for the contact to merge into. Must be a user.
-         */
-        _FinalStage contactId(@NotNull String contactId);
-    }
-
-    public interface _FinalStage {
-        MergeContactsRequest build();
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements LeadIdStage, ContactIdStage, _FinalStage {
-        private String leadId;
+    public static final class Builder {
+        private Optional<String> leadId = Optional.empty();
 
-        private String contactId;
+        private Optional<String> contactId = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(MergeContactsRequest other) {
             leadId(other.getLeadId());
             contactId(other.getContactId());
@@ -115,28 +96,33 @@ public final class MergeContactsRequest {
         }
 
         /**
-         * The unique identifier for the contact to merge away from. Must be a lead.<p>The unique identifier for the contact to merge away from. Must be a lead.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The unique identifier for the contact to merge away from. Must be a lead.</p>
          */
-        @java.lang.Override
-        @JsonSetter("from")
-        public ContactIdStage leadId(@NotNull String leadId) {
-            this.leadId = Objects.requireNonNull(leadId, "leadId must not be null");
+        @JsonSetter(value = "from", nulls = Nulls.SKIP)
+        public Builder leadId(Optional<String> leadId) {
+            this.leadId = leadId;
+            return this;
+        }
+
+        public Builder leadId(String leadId) {
+            this.leadId = Optional.ofNullable(leadId);
             return this;
         }
 
         /**
-         * The unique identifier for the contact to merge into. Must be a user.<p>The unique identifier for the contact to merge into. Must be a user.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The unique identifier for the contact to merge into. Must be a user.</p>
          */
-        @java.lang.Override
-        @JsonSetter("into")
-        public _FinalStage contactId(@NotNull String contactId) {
-            this.contactId = Objects.requireNonNull(contactId, "contactId must not be null");
+        @JsonSetter(value = "into", nulls = Nulls.SKIP)
+        public Builder contactId(Optional<String> contactId) {
+            this.contactId = contactId;
             return this;
         }
 
-        @java.lang.Override
+        public Builder contactId(String contactId) {
+            this.contactId = Optional.ofNullable(contactId);
+            return this;
+        }
+
         public MergeContactsRequest build() {
             return new MergeContactsRequest(leadId, contactId, additionalProperties);
         }

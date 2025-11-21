@@ -9,40 +9,41 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = PartAttachment.Builder.class)
 public final class PartAttachment {
-    private final String type;
+    private final Optional<String> type;
 
-    private final String name;
+    private final Optional<String> name;
 
-    private final String url;
+    private final Optional<String> url;
 
-    private final String contentType;
+    private final Optional<String> contentType;
 
-    private final int filesize;
+    private final Optional<Integer> filesize;
 
-    private final int width;
+    private final Optional<Integer> width;
 
-    private final int height;
+    private final Optional<Integer> height;
 
     private final Map<String, Object> additionalProperties;
 
     private PartAttachment(
-            String type,
-            String name,
-            String url,
-            String contentType,
-            int filesize,
-            int width,
-            int height,
+            Optional<String> type,
+            Optional<String> name,
+            Optional<String> url,
+            Optional<String> contentType,
+            Optional<Integer> filesize,
+            Optional<Integer> width,
+            Optional<Integer> height,
             Map<String, Object> additionalProperties) {
         this.type = type;
         this.name = name;
@@ -58,7 +59,7 @@ public final class PartAttachment {
      * @return The type of attachment
      */
     @JsonProperty("type")
-    public String getType() {
+    public Optional<String> getType() {
         return type;
     }
 
@@ -66,7 +67,7 @@ public final class PartAttachment {
      * @return The name of the attachment
      */
     @JsonProperty("name")
-    public String getName() {
+    public Optional<String> getName() {
         return name;
     }
 
@@ -74,7 +75,7 @@ public final class PartAttachment {
      * @return The URL of the attachment
      */
     @JsonProperty("url")
-    public String getUrl() {
+    public Optional<String> getUrl() {
         return url;
     }
 
@@ -82,7 +83,7 @@ public final class PartAttachment {
      * @return The content type of the attachment
      */
     @JsonProperty("content_type")
-    public String getContentType() {
+    public Optional<String> getContentType() {
         return contentType;
     }
 
@@ -90,7 +91,7 @@ public final class PartAttachment {
      * @return The size of the attachment
      */
     @JsonProperty("filesize")
-    public int getFilesize() {
+    public Optional<Integer> getFilesize() {
         return filesize;
     }
 
@@ -98,7 +99,7 @@ public final class PartAttachment {
      * @return The width of the attachment
      */
     @JsonProperty("width")
-    public int getWidth() {
+    public Optional<Integer> getWidth() {
         return width;
     }
 
@@ -106,7 +107,7 @@ public final class PartAttachment {
      * @return The height of the attachment
      */
     @JsonProperty("height")
-    public int getHeight() {
+    public Optional<Integer> getHeight() {
         return height;
     }
 
@@ -126,9 +127,9 @@ public final class PartAttachment {
                 && name.equals(other.name)
                 && url.equals(other.url)
                 && contentType.equals(other.contentType)
-                && filesize == other.filesize
-                && width == other.width
-                && height == other.height;
+                && filesize.equals(other.filesize)
+                && width.equals(other.width)
+                && height.equals(other.height);
     }
 
     @java.lang.Override
@@ -141,95 +142,31 @@ public final class PartAttachment {
         return ObjectMappers.stringify(this);
     }
 
-    public static TypeStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface TypeStage {
-        /**
-         * The type of attachment
-         */
-        NameStage type(@NotNull String type);
-
-        Builder from(PartAttachment other);
-    }
-
-    public interface NameStage {
-        /**
-         * The name of the attachment
-         */
-        UrlStage name(@NotNull String name);
-    }
-
-    public interface UrlStage {
-        /**
-         * The URL of the attachment
-         */
-        ContentTypeStage url(@NotNull String url);
-    }
-
-    public interface ContentTypeStage {
-        /**
-         * The content type of the attachment
-         */
-        FilesizeStage contentType(@NotNull String contentType);
-    }
-
-    public interface FilesizeStage {
-        /**
-         * The size of the attachment
-         */
-        WidthStage filesize(int filesize);
-    }
-
-    public interface WidthStage {
-        /**
-         * The width of the attachment
-         */
-        HeightStage width(int width);
-    }
-
-    public interface HeightStage {
-        /**
-         * The height of the attachment
-         */
-        _FinalStage height(int height);
-    }
-
-    public interface _FinalStage {
-        PartAttachment build();
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder
-            implements TypeStage,
-                    NameStage,
-                    UrlStage,
-                    ContentTypeStage,
-                    FilesizeStage,
-                    WidthStage,
-                    HeightStage,
-                    _FinalStage {
-        private String type;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private String name;
+        private Optional<String> name = Optional.empty();
 
-        private String url;
+        private Optional<String> url = Optional.empty();
 
-        private String contentType;
+        private Optional<String> contentType = Optional.empty();
 
-        private int filesize;
+        private Optional<Integer> filesize = Optional.empty();
 
-        private int width;
+        private Optional<Integer> width = Optional.empty();
 
-        private int height;
+        private Optional<Integer> height = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(PartAttachment other) {
             type(other.getType());
             name(other.getName());
@@ -242,83 +179,103 @@ public final class PartAttachment {
         }
 
         /**
-         * The type of attachment<p>The type of attachment</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The type of attachment</p>
          */
-        @java.lang.Override
-        @JsonSetter("type")
-        public NameStage type(@NotNull String type) {
-            this.type = Objects.requireNonNull(type, "type must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
-         * The name of the attachment<p>The name of the attachment</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The name of the attachment</p>
          */
-        @java.lang.Override
-        @JsonSetter("name")
-        public UrlStage name(@NotNull String name) {
-            this.name = Objects.requireNonNull(name, "name must not be null");
+        @JsonSetter(value = "name", nulls = Nulls.SKIP)
+        public Builder name(Optional<String> name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = Optional.ofNullable(name);
             return this;
         }
 
         /**
-         * The URL of the attachment<p>The URL of the attachment</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The URL of the attachment</p>
          */
-        @java.lang.Override
-        @JsonSetter("url")
-        public ContentTypeStage url(@NotNull String url) {
-            this.url = Objects.requireNonNull(url, "url must not be null");
+        @JsonSetter(value = "url", nulls = Nulls.SKIP)
+        public Builder url(Optional<String> url) {
+            this.url = url;
+            return this;
+        }
+
+        public Builder url(String url) {
+            this.url = Optional.ofNullable(url);
             return this;
         }
 
         /**
-         * The content type of the attachment<p>The content type of the attachment</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The content type of the attachment</p>
          */
-        @java.lang.Override
-        @JsonSetter("content_type")
-        public FilesizeStage contentType(@NotNull String contentType) {
-            this.contentType = Objects.requireNonNull(contentType, "contentType must not be null");
+        @JsonSetter(value = "content_type", nulls = Nulls.SKIP)
+        public Builder contentType(Optional<String> contentType) {
+            this.contentType = contentType;
+            return this;
+        }
+
+        public Builder contentType(String contentType) {
+            this.contentType = Optional.ofNullable(contentType);
             return this;
         }
 
         /**
-         * The size of the attachment<p>The size of the attachment</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The size of the attachment</p>
          */
-        @java.lang.Override
-        @JsonSetter("filesize")
-        public WidthStage filesize(int filesize) {
+        @JsonSetter(value = "filesize", nulls = Nulls.SKIP)
+        public Builder filesize(Optional<Integer> filesize) {
             this.filesize = filesize;
             return this;
         }
 
+        public Builder filesize(Integer filesize) {
+            this.filesize = Optional.ofNullable(filesize);
+            return this;
+        }
+
         /**
-         * The width of the attachment<p>The width of the attachment</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The width of the attachment</p>
          */
-        @java.lang.Override
-        @JsonSetter("width")
-        public HeightStage width(int width) {
+        @JsonSetter(value = "width", nulls = Nulls.SKIP)
+        public Builder width(Optional<Integer> width) {
             this.width = width;
             return this;
         }
 
+        public Builder width(Integer width) {
+            this.width = Optional.ofNullable(width);
+            return this;
+        }
+
         /**
-         * The height of the attachment<p>The height of the attachment</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The height of the attachment</p>
          */
-        @java.lang.Override
-        @JsonSetter("height")
-        public _FinalStage height(int height) {
+        @JsonSetter(value = "height", nulls = Nulls.SKIP)
+        public Builder height(Optional<Integer> height) {
             this.height = height;
             return this;
         }
 
-        @java.lang.Override
+        public Builder height(Integer height) {
+            this.height = Optional.ofNullable(height);
+            return this;
+        }
+
         public PartAttachment build() {
             return new PartAttachment(type, name, url, contentType, filesize, width, height, additionalProperties);
         }

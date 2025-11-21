@@ -16,48 +16,55 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.types.TicketTypeAttributeList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = TicketType.Builder.class)
 public final class TicketType {
-    private final String id;
+    private final Optional<String> type;
 
-    private final Category category;
+    private final Optional<String> id;
 
-    private final String name;
+    private final Optional<Category> category;
 
-    private final String description;
+    private final Optional<String> name;
 
-    private final String icon;
+    private final Optional<String> description;
 
-    private final String workspaceId;
+    private final Optional<String> icon;
 
-    private final TicketTypeAttributeList ticketTypeAttributes;
+    private final Optional<String> workspaceId;
 
-    private final boolean archived;
+    private final Optional<TicketTypeAttributeList> ticketTypeAttributes;
 
-    private final int createdAt;
+    private final Optional<TicketStates> ticketStates;
+
+    private final Optional<Boolean> archived;
+
+    private final Optional<Integer> createdAt;
 
     private final Optional<Integer> updatedAt;
 
     private final Map<String, Object> additionalProperties;
 
     private TicketType(
-            String id,
-            Category category,
-            String name,
-            String description,
-            String icon,
-            String workspaceId,
-            TicketTypeAttributeList ticketTypeAttributes,
-            boolean archived,
-            int createdAt,
+            Optional<String> type,
+            Optional<String> id,
+            Optional<Category> category,
+            Optional<String> name,
+            Optional<String> description,
+            Optional<String> icon,
+            Optional<String> workspaceId,
+            Optional<TicketTypeAttributeList> ticketTypeAttributes,
+            Optional<TicketStates> ticketStates,
+            Optional<Boolean> archived,
+            Optional<Integer> createdAt,
             Optional<Integer> updatedAt,
             Map<String, Object> additionalProperties) {
+        this.type = type;
         this.id = id;
         this.category = category;
         this.name = name;
@@ -65,6 +72,7 @@ public final class TicketType {
         this.icon = icon;
         this.workspaceId = workspaceId;
         this.ticketTypeAttributes = ticketTypeAttributes;
+        this.ticketStates = ticketStates;
         this.archived = archived;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -75,15 +83,15 @@ public final class TicketType {
      * @return String representing the object's type. Always has the value <code>ticket_type</code>.
      */
     @JsonProperty("type")
-    public String getType() {
-        return "ticket_type";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The id representing the ticket type.
      */
     @JsonProperty("id")
-    public String getId() {
+    public Optional<String> getId() {
         return id;
     }
 
@@ -91,7 +99,7 @@ public final class TicketType {
      * @return Category of the Ticket Type.
      */
     @JsonProperty("category")
-    public Category getCategory() {
+    public Optional<Category> getCategory() {
         return category;
     }
 
@@ -99,7 +107,7 @@ public final class TicketType {
      * @return The name of the ticket type
      */
     @JsonProperty("name")
-    public String getName() {
+    public Optional<String> getName() {
         return name;
     }
 
@@ -107,7 +115,7 @@ public final class TicketType {
      * @return The description of the ticket type
      */
     @JsonProperty("description")
-    public String getDescription() {
+    public Optional<String> getDescription() {
         return description;
     }
 
@@ -115,7 +123,7 @@ public final class TicketType {
      * @return The icon of the ticket type
      */
     @JsonProperty("icon")
-    public String getIcon() {
+    public Optional<String> getIcon() {
         return icon;
     }
 
@@ -123,20 +131,28 @@ public final class TicketType {
      * @return The id of the workspace that the ticket type belongs to.
      */
     @JsonProperty("workspace_id")
-    public String getWorkspaceId() {
+    public Optional<String> getWorkspaceId() {
         return workspaceId;
     }
 
     @JsonProperty("ticket_type_attributes")
-    public TicketTypeAttributeList getTicketTypeAttributes() {
+    public Optional<TicketTypeAttributeList> getTicketTypeAttributes() {
         return ticketTypeAttributes;
+    }
+
+    /**
+     * @return A list of ticket states associated with a given ticket type.
+     */
+    @JsonProperty("ticket_states")
+    public Optional<TicketStates> getTicketStates() {
+        return ticketStates;
     }
 
     /**
      * @return Whether the ticket type is archived or not.
      */
     @JsonProperty("archived")
-    public boolean getArchived() {
+    public Optional<Boolean> getArchived() {
         return archived;
     }
 
@@ -144,7 +160,7 @@ public final class TicketType {
      * @return The date and time the ticket type was created.
      */
     @JsonProperty("created_at")
-    public int getCreatedAt() {
+    public Optional<Integer> getCreatedAt() {
         return createdAt;
     }
 
@@ -168,21 +184,24 @@ public final class TicketType {
     }
 
     private boolean equalTo(TicketType other) {
-        return id.equals(other.id)
+        return type.equals(other.type)
+                && id.equals(other.id)
                 && category.equals(other.category)
                 && name.equals(other.name)
                 && description.equals(other.description)
                 && icon.equals(other.icon)
                 && workspaceId.equals(other.workspaceId)
                 && ticketTypeAttributes.equals(other.ticketTypeAttributes)
-                && archived == other.archived
-                && createdAt == other.createdAt
+                && ticketStates.equals(other.ticketStates)
+                && archived.equals(other.archived)
+                && createdAt.equals(other.createdAt)
                 && updatedAt.equals(other.updatedAt);
     }
 
     @java.lang.Override
     public int hashCode() {
         return Objects.hash(
+                this.type,
                 this.id,
                 this.category,
                 this.name,
@@ -190,6 +209,7 @@ public final class TicketType {
                 this.icon,
                 this.workspaceId,
                 this.ticketTypeAttributes,
+                this.ticketStates,
                 this.archived,
                 this.createdAt,
                 this.updatedAt);
@@ -200,112 +220,33 @@ public final class TicketType {
         return ObjectMappers.stringify(this);
     }
 
-    public static IdStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface IdStage {
-        /**
-         * The id representing the ticket type.
-         */
-        CategoryStage id(@NotNull String id);
-
-        Builder from(TicketType other);
-    }
-
-    public interface CategoryStage {
-        /**
-         * Category of the Ticket Type.
-         */
-        NameStage category(@NotNull Category category);
-    }
-
-    public interface NameStage {
-        /**
-         * The name of the ticket type
-         */
-        DescriptionStage name(@NotNull String name);
-    }
-
-    public interface DescriptionStage {
-        /**
-         * The description of the ticket type
-         */
-        IconStage description(@NotNull String description);
-    }
-
-    public interface IconStage {
-        /**
-         * The icon of the ticket type
-         */
-        WorkspaceIdStage icon(@NotNull String icon);
-    }
-
-    public interface WorkspaceIdStage {
-        /**
-         * The id of the workspace that the ticket type belongs to.
-         */
-        TicketTypeAttributesStage workspaceId(@NotNull String workspaceId);
-    }
-
-    public interface TicketTypeAttributesStage {
-        ArchivedStage ticketTypeAttributes(@NotNull TicketTypeAttributeList ticketTypeAttributes);
-    }
-
-    public interface ArchivedStage {
-        /**
-         * Whether the ticket type is archived or not.
-         */
-        CreatedAtStage archived(boolean archived);
-    }
-
-    public interface CreatedAtStage {
-        /**
-         * The date and time the ticket type was created.
-         */
-        _FinalStage createdAt(int createdAt);
-    }
-
-    public interface _FinalStage {
-        TicketType build();
-
-        /**
-         * <p>The date and time the ticket type was last updated.</p>
-         */
-        _FinalStage updatedAt(Optional<Integer> updatedAt);
-
-        _FinalStage updatedAt(Integer updatedAt);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder
-            implements IdStage,
-                    CategoryStage,
-                    NameStage,
-                    DescriptionStage,
-                    IconStage,
-                    WorkspaceIdStage,
-                    TicketTypeAttributesStage,
-                    ArchivedStage,
-                    CreatedAtStage,
-                    _FinalStage {
-        private String id;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private Category category;
+        private Optional<String> id = Optional.empty();
 
-        private String name;
+        private Optional<Category> category = Optional.empty();
 
-        private String description;
+        private Optional<String> name = Optional.empty();
 
-        private String icon;
+        private Optional<String> description = Optional.empty();
 
-        private String workspaceId;
+        private Optional<String> icon = Optional.empty();
 
-        private TicketTypeAttributeList ticketTypeAttributes;
+        private Optional<String> workspaceId = Optional.empty();
 
-        private boolean archived;
+        private Optional<TicketTypeAttributeList> ticketTypeAttributes = Optional.empty();
 
-        private int createdAt;
+        private Optional<TicketStates> ticketStates = Optional.empty();
+
+        private Optional<Boolean> archived = Optional.empty();
+
+        private Optional<Integer> createdAt = Optional.empty();
 
         private Optional<Integer> updatedAt = Optional.empty();
 
@@ -314,8 +255,8 @@ public final class TicketType {
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(TicketType other) {
+            type(other.getType());
             id(other.getId());
             category(other.getCategory());
             name(other.getName());
@@ -323,6 +264,7 @@ public final class TicketType {
             icon(other.getIcon());
             workspaceId(other.getWorkspaceId());
             ticketTypeAttributes(other.getTicketTypeAttributes());
+            ticketStates(other.getTicketStates());
             archived(other.getArchived());
             createdAt(other.getCreatedAt());
             updatedAt(other.getUpdatedAt());
@@ -330,124 +272,173 @@ public final class TicketType {
         }
 
         /**
-         * The id representing the ticket type.<p>The id representing the ticket type.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>String representing the object's type. Always has the value <code>ticket_type</code>.</p>
          */
-        @java.lang.Override
-        @JsonSetter("id")
-        public CategoryStage id(@NotNull String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
-         * Category of the Ticket Type.<p>Category of the Ticket Type.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The id representing the ticket type.</p>
          */
-        @java.lang.Override
-        @JsonSetter("category")
-        public NameStage category(@NotNull Category category) {
-            this.category = Objects.requireNonNull(category, "category must not be null");
+        @JsonSetter(value = "id", nulls = Nulls.SKIP)
+        public Builder id(Optional<String> id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder id(String id) {
+            this.id = Optional.ofNullable(id);
             return this;
         }
 
         /**
-         * The name of the ticket type<p>The name of the ticket type</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Category of the Ticket Type.</p>
          */
-        @java.lang.Override
-        @JsonSetter("name")
-        public DescriptionStage name(@NotNull String name) {
-            this.name = Objects.requireNonNull(name, "name must not be null");
+        @JsonSetter(value = "category", nulls = Nulls.SKIP)
+        public Builder category(Optional<Category> category) {
+            this.category = category;
+            return this;
+        }
+
+        public Builder category(Category category) {
+            this.category = Optional.ofNullable(category);
             return this;
         }
 
         /**
-         * The description of the ticket type<p>The description of the ticket type</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The name of the ticket type</p>
          */
-        @java.lang.Override
-        @JsonSetter("description")
-        public IconStage description(@NotNull String description) {
-            this.description = Objects.requireNonNull(description, "description must not be null");
+        @JsonSetter(value = "name", nulls = Nulls.SKIP)
+        public Builder name(Optional<String> name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = Optional.ofNullable(name);
             return this;
         }
 
         /**
-         * The icon of the ticket type<p>The icon of the ticket type</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The description of the ticket type</p>
          */
-        @java.lang.Override
-        @JsonSetter("icon")
-        public WorkspaceIdStage icon(@NotNull String icon) {
-            this.icon = Objects.requireNonNull(icon, "icon must not be null");
+        @JsonSetter(value = "description", nulls = Nulls.SKIP)
+        public Builder description(Optional<String> description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = Optional.ofNullable(description);
             return this;
         }
 
         /**
-         * The id of the workspace that the ticket type belongs to.<p>The id of the workspace that the ticket type belongs to.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The icon of the ticket type</p>
          */
-        @java.lang.Override
-        @JsonSetter("workspace_id")
-        public TicketTypeAttributesStage workspaceId(@NotNull String workspaceId) {
-            this.workspaceId = Objects.requireNonNull(workspaceId, "workspaceId must not be null");
+        @JsonSetter(value = "icon", nulls = Nulls.SKIP)
+        public Builder icon(Optional<String> icon) {
+            this.icon = icon;
             return this;
         }
 
-        @java.lang.Override
-        @JsonSetter("ticket_type_attributes")
-        public ArchivedStage ticketTypeAttributes(@NotNull TicketTypeAttributeList ticketTypeAttributes) {
-            this.ticketTypeAttributes =
-                    Objects.requireNonNull(ticketTypeAttributes, "ticketTypeAttributes must not be null");
+        public Builder icon(String icon) {
+            this.icon = Optional.ofNullable(icon);
             return this;
         }
 
         /**
-         * Whether the ticket type is archived or not.<p>Whether the ticket type is archived or not.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The id of the workspace that the ticket type belongs to.</p>
          */
-        @java.lang.Override
-        @JsonSetter("archived")
-        public CreatedAtStage archived(boolean archived) {
+        @JsonSetter(value = "workspace_id", nulls = Nulls.SKIP)
+        public Builder workspaceId(Optional<String> workspaceId) {
+            this.workspaceId = workspaceId;
+            return this;
+        }
+
+        public Builder workspaceId(String workspaceId) {
+            this.workspaceId = Optional.ofNullable(workspaceId);
+            return this;
+        }
+
+        @JsonSetter(value = "ticket_type_attributes", nulls = Nulls.SKIP)
+        public Builder ticketTypeAttributes(Optional<TicketTypeAttributeList> ticketTypeAttributes) {
+            this.ticketTypeAttributes = ticketTypeAttributes;
+            return this;
+        }
+
+        public Builder ticketTypeAttributes(TicketTypeAttributeList ticketTypeAttributes) {
+            this.ticketTypeAttributes = Optional.ofNullable(ticketTypeAttributes);
+            return this;
+        }
+
+        /**
+         * <p>A list of ticket states associated with a given ticket type.</p>
+         */
+        @JsonSetter(value = "ticket_states", nulls = Nulls.SKIP)
+        public Builder ticketStates(Optional<TicketStates> ticketStates) {
+            this.ticketStates = ticketStates;
+            return this;
+        }
+
+        public Builder ticketStates(TicketStates ticketStates) {
+            this.ticketStates = Optional.ofNullable(ticketStates);
+            return this;
+        }
+
+        /**
+         * <p>Whether the ticket type is archived or not.</p>
+         */
+        @JsonSetter(value = "archived", nulls = Nulls.SKIP)
+        public Builder archived(Optional<Boolean> archived) {
             this.archived = archived;
             return this;
         }
 
+        public Builder archived(Boolean archived) {
+            this.archived = Optional.ofNullable(archived);
+            return this;
+        }
+
         /**
-         * The date and time the ticket type was created.<p>The date and time the ticket type was created.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The date and time the ticket type was created.</p>
          */
-        @java.lang.Override
-        @JsonSetter("created_at")
-        public _FinalStage createdAt(int createdAt) {
+        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
+        public Builder createdAt(Optional<Integer> createdAt) {
             this.createdAt = createdAt;
             return this;
         }
 
-        /**
-         * <p>The date and time the ticket type was last updated.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage updatedAt(Integer updatedAt) {
-            this.updatedAt = Optional.ofNullable(updatedAt);
+        public Builder createdAt(Integer createdAt) {
+            this.createdAt = Optional.ofNullable(createdAt);
             return this;
         }
 
         /**
          * <p>The date and time the ticket type was last updated.</p>
          */
-        @java.lang.Override
         @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
-        public _FinalStage updatedAt(Optional<Integer> updatedAt) {
+        public Builder updatedAt(Optional<Integer> updatedAt) {
             this.updatedAt = updatedAt;
             return this;
         }
 
-        @java.lang.Override
+        public Builder updatedAt(Integer updatedAt) {
+            this.updatedAt = Optional.ofNullable(updatedAt);
+            return this;
+        }
+
         public TicketType build() {
             return new TicketType(
+                    type,
                     id,
                     category,
                     name,
@@ -455,6 +446,7 @@ public final class TicketType {
                     icon,
                     workspaceId,
                     ticketTypeAttributes,
+                    ticketStates,
                     archived,
                     createdAt,
                     updatedAt,
@@ -544,6 +536,120 @@ public final class TicketType {
             T visitTracker();
 
             T visitUnknown(String unknownType);
+        }
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_ABSENT)
+    @JsonDeserialize(builder = TicketStates.Builder.class)
+    public static final class TicketStates {
+        private final Optional<String> type;
+
+        private final Optional<List<Optional<TicketState>>> data;
+
+        private final Map<String, Object> additionalProperties;
+
+        private TicketStates(
+                Optional<String> type,
+                Optional<List<Optional<TicketState>>> data,
+                Map<String, Object> additionalProperties) {
+            this.type = type;
+            this.data = data;
+            this.additionalProperties = additionalProperties;
+        }
+
+        /**
+         * @return String representing the object's type. Always has the value <code>list</code>.
+         */
+        @JsonProperty("type")
+        public Optional<String> getType() {
+            return type;
+        }
+
+        /**
+         * @return A list of ticket states associated with a given ticket type.
+         */
+        @JsonProperty("data")
+        public Optional<List<Optional<TicketState>>> getData() {
+            return data;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            if (this == other) return true;
+            return other instanceof TicketStates && equalTo((TicketStates) other);
+        }
+
+        @JsonAnyGetter
+        public Map<String, Object> getAdditionalProperties() {
+            return this.additionalProperties;
+        }
+
+        private boolean equalTo(TicketStates other) {
+            return type.equals(other.type) && data.equals(other.data);
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return Objects.hash(this.type, this.data);
+        }
+
+        @java.lang.Override
+        public String toString() {
+            return ObjectMappers.stringify(this);
+        }
+
+        public static Builder builder() {
+            return new Builder();
+        }
+
+        @JsonIgnoreProperties(ignoreUnknown = true)
+        public static final class Builder {
+            private Optional<String> type = Optional.empty();
+
+            private Optional<List<Optional<TicketState>>> data = Optional.empty();
+
+            @JsonAnySetter
+            private Map<String, Object> additionalProperties = new HashMap<>();
+
+            private Builder() {}
+
+            public Builder from(TicketStates other) {
+                type(other.getType());
+                data(other.getData());
+                return this;
+            }
+
+            /**
+             * <p>String representing the object's type. Always has the value <code>list</code>.</p>
+             */
+            @JsonSetter(value = "type", nulls = Nulls.SKIP)
+            public Builder type(Optional<String> type) {
+                this.type = type;
+                return this;
+            }
+
+            public Builder type(String type) {
+                this.type = Optional.ofNullable(type);
+                return this;
+            }
+
+            /**
+             * <p>A list of ticket states associated with a given ticket type.</p>
+             */
+            @JsonSetter(value = "data", nulls = Nulls.SKIP)
+            public Builder data(Optional<List<Optional<TicketState>>> data) {
+                this.data = data;
+                return this;
+            }
+
+            public Builder data(List<Optional<TicketState>> data) {
+                this.data = Optional.ofNullable(data);
+                return this;
+            }
+
+            public TicketStates build() {
+                return new TicketStates(type, data, additionalProperties);
+            }
         }
     }
 }

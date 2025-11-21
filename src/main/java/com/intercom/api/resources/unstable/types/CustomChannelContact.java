@@ -11,11 +11,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
@@ -25,14 +27,18 @@ public final class CustomChannelContact {
 
     private final String externalId;
 
-    private final String name;
+    private final Optional<String> name;
 
-    private final String email;
+    private final Optional<String> email;
 
     private final Map<String, Object> additionalProperties;
 
     private CustomChannelContact(
-            Type type, String externalId, String name, String email, Map<String, Object> additionalProperties) {
+            Type type,
+            String externalId,
+            Optional<String> name,
+            Optional<String> email,
+            Map<String, Object> additionalProperties) {
         this.type = type;
         this.externalId = externalId;
         this.name = name;
@@ -57,18 +63,18 @@ public final class CustomChannelContact {
     }
 
     /**
-     * @return Name of the contact.
+     * @return Name of the contact. Required for user type.
      */
     @JsonProperty("name")
-    public String getName() {
+    public Optional<String> getName() {
         return name;
     }
 
     /**
-     * @return Email address of the contact.
+     * @return Email address of the contact. Required for user type.
      */
     @JsonProperty("email")
-    public String getEmail() {
+    public Optional<String> getEmail() {
         return email;
     }
 
@@ -117,36 +123,36 @@ public final class CustomChannelContact {
         /**
          * External identifier for the contact. Intercom will take care of the mapping of your external_id with our internal ones so you don't have to worry about it.
          */
-        NameStage externalId(@NotNull String externalId);
-    }
-
-    public interface NameStage {
-        /**
-         * Name of the contact.
-         */
-        EmailStage name(@NotNull String name);
-    }
-
-    public interface EmailStage {
-        /**
-         * Email address of the contact.
-         */
-        _FinalStage email(@NotNull String email);
+        _FinalStage externalId(@NotNull String externalId);
     }
 
     public interface _FinalStage {
         CustomChannelContact build();
+
+        /**
+         * <p>Name of the contact. Required for user type.</p>
+         */
+        _FinalStage name(Optional<String> name);
+
+        _FinalStage name(String name);
+
+        /**
+         * <p>Email address of the contact. Required for user type.</p>
+         */
+        _FinalStage email(Optional<String> email);
+
+        _FinalStage email(String email);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements TypeStage, ExternalIdStage, NameStage, EmailStage, _FinalStage {
+    public static final class Builder implements TypeStage, ExternalIdStage, _FinalStage {
         private Type type;
 
         private String externalId;
 
-        private String name;
+        private Optional<String> email = Optional.empty();
 
-        private String email;
+        private Optional<String> name = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -179,30 +185,48 @@ public final class CustomChannelContact {
          */
         @java.lang.Override
         @JsonSetter("external_id")
-        public NameStage externalId(@NotNull String externalId) {
+        public _FinalStage externalId(@NotNull String externalId) {
             this.externalId = Objects.requireNonNull(externalId, "externalId must not be null");
             return this;
         }
 
         /**
-         * Name of the contact.<p>Name of the contact.</p>
+         * <p>Email address of the contact. Required for user type.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
-        @JsonSetter("name")
-        public EmailStage name(@NotNull String name) {
-            this.name = Objects.requireNonNull(name, "name must not be null");
+        public _FinalStage email(String email) {
+            this.email = Optional.ofNullable(email);
             return this;
         }
 
         /**
-         * Email address of the contact.<p>Email address of the contact.</p>
+         * <p>Email address of the contact. Required for user type.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "email", nulls = Nulls.SKIP)
+        public _FinalStage email(Optional<String> email) {
+            this.email = email;
+            return this;
+        }
+
+        /**
+         * <p>Name of the contact. Required for user type.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
-        @JsonSetter("email")
-        public _FinalStage email(@NotNull String email) {
-            this.email = Objects.requireNonNull(email, "email must not be null");
+        public _FinalStage name(String name) {
+            this.name = Optional.ofNullable(name);
+            return this;
+        }
+
+        /**
+         * <p>Name of the contact. Required for user type.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "name", nulls = Nulls.SKIP)
+        public _FinalStage name(Optional<String> name) {
+            this.name = name;
             return this;
         }
 

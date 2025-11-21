@@ -9,11 +9,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
+import com.intercom.api.types.UpdateCompanyRequestBody;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
@@ -21,10 +24,14 @@ import org.jetbrains.annotations.NotNull;
 public final class UpdateCompanyRequest {
     private final String companyId;
 
+    private final Optional<UpdateCompanyRequestBody> body;
+
     private final Map<String, Object> additionalProperties;
 
-    private UpdateCompanyRequest(String companyId, Map<String, Object> additionalProperties) {
+    private UpdateCompanyRequest(
+            String companyId, Optional<UpdateCompanyRequestBody> body, Map<String, Object> additionalProperties) {
         this.companyId = companyId;
+        this.body = body;
         this.additionalProperties = additionalProperties;
     }
 
@@ -34,6 +41,11 @@ public final class UpdateCompanyRequest {
     @JsonProperty("company_id")
     public String getCompanyId() {
         return companyId;
+    }
+
+    @JsonProperty("body")
+    public Optional<UpdateCompanyRequestBody> getBody() {
+        return body;
     }
 
     @java.lang.Override
@@ -48,12 +60,12 @@ public final class UpdateCompanyRequest {
     }
 
     private boolean equalTo(UpdateCompanyRequest other) {
-        return companyId.equals(other.companyId);
+        return companyId.equals(other.companyId) && body.equals(other.body);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.companyId);
+        return Objects.hash(this.companyId, this.body);
     }
 
     @java.lang.Override
@@ -76,11 +88,17 @@ public final class UpdateCompanyRequest {
 
     public interface _FinalStage {
         UpdateCompanyRequest build();
+
+        _FinalStage body(Optional<UpdateCompanyRequestBody> body);
+
+        _FinalStage body(UpdateCompanyRequestBody body);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder implements CompanyIdStage, _FinalStage {
         private String companyId;
+
+        private Optional<UpdateCompanyRequestBody> body = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -90,6 +108,7 @@ public final class UpdateCompanyRequest {
         @java.lang.Override
         public Builder from(UpdateCompanyRequest other) {
             companyId(other.getCompanyId());
+            body(other.getBody());
             return this;
         }
 
@@ -105,8 +124,21 @@ public final class UpdateCompanyRequest {
         }
 
         @java.lang.Override
+        public _FinalStage body(UpdateCompanyRequestBody body) {
+            this.body = Optional.ofNullable(body);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "body", nulls = Nulls.SKIP)
+        public _FinalStage body(Optional<UpdateCompanyRequestBody> body) {
+            this.body = body;
+            return this;
+        }
+
+        @java.lang.Override
         public UpdateCompanyRequest build() {
-            return new UpdateCompanyRequest(companyId, additionalProperties);
+            return new UpdateCompanyRequest(companyId, body, additionalProperties);
         }
     }
 }

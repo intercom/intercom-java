@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.resources.contacts.types.Contact;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,16 +22,23 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ContactList.Builder.class)
 public final class ContactList {
-    private final List<Contact> data;
+    private final Optional<String> type;
 
-    private final int totalCount;
+    private final Optional<List<Contact>> data;
+
+    private final Optional<Integer> totalCount;
 
     private final Optional<CursorPages> pages;
 
     private final Map<String, Object> additionalProperties;
 
     private ContactList(
-            List<Contact> data, int totalCount, Optional<CursorPages> pages, Map<String, Object> additionalProperties) {
+            Optional<String> type,
+            Optional<List<Contact>> data,
+            Optional<Integer> totalCount,
+            Optional<CursorPages> pages,
+            Map<String, Object> additionalProperties) {
+        this.type = type;
         this.data = data;
         this.totalCount = totalCount;
         this.pages = pages;
@@ -43,15 +49,15 @@ public final class ContactList {
      * @return Always list
      */
     @JsonProperty("type")
-    public String getType() {
-        return "list";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The list of contact objects
      */
     @JsonProperty("data")
-    public List<Contact> getData() {
+    public Optional<List<Contact>> getData() {
         return data;
     }
 
@@ -59,7 +65,7 @@ public final class ContactList {
      * @return A count of the total number of objects.
      */
     @JsonProperty("total_count")
-    public int getTotalCount() {
+    public Optional<Integer> getTotalCount() {
         return totalCount;
     }
 
@@ -80,12 +86,15 @@ public final class ContactList {
     }
 
     private boolean equalTo(ContactList other) {
-        return data.equals(other.data) && totalCount == other.totalCount && pages.equals(other.pages);
+        return type.equals(other.type)
+                && data.equals(other.data)
+                && totalCount.equals(other.totalCount)
+                && pages.equals(other.pages);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.data, this.totalCount, this.pages);
+        return Objects.hash(this.type, this.data, this.totalCount, this.pages);
     }
 
     @java.lang.Override
@@ -93,51 +102,27 @@ public final class ContactList {
         return ObjectMappers.stringify(this);
     }
 
-    public static TotalCountStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface TotalCountStage {
-        /**
-         * A count of the total number of objects.
-         */
-        _FinalStage totalCount(int totalCount);
-
-        Builder from(ContactList other);
-    }
-
-    public interface _FinalStage {
-        ContactList build();
-
-        /**
-         * <p>The list of contact objects</p>
-         */
-        _FinalStage data(List<Contact> data);
-
-        _FinalStage addData(Contact data);
-
-        _FinalStage addAllData(List<Contact> data);
-
-        _FinalStage pages(Optional<CursorPages> pages);
-
-        _FinalStage pages(CursorPages pages);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements TotalCountStage, _FinalStage {
-        private int totalCount;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
+
+        private Optional<List<Contact>> data = Optional.empty();
+
+        private Optional<Integer> totalCount = Optional.empty();
 
         private Optional<CursorPages> pages = Optional.empty();
-
-        private List<Contact> data = new ArrayList<>();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(ContactList other) {
+            type(other.getType());
             data(other.getData());
             totalCount(other.getTotalCount());
             pages(other.getPages());
@@ -145,63 +130,60 @@ public final class ContactList {
         }
 
         /**
-         * A count of the total number of objects.<p>A count of the total number of objects.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Always list</p>
          */
-        @java.lang.Override
-        @JsonSetter("total_count")
-        public _FinalStage totalCount(int totalCount) {
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
+            return this;
+        }
+
+        /**
+         * <p>The list of contact objects</p>
+         */
+        @JsonSetter(value = "data", nulls = Nulls.SKIP)
+        public Builder data(Optional<List<Contact>> data) {
+            this.data = data;
+            return this;
+        }
+
+        public Builder data(List<Contact> data) {
+            this.data = Optional.ofNullable(data);
+            return this;
+        }
+
+        /**
+         * <p>A count of the total number of objects.</p>
+         */
+        @JsonSetter(value = "total_count", nulls = Nulls.SKIP)
+        public Builder totalCount(Optional<Integer> totalCount) {
             this.totalCount = totalCount;
             return this;
         }
 
-        @java.lang.Override
-        public _FinalStage pages(CursorPages pages) {
-            this.pages = Optional.ofNullable(pages);
+        public Builder totalCount(Integer totalCount) {
+            this.totalCount = Optional.ofNullable(totalCount);
             return this;
         }
 
-        @java.lang.Override
         @JsonSetter(value = "pages", nulls = Nulls.SKIP)
-        public _FinalStage pages(Optional<CursorPages> pages) {
+        public Builder pages(Optional<CursorPages> pages) {
             this.pages = pages;
             return this;
         }
 
-        /**
-         * <p>The list of contact objects</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addAllData(List<Contact> data) {
-            this.data.addAll(data);
+        public Builder pages(CursorPages pages) {
+            this.pages = Optional.ofNullable(pages);
             return this;
         }
 
-        /**
-         * <p>The list of contact objects</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addData(Contact data) {
-            this.data.add(data);
-            return this;
-        }
-
-        /**
-         * <p>The list of contact objects</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "data", nulls = Nulls.SKIP)
-        public _FinalStage data(List<Contact> data) {
-            this.data.clear();
-            this.data.addAll(data);
-            return this;
-        }
-
-        @java.lang.Override
         public ContactList build() {
-            return new ContactList(data, totalCount, pages, additionalProperties);
+            return new ContactList(type, data, totalCount, pages, additionalProperties);
         }
     }
 }

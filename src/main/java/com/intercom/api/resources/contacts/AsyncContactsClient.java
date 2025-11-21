@@ -9,6 +9,7 @@ import com.intercom.api.core.pagination.SyncPagingIterable;
 import com.intercom.api.resources.companies.types.Company;
 import com.intercom.api.resources.contacts.requests.ArchiveContactRequest;
 import com.intercom.api.resources.contacts.requests.AttachSubscriptionToContactRequest;
+import com.intercom.api.resources.contacts.requests.BlockContactRequest;
 import com.intercom.api.resources.contacts.requests.DeleteContactRequest;
 import com.intercom.api.resources.contacts.requests.DetachSubscriptionFromContactRequest;
 import com.intercom.api.resources.contacts.requests.FindContactRequest;
@@ -18,11 +19,18 @@ import com.intercom.api.resources.contacts.requests.ListContactsRequest;
 import com.intercom.api.resources.contacts.requests.ListSegmentsAttachedToContactRequest;
 import com.intercom.api.resources.contacts.requests.ListTagsAttachedToContactRequest;
 import com.intercom.api.resources.contacts.requests.MergeContactsRequest;
+import com.intercom.api.resources.contacts.requests.ShowContactByExternalIdRequest;
 import com.intercom.api.resources.contacts.requests.UnarchiveContactRequest;
 import com.intercom.api.resources.contacts.requests.UpdateContactRequest;
 import com.intercom.api.resources.contacts.types.Contact;
+import com.intercom.api.resources.contacts.types.ContactsCreateResponse;
+import com.intercom.api.resources.contacts.types.ContactsFindResponse;
+import com.intercom.api.resources.contacts.types.ContactsMergeLeadInUserResponse;
+import com.intercom.api.resources.contacts.types.ContactsUpdateResponse;
+import com.intercom.api.resources.contacts.types.ShowContactByExternalIdResponse;
 import com.intercom.api.resources.subscriptiontypes.types.SubscriptionType;
 import com.intercom.api.types.ContactArchived;
+import com.intercom.api.types.ContactBlocked;
 import com.intercom.api.types.ContactDeleted;
 import com.intercom.api.types.ContactSegments;
 import com.intercom.api.types.ContactUnarchived;
@@ -156,28 +164,37 @@ public class AsyncContactsClient {
     /**
      * You can fetch the details of a single contact.
      */
-    public CompletableFuture<Contact> find(FindContactRequest request) {
+    public CompletableFuture<ContactsFindResponse> find(FindContactRequest request) {
         return this.rawClient.find(request).thenApply(response -> response.body());
     }
 
     /**
      * You can fetch the details of a single contact.
      */
-    public CompletableFuture<Contact> find(FindContactRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<ContactsFindResponse> find(FindContactRequest request, RequestOptions requestOptions) {
         return this.rawClient.find(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
      * You can update an existing contact (ie. user or lead).
+     * <p>{% admonition type=&quot;info&quot; %}
+     * This endpoint handles both <strong>contact updates</strong> and <strong>custom object associations</strong>.</p>
+     * <p>See <em><code>update a contact with an association to a custom object instance</code></em> in the request/response examples to see the custom object association format.
+     * {% /admonition %}</p>
      */
-    public CompletableFuture<Contact> update(UpdateContactRequest request) {
+    public CompletableFuture<ContactsUpdateResponse> update(UpdateContactRequest request) {
         return this.rawClient.update(request).thenApply(response -> response.body());
     }
 
     /**
      * You can update an existing contact (ie. user or lead).
+     * <p>{% admonition type=&quot;info&quot; %}
+     * This endpoint handles both <strong>contact updates</strong> and <strong>custom object associations</strong>.</p>
+     * <p>See <em><code>update a contact with an association to a custom object instance</code></em> in the request/response examples to see the custom object association format.
+     * {% /admonition %}</p>
      */
-    public CompletableFuture<Contact> update(UpdateContactRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<ContactsUpdateResponse> update(
+            UpdateContactRequest request, RequestOptions requestOptions) {
         return this.rawClient.update(request, requestOptions).thenApply(response -> response.body());
     }
 
@@ -198,14 +215,22 @@ public class AsyncContactsClient {
     /**
      * You can merge a contact with a <code>role</code> of <code>lead</code> into a contact with a <code>role</code> of <code>user</code>.
      */
-    public CompletableFuture<Contact> mergeLeadInUser(MergeContactsRequest request) {
+    public CompletableFuture<ContactsMergeLeadInUserResponse> mergeLeadInUser() {
+        return this.rawClient.mergeLeadInUser().thenApply(response -> response.body());
+    }
+
+    /**
+     * You can merge a contact with a <code>role</code> of <code>lead</code> into a contact with a <code>role</code> of <code>user</code>.
+     */
+    public CompletableFuture<ContactsMergeLeadInUserResponse> mergeLeadInUser(MergeContactsRequest request) {
         return this.rawClient.mergeLeadInUser(request).thenApply(response -> response.body());
     }
 
     /**
      * You can merge a contact with a <code>role</code> of <code>lead</code> into a contact with a <code>role</code> of <code>user</code>.
      */
-    public CompletableFuture<Contact> mergeLeadInUser(MergeContactsRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<ContactsMergeLeadInUserResponse> mergeLeadInUser(
+            MergeContactsRequest request, RequestOptions requestOptions) {
         return this.rawClient.mergeLeadInUser(request, requestOptions).thenApply(response -> response.body());
     }
 
@@ -430,15 +455,32 @@ public class AsyncContactsClient {
     /**
      * You can create a new contact (ie. user or lead).
      */
-    public CompletableFuture<Contact> create(CreateContactRequest request) {
+    public CompletableFuture<ContactsCreateResponse> create(CreateContactRequest request) {
         return this.rawClient.create(request).thenApply(response -> response.body());
     }
 
     /**
      * You can create a new contact (ie. user or lead).
      */
-    public CompletableFuture<Contact> create(CreateContactRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<ContactsCreateResponse> create(
+            CreateContactRequest request, RequestOptions requestOptions) {
         return this.rawClient.create(request, requestOptions).thenApply(response -> response.body());
+    }
+
+    /**
+     * You can fetch the details of a single contact by external ID. Note that this endpoint only supports users and not leads.
+     */
+    public CompletableFuture<ShowContactByExternalIdResponse> showContactByExternalId(
+            ShowContactByExternalIdRequest request) {
+        return this.rawClient.showContactByExternalId(request).thenApply(response -> response.body());
+    }
+
+    /**
+     * You can fetch the details of a single contact by external ID. Note that this endpoint only supports users and not leads.
+     */
+    public CompletableFuture<ShowContactByExternalIdResponse> showContactByExternalId(
+            ShowContactByExternalIdRequest request, RequestOptions requestOptions) {
+        return this.rawClient.showContactByExternalId(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**
@@ -468,5 +510,19 @@ public class AsyncContactsClient {
     public CompletableFuture<ContactUnarchived> unarchive(
             UnarchiveContactRequest request, RequestOptions requestOptions) {
         return this.rawClient.unarchive(request, requestOptions).thenApply(response -> response.body());
+    }
+
+    /**
+     * Block a single contact.&lt;br&gt;<strong>Note:</strong> conversations of the contact will also be archived during the process.&lt;br&gt;More details in <a href="https://www.intercom.com/help/en/articles/8838656-inbox-faqs">FAQ How do I block Inbox spam?</a>
+     */
+    public CompletableFuture<ContactBlocked> blockContact(BlockContactRequest request) {
+        return this.rawClient.blockContact(request).thenApply(response -> response.body());
+    }
+
+    /**
+     * Block a single contact.&lt;br&gt;<strong>Note:</strong> conversations of the contact will also be archived during the process.&lt;br&gt;More details in <a href="https://www.intercom.com/help/en/articles/8838656-inbox-faqs">FAQ How do I block Inbox spam?</a>
+     */
+    public CompletableFuture<ContactBlocked> blockContact(BlockContactRequest request, RequestOptions requestOptions) {
+        return this.rawClient.blockContact(request, requestOptions).thenApply(response -> response.body());
     }
 }

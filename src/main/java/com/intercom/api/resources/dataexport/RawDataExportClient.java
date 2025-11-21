@@ -10,12 +10,17 @@ import com.intercom.api.core.IntercomException;
 import com.intercom.api.core.IntercomHttpResponse;
 import com.intercom.api.core.MediaTypes;
 import com.intercom.api.core.ObjectMappers;
+import com.intercom.api.core.QueryStringMapper;
 import com.intercom.api.core.RequestOptions;
+import com.intercom.api.errors.NotFoundError;
 import com.intercom.api.resources.dataexport.requests.CancelDataExportRequest;
 import com.intercom.api.resources.dataexport.requests.CreateDataExportRequest;
 import com.intercom.api.resources.dataexport.requests.DownloadDataExportRequest;
+import com.intercom.api.resources.dataexport.requests.DownloadReportingDataExportRequest;
+import com.intercom.api.resources.dataexport.requests.ExportReportingDataRequest;
 import com.intercom.api.resources.dataexport.requests.FindDataExportRequest;
 import com.intercom.api.resources.dataexport.types.DataExport;
+import com.intercom.api.resources.dataexport.types.DataExportExportReportingDataResponse;
 import java.io.IOException;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
@@ -30,6 +35,117 @@ public class RawDataExportClient {
 
     public RawDataExportClient(ClientOptions clientOptions) {
         this.clientOptions = clientOptions;
+    }
+
+    public IntercomHttpResponse<DataExportExportReportingDataResponse> exportReportingData(
+            ExportReportingDataRequest request) {
+        return exportReportingData(request, null);
+    }
+
+    public IntercomHttpResponse<DataExportExportReportingDataResponse> exportReportingData(
+            ExportReportingDataRequest request, RequestOptions requestOptions) {
+        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+                .newBuilder()
+                .addPathSegments("export/reporting_data")
+                .addPathSegment(request.getJobIdentifier());
+        QueryStringMapper.addQueryParameter(httpUrl, "app_id", request.getAppId(), false);
+        QueryStringMapper.addQueryParameter(httpUrl, "client_id", request.getClientId(), false);
+        Request.Builder _requestBuilder = new Request.Builder()
+                .url(httpUrl.build())
+                .method("GET", null)
+                .headers(Headers.of(clientOptions.headers(requestOptions)))
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept", "application/json");
+        Request okhttpRequest = _requestBuilder.build();
+        OkHttpClient client = clientOptions.httpClient();
+        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+            client = clientOptions.httpClientWithTimeout(requestOptions);
+        }
+        try (Response response = client.newCall(okhttpRequest).execute()) {
+            ResponseBody responseBody = response.body();
+            if (response.isSuccessful()) {
+                return new IntercomHttpResponse<>(
+                        ObjectMappers.JSON_MAPPER.readValue(
+                                responseBody.string(), DataExportExportReportingDataResponse.class),
+                        response);
+            }
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+            try {
+                if (response.code() == 404) {
+                    throw new NotFoundError(
+                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+                }
+            } catch (JsonProcessingException ignored) {
+                // unable to map error response, throwing generic error
+            }
+            throw new IntercomApiException(
+                    "Error with status code " + response.code(),
+                    response.code(),
+                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
+                    response);
+        } catch (IOException e) {
+            throw new IntercomException("Network error executing HTTP request", e);
+        }
+    }
+
+    /**
+     * Download the data from a completed reporting data export job.
+     * <blockquote>
+     * <p>Octet header required</p>
+     * <p>You will have to specify the header Accept: <code>application/octet-stream</code> when hitting this endpoint.</p>
+     * </blockquote>
+     */
+    public IntercomHttpResponse<Void> downloadReportingDataExport(DownloadReportingDataExportRequest request) {
+        return downloadReportingDataExport(request, null);
+    }
+
+    /**
+     * Download the data from a completed reporting data export job.
+     * <blockquote>
+     * <p>Octet header required</p>
+     * <p>You will have to specify the header Accept: <code>application/octet-stream</code> when hitting this endpoint.</p>
+     * </blockquote>
+     */
+    public IntercomHttpResponse<Void> downloadReportingDataExport(
+            DownloadReportingDataExportRequest request, RequestOptions requestOptions) {
+        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+                .newBuilder()
+                .addPathSegments("download/reporting_data")
+                .addPathSegment(request.getJobIdentifier());
+        QueryStringMapper.addQueryParameter(httpUrl, "app_id", request.getAppId(), false);
+        Request.Builder _requestBuilder = new Request.Builder()
+                .url(httpUrl.build())
+                .method("GET", null)
+                .headers(Headers.of(clientOptions.headers(requestOptions)))
+                .addHeader("Accept", "application/json");
+        _requestBuilder.addHeader("Accept", request.getAccept());
+        Request okhttpRequest = _requestBuilder.build();
+        OkHttpClient client = clientOptions.httpClient();
+        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+            client = clientOptions.httpClientWithTimeout(requestOptions);
+        }
+        try (Response response = client.newCall(okhttpRequest).execute()) {
+            ResponseBody responseBody = response.body();
+            if (response.isSuccessful()) {
+                return new IntercomHttpResponse<>(null, response);
+            }
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+            try {
+                if (response.code() == 404) {
+                    throw new NotFoundError(
+                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+                }
+            } catch (JsonProcessingException ignored) {
+                // unable to map error response, throwing generic error
+            }
+            throw new IntercomApiException(
+                    "Error with status code " + response.code(),
+                    response.code(),
+                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
+                    response);
+        } catch (IOException e) {
+            throw new IntercomException("Network error executing HTTP request", e);
+        }
     }
 
     /**

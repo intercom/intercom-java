@@ -18,31 +18,30 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ActivityLog.Builder.class)
 public final class ActivityLog {
-    private final String id;
+    private final Optional<String> id;
 
-    private final PerformedBy performedBy;
+    private final Optional<PerformedBy> performedBy;
 
     private final Optional<ActivityLogMetadata> metadata;
 
     private final Optional<Integer> createdAt;
 
-    private final ActivityType activityType;
+    private final Optional<ActivityType> activityType;
 
     private final Optional<String> activityDescription;
 
     private final Map<String, Object> additionalProperties;
 
     private ActivityLog(
-            String id,
-            PerformedBy performedBy,
+            Optional<String> id,
+            Optional<PerformedBy> performedBy,
             Optional<ActivityLogMetadata> metadata,
             Optional<Integer> createdAt,
-            ActivityType activityType,
+            Optional<ActivityType> activityType,
             Optional<String> activityDescription,
             Map<String, Object> additionalProperties) {
         this.id = id;
@@ -58,7 +57,7 @@ public final class ActivityLog {
      * @return The id representing the activity.
      */
     @JsonProperty("id")
-    public String getId() {
+    public Optional<String> getId() {
         return id;
     }
 
@@ -66,7 +65,7 @@ public final class ActivityLog {
      * @return Details about the Admin involved in the activity.
      */
     @JsonProperty("performed_by")
-    public PerformedBy getPerformedBy() {
+    public Optional<PerformedBy> getPerformedBy() {
         return performedBy;
     }
 
@@ -84,7 +83,7 @@ public final class ActivityLog {
     }
 
     @JsonProperty("activity_type")
-    public ActivityType getActivityType() {
+    public Optional<ActivityType> getActivityType() {
         return activityType;
     }
 
@@ -127,72 +126,29 @@ public final class ActivityLog {
         return ObjectMappers.stringify(this);
     }
 
-    public static IdStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface IdStage {
-        /**
-         * The id representing the activity.
-         */
-        PerformedByStage id(@NotNull String id);
-
-        Builder from(ActivityLog other);
-    }
-
-    public interface PerformedByStage {
-        /**
-         * Details about the Admin involved in the activity.
-         */
-        ActivityTypeStage performedBy(@NotNull PerformedBy performedBy);
-    }
-
-    public interface ActivityTypeStage {
-        _FinalStage activityType(@NotNull ActivityType activityType);
-    }
-
-    public interface _FinalStage {
-        ActivityLog build();
-
-        _FinalStage metadata(Optional<ActivityLogMetadata> metadata);
-
-        _FinalStage metadata(ActivityLogMetadata metadata);
-
-        /**
-         * <p>The time the activity was created.</p>
-         */
-        _FinalStage createdAt(Optional<Integer> createdAt);
-
-        _FinalStage createdAt(Integer createdAt);
-
-        /**
-         * <p>A sentence or two describing the activity.</p>
-         */
-        _FinalStage activityDescription(Optional<String> activityDescription);
-
-        _FinalStage activityDescription(String activityDescription);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements IdStage, PerformedByStage, ActivityTypeStage, _FinalStage {
-        private String id;
+    public static final class Builder {
+        private Optional<String> id = Optional.empty();
 
-        private PerformedBy performedBy;
+        private Optional<PerformedBy> performedBy = Optional.empty();
 
-        private ActivityType activityType;
-
-        private Optional<String> activityDescription = Optional.empty();
+        private Optional<ActivityLogMetadata> metadata = Optional.empty();
 
         private Optional<Integer> createdAt = Optional.empty();
 
-        private Optional<ActivityLogMetadata> metadata = Optional.empty();
+        private Optional<ActivityType> activityType = Optional.empty();
+
+        private Optional<String> activityDescription = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(ActivityLog other) {
             id(other.getId());
             performedBy(other.getPerformedBy());
@@ -204,88 +160,83 @@ public final class ActivityLog {
         }
 
         /**
-         * The id representing the activity.<p>The id representing the activity.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The id representing the activity.</p>
          */
-        @java.lang.Override
-        @JsonSetter("id")
-        public PerformedByStage id(@NotNull String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+        @JsonSetter(value = "id", nulls = Nulls.SKIP)
+        public Builder id(Optional<String> id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder id(String id) {
+            this.id = Optional.ofNullable(id);
             return this;
         }
 
         /**
-         * Details about the Admin involved in the activity.<p>Details about the Admin involved in the activity.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Details about the Admin involved in the activity.</p>
          */
-        @java.lang.Override
-        @JsonSetter("performed_by")
-        public ActivityTypeStage performedBy(@NotNull PerformedBy performedBy) {
-            this.performedBy = Objects.requireNonNull(performedBy, "performedBy must not be null");
+        @JsonSetter(value = "performed_by", nulls = Nulls.SKIP)
+        public Builder performedBy(Optional<PerformedBy> performedBy) {
+            this.performedBy = performedBy;
             return this;
         }
 
-        @java.lang.Override
-        @JsonSetter("activity_type")
-        public _FinalStage activityType(@NotNull ActivityType activityType) {
-            this.activityType = Objects.requireNonNull(activityType, "activityType must not be null");
+        public Builder performedBy(PerformedBy performedBy) {
+            this.performedBy = Optional.ofNullable(performedBy);
             return this;
         }
 
-        /**
-         * <p>A sentence or two describing the activity.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage activityDescription(String activityDescription) {
-            this.activityDescription = Optional.ofNullable(activityDescription);
-            return this;
-        }
-
-        /**
-         * <p>A sentence or two describing the activity.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "activity_description", nulls = Nulls.SKIP)
-        public _FinalStage activityDescription(Optional<String> activityDescription) {
-            this.activityDescription = activityDescription;
-            return this;
-        }
-
-        /**
-         * <p>The time the activity was created.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage createdAt(Integer createdAt) {
-            this.createdAt = Optional.ofNullable(createdAt);
-            return this;
-        }
-
-        /**
-         * <p>The time the activity was created.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
-        public _FinalStage createdAt(Optional<Integer> createdAt) {
-            this.createdAt = createdAt;
-            return this;
-        }
-
-        @java.lang.Override
-        public _FinalStage metadata(ActivityLogMetadata metadata) {
-            this.metadata = Optional.ofNullable(metadata);
-            return this;
-        }
-
-        @java.lang.Override
         @JsonSetter(value = "metadata", nulls = Nulls.SKIP)
-        public _FinalStage metadata(Optional<ActivityLogMetadata> metadata) {
+        public Builder metadata(Optional<ActivityLogMetadata> metadata) {
             this.metadata = metadata;
             return this;
         }
 
-        @java.lang.Override
+        public Builder metadata(ActivityLogMetadata metadata) {
+            this.metadata = Optional.ofNullable(metadata);
+            return this;
+        }
+
+        /**
+         * <p>The time the activity was created.</p>
+         */
+        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
+        public Builder createdAt(Optional<Integer> createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public Builder createdAt(Integer createdAt) {
+            this.createdAt = Optional.ofNullable(createdAt);
+            return this;
+        }
+
+        @JsonSetter(value = "activity_type", nulls = Nulls.SKIP)
+        public Builder activityType(Optional<ActivityType> activityType) {
+            this.activityType = activityType;
+            return this;
+        }
+
+        public Builder activityType(ActivityType activityType) {
+            this.activityType = Optional.ofNullable(activityType);
+            return this;
+        }
+
+        /**
+         * <p>A sentence or two describing the activity.</p>
+         */
+        @JsonSetter(value = "activity_description", nulls = Nulls.SKIP)
+        public Builder activityDescription(Optional<String> activityDescription) {
+            this.activityDescription = activityDescription;
+            return this;
+        }
+
+        public Builder activityDescription(String activityDescription) {
+            this.activityDescription = Optional.ofNullable(activityDescription);
+            return this;
+        }
+
         public ActivityLog build() {
             return new ActivityLog(
                     id, performedBy, metadata, createdAt, activityType, activityDescription, additionalProperties);
@@ -496,11 +447,11 @@ public final class ActivityLog {
         public static final ActivityType CONVERSATION_TOPIC_CHANGE =
                 new ActivityType(Value.CONVERSATION_TOPIC_CHANGE, "conversation_topic_change");
 
-        public static final ActivityType ADMIN_ASSIGNMENT_LIMIT_CHANGE =
-                new ActivityType(Value.ADMIN_ASSIGNMENT_LIMIT_CHANGE, "admin_assignment_limit_change");
-
         public static final ActivityType CAMPAIGN_STATE_CHANGE =
                 new ActivityType(Value.CAMPAIGN_STATE_CHANGE, "campaign_state_change");
+
+        public static final ActivityType UNASSIGN_UNSNOOZED_AT_CAPACITY_SETTING_CHANGE = new ActivityType(
+                Value.UNASSIGN_UNSNOOZED_AT_CAPACITY_SETTING_CHANGE, "unassign_unsnoozed_at_capacity_setting_change");
 
         public static final ActivityType ADMIN_AWAY_MODE_CHANGE =
                 new ActivityType(Value.ADMIN_AWAY_MODE_CHANGE, "admin_away_mode_change");
@@ -530,6 +481,9 @@ public final class ActivityLog {
 
         public static final ActivityType APP_PACKAGE_INSTALLATION =
                 new ActivityType(Value.APP_PACKAGE_INSTALLATION, "app_package_installation");
+
+        public static final ActivityType ADMIN_CONVERSATION_ASSIGNMENT_LIMIT_CHANGE = new ActivityType(
+                Value.ADMIN_CONVERSATION_ASSIGNMENT_LIMIT_CHANGE, "admin_conversation_assignment_limit_change");
 
         public static final ActivityType ROLE_CREATION = new ActivityType(Value.ROLE_CREATION, "role_creation");
 
@@ -604,6 +558,9 @@ public final class ActivityLog {
         public static final ActivityType ADMIN_PASSWORD_RESET_SUCCESS =
                 new ActivityType(Value.ADMIN_PASSWORD_RESET_SUCCESS, "admin_password_reset_success");
 
+        public static final ActivityType TEAM_ASSIGNMENT_LIMIT_CHANGE =
+                new ActivityType(Value.TEAM_ASSIGNMENT_LIMIT_CHANGE, "team_assignment_limit_change");
+
         public static final ActivityType OFFICE_HOURS_CHANGE =
                 new ActivityType(Value.OFFICE_HOURS_CHANGE, "office_hours_change");
 
@@ -635,6 +592,9 @@ public final class ActivityLog {
 
         public static final ActivityType ADMIN_PERMISSION_CHANGE =
                 new ActivityType(Value.ADMIN_PERMISSION_CHANGE, "admin_permission_change");
+
+        public static final ActivityType ADMIN_TICKET_ASSIGNMENT_LIMIT_CHANGE =
+                new ActivityType(Value.ADMIN_TICKET_ASSIGNMENT_LIMIT_CHANGE, "admin_ticket_assignment_limit_change");
 
         public static final ActivityType INBOUND_CONVERSATIONS_CHANGE =
                 new ActivityType(Value.INBOUND_CONVERSATIONS_CHANGE, "inbound_conversations_change");
@@ -708,10 +668,10 @@ public final class ActivityLog {
                     return visitor.visitAppPackageUninstallation();
                 case CONVERSATION_TOPIC_CHANGE:
                     return visitor.visitConversationTopicChange();
-                case ADMIN_ASSIGNMENT_LIMIT_CHANGE:
-                    return visitor.visitAdminAssignmentLimitChange();
                 case CAMPAIGN_STATE_CHANGE:
                     return visitor.visitCampaignStateChange();
+                case UNASSIGN_UNSNOOZED_AT_CAPACITY_SETTING_CHANGE:
+                    return visitor.visitUnassignUnsnoozedAtCapacitySettingChange();
                 case ADMIN_AWAY_MODE_CHANGE:
                     return visitor.visitAdminAwayModeChange();
                 case CONVERSATION_PART_DELETION:
@@ -732,6 +692,8 @@ public final class ActivityLog {
                     return visitor.visitAdminDeletion();
                 case APP_PACKAGE_INSTALLATION:
                     return visitor.visitAppPackageInstallation();
+                case ADMIN_CONVERSATION_ASSIGNMENT_LIMIT_CHANGE:
+                    return visitor.visitAdminConversationAssignmentLimitChange();
                 case ROLE_CREATION:
                     return visitor.visitRoleCreation();
                 case APP_ADMIN_JOIN:
@@ -786,6 +748,8 @@ public final class ActivityLog {
                     return visitor.visitConversationTopicDeletion();
                 case ADMIN_PASSWORD_RESET_SUCCESS:
                     return visitor.visitAdminPasswordResetSuccess();
+                case TEAM_ASSIGNMENT_LIMIT_CHANGE:
+                    return visitor.visitTeamAssignmentLimitChange();
                 case OFFICE_HOURS_CHANGE:
                     return visitor.visitOfficeHoursChange();
                 case ADMIN_UNAUTHORIZED_SIGN_IN_METHOD:
@@ -808,6 +772,8 @@ public final class ActivityLog {
                     return visitor.visitAppTeamMembershipModification();
                 case ADMIN_PERMISSION_CHANGE:
                     return visitor.visitAdminPermissionChange();
+                case ADMIN_TICKET_ASSIGNMENT_LIMIT_CHANGE:
+                    return visitor.visitAdminTicketAssignmentLimitChange();
                 case INBOUND_CONVERSATIONS_CHANGE:
                     return visitor.visitInboundConversationsChange();
                 case MESSAGE_STATE_CHANGE:
@@ -851,10 +817,10 @@ public final class ActivityLog {
                     return APP_PACKAGE_UNINSTALLATION;
                 case "conversation_topic_change":
                     return CONVERSATION_TOPIC_CHANGE;
-                case "admin_assignment_limit_change":
-                    return ADMIN_ASSIGNMENT_LIMIT_CHANGE;
                 case "campaign_state_change":
                     return CAMPAIGN_STATE_CHANGE;
+                case "unassign_unsnoozed_at_capacity_setting_change":
+                    return UNASSIGN_UNSNOOZED_AT_CAPACITY_SETTING_CHANGE;
                 case "admin_away_mode_change":
                     return ADMIN_AWAY_MODE_CHANGE;
                 case "conversation_part_deletion":
@@ -875,6 +841,8 @@ public final class ActivityLog {
                     return ADMIN_DELETION;
                 case "app_package_installation":
                     return APP_PACKAGE_INSTALLATION;
+                case "admin_conversation_assignment_limit_change":
+                    return ADMIN_CONVERSATION_ASSIGNMENT_LIMIT_CHANGE;
                 case "role_creation":
                     return ROLE_CREATION;
                 case "app_admin_join":
@@ -929,6 +897,8 @@ public final class ActivityLog {
                     return CONVERSATION_TOPIC_DELETION;
                 case "admin_password_reset_success":
                     return ADMIN_PASSWORD_RESET_SUCCESS;
+                case "team_assignment_limit_change":
+                    return TEAM_ASSIGNMENT_LIMIT_CHANGE;
                 case "office_hours_change":
                     return OFFICE_HOURS_CHANGE;
                 case "admin_unauthorized_sign_in_method":
@@ -951,6 +921,8 @@ public final class ActivityLog {
                     return APP_TEAM_MEMBERSHIP_MODIFICATION;
                 case "admin_permission_change":
                     return ADMIN_PERMISSION_CHANGE;
+                case "admin_ticket_assignment_limit_change":
+                    return ADMIN_TICKET_ASSIGNMENT_LIMIT_CHANGE;
                 case "inbound_conversations_change":
                     return INBOUND_CONVERSATIONS_CHANGE;
                 case "message_state_change":
@@ -969,7 +941,9 @@ public final class ActivityLog {
         }
 
         public enum Value {
-            ADMIN_ASSIGNMENT_LIMIT_CHANGE,
+            ADMIN_CONVERSATION_ASSIGNMENT_LIMIT_CHANGE,
+
+            ADMIN_TICKET_ASSIGNMENT_LIMIT_CHANGE,
 
             ADMIN_AWAY_MODE_CHANGE,
 
@@ -1097,7 +1071,11 @@ public final class ActivityLog {
 
             SECURITY_SETTINGS_CHANGE,
 
+            TEAM_ASSIGNMENT_LIMIT_CHANGE,
+
             TEMPORARY_EXPECTATION_CHANGE,
+
+            UNASSIGN_UNSNOOZED_AT_CAPACITY_SETTING_CHANGE,
 
             UPFRONT_EMAIL_COLLECTION_CHANGE,
 
@@ -1107,7 +1085,9 @@ public final class ActivityLog {
         }
 
         public interface Visitor<T> {
-            T visitAdminAssignmentLimitChange();
+            T visitAdminConversationAssignmentLimitChange();
+
+            T visitAdminTicketAssignmentLimitChange();
 
             T visitAdminAwayModeChange();
 
@@ -1235,7 +1215,11 @@ public final class ActivityLog {
 
             T visitSecuritySettingsChange();
 
+            T visitTeamAssignmentLimitChange();
+
             T visitTemporaryExpectationChange();
+
+            T visitUnassignUnsnoozedAtCapacitySettingChange();
 
             T visitUpfrontEmailCollectionChange();
 

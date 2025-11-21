@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.resources.companies.types.Company;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,14 +24,17 @@ import java.util.Optional;
 public final class CompanyList {
     private final Optional<OffsetPages> pages;
 
-    private final int totalCount;
+    private final Optional<Integer> totalCount;
 
-    private final List<Company> data;
+    private final Optional<List<Company>> data;
 
     private final Map<String, Object> additionalProperties;
 
     private CompanyList(
-            Optional<OffsetPages> pages, int totalCount, List<Company> data, Map<String, Object> additionalProperties) {
+            Optional<OffsetPages> pages,
+            Optional<Integer> totalCount,
+            Optional<List<Company>> data,
+            Map<String, Object> additionalProperties) {
         this.pages = pages;
         this.totalCount = totalCount;
         this.data = data;
@@ -48,7 +50,7 @@ public final class CompanyList {
      * @return The total number of companies.
      */
     @JsonProperty("total_count")
-    public int getTotalCount() {
+    public Optional<Integer> getTotalCount() {
         return totalCount;
     }
 
@@ -56,7 +58,7 @@ public final class CompanyList {
      * @return An array containing Company Objects.
      */
     @JsonProperty("data")
-    public List<Company> getData() {
+    public Optional<List<Company>> getData() {
         return data;
     }
 
@@ -72,7 +74,7 @@ public final class CompanyList {
     }
 
     private boolean equalTo(CompanyList other) {
-        return pages.equals(other.pages) && totalCount == other.totalCount && data.equals(other.data);
+        return pages.equals(other.pages) && totalCount.equals(other.totalCount) && data.equals(other.data);
     }
 
     @java.lang.Override
@@ -85,50 +87,23 @@ public final class CompanyList {
         return ObjectMappers.stringify(this);
     }
 
-    public static TotalCountStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface TotalCountStage {
-        /**
-         * The total number of companies.
-         */
-        _FinalStage totalCount(int totalCount);
-
-        Builder from(CompanyList other);
-    }
-
-    public interface _FinalStage {
-        CompanyList build();
-
-        _FinalStage pages(Optional<OffsetPages> pages);
-
-        _FinalStage pages(OffsetPages pages);
-
-        /**
-         * <p>An array containing Company Objects.</p>
-         */
-        _FinalStage data(List<Company> data);
-
-        _FinalStage addData(Company data);
-
-        _FinalStage addAllData(List<Company> data);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements TotalCountStage, _FinalStage {
-        private int totalCount;
-
-        private List<Company> data = new ArrayList<>();
-
+    public static final class Builder {
         private Optional<OffsetPages> pages = Optional.empty();
+
+        private Optional<Integer> totalCount = Optional.empty();
+
+        private Optional<List<Company>> data = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(CompanyList other) {
             pages(other.getPages());
             totalCount(other.getTotalCount());
@@ -136,62 +111,45 @@ public final class CompanyList {
             return this;
         }
 
-        /**
-         * The total number of companies.<p>The total number of companies.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("total_count")
-        public _FinalStage totalCount(int totalCount) {
-            this.totalCount = totalCount;
-            return this;
-        }
-
-        /**
-         * <p>An array containing Company Objects.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addAllData(List<Company> data) {
-            this.data.addAll(data);
-            return this;
-        }
-
-        /**
-         * <p>An array containing Company Objects.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addData(Company data) {
-            this.data.add(data);
-            return this;
-        }
-
-        /**
-         * <p>An array containing Company Objects.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "data", nulls = Nulls.SKIP)
-        public _FinalStage data(List<Company> data) {
-            this.data.clear();
-            this.data.addAll(data);
-            return this;
-        }
-
-        @java.lang.Override
-        public _FinalStage pages(OffsetPages pages) {
-            this.pages = Optional.ofNullable(pages);
-            return this;
-        }
-
-        @java.lang.Override
         @JsonSetter(value = "pages", nulls = Nulls.SKIP)
-        public _FinalStage pages(Optional<OffsetPages> pages) {
+        public Builder pages(Optional<OffsetPages> pages) {
             this.pages = pages;
             return this;
         }
 
-        @java.lang.Override
+        public Builder pages(OffsetPages pages) {
+            this.pages = Optional.ofNullable(pages);
+            return this;
+        }
+
+        /**
+         * <p>The total number of companies.</p>
+         */
+        @JsonSetter(value = "total_count", nulls = Nulls.SKIP)
+        public Builder totalCount(Optional<Integer> totalCount) {
+            this.totalCount = totalCount;
+            return this;
+        }
+
+        public Builder totalCount(Integer totalCount) {
+            this.totalCount = Optional.ofNullable(totalCount);
+            return this;
+        }
+
+        /**
+         * <p>An array containing Company Objects.</p>
+         */
+        @JsonSetter(value = "data", nulls = Nulls.SKIP)
+        public Builder data(Optional<List<Company>> data) {
+            this.data = data;
+            return this;
+        }
+
+        public Builder data(List<Company> data) {
+            this.data = Optional.ofNullable(data);
+            return this;
+        }
+
         public CompanyList build() {
             return new CompanyList(pages, totalCount, data, additionalProperties);
         }

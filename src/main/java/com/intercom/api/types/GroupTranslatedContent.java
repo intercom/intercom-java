@@ -20,6 +20,8 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = GroupTranslatedContent.Builder.class)
 public final class GroupTranslatedContent {
+    private final Optional<String> type;
+
     private final Optional<GroupContent> ar;
 
     private final Optional<GroupContent> bg;
@@ -97,6 +99,7 @@ public final class GroupTranslatedContent {
     private final Map<String, Object> additionalProperties;
 
     private GroupTranslatedContent(
+            Optional<String> type,
             Optional<GroupContent> ar,
             Optional<GroupContent> bg,
             Optional<GroupContent> bs,
@@ -135,6 +138,7 @@ public final class GroupTranslatedContent {
             Optional<GroupContent> zhCn,
             Optional<GroupContent> zhTw,
             Map<String, Object> additionalProperties) {
+        this.type = type;
         this.ar = ar;
         this.bg = bg;
         this.bs = bs;
@@ -179,8 +183,8 @@ public final class GroupTranslatedContent {
      * @return The type of object - group_translated_content.
      */
     @JsonProperty("type")
-    public String getType() {
-        return "group_translated_content";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
@@ -491,7 +495,8 @@ public final class GroupTranslatedContent {
     }
 
     private boolean equalTo(GroupTranslatedContent other) {
-        return ar.equals(other.ar)
+        return type.equals(other.type)
+                && ar.equals(other.ar)
                 && bg.equals(other.bg)
                 && bs.equals(other.bs)
                 && ca.equals(other.ca)
@@ -533,10 +538,10 @@ public final class GroupTranslatedContent {
     @java.lang.Override
     public int hashCode() {
         return Objects.hash(
-                this.ar, this.bg, this.bs, this.ca, this.cs, this.da, this.de, this.el, this.en, this.es, this.et,
-                this.fi, this.fr, this.he, this.hr, this.hu, this.id, this.it, this.ja, this.ko, this.lt, this.lv,
-                this.mn, this.nb, this.nl, this.pl, this.pt, this.ro, this.ru, this.sl, this.sr, this.sv, this.tr,
-                this.vi, this.ptBr, this.zhCn, this.zhTw);
+                this.type, this.ar, this.bg, this.bs, this.ca, this.cs, this.da, this.de, this.el, this.en, this.es,
+                this.et, this.fi, this.fr, this.he, this.hr, this.hu, this.id, this.it, this.ja, this.ko, this.lt,
+                this.lv, this.mn, this.nb, this.nl, this.pl, this.pt, this.ro, this.ru, this.sl, this.sr, this.sv,
+                this.tr, this.vi, this.ptBr, this.zhCn, this.zhTw);
     }
 
     @java.lang.Override
@@ -550,6 +555,8 @@ public final class GroupTranslatedContent {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
+        private Optional<String> type = Optional.empty();
+
         private Optional<GroupContent> ar = Optional.empty();
 
         private Optional<GroupContent> bg = Optional.empty();
@@ -630,6 +637,7 @@ public final class GroupTranslatedContent {
         private Builder() {}
 
         public Builder from(GroupTranslatedContent other) {
+            type(other.getType());
             ar(other.getAr());
             bg(other.getBg());
             bs(other.getBs());
@@ -667,6 +675,20 @@ public final class GroupTranslatedContent {
             ptBr(other.getPtBr());
             zhCn(other.getZhCn());
             zhTw(other.getZhTw());
+            return this;
+        }
+
+        /**
+         * <p>The type of object - group_translated_content.</p>
+         */
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
@@ -1190,6 +1212,7 @@ public final class GroupTranslatedContent {
 
         public GroupTranslatedContent build() {
             return new GroupTranslatedContent(
+                    type,
                     ar,
                     bg,
                     bs,

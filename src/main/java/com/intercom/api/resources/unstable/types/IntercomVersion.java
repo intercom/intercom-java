@@ -7,9 +7,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public final class IntercomVersion {
+    public static final IntercomVersion TWO_12 = new IntercomVersion(Value.TWO_12, "2.12");
+
     public static final IntercomVersion TWO_0 = new IntercomVersion(Value.TWO_0, "2.0");
 
+    public static final IntercomVersion TWO_13 = new IntercomVersion(Value.TWO_13, "2.13");
+
     public static final IntercomVersion TWO_1 = new IntercomVersion(Value.TWO_1, "2.1");
+
+    public static final IntercomVersion TWO_14 = new IntercomVersion(Value.TWO_14, "2.14");
 
     public static final IntercomVersion TWO_2 = new IntercomVersion(Value.TWO_2, "2.2");
 
@@ -75,10 +81,16 @@ public final class IntercomVersion {
 
     public <T> T visit(Visitor<T> visitor) {
         switch (value) {
+            case TWO_12:
+                return visitor.visitTwo12();
             case TWO_0:
                 return visitor.visitTwo0();
+            case TWO_13:
+                return visitor.visitTwo13();
             case TWO_1:
                 return visitor.visitTwo1();
+            case TWO_14:
+                return visitor.visitTwo14();
             case TWO_2:
                 return visitor.visitTwo2();
             case ONE_4:
@@ -120,10 +132,16 @@ public final class IntercomVersion {
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
     public static IntercomVersion valueOf(String value) {
         switch (value) {
+            case "2.12":
+                return TWO_12;
             case "2.0":
                 return TWO_0;
+            case "2.13":
+                return TWO_13;
             case "2.1":
                 return TWO_1;
+            case "2.14":
+                return TWO_14;
             case "2.2":
                 return TWO_2;
             case "1.4":
@@ -196,6 +214,12 @@ public final class IntercomVersion {
 
         TWO_11,
 
+        TWO_12,
+
+        TWO_13,
+
+        TWO_14,
+
         UNSTABLE,
 
         UNKNOWN
@@ -235,6 +259,12 @@ public final class IntercomVersion {
         T visitTwo10();
 
         T visitTwo11();
+
+        T visitTwo12();
+
+        T visitTwo13();
+
+        T visitTwo14();
 
         T visitUnstable();
 

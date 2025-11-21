@@ -18,20 +18,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ArticleContent.Builder.class)
 public final class ArticleContent {
-    private final String title;
+    private final Optional<String> type;
 
-    private final String description;
+    private final Optional<String> title;
 
-    private final String body;
+    private final Optional<String> description;
 
-    private final int authorId;
+    private final Optional<String> body;
 
-    private final State state;
+    private final Optional<Integer> authorId;
+
+    private final Optional<State> state;
 
     private final Optional<Integer> createdAt;
 
@@ -42,15 +43,17 @@ public final class ArticleContent {
     private final Map<String, Object> additionalProperties;
 
     private ArticleContent(
-            String title,
-            String description,
-            String body,
-            int authorId,
-            State state,
+            Optional<String> type,
+            Optional<String> title,
+            Optional<String> description,
+            Optional<String> body,
+            Optional<Integer> authorId,
+            Optional<State> state,
             Optional<Integer> createdAt,
             Optional<Integer> updatedAt,
             Optional<String> url,
             Map<String, Object> additionalProperties) {
+        this.type = type;
         this.title = title;
         this.description = description;
         this.body = body;
@@ -66,15 +69,15 @@ public final class ArticleContent {
      * @return The type of object - <code>article_content</code> .
      */
     @JsonProperty("type")
-    public String getType() {
-        return "article_content";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The title of the article.
      */
     @JsonProperty("title")
-    public String getTitle() {
+    public Optional<String> getTitle() {
         return title;
     }
 
@@ -82,7 +85,7 @@ public final class ArticleContent {
      * @return The description of the article.
      */
     @JsonProperty("description")
-    public String getDescription() {
+    public Optional<String> getDescription() {
         return description;
     }
 
@@ -90,7 +93,7 @@ public final class ArticleContent {
      * @return The body of the article.
      */
     @JsonProperty("body")
-    public String getBody() {
+    public Optional<String> getBody() {
         return body;
     }
 
@@ -98,7 +101,7 @@ public final class ArticleContent {
      * @return The ID of the author of the article.
      */
     @JsonProperty("author_id")
-    public int getAuthorId() {
+    public Optional<Integer> getAuthorId() {
         return authorId;
     }
 
@@ -106,7 +109,7 @@ public final class ArticleContent {
      * @return Whether the article is <code>published</code> or is a <code>draft</code> .
      */
     @JsonProperty("state")
-    public State getState() {
+    public Optional<State> getState() {
         return state;
     }
 
@@ -146,10 +149,11 @@ public final class ArticleContent {
     }
 
     private boolean equalTo(ArticleContent other) {
-        return title.equals(other.title)
+        return type.equals(other.type)
+                && title.equals(other.title)
                 && description.equals(other.description)
                 && body.equals(other.body)
-                && authorId == other.authorId
+                && authorId.equals(other.authorId)
                 && state.equals(other.state)
                 && createdAt.equals(other.createdAt)
                 && updatedAt.equals(other.updatedAt)
@@ -159,6 +163,7 @@ public final class ArticleContent {
     @java.lang.Override
     public int hashCode() {
         return Objects.hash(
+                this.type,
                 this.title,
                 this.description,
                 this.body,
@@ -174,98 +179,37 @@ public final class ArticleContent {
         return ObjectMappers.stringify(this);
     }
 
-    public static TitleStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface TitleStage {
-        /**
-         * The title of the article.
-         */
-        DescriptionStage title(@NotNull String title);
-
-        Builder from(ArticleContent other);
-    }
-
-    public interface DescriptionStage {
-        /**
-         * The description of the article.
-         */
-        BodyStage description(@NotNull String description);
-    }
-
-    public interface BodyStage {
-        /**
-         * The body of the article.
-         */
-        AuthorIdStage body(@NotNull String body);
-    }
-
-    public interface AuthorIdStage {
-        /**
-         * The ID of the author of the article.
-         */
-        StateStage authorId(int authorId);
-    }
-
-    public interface StateStage {
-        /**
-         * Whether the article is `published` or is a `draft` .
-         */
-        _FinalStage state(@NotNull State state);
-    }
-
-    public interface _FinalStage {
-        ArticleContent build();
-
-        /**
-         * <p>The time when the article was created (seconds).</p>
-         */
-        _FinalStage createdAt(Optional<Integer> createdAt);
-
-        _FinalStage createdAt(Integer createdAt);
-
-        /**
-         * <p>The time when the article was last updated (seconds).</p>
-         */
-        _FinalStage updatedAt(Optional<Integer> updatedAt);
-
-        _FinalStage updatedAt(Integer updatedAt);
-
-        /**
-         * <p>The URL of the article.</p>
-         */
-        _FinalStage url(Optional<String> url);
-
-        _FinalStage url(String url);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder
-            implements TitleStage, DescriptionStage, BodyStage, AuthorIdStage, StateStage, _FinalStage {
-        private String title;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private String description;
+        private Optional<String> title = Optional.empty();
 
-        private String body;
+        private Optional<String> description = Optional.empty();
 
-        private int authorId;
+        private Optional<String> body = Optional.empty();
 
-        private State state;
+        private Optional<Integer> authorId = Optional.empty();
 
-        private Optional<String> url = Optional.empty();
+        private Optional<State> state = Optional.empty();
+
+        private Optional<Integer> createdAt = Optional.empty();
 
         private Optional<Integer> updatedAt = Optional.empty();
 
-        private Optional<Integer> createdAt = Optional.empty();
+        private Optional<String> url = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(ArticleContent other) {
+            type(other.getType());
             title(other.getTitle());
             description(other.getDescription());
             body(other.getBody());
@@ -278,124 +222,134 @@ public final class ArticleContent {
         }
 
         /**
-         * The title of the article.<p>The title of the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The type of object - <code>article_content</code> .</p>
          */
-        @java.lang.Override
-        @JsonSetter("title")
-        public DescriptionStage title(@NotNull String title) {
-            this.title = Objects.requireNonNull(title, "title must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
-         * The description of the article.<p>The description of the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The title of the article.</p>
          */
-        @java.lang.Override
-        @JsonSetter("description")
-        public BodyStage description(@NotNull String description) {
-            this.description = Objects.requireNonNull(description, "description must not be null");
+        @JsonSetter(value = "title", nulls = Nulls.SKIP)
+        public Builder title(Optional<String> title) {
+            this.title = title;
+            return this;
+        }
+
+        public Builder title(String title) {
+            this.title = Optional.ofNullable(title);
             return this;
         }
 
         /**
-         * The body of the article.<p>The body of the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The description of the article.</p>
          */
-        @java.lang.Override
-        @JsonSetter("body")
-        public AuthorIdStage body(@NotNull String body) {
-            this.body = Objects.requireNonNull(body, "body must not be null");
+        @JsonSetter(value = "description", nulls = Nulls.SKIP)
+        public Builder description(Optional<String> description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = Optional.ofNullable(description);
             return this;
         }
 
         /**
-         * The ID of the author of the article.<p>The ID of the author of the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The body of the article.</p>
          */
-        @java.lang.Override
-        @JsonSetter("author_id")
-        public StateStage authorId(int authorId) {
+        @JsonSetter(value = "body", nulls = Nulls.SKIP)
+        public Builder body(Optional<String> body) {
+            this.body = body;
+            return this;
+        }
+
+        public Builder body(String body) {
+            this.body = Optional.ofNullable(body);
+            return this;
+        }
+
+        /**
+         * <p>The ID of the author of the article.</p>
+         */
+        @JsonSetter(value = "author_id", nulls = Nulls.SKIP)
+        public Builder authorId(Optional<Integer> authorId) {
             this.authorId = authorId;
             return this;
         }
 
-        /**
-         * Whether the article is `published` or is a `draft` .<p>Whether the article is <code>published</code> or is a <code>draft</code> .</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("state")
-        public _FinalStage state(@NotNull State state) {
-            this.state = Objects.requireNonNull(state, "state must not be null");
+        public Builder authorId(Integer authorId) {
+            this.authorId = Optional.ofNullable(authorId);
             return this;
         }
 
         /**
-         * <p>The URL of the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Whether the article is <code>published</code> or is a <code>draft</code> .</p>
          */
-        @java.lang.Override
-        public _FinalStage url(String url) {
-            this.url = Optional.ofNullable(url);
+        @JsonSetter(value = "state", nulls = Nulls.SKIP)
+        public Builder state(Optional<State> state) {
+            this.state = state;
             return this;
         }
 
-        /**
-         * <p>The URL of the article.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "url", nulls = Nulls.SKIP)
-        public _FinalStage url(Optional<String> url) {
-            this.url = url;
-            return this;
-        }
-
-        /**
-         * <p>The time when the article was last updated (seconds).</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage updatedAt(Integer updatedAt) {
-            this.updatedAt = Optional.ofNullable(updatedAt);
-            return this;
-        }
-
-        /**
-         * <p>The time when the article was last updated (seconds).</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
-        public _FinalStage updatedAt(Optional<Integer> updatedAt) {
-            this.updatedAt = updatedAt;
+        public Builder state(State state) {
+            this.state = Optional.ofNullable(state);
             return this;
         }
 
         /**
          * <p>The time when the article was created (seconds).</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @java.lang.Override
-        public _FinalStage createdAt(Integer createdAt) {
+        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
+        public Builder createdAt(Optional<Integer> createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public Builder createdAt(Integer createdAt) {
             this.createdAt = Optional.ofNullable(createdAt);
             return this;
         }
 
         /**
-         * <p>The time when the article was created (seconds).</p>
+         * <p>The time when the article was last updated (seconds).</p>
          */
-        @java.lang.Override
-        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
-        public _FinalStage createdAt(Optional<Integer> createdAt) {
-            this.createdAt = createdAt;
+        @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
+        public Builder updatedAt(Optional<Integer> updatedAt) {
+            this.updatedAt = updatedAt;
             return this;
         }
 
-        @java.lang.Override
+        public Builder updatedAt(Integer updatedAt) {
+            this.updatedAt = Optional.ofNullable(updatedAt);
+            return this;
+        }
+
+        /**
+         * <p>The URL of the article.</p>
+         */
+        @JsonSetter(value = "url", nulls = Nulls.SKIP)
+        public Builder url(Optional<String> url) {
+            this.url = url;
+            return this;
+        }
+
+        public Builder url(String url) {
+            this.url = Optional.ofNullable(url);
+            return this;
+        }
+
         public ArticleContent build() {
             return new ArticleContent(
-                    title, description, body, authorId, state, createdAt, updatedAt, url, additionalProperties);
+                    type, title, description, body, authorId, state, createdAt, updatedAt, url, additionalProperties);
         }
     }
 

@@ -4,6 +4,7 @@
 package com.intercom.api.resources.companies;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.IntercomApiException;
 import com.intercom.api.core.IntercomException;
@@ -17,7 +18,6 @@ import com.intercom.api.errors.BadRequestError;
 import com.intercom.api.errors.NotFoundError;
 import com.intercom.api.errors.UnauthorizedError;
 import com.intercom.api.resources.companies.requests.AttachContactToCompanyRequest;
-import com.intercom.api.resources.companies.requests.CreateOrUpdateCompanyRequest;
 import com.intercom.api.resources.companies.requests.DeleteCompanyRequest;
 import com.intercom.api.resources.companies.requests.DetachContactFromCompanyRequest;
 import com.intercom.api.resources.companies.requests.FindCompanyRequest;
@@ -33,9 +33,11 @@ import com.intercom.api.types.CompanyAttachedContacts;
 import com.intercom.api.types.CompanyAttachedSegments;
 import com.intercom.api.types.CompanyList;
 import com.intercom.api.types.CompanyScroll;
+import com.intercom.api.types.CreateOrUpdateCompanyRequest;
 import com.intercom.api.types.DeletedCompanyObject;
 import com.intercom.api.types.Error;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import okhttp3.Headers;
@@ -164,7 +166,7 @@ public class RawCompaniesClient {
      * {% /admonition %}</p>
      */
     public IntercomHttpResponse<Company> createOrUpdate() {
-        return createOrUpdate(CreateOrUpdateCompanyRequest.builder().build());
+        return createOrUpdate(Optional.empty());
     }
 
     /**
@@ -175,7 +177,7 @@ public class RawCompaniesClient {
      * You can set a unique <code>company_id</code> value when creating a company. However, it is not possible to update <code>company_id</code>. Be sure to set a unique value once upon creation of the company.
      * {% /admonition %}</p>
      */
-    public IntercomHttpResponse<Company> createOrUpdate(CreateOrUpdateCompanyRequest request) {
+    public IntercomHttpResponse<Company> createOrUpdate(Optional<CreateOrUpdateCompanyRequest> request) {
         return createOrUpdate(request, null);
     }
 
@@ -188,15 +190,18 @@ public class RawCompaniesClient {
      * {% /admonition %}</p>
      */
     public IntercomHttpResponse<Company> createOrUpdate(
-            CreateOrUpdateCompanyRequest request, RequestOptions requestOptions) {
+            Optional<CreateOrUpdateCompanyRequest> request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("companies")
                 .build();
         RequestBody body;
         try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+            body = RequestBody.create("", null);
+            if (request.isPresent()) {
+                body = RequestBody.create(
+                        ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+            }
         } catch (JsonProcessingException e) {
             throw new IntercomException("Failed to serialize request", e);
         }
@@ -318,13 +323,23 @@ public class RawCompaniesClient {
                 .addPathSegments("companies")
                 .addPathSegment(request.getCompanyId())
                 .build();
-        Request.Builder _requestBuilder = new Request.Builder()
+        RequestBody body;
+        try {
+            body = RequestBody.create("", null);
+            if (request.isPresent()) {
+                body = RequestBody.create(
+                        ObjectMappers.JSON_MAPPER.writeValueAsBytes(request.getBody()), MediaTypes.APPLICATION_JSON);
+            }
+        } catch (JsonProcessingException e) {
+            throw new IntercomException("Failed to serialize request", e);
+        }
+        Request okhttpRequest = new Request.Builder()
                 .url(httpUrl)
-                .method("PUT", RequestBody.create("", null))
+                .method("PUT", body)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
                 .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
+                .addHeader("Accept", "application/json")
+                .build();
         OkHttpClient client = clientOptions.httpClient();
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
@@ -428,21 +443,14 @@ public class RawCompaniesClient {
      */
     public IntercomHttpResponse<CompanyAttachedContacts> listAttachedContacts(
             ListAttachedContactsRequest request, RequestOptions requestOptions) {
-        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("companies")
                 .addPathSegment(request.getCompanyId())
-                .addPathSegments("contacts");
-        if (request.getPage().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "page", request.getPage().get().toString(), false);
-        }
-        if (request.getPerPage().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "per_page", request.getPerPage().get().toString(), false);
-        }
+                .addPathSegments("contacts")
+                .build();
         Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl.build())
+                .url(httpUrl)
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
                 .addHeader("Content-Type", "application/json")
@@ -615,7 +623,7 @@ public class RawCompaniesClient {
                         .from(request)
                         .page(newPageNumber)
                         .build();
-                List<Company> result = parsedResponse.getData();
+                List<Company> result = parsedResponse.getData().orElse(Collections.emptyList());
                 return new IntercomHttpResponse<>(
                         new SyncPagingIterable<Company>(true, result, () -> list(nextRequest, requestOptions)
                                 .body()),
@@ -722,14 +730,15 @@ public class RawCompaniesClient {
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
             if (response.isSuccessful()) {
-                CompanyScroll parsedResponse =
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), CompanyScroll.class);
-                Optional<String> startingAfter = parsedResponse.getScrollParam();
+                Optional<CompanyScroll> parsedResponse = ObjectMappers.JSON_MAPPER.readValue(
+                        responseBody.string(), new TypeReference<Optional<CompanyScroll>>() {});
+                Optional<String> startingAfter = parsedResponse.flatMap(CompanyScroll::getScrollParam);
                 ScrollCompaniesRequest nextRequest = ScrollCompaniesRequest.builder()
                         .from(request)
                         .scrollParam(startingAfter)
                         .build();
-                List<Company> result = parsedResponse.getData();
+                List<Company> result =
+                        parsedResponse.flatMap(CompanyScroll::getData).orElse(Collections.emptyList());
                 return new IntercomHttpResponse<>(
                         new SyncPagingIterable<Company>(
                                 startingAfter.isPresent(), result, () -> scroll(nextRequest, requestOptions)
@@ -770,7 +779,7 @@ public class RawCompaniesClient {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("contacts")
-                .addPathSegment(request.getContactId())
+                .addPathSegment(Integer.toString(request.getContactId()))
                 .addPathSegments("companies")
                 .build();
         RequestBody body;

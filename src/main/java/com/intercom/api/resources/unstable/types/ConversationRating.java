@@ -26,6 +26,8 @@ public final class ConversationRating {
 
     private final Optional<Integer> createdAt;
 
+    private final Optional<Integer> updatedAt;
+
     private final Optional<ContactReference> contact;
 
     private final Optional<Reference> teammate;
@@ -36,12 +38,14 @@ public final class ConversationRating {
             Optional<Integer> rating,
             Optional<String> remark,
             Optional<Integer> createdAt,
+            Optional<Integer> updatedAt,
             Optional<ContactReference> contact,
             Optional<Reference> teammate,
             Map<String, Object> additionalProperties) {
         this.rating = rating;
         this.remark = remark;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
         this.contact = contact;
         this.teammate = teammate;
         this.additionalProperties = additionalProperties;
@@ -71,6 +75,14 @@ public final class ConversationRating {
         return createdAt;
     }
 
+    /**
+     * @return The time the rating was last updated.
+     */
+    @JsonProperty("updated_at")
+    public Optional<Integer> getUpdatedAt() {
+        return updatedAt;
+    }
+
     @JsonProperty("contact")
     public Optional<ContactReference> getContact() {
         return contact;
@@ -96,13 +108,14 @@ public final class ConversationRating {
         return rating.equals(other.rating)
                 && remark.equals(other.remark)
                 && createdAt.equals(other.createdAt)
+                && updatedAt.equals(other.updatedAt)
                 && contact.equals(other.contact)
                 && teammate.equals(other.teammate);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.rating, this.remark, this.createdAt, this.contact, this.teammate);
+        return Objects.hash(this.rating, this.remark, this.createdAt, this.updatedAt, this.contact, this.teammate);
     }
 
     @java.lang.Override
@@ -122,6 +135,8 @@ public final class ConversationRating {
 
         private Optional<Integer> createdAt = Optional.empty();
 
+        private Optional<Integer> updatedAt = Optional.empty();
+
         private Optional<ContactReference> contact = Optional.empty();
 
         private Optional<Reference> teammate = Optional.empty();
@@ -135,6 +150,7 @@ public final class ConversationRating {
             rating(other.getRating());
             remark(other.getRemark());
             createdAt(other.getCreatedAt());
+            updatedAt(other.getUpdatedAt());
             contact(other.getContact());
             teammate(other.getTeammate());
             return this;
@@ -182,6 +198,20 @@ public final class ConversationRating {
             return this;
         }
 
+        /**
+         * <p>The time the rating was last updated.</p>
+         */
+        @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
+        public Builder updatedAt(Optional<Integer> updatedAt) {
+            this.updatedAt = updatedAt;
+            return this;
+        }
+
+        public Builder updatedAt(Integer updatedAt) {
+            this.updatedAt = Optional.ofNullable(updatedAt);
+            return this;
+        }
+
         @JsonSetter(value = "contact", nulls = Nulls.SKIP)
         public Builder contact(Optional<ContactReference> contact) {
             this.contact = contact;
@@ -205,7 +235,8 @@ public final class ConversationRating {
         }
 
         public ConversationRating build() {
-            return new ConversationRating(rating, remark, createdAt, contact, teammate, additionalProperties);
+            return new ConversationRating(
+                    rating, remark, createdAt, updatedAt, contact, teammate, additionalProperties);
         }
     }
 }

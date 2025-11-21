@@ -4,6 +4,7 @@
 package com.intercom.api.resources.phonecallredirects;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.IntercomApiException;
 import com.intercom.api.core.IntercomException;
@@ -14,10 +15,11 @@ import com.intercom.api.core.RequestOptions;
 import com.intercom.api.errors.BadRequestError;
 import com.intercom.api.errors.UnauthorizedError;
 import com.intercom.api.errors.UnprocessableEntityError;
-import com.intercom.api.resources.phonecallredirects.requests.CreatePhoneCallRedirectRequest;
+import com.intercom.api.types.CreatePhoneSwitchRequest;
 import com.intercom.api.types.Error;
 import com.intercom.api.types.PhoneSwitch;
 import java.io.IOException;
+import java.util.Optional;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -38,7 +40,16 @@ public class RawPhoneCallRedirectsClient {
      * Calling this endpoint will send an SMS with a link to the Messenger to the phone number specified.
      * <p>If custom attributes are specified, they will be added to the user or lead's custom data attributes.</p>
      */
-    public IntercomHttpResponse<PhoneSwitch> create(CreatePhoneCallRedirectRequest request) {
+    public IntercomHttpResponse<Optional<PhoneSwitch>> create() {
+        return create(Optional.empty());
+    }
+
+    /**
+     * You can use the API to deflect phone calls to the Intercom Messenger.
+     * Calling this endpoint will send an SMS with a link to the Messenger to the phone number specified.
+     * <p>If custom attributes are specified, they will be added to the user or lead's custom data attributes.</p>
+     */
+    public IntercomHttpResponse<Optional<PhoneSwitch>> create(Optional<CreatePhoneSwitchRequest> request) {
         return create(request, null);
     }
 
@@ -47,16 +58,19 @@ public class RawPhoneCallRedirectsClient {
      * Calling this endpoint will send an SMS with a link to the Messenger to the phone number specified.
      * <p>If custom attributes are specified, they will be added to the user or lead's custom data attributes.</p>
      */
-    public IntercomHttpResponse<PhoneSwitch> create(
-            CreatePhoneCallRedirectRequest request, RequestOptions requestOptions) {
+    public IntercomHttpResponse<Optional<PhoneSwitch>> create(
+            Optional<CreatePhoneSwitchRequest> request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("phone_call_redirects")
                 .build();
         RequestBody body;
         try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+            body = RequestBody.create("", null);
+            if (request.isPresent()) {
+                body = RequestBody.create(
+                        ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+            }
         } catch (JsonProcessingException e) {
             throw new IntercomException("Failed to serialize request", e);
         }
@@ -75,7 +89,9 @@ public class RawPhoneCallRedirectsClient {
             ResponseBody responseBody = response.body();
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), PhoneSwitch.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(
+                                responseBody.string(), new TypeReference<Optional<PhoneSwitch>>() {}),
+                        response);
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {

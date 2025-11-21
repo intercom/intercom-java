@@ -248,6 +248,13 @@ public class RawConversationsClient {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "display_as", request.getDisplayAs().get(), false);
         }
+        if (request.getIncludeTranslations().isPresent()) {
+            QueryStringMapper.addQueryParameter(
+                    httpUrl,
+                    "include_translations",
+                    request.getIncludeTranslations().get().toString(),
+                    false);
+        }
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl.build())
                 .method("GET", null)
@@ -334,6 +341,9 @@ public class RawConversationsClient {
         }
         if (request.getCustomAttributes().isPresent()) {
             properties.put("custom_attributes", request.getCustomAttributes());
+        }
+        if (request.getCompanyId().isPresent()) {
+            properties.put("company_id", request.getCompanyId());
         }
         RequestBody body;
         try {

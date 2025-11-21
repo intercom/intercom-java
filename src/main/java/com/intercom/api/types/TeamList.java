@@ -13,20 +13,23 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.resources.teams.types.Team;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = TeamList.Builder.class)
 public final class TeamList {
-    private final List<Team> teams;
+    private final Optional<String> type;
+
+    private final Optional<List<Team>> teams;
 
     private final Map<String, Object> additionalProperties;
 
-    private TeamList(List<Team> teams, Map<String, Object> additionalProperties) {
+    private TeamList(Optional<String> type, Optional<List<Team>> teams, Map<String, Object> additionalProperties) {
+        this.type = type;
         this.teams = teams;
         this.additionalProperties = additionalProperties;
     }
@@ -35,15 +38,15 @@ public final class TeamList {
      * @return The type of the object
      */
     @JsonProperty("type")
-    public String getType() {
-        return "team.list";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return A list of team objects
      */
     @JsonProperty("teams")
-    public List<Team> getTeams() {
+    public Optional<List<Team>> getTeams() {
         return teams;
     }
 
@@ -59,12 +62,12 @@ public final class TeamList {
     }
 
     private boolean equalTo(TeamList other) {
-        return teams.equals(other.teams);
+        return type.equals(other.type) && teams.equals(other.teams);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.teams);
+        return Objects.hash(this.type, this.teams);
     }
 
     @java.lang.Override
@@ -78,7 +81,9 @@ public final class TeamList {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
-        private List<Team> teams = new ArrayList<>();
+        private Optional<String> type = Optional.empty();
+
+        private Optional<List<Team>> teams = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -86,7 +91,22 @@ public final class TeamList {
         private Builder() {}
 
         public Builder from(TeamList other) {
+            type(other.getType());
             teams(other.getTeams());
+            return this;
+        }
+
+        /**
+         * <p>The type of the object</p>
+         */
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
@@ -94,24 +114,18 @@ public final class TeamList {
          * <p>A list of team objects</p>
          */
         @JsonSetter(value = "teams", nulls = Nulls.SKIP)
+        public Builder teams(Optional<List<Team>> teams) {
+            this.teams = teams;
+            return this;
+        }
+
         public Builder teams(List<Team> teams) {
-            this.teams.clear();
-            this.teams.addAll(teams);
-            return this;
-        }
-
-        public Builder addTeams(Team teams) {
-            this.teams.add(teams);
-            return this;
-        }
-
-        public Builder addAllTeams(List<Team> teams) {
-            this.teams.addAll(teams);
+            this.teams = Optional.ofNullable(teams);
             return this;
         }
 
         public TeamList build() {
-            return new TeamList(teams, additionalProperties);
+            return new TeamList(type, teams, additionalProperties);
         }
     }
 }

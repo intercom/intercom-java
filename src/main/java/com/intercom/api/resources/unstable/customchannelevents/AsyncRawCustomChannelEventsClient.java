@@ -44,7 +44,7 @@ public class AsyncRawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a new conversation was created in your custom channel/platform. This triggers conversation creation and workflow automations within Intercom for your custom channel integration.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public CompletableFuture<IntercomHttpResponse<CustomChannelNotificationResponse>> notifyNewConversation(
@@ -55,7 +55,7 @@ public class AsyncRawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a new conversation was created in your custom channel/platform. This triggers conversation creation and workflow automations within Intercom for your custom channel integration.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public CompletableFuture<IntercomHttpResponse<CustomChannelNotificationResponse>> notifyNewConversation(
@@ -143,7 +143,7 @@ public class AsyncRawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a new message was sent in a conversation on your custom channel/platform. This allows Intercom to process the message and trigger any relevant workflow automations.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public CompletableFuture<IntercomHttpResponse<CustomChannelNotificationResponse>> notifyNewMessage(
@@ -154,7 +154,7 @@ public class AsyncRawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a new message was sent in a conversation on your custom channel/platform. This allows Intercom to process the message and trigger any relevant workflow automations.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public CompletableFuture<IntercomHttpResponse<CustomChannelNotificationResponse>> notifyNewMessage(
@@ -242,7 +242,7 @@ public class AsyncRawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a user selected a quick reply option in your custom channel/platform. This allows Intercom to process the response and trigger any relevant workflow automations.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public CompletableFuture<IntercomHttpResponse<CustomChannelNotificationResponse>> notifyQuickReplySelected(
@@ -253,7 +253,7 @@ public class AsyncRawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a user selected a quick reply option in your custom channel/platform. This allows Intercom to process the response and trigger any relevant workflow automations.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public CompletableFuture<IntercomHttpResponse<CustomChannelNotificationResponse>> notifyQuickReplySelected(
@@ -341,7 +341,7 @@ public class AsyncRawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a user provided a response to an attribute collector in your custom channel/platform. This allows Intercom to process the attribute and trigger any relevant workflow automations.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public CompletableFuture<IntercomHttpResponse<CustomChannelNotificationResponse>> notifyAttributeCollected(
@@ -352,7 +352,7 @@ public class AsyncRawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a user provided a response to an attribute collector in your custom channel/platform. This allows Intercom to process the attribute and trigger any relevant workflow automations.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public CompletableFuture<IntercomHttpResponse<CustomChannelNotificationResponse>> notifyAttributeCollected(

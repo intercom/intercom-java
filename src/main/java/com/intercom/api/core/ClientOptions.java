@@ -27,7 +27,7 @@ public final class ClientOptions {
     private final ApiVersion version;
 
     /**
-     * @param version Defaults to "2.11" if empty
+     * @param version Defaults to "2.14" if empty
      */
     private ClientOptions(
             Environment environment,
@@ -41,16 +41,16 @@ public final class ClientOptions {
         this.headers.putAll(headers);
         this.headers.putAll(new HashMap<String, String>() {
             {
-                put("User-Agent", "io.intercom:intercom-java/3.0.0");
+                put("User-Agent", "io.intercom:intercom-java/3.1.0");
                 put("X-Fern-Language", "JAVA");
                 put("X-Fern-SDK-Name", "com.intercom.fern:api-sdk");
-                put("X-Fern-SDK-Version", "3.0.0");
+                put("X-Fern-SDK-Version", "3.1.0");
             }
         });
         this.headerSuppliers = headerSuppliers;
         this.httpClient = httpClient;
         this.timeout = timeout;
-        this.version = version.orElse(ApiVersion._2_11);
+        this.version = version.orElse(ApiVersion._2_14);
         this.headers.put("Intercom-Version", this.version.toString());
     }
 

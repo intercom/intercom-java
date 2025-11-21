@@ -99,7 +99,7 @@ public final class Message {
     }
 
     /**
-     * @return The type of message that was sent. Can be email, inapp, facebook ,twitter or sms.
+     * @return The type of message that was sent. Can be email, inapp, facebook, twitter, sms or whatsapp.
      */
     @JsonProperty("message_type")
     public MessageType getMessageType() {
@@ -182,7 +182,7 @@ public final class Message {
 
     public interface MessageTypeStage {
         /**
-         * The type of message that was sent. Can be email, inapp, facebook ,twitter or sms.
+         * The type of message that was sent. Can be email, inapp, facebook, twitter, sms or whatsapp.
          */
         _FinalStage messageType(@NotNull MessageType messageType);
     }
@@ -284,7 +284,7 @@ public final class Message {
         }
 
         /**
-         * The type of message that was sent. Can be email, inapp, facebook ,twitter or sms.<p>The type of message that was sent. Can be email, inapp, facebook ,twitter or sms.</p>
+         * The type of message that was sent. Can be email, inapp, facebook, twitter, sms or whatsapp.<p>The type of message that was sent. Can be email, inapp, facebook, twitter, sms or whatsapp.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -347,6 +347,8 @@ public final class Message {
 
         public static final MessageType INAPP = new MessageType(Value.INAPP, "inapp");
 
+        public static final MessageType WHATSAPP = new MessageType(Value.WHATSAPP, "whatsapp");
+
         public static final MessageType SMS = new MessageType(Value.SMS, "sms");
 
         public static final MessageType TWITTER = new MessageType(Value.TWITTER, "twitter");
@@ -389,6 +391,8 @@ public final class Message {
                     return visitor.visitFacebook();
                 case INAPP:
                     return visitor.visitInapp();
+                case WHATSAPP:
+                    return visitor.visitWhatsapp();
                 case SMS:
                     return visitor.visitSms();
                 case TWITTER:
@@ -408,6 +412,8 @@ public final class Message {
                     return FACEBOOK;
                 case "inapp":
                     return INAPP;
+                case "whatsapp":
+                    return WHATSAPP;
                 case "sms":
                     return SMS;
                 case "twitter":
@@ -428,6 +434,8 @@ public final class Message {
 
             SMS,
 
+            WHATSAPP,
+
             UNKNOWN
         }
 
@@ -441,6 +449,8 @@ public final class Message {
             T visitTwitter();
 
             T visitSms();
+
+            T visitWhatsapp();
 
             T visitUnknown(String unknownType);
         }

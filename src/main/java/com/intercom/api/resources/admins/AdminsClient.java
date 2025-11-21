@@ -12,6 +12,7 @@ import com.intercom.api.resources.admins.types.Admin;
 import com.intercom.api.types.ActivityLogList;
 import com.intercom.api.types.AdminList;
 import com.intercom.api.types.AdminWithApp;
+import java.util.Optional;
 
 public class AdminsClient {
     protected final ClientOptions clientOptions;
@@ -37,7 +38,7 @@ public class AdminsClient {
      * <p>If you are building a custom &quot;Log in with Intercom&quot; flow for your site, and you call the <code>/me</code> endpoint to identify the logged-in user, you should not accept any sign-ins from users with unverified email addresses as it poses a potential impersonation security risk.</p>
      * </blockquote>
      */
-    public AdminWithApp identify() {
+    public Optional<AdminWithApp> identify() {
         return this.rawClient.identify().body();
     }
 
@@ -48,21 +49,21 @@ public class AdminsClient {
      * <p>If you are building a custom &quot;Log in with Intercom&quot; flow for your site, and you call the <code>/me</code> endpoint to identify the logged-in user, you should not accept any sign-ins from users with unverified email addresses as it poses a potential impersonation security risk.</p>
      * </blockquote>
      */
-    public AdminWithApp identify(RequestOptions requestOptions) {
+    public Optional<AdminWithApp> identify(RequestOptions requestOptions) {
         return this.rawClient.identify(requestOptions).body();
     }
 
     /**
      * You can set an Admin as away for the Inbox.
      */
-    public Admin away(ConfigureAwayAdminRequest request) {
+    public Optional<Admin> away(ConfigureAwayAdminRequest request) {
         return this.rawClient.away(request).body();
     }
 
     /**
      * You can set an Admin as away for the Inbox.
      */
-    public Admin away(ConfigureAwayAdminRequest request, RequestOptions requestOptions) {
+    public Optional<Admin> away(ConfigureAwayAdminRequest request, RequestOptions requestOptions) {
         return this.rawClient.away(request, requestOptions).body();
     }
 
@@ -97,14 +98,14 @@ public class AdminsClient {
     /**
      * You can retrieve the details of a single admin.
      */
-    public Admin find(FindAdminRequest request) {
+    public Optional<Admin> find(FindAdminRequest request) {
         return this.rawClient.find(request).body();
     }
 
     /**
      * You can retrieve the details of a single admin.
      */
-    public Admin find(FindAdminRequest request, RequestOptions requestOptions) {
+    public Optional<Admin> find(FindAdminRequest request, RequestOptions requestOptions) {
         return this.rawClient.find(request, requestOptions).body();
     }
 }

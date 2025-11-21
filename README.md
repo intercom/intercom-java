@@ -2,7 +2,19 @@
 
 [![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fintercom%2Fintercom-java)
 
-The Intercom Java library provides convenient access to the Intercom API from Java.
+The Intercom Java library provides convenient access to the Intercom APIs from Java.
+
+## Table of Contents
+
+- [Usage](#usage)
+- [Environments](#environments)
+- [Base Url](#base-url)
+- [Exception Handling](#exception-handling)
+- [Advanced](#advanced)
+  - [Custom Client](#custom-client)
+  - [Retries](#retries)
+  - [Timeouts](#timeouts)
+- [Contributing](#contributing)
 
 ## Usage
 
@@ -12,8 +24,7 @@ Instantiate and use the client with the following:
 package com.example.usage;
 
 import com.intercom.api.Intercom;
-import com.intercom.api.resources.articles.requests.CreateArticleRequest;
-import com.intercom.api.resources.articles.types.CreateArticleRequestState;
+import com.intercom.api.resources.aicontent.requests.CreateContentImportSourceRequest;
 
 public class Example {
     public static void main(String[] args) {
@@ -22,14 +33,11 @@ public class Example {
             .token("<token>")
             .build();
 
-        client.articles().create(
-            CreateArticleRequest
+        client.aiContent().createContentImportSource(
+            CreateContentImportSourceRequest
                 .builder()
-                .title("Thanks for everything")
-                .authorId(1295)
-                .description("Description of the Article")
-                .body("Body of the Article")
-                .state(CreateArticleRequestState.PUBLISHED)
+                .syncBehavior("api")
+                .url("https://www.example.com")
                 .build()
         );
     }
@@ -71,7 +79,7 @@ When the API returns a non-success status code (4xx or 5xx response), an API exc
 import com.intercom.api.core.IntercomApiApiException;
 
 try {
-    client.articles().create(...);
+    client.aiContent().createContentImportSource(...);
 } catch (IntercomApiApiException e) {
     // Do something with the API exception...
 }
@@ -134,7 +142,7 @@ Intercom client = Intercom
     .build();
 
 // Request level
-client.articles().create(
+client.aiContent().createContentImportSource(
     ...,
     RequestOptions
         .builder()

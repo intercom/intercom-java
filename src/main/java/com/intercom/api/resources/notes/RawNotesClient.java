@@ -22,6 +22,7 @@ import com.intercom.api.resources.notes.types.Note;
 import com.intercom.api.types.Error;
 import com.intercom.api.types.NoteList;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
@@ -83,7 +84,7 @@ public class RawNotesClient {
                         .from(request)
                         .page(newPageNumber)
                         .build();
-                List<Note> result = parsedResponse.getData();
+                List<Note> result = parsedResponse.getData().orElse(Collections.emptyList());
                 return new IntercomHttpResponse<>(
                         new SyncPagingIterable<Note>(true, result, () -> list(nextRequest, requestOptions)
                                 .body()),
@@ -182,7 +183,7 @@ public class RawNotesClient {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("notes")
-                .addPathSegment(request.getNoteId())
+                .addPathSegment(Integer.toString(request.getNoteId()))
                 .build();
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl)

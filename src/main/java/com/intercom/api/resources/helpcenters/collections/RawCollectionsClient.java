@@ -26,6 +26,7 @@ import com.intercom.api.types.CollectionList;
 import com.intercom.api.types.DeletedCollectionObject;
 import com.intercom.api.types.Error;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
@@ -96,7 +97,7 @@ public class RawCollectionsClient {
                         .from(request)
                         .page(newPageNumber)
                         .build();
-                List<Collection> result = parsedResponse.getData();
+                List<Collection> result = parsedResponse.getData().orElse(Collections.emptyList());
                 return new IntercomHttpResponse<>(
                         new SyncPagingIterable<Collection>(true, result, () -> list(nextRequest, requestOptions)
                                 .body()),
@@ -197,7 +198,7 @@ public class RawCollectionsClient {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("help_center/collections")
-                .addPathSegment(request.getCollectionId())
+                .addPathSegment(Integer.toString(request.getCollectionId()))
                 .build();
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl)
@@ -253,7 +254,7 @@ public class RawCollectionsClient {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("help_center/collections")
-                .addPathSegment(request.getCollectionId())
+                .addPathSegment(Integer.toString(request.getCollectionId()))
                 .build();
         RequestBody body;
         try {
@@ -317,7 +318,7 @@ public class RawCollectionsClient {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("help_center/collections")
-                .addPathSegment(request.getCollectionId())
+                .addPathSegment(Integer.toString(request.getCollectionId()))
                 .build();
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl)

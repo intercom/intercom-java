@@ -9,43 +9,27 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
+import com.intercom.api.types.UpdateDataAttributeRequestBody;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = UpdateDataAttributeRequest.Builder.class)
 public final class UpdateDataAttributeRequest {
-    private final String dataAttributeId;
+    private final int dataAttributeId;
 
-    private final Optional<Boolean> archived;
-
-    private final Optional<String> description;
-
-    private final Optional<List<OptionsItem>> options;
-
-    private final Optional<Boolean> messengerWritable;
+    private final UpdateDataAttributeRequestBody body;
 
     private final Map<String, Object> additionalProperties;
 
     private UpdateDataAttributeRequest(
-            String dataAttributeId,
-            Optional<Boolean> archived,
-            Optional<String> description,
-            Optional<List<OptionsItem>> options,
-            Optional<Boolean> messengerWritable,
-            Map<String, Object> additionalProperties) {
+            int dataAttributeId, UpdateDataAttributeRequestBody body, Map<String, Object> additionalProperties) {
         this.dataAttributeId = dataAttributeId;
-        this.archived = archived;
-        this.description = description;
-        this.options = options;
-        this.messengerWritable = messengerWritable;
+        this.body = body;
         this.additionalProperties = additionalProperties;
     }
 
@@ -53,40 +37,13 @@ public final class UpdateDataAttributeRequest {
      * @return The data attribute id
      */
     @JsonProperty("data_attribute_id")
-    public String getDataAttributeId() {
+    public int getDataAttributeId() {
         return dataAttributeId;
     }
 
-    /**
-     * @return Whether the attribute is to be archived or not.
-     */
-    @JsonProperty("archived")
-    public Optional<Boolean> getArchived() {
-        return archived;
-    }
-
-    /**
-     * @return The readable description you see in the UI for the attribute.
-     */
-    @JsonProperty("description")
-    public Optional<String> getDescription() {
-        return description;
-    }
-
-    /**
-     * @return To create list attributes. Provide a set of hashes with <code>value</code> as the key of the options you want to make. <code>data_type</code> must be <code>string</code>.
-     */
-    @JsonProperty("options")
-    public Optional<List<OptionsItem>> getOptions() {
-        return options;
-    }
-
-    /**
-     * @return Can this attribute be updated by the Messenger
-     */
-    @JsonProperty("messenger_writable")
-    public Optional<Boolean> getMessengerWritable() {
-        return messengerWritable;
+    @JsonProperty("body")
+    public UpdateDataAttributeRequestBody getBody() {
+        return body;
     }
 
     @java.lang.Override
@@ -101,17 +58,12 @@ public final class UpdateDataAttributeRequest {
     }
 
     private boolean equalTo(UpdateDataAttributeRequest other) {
-        return dataAttributeId.equals(other.dataAttributeId)
-                && archived.equals(other.archived)
-                && description.equals(other.description)
-                && options.equals(other.options)
-                && messengerWritable.equals(other.messengerWritable);
+        return dataAttributeId == other.dataAttributeId && body.equals(other.body);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(
-                this.dataAttributeId, this.archived, this.description, this.options, this.messengerWritable);
+        return Objects.hash(this.dataAttributeId, this.body);
     }
 
     @java.lang.Override
@@ -127,54 +79,24 @@ public final class UpdateDataAttributeRequest {
         /**
          * The data attribute id
          */
-        _FinalStage dataAttributeId(@NotNull String dataAttributeId);
+        BodyStage dataAttributeId(int dataAttributeId);
 
         Builder from(UpdateDataAttributeRequest other);
     }
 
+    public interface BodyStage {
+        _FinalStage body(@NotNull UpdateDataAttributeRequestBody body);
+    }
+
     public interface _FinalStage {
         UpdateDataAttributeRequest build();
-
-        /**
-         * <p>Whether the attribute is to be archived or not.</p>
-         */
-        _FinalStage archived(Optional<Boolean> archived);
-
-        _FinalStage archived(Boolean archived);
-
-        /**
-         * <p>The readable description you see in the UI for the attribute.</p>
-         */
-        _FinalStage description(Optional<String> description);
-
-        _FinalStage description(String description);
-
-        /**
-         * <p>To create list attributes. Provide a set of hashes with <code>value</code> as the key of the options you want to make. <code>data_type</code> must be <code>string</code>.</p>
-         */
-        _FinalStage options(Optional<List<OptionsItem>> options);
-
-        _FinalStage options(List<OptionsItem> options);
-
-        /**
-         * <p>Can this attribute be updated by the Messenger</p>
-         */
-        _FinalStage messengerWritable(Optional<Boolean> messengerWritable);
-
-        _FinalStage messengerWritable(Boolean messengerWritable);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements DataAttributeIdStage, _FinalStage {
-        private String dataAttributeId;
+    public static final class Builder implements DataAttributeIdStage, BodyStage, _FinalStage {
+        private int dataAttributeId;
 
-        private Optional<Boolean> messengerWritable = Optional.empty();
-
-        private Optional<List<OptionsItem>> options = Optional.empty();
-
-        private Optional<String> description = Optional.empty();
-
-        private Optional<Boolean> archived = Optional.empty();
+        private UpdateDataAttributeRequestBody body;
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -184,10 +106,7 @@ public final class UpdateDataAttributeRequest {
         @java.lang.Override
         public Builder from(UpdateDataAttributeRequest other) {
             dataAttributeId(other.getDataAttributeId());
-            archived(other.getArchived());
-            description(other.getDescription());
-            options(other.getOptions());
-            messengerWritable(other.getMessengerWritable());
+            body(other.getBody());
             return this;
         }
 
@@ -197,180 +116,21 @@ public final class UpdateDataAttributeRequest {
          */
         @java.lang.Override
         @JsonSetter("data_attribute_id")
-        public _FinalStage dataAttributeId(@NotNull String dataAttributeId) {
-            this.dataAttributeId = Objects.requireNonNull(dataAttributeId, "dataAttributeId must not be null");
+        public BodyStage dataAttributeId(int dataAttributeId) {
+            this.dataAttributeId = dataAttributeId;
             return this;
         }
 
-        /**
-         * <p>Can this attribute be updated by the Messenger</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
-        public _FinalStage messengerWritable(Boolean messengerWritable) {
-            this.messengerWritable = Optional.ofNullable(messengerWritable);
-            return this;
-        }
-
-        /**
-         * <p>Can this attribute be updated by the Messenger</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "messenger_writable", nulls = Nulls.SKIP)
-        public _FinalStage messengerWritable(Optional<Boolean> messengerWritable) {
-            this.messengerWritable = messengerWritable;
-            return this;
-        }
-
-        /**
-         * <p>To create list attributes. Provide a set of hashes with <code>value</code> as the key of the options you want to make. <code>data_type</code> must be <code>string</code>.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage options(List<OptionsItem> options) {
-            this.options = Optional.ofNullable(options);
-            return this;
-        }
-
-        /**
-         * <p>To create list attributes. Provide a set of hashes with <code>value</code> as the key of the options you want to make. <code>data_type</code> must be <code>string</code>.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "options", nulls = Nulls.SKIP)
-        public _FinalStage options(Optional<List<OptionsItem>> options) {
-            this.options = options;
-            return this;
-        }
-
-        /**
-         * <p>The readable description you see in the UI for the attribute.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage description(String description) {
-            this.description = Optional.ofNullable(description);
-            return this;
-        }
-
-        /**
-         * <p>The readable description you see in the UI for the attribute.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "description", nulls = Nulls.SKIP)
-        public _FinalStage description(Optional<String> description) {
-            this.description = description;
-            return this;
-        }
-
-        /**
-         * <p>Whether the attribute is to be archived or not.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage archived(Boolean archived) {
-            this.archived = Optional.ofNullable(archived);
-            return this;
-        }
-
-        /**
-         * <p>Whether the attribute is to be archived or not.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "archived", nulls = Nulls.SKIP)
-        public _FinalStage archived(Optional<Boolean> archived) {
-            this.archived = archived;
+        @JsonSetter("body")
+        public _FinalStage body(@NotNull UpdateDataAttributeRequestBody body) {
+            this.body = Objects.requireNonNull(body, "body must not be null");
             return this;
         }
 
         @java.lang.Override
         public UpdateDataAttributeRequest build() {
-            return new UpdateDataAttributeRequest(
-                    dataAttributeId, archived, description, options, messengerWritable, additionalProperties);
-        }
-    }
-
-    @JsonInclude(JsonInclude.Include.NON_ABSENT)
-    @JsonDeserialize(builder = OptionsItem.Builder.class)
-    public static final class OptionsItem {
-        private final String value;
-
-        private final Map<String, Object> additionalProperties;
-
-        private OptionsItem(String value, Map<String, Object> additionalProperties) {
-            this.value = value;
-            this.additionalProperties = additionalProperties;
-        }
-
-        @JsonProperty("value")
-        public String getValue() {
-            return value;
-        }
-
-        @java.lang.Override
-        public boolean equals(Object other) {
-            if (this == other) return true;
-            return other instanceof OptionsItem && equalTo((OptionsItem) other);
-        }
-
-        @JsonAnyGetter
-        public Map<String, Object> getAdditionalProperties() {
-            return this.additionalProperties;
-        }
-
-        private boolean equalTo(OptionsItem other) {
-            return value.equals(other.value);
-        }
-
-        @java.lang.Override
-        public int hashCode() {
-            return Objects.hash(this.value);
-        }
-
-        @java.lang.Override
-        public String toString() {
-            return ObjectMappers.stringify(this);
-        }
-
-        public static ValueStage builder() {
-            return new Builder();
-        }
-
-        public interface ValueStage {
-            _FinalStage value(@NotNull String value);
-
-            Builder from(OptionsItem other);
-        }
-
-        public interface _FinalStage {
-            OptionsItem build();
-        }
-
-        @JsonIgnoreProperties(ignoreUnknown = true)
-        public static final class Builder implements ValueStage, _FinalStage {
-            private String value;
-
-            @JsonAnySetter
-            private Map<String, Object> additionalProperties = new HashMap<>();
-
-            private Builder() {}
-
-            @java.lang.Override
-            public Builder from(OptionsItem other) {
-                value(other.getValue());
-                return this;
-            }
-
-            @java.lang.Override
-            @JsonSetter("value")
-            public _FinalStage value(@NotNull String value) {
-                this.value = Objects.requireNonNull(value, "value must not be null");
-                return this;
-            }
-
-            @java.lang.Override
-            public OptionsItem build() {
-                return new OptionsItem(value, additionalProperties);
-            }
+            return new UpdateDataAttributeRequest(dataAttributeId, body, additionalProperties);
         }
     }
 }

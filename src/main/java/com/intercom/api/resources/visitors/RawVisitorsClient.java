@@ -4,6 +4,7 @@
 package com.intercom.api.resources.visitors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.IntercomApiException;
 import com.intercom.api.core.IntercomException;
@@ -21,6 +22,7 @@ import com.intercom.api.types.Error;
 import com.intercom.api.types.UpdateVisitorRequest;
 import com.intercom.api.types.Visitor;
 import java.io.IOException;
+import java.util.Optional;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -39,14 +41,14 @@ public class RawVisitorsClient {
     /**
      * You can fetch the details of a single visitor.
      */
-    public IntercomHttpResponse<Visitor> find(FindVisitorRequest request) {
+    public IntercomHttpResponse<Optional<Visitor>> find(FindVisitorRequest request) {
         return find(request, null);
     }
 
     /**
      * You can fetch the details of a single visitor.
      */
-    public IntercomHttpResponse<Visitor> find(FindVisitorRequest request, RequestOptions requestOptions) {
+    public IntercomHttpResponse<Optional<Visitor>> find(FindVisitorRequest request, RequestOptions requestOptions) {
         HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("visitors");
@@ -66,7 +68,9 @@ public class RawVisitorsClient {
             ResponseBody responseBody = response.body();
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Visitor.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(
+                                responseBody.string(), new TypeReference<Optional<Visitor>>() {}),
+                        response);
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
@@ -96,7 +100,7 @@ public class RawVisitorsClient {
      * <p><strong>Option 1.</strong> You can update a visitor by passing in the <code>user_id</code> of the visitor in the Request body.</p>
      * <p><strong>Option 2.</strong> You can update a visitor by passing in the <code>id</code> of the visitor in the Request body.</p>
      */
-    public IntercomHttpResponse<Visitor> update(UpdateVisitorRequest request) {
+    public IntercomHttpResponse<Optional<Visitor>> update(UpdateVisitorRequest request) {
         return update(request, null);
     }
 
@@ -105,7 +109,7 @@ public class RawVisitorsClient {
      * <p><strong>Option 1.</strong> You can update a visitor by passing in the <code>user_id</code> of the visitor in the Request body.</p>
      * <p><strong>Option 2.</strong> You can update a visitor by passing in the <code>id</code> of the visitor in the Request body.</p>
      */
-    public IntercomHttpResponse<Visitor> update(UpdateVisitorRequest request, RequestOptions requestOptions) {
+    public IntercomHttpResponse<Optional<Visitor>> update(UpdateVisitorRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("visitors")
@@ -132,7 +136,9 @@ public class RawVisitorsClient {
             ResponseBody responseBody = response.body();
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Visitor.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(
+                                responseBody.string(), new TypeReference<Optional<Visitor>>() {}),
+                        response);
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {

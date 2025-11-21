@@ -346,9 +346,7 @@ public final class SingleFilterSearchRequest {
             } else if (this.type == 1) {
                 return visitor.visit((int) this.value);
             } else if (this.type == 2) {
-                return visitor.visitListOfString((List<String>) this.value);
-            } else if (this.type == 3) {
-                return visitor.visitListOfInteger((List<Integer>) this.value);
+                return visitor.visit((List<Item>) this.value);
             }
             throw new IllegalStateException("Failed to visit value. This should never happen.");
         }
@@ -381,12 +379,8 @@ public final class SingleFilterSearchRequest {
             return new Value(value, 1);
         }
 
-        public static Value ofListOfString(List<String> value) {
+        public static Value of(List<Item> value) {
             return new Value(value, 2);
-        }
-
-        public static Value ofListOfInteger(List<Integer> value) {
-            return new Value(value, 3);
         }
 
         public interface Visitor<T> {
@@ -394,9 +388,7 @@ public final class SingleFilterSearchRequest {
 
             T visit(int value);
 
-            T visitListOfString(List<String> value);
-
-            T visitListOfInteger(List<Integer> value);
+            T visit(List<Item> value);
         }
 
         static final class Deserializer extends StdDeserializer<Value> {
@@ -415,16 +407,90 @@ public final class SingleFilterSearchRequest {
                     return of((Integer) value);
                 }
                 try {
-                    return ofListOfString(
-                            ObjectMappers.JSON_MAPPER.convertValue(value, new TypeReference<List<String>>() {}));
-                } catch (IllegalArgumentException e) {
-                }
-                try {
-                    return ofListOfInteger(
-                            ObjectMappers.JSON_MAPPER.convertValue(value, new TypeReference<List<Integer>>() {}));
+                    return of(ObjectMappers.JSON_MAPPER.convertValue(value, new TypeReference<List<Item>>() {}));
                 } catch (IllegalArgumentException e) {
                 }
                 throw new JsonParseException(p, "Failed to deserialize");
+            }
+        }
+
+        @JsonDeserialize(using = Item.Deserializer.class)
+        public static final class Item {
+            private final Object value;
+
+            private final int type;
+
+            private Item(Object value, int type) {
+                this.value = value;
+                this.type = type;
+            }
+
+            @JsonValue
+            public Object get() {
+                return this.value;
+            }
+
+            @SuppressWarnings("unchecked")
+            public <T> T visit(Visitor<T> visitor) {
+                if (this.type == 0) {
+                    return visitor.visit((String) this.value);
+                } else if (this.type == 1) {
+                    return visitor.visit((int) this.value);
+                }
+                throw new IllegalStateException("Failed to visit value. This should never happen.");
+            }
+
+            @java.lang.Override
+            public boolean equals(Object other) {
+                if (this == other) return true;
+                return other instanceof Item && equalTo((Item) other);
+            }
+
+            private boolean equalTo(Item other) {
+                return value.equals(other.value);
+            }
+
+            @java.lang.Override
+            public int hashCode() {
+                return Objects.hash(this.value);
+            }
+
+            @java.lang.Override
+            public String toString() {
+                return this.value.toString();
+            }
+
+            public static Item of(String value) {
+                return new Item(value, 0);
+            }
+
+            public static Item of(int value) {
+                return new Item(value, 1);
+            }
+
+            public interface Visitor<T> {
+                T visit(String value);
+
+                T visit(int value);
+            }
+
+            static final class Deserializer extends StdDeserializer<Item> {
+                Deserializer() {
+                    super(Item.class);
+                }
+
+                @java.lang.Override
+                public Item deserialize(JsonParser p, DeserializationContext context) throws IOException {
+                    Object value = p.readValueAs(Object.class);
+                    try {
+                        return of(ObjectMappers.JSON_MAPPER.convertValue(value, String.class));
+                    } catch (IllegalArgumentException e) {
+                    }
+                    if (value instanceof Integer) {
+                        return of((Integer) value);
+                    }
+                    throw new JsonParseException(p, "Failed to deserialize");
+                }
             }
         }
     }

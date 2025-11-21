@@ -4,6 +4,7 @@
 package com.intercom.api.resources.admins;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.IntercomApiException;
 import com.intercom.api.core.IntercomException;
@@ -12,6 +13,7 @@ import com.intercom.api.core.MediaTypes;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.core.QueryStringMapper;
 import com.intercom.api.core.RequestOptions;
+import com.intercom.api.errors.BadRequestError;
 import com.intercom.api.errors.NotFoundError;
 import com.intercom.api.errors.UnauthorizedError;
 import com.intercom.api.resources.admins.requests.ConfigureAwayAdminRequest;
@@ -23,6 +25,7 @@ import com.intercom.api.types.AdminList;
 import com.intercom.api.types.AdminWithApp;
 import com.intercom.api.types.Error;
 import java.io.IOException;
+import java.util.Optional;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -45,7 +48,7 @@ public class RawAdminsClient {
      * <p>If you are building a custom &quot;Log in with Intercom&quot; flow for your site, and you call the <code>/me</code> endpoint to identify the logged-in user, you should not accept any sign-ins from users with unverified email addresses as it poses a potential impersonation security risk.</p>
      * </blockquote>
      */
-    public IntercomHttpResponse<AdminWithApp> identify() {
+    public IntercomHttpResponse<Optional<AdminWithApp>> identify() {
         return identify(null);
     }
 
@@ -56,7 +59,7 @@ public class RawAdminsClient {
      * <p>If you are building a custom &quot;Log in with Intercom&quot; flow for your site, and you call the <code>/me</code> endpoint to identify the logged-in user, you should not accept any sign-ins from users with unverified email addresses as it poses a potential impersonation security risk.</p>
      * </blockquote>
      */
-    public IntercomHttpResponse<AdminWithApp> identify(RequestOptions requestOptions) {
+    public IntercomHttpResponse<Optional<AdminWithApp>> identify(RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("me")
@@ -76,7 +79,9 @@ public class RawAdminsClient {
             ResponseBody responseBody = response.body();
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), AdminWithApp.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(
+                                responseBody.string(), new TypeReference<Optional<AdminWithApp>>() {}),
+                        response);
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             throw new IntercomApiException(
@@ -92,18 +97,19 @@ public class RawAdminsClient {
     /**
      * You can set an Admin as away for the Inbox.
      */
-    public IntercomHttpResponse<Admin> away(ConfigureAwayAdminRequest request) {
+    public IntercomHttpResponse<Optional<Admin>> away(ConfigureAwayAdminRequest request) {
         return away(request, null);
     }
 
     /**
      * You can set an Admin as away for the Inbox.
      */
-    public IntercomHttpResponse<Admin> away(ConfigureAwayAdminRequest request, RequestOptions requestOptions) {
+    public IntercomHttpResponse<Optional<Admin>> away(
+            ConfigureAwayAdminRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("admins")
-                .addPathSegment(request.getAdminId())
+                .addPathSegment(Integer.toString(request.getAdminId()))
                 .addPathSegments("away")
                 .build();
         RequestBody body;
@@ -128,11 +134,16 @@ public class RawAdminsClient {
             ResponseBody responseBody = response.body();
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Admin.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(
+                                responseBody.string(), new TypeReference<Optional<Admin>>() {}),
+                        response);
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 switch (response.code()) {
+                    case 400:
+                        throw new BadRequestError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
                     case 401:
                         throw new UnauthorizedError(
                                 ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class), response);
@@ -263,18 +274,18 @@ public class RawAdminsClient {
     /**
      * You can retrieve the details of a single admin.
      */
-    public IntercomHttpResponse<Admin> find(FindAdminRequest request) {
+    public IntercomHttpResponse<Optional<Admin>> find(FindAdminRequest request) {
         return find(request, null);
     }
 
     /**
      * You can retrieve the details of a single admin.
      */
-    public IntercomHttpResponse<Admin> find(FindAdminRequest request, RequestOptions requestOptions) {
+    public IntercomHttpResponse<Optional<Admin>> find(FindAdminRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("admins")
-                .addPathSegment(request.getAdminId())
+                .addPathSegment(Integer.toString(request.getAdminId()))
                 .build();
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl)
@@ -291,7 +302,9 @@ public class RawAdminsClient {
             ResponseBody responseBody = response.body();
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Admin.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(
+                                responseBody.string(), new TypeReference<Optional<Admin>>() {}),
+                        response);
             }
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {

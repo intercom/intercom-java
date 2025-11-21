@@ -17,30 +17,33 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = Note.Builder.class)
 public final class Note {
-    private final String id;
+    private final Optional<String> type;
 
-    private final int createdAt;
+    private final Optional<String> id;
+
+    private final Optional<Integer> createdAt;
 
     private final Optional<Contact> contact;
 
-    private final Admin author;
+    private final Optional<Admin> author;
 
-    private final String body;
+    private final Optional<String> body;
 
     private final Map<String, Object> additionalProperties;
 
     private Note(
-            String id,
-            int createdAt,
+            Optional<String> type,
+            Optional<String> id,
+            Optional<Integer> createdAt,
             Optional<Contact> contact,
-            Admin author,
-            String body,
+            Optional<Admin> author,
+            Optional<String> body,
             Map<String, Object> additionalProperties) {
+        this.type = type;
         this.id = id;
         this.createdAt = createdAt;
         this.contact = contact;
@@ -53,15 +56,15 @@ public final class Note {
      * @return String representing the object's type. Always has the value <code>note</code>.
      */
     @JsonProperty("type")
-    public String getType() {
-        return "note";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The id of the note.
      */
     @JsonProperty("id")
-    public String getId() {
+    public Optional<String> getId() {
         return id;
     }
 
@@ -69,7 +72,7 @@ public final class Note {
      * @return The time the note was created.
      */
     @JsonProperty("created_at")
-    public int getCreatedAt() {
+    public Optional<Integer> getCreatedAt() {
         return createdAt;
     }
 
@@ -85,7 +88,7 @@ public final class Note {
      * @return Optional. Represents the Admin that created the note.
      */
     @JsonProperty("author")
-    public Admin getAuthor() {
+    public Optional<Admin> getAuthor() {
         return author;
     }
 
@@ -93,7 +96,7 @@ public final class Note {
      * @return The body text of the note.
      */
     @JsonProperty("body")
-    public String getBody() {
+    public Optional<String> getBody() {
         return body;
     }
 
@@ -109,8 +112,9 @@ public final class Note {
     }
 
     private boolean equalTo(Note other) {
-        return id.equals(other.id)
-                && createdAt == other.createdAt
+        return type.equals(other.type)
+                && id.equals(other.id)
+                && createdAt.equals(other.createdAt)
                 && contact.equals(other.contact)
                 && author.equals(other.author)
                 && body.equals(other.body);
@@ -118,7 +122,7 @@ public final class Note {
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.id, this.createdAt, this.contact, this.author, this.body);
+        return Objects.hash(this.type, this.id, this.createdAt, this.contact, this.author, this.body);
     }
 
     @java.lang.Override
@@ -126,70 +130,31 @@ public final class Note {
         return ObjectMappers.stringify(this);
     }
 
-    public static IdStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface IdStage {
-        /**
-         * The id of the note.
-         */
-        CreatedAtStage id(@NotNull String id);
-
-        Builder from(Note other);
-    }
-
-    public interface CreatedAtStage {
-        /**
-         * The time the note was created.
-         */
-        AuthorStage createdAt(int createdAt);
-    }
-
-    public interface AuthorStage {
-        /**
-         * Optional. Represents the Admin that created the note.
-         */
-        BodyStage author(@NotNull Admin author);
-    }
-
-    public interface BodyStage {
-        /**
-         * The body text of the note.
-         */
-        _FinalStage body(@NotNull String body);
-    }
-
-    public interface _FinalStage {
-        Note build();
-
-        /**
-         * <p>Represents the contact that the note was created about.</p>
-         */
-        _FinalStage contact(Optional<Contact> contact);
-
-        _FinalStage contact(Contact contact);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements IdStage, CreatedAtStage, AuthorStage, BodyStage, _FinalStage {
-        private String id;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private int createdAt;
+        private Optional<String> id = Optional.empty();
 
-        private Admin author;
-
-        private String body;
+        private Optional<Integer> createdAt = Optional.empty();
 
         private Optional<Contact> contact = Optional.empty();
+
+        private Optional<Admin> author = Optional.empty();
+
+        private Optional<String> body = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(Note other) {
+            type(other.getType());
             id(other.getId());
             createdAt(other.getCreatedAt());
             contact(other.getContact());
@@ -199,72 +164,91 @@ public final class Note {
         }
 
         /**
-         * The id of the note.<p>The id of the note.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>String representing the object's type. Always has the value <code>note</code>.</p>
          */
-        @java.lang.Override
-        @JsonSetter("id")
-        public CreatedAtStage id(@NotNull String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
-         * The time the note was created.<p>The time the note was created.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The id of the note.</p>
          */
-        @java.lang.Override
-        @JsonSetter("created_at")
-        public AuthorStage createdAt(int createdAt) {
+        @JsonSetter(value = "id", nulls = Nulls.SKIP)
+        public Builder id(Optional<String> id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder id(String id) {
+            this.id = Optional.ofNullable(id);
+            return this;
+        }
+
+        /**
+         * <p>The time the note was created.</p>
+         */
+        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
+        public Builder createdAt(Optional<Integer> createdAt) {
             this.createdAt = createdAt;
             return this;
         }
 
-        /**
-         * Optional. Represents the Admin that created the note.<p>Optional. Represents the Admin that created the note.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("author")
-        public BodyStage author(@NotNull Admin author) {
-            this.author = Objects.requireNonNull(author, "author must not be null");
-            return this;
-        }
-
-        /**
-         * The body text of the note.<p>The body text of the note.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("body")
-        public _FinalStage body(@NotNull String body) {
-            this.body = Objects.requireNonNull(body, "body must not be null");
+        public Builder createdAt(Integer createdAt) {
+            this.createdAt = Optional.ofNullable(createdAt);
             return this;
         }
 
         /**
          * <p>Represents the contact that the note was created about.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @java.lang.Override
-        public _FinalStage contact(Contact contact) {
+        @JsonSetter(value = "contact", nulls = Nulls.SKIP)
+        public Builder contact(Optional<Contact> contact) {
+            this.contact = contact;
+            return this;
+        }
+
+        public Builder contact(Contact contact) {
             this.contact = Optional.ofNullable(contact);
             return this;
         }
 
         /**
-         * <p>Represents the contact that the note was created about.</p>
+         * <p>Optional. Represents the Admin that created the note.</p>
          */
-        @java.lang.Override
-        @JsonSetter(value = "contact", nulls = Nulls.SKIP)
-        public _FinalStage contact(Optional<Contact> contact) {
-            this.contact = contact;
+        @JsonSetter(value = "author", nulls = Nulls.SKIP)
+        public Builder author(Optional<Admin> author) {
+            this.author = author;
             return this;
         }
 
-        @java.lang.Override
+        public Builder author(Admin author) {
+            this.author = Optional.ofNullable(author);
+            return this;
+        }
+
+        /**
+         * <p>The body text of the note.</p>
+         */
+        @JsonSetter(value = "body", nulls = Nulls.SKIP)
+        public Builder body(Optional<String> body) {
+            this.body = body;
+            return this;
+        }
+
+        public Builder body(String body) {
+            this.body = Optional.ofNullable(body);
+            return this;
+        }
+
         public Note build() {
-            return new Note(id, createdAt, contact, author, body, additionalProperties);
+            return new Note(type, id, createdAt, contact, author, body, additionalProperties);
         }
     }
 

@@ -27,7 +27,7 @@ public class MessagesClient {
     }
 
     /**
-     * You can create a message that has been initiated by an admin. The conversation can be either an in-app message, an email or sms.
+     * You can create a message that has been initiated by an admin. The conversation can be either an in-app message, an email, sms or whatsapp.
      * <blockquote>
      * <p>🚧 Sending for visitors</p>
      * <p>There can be a short delay between when a contact is created and when a contact becomes available to be messaged through the API. A 404 Not Found error will be returned in this case.</p>
@@ -43,7 +43,7 @@ public class MessagesClient {
     }
 
     /**
-     * You can create a message that has been initiated by an admin. The conversation can be either an in-app message, an email or sms.
+     * You can create a message that has been initiated by an admin. The conversation can be either an in-app message, an email, sms or whatsapp.
      * <blockquote>
      * <p>🚧 Sending for visitors</p>
      * <p>There can be a short delay between when a contact is created and when a contact becomes available to be messaged through the API. A 404 Not Found error will be returned in this case.</p>

@@ -7,7 +7,6 @@ import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.RequestOptions;
 import com.intercom.api.core.pagination.SyncPagingIterable;
 import com.intercom.api.resources.companies.requests.AttachContactToCompanyRequest;
-import com.intercom.api.resources.companies.requests.CreateOrUpdateCompanyRequest;
 import com.intercom.api.resources.companies.requests.DeleteCompanyRequest;
 import com.intercom.api.resources.companies.requests.DetachContactFromCompanyRequest;
 import com.intercom.api.resources.companies.requests.FindCompanyRequest;
@@ -21,7 +20,9 @@ import com.intercom.api.resources.companies.types.CompaniesRetrieveResponse;
 import com.intercom.api.resources.companies.types.Company;
 import com.intercom.api.types.CompanyAttachedContacts;
 import com.intercom.api.types.CompanyAttachedSegments;
+import com.intercom.api.types.CreateOrUpdateCompanyRequest;
 import com.intercom.api.types.DeletedCompanyObject;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class AsyncCompaniesClient {
@@ -98,7 +99,7 @@ public class AsyncCompaniesClient {
      * You can set a unique <code>company_id</code> value when creating a company. However, it is not possible to update <code>company_id</code>. Be sure to set a unique value once upon creation of the company.
      * {% /admonition %}</p>
      */
-    public CompletableFuture<Company> createOrUpdate(CreateOrUpdateCompanyRequest request) {
+    public CompletableFuture<Company> createOrUpdate(Optional<CreateOrUpdateCompanyRequest> request) {
         return this.rawClient.createOrUpdate(request).thenApply(response -> response.body());
     }
 
@@ -111,7 +112,7 @@ public class AsyncCompaniesClient {
      * {% /admonition %}</p>
      */
     public CompletableFuture<Company> createOrUpdate(
-            CreateOrUpdateCompanyRequest request, RequestOptions requestOptions) {
+            Optional<CreateOrUpdateCompanyRequest> request, RequestOptions requestOptions) {
         return this.rawClient.createOrUpdate(request, requestOptions).thenApply(response -> response.body());
     }
 

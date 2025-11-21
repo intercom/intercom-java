@@ -16,18 +16,24 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ContactReference.Builder.class)
-public final class ContactReference {
-    private final String id;
+public final class ContactReference implements IContactReference {
+    private final Optional<String> type;
+
+    private final Optional<String> id;
 
     private final Optional<String> externalId;
 
     private final Map<String, Object> additionalProperties;
 
-    private ContactReference(String id, Optional<String> externalId, Map<String, Object> additionalProperties) {
+    private ContactReference(
+            Optional<String> type,
+            Optional<String> id,
+            Optional<String> externalId,
+            Map<String, Object> additionalProperties) {
+        this.type = type;
         this.id = id;
         this.externalId = externalId;
         this.additionalProperties = additionalProperties;
@@ -37,15 +43,15 @@ public final class ContactReference {
      * @return always contact
      */
     @JsonProperty("type")
-    public String getType() {
-        return "contact";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The unique identifier for the contact which is given by Intercom.
      */
     @JsonProperty("id")
-    public String getId() {
+    public Optional<String> getId() {
         return id;
     }
 
@@ -69,12 +75,12 @@ public final class ContactReference {
     }
 
     private boolean equalTo(ContactReference other) {
-        return id.equals(other.id) && externalId.equals(other.externalId);
+        return type.equals(other.type) && id.equals(other.id) && externalId.equals(other.externalId);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.id, this.externalId);
+        return Objects.hash(this.type, this.id, this.externalId);
     }
 
     @java.lang.Override
@@ -82,33 +88,15 @@ public final class ContactReference {
         return ObjectMappers.stringify(this);
     }
 
-    public static IdStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface IdStage {
-        /**
-         * The unique identifier for the contact which is given by Intercom.
-         */
-        _FinalStage id(@NotNull String id);
-
-        Builder from(ContactReference other);
-    }
-
-    public interface _FinalStage {
-        ContactReference build();
-
-        /**
-         * <p>The unique identifier for the contact which is provided by the Client.</p>
-         */
-        _FinalStage externalId(Optional<String> externalId);
-
-        _FinalStage externalId(String externalId);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements IdStage, _FinalStage {
-        private String id;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
+
+        private Optional<String> id = Optional.empty();
 
         private Optional<String> externalId = Optional.empty();
 
@@ -117,47 +105,57 @@ public final class ContactReference {
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(ContactReference other) {
+            type(other.getType());
             id(other.getId());
             externalId(other.getExternalId());
             return this;
         }
 
         /**
-         * The unique identifier for the contact which is given by Intercom.<p>The unique identifier for the contact which is given by Intercom.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>always contact</p>
          */
-        @java.lang.Override
-        @JsonSetter("id")
-        public _FinalStage id(@NotNull String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
+            return this;
+        }
+
+        /**
+         * <p>The unique identifier for the contact which is given by Intercom.</p>
+         */
+        @JsonSetter(value = "id", nulls = Nulls.SKIP)
+        public Builder id(Optional<String> id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder id(String id) {
+            this.id = Optional.ofNullable(id);
             return this;
         }
 
         /**
          * <p>The unique identifier for the contact which is provided by the Client.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @java.lang.Override
-        public _FinalStage externalId(String externalId) {
-            this.externalId = Optional.ofNullable(externalId);
-            return this;
-        }
-
-        /**
-         * <p>The unique identifier for the contact which is provided by the Client.</p>
-         */
-        @java.lang.Override
         @JsonSetter(value = "external_id", nulls = Nulls.SKIP)
-        public _FinalStage externalId(Optional<String> externalId) {
+        public Builder externalId(Optional<String> externalId) {
             this.externalId = externalId;
             return this;
         }
 
-        @java.lang.Override
+        public Builder externalId(String externalId) {
+            this.externalId = Optional.ofNullable(externalId);
+            return this;
+        }
+
         public ContactReference build() {
-            return new ContactReference(id, externalId, additionalProperties);
+            return new ContactReference(type, id, externalId, additionalProperties);
         }
     }
 }

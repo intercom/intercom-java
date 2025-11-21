@@ -35,6 +35,10 @@ public final class AiAgent {
 
     private final Optional<String> ratingRemark;
 
+    private final Optional<Integer> createdAt;
+
+    private final Optional<Integer> updatedAt;
+
     private final Optional<ContentSourcesList> contentSources;
 
     private final Map<String, Object> additionalProperties;
@@ -46,6 +50,8 @@ public final class AiAgent {
             Optional<String> resolutionState,
             Optional<Integer> rating,
             Optional<String> ratingRemark,
+            Optional<Integer> createdAt,
+            Optional<Integer> updatedAt,
             Optional<ContentSourcesList> contentSources,
             Map<String, Object> additionalProperties) {
         this.sourceType = sourceType;
@@ -54,6 +60,8 @@ public final class AiAgent {
         this.resolutionState = resolutionState;
         this.rating = rating;
         this.ratingRemark = ratingRemark;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
         this.contentSources = contentSources;
         this.additionalProperties = additionalProperties;
     }
@@ -106,6 +114,22 @@ public final class AiAgent {
         return ratingRemark;
     }
 
+    /**
+     * @return The time when the AI agent rating was created.
+     */
+    @JsonProperty("created_at")
+    public Optional<Integer> getCreatedAt() {
+        return createdAt;
+    }
+
+    /**
+     * @return The time when the AI agent rating was last updated.
+     */
+    @JsonProperty("updated_at")
+    public Optional<Integer> getUpdatedAt() {
+        return updatedAt;
+    }
+
     @JsonProperty("content_sources")
     public Optional<ContentSourcesList> getContentSources() {
         return contentSources;
@@ -129,6 +153,8 @@ public final class AiAgent {
                 && resolutionState.equals(other.resolutionState)
                 && rating.equals(other.rating)
                 && ratingRemark.equals(other.ratingRemark)
+                && createdAt.equals(other.createdAt)
+                && updatedAt.equals(other.updatedAt)
                 && contentSources.equals(other.contentSources);
     }
 
@@ -141,6 +167,8 @@ public final class AiAgent {
                 this.resolutionState,
                 this.rating,
                 this.ratingRemark,
+                this.createdAt,
+                this.updatedAt,
                 this.contentSources);
     }
 
@@ -167,6 +195,10 @@ public final class AiAgent {
 
         private Optional<String> ratingRemark = Optional.empty();
 
+        private Optional<Integer> createdAt = Optional.empty();
+
+        private Optional<Integer> updatedAt = Optional.empty();
+
         private Optional<ContentSourcesList> contentSources = Optional.empty();
 
         @JsonAnySetter
@@ -181,6 +213,8 @@ public final class AiAgent {
             resolutionState(other.getResolutionState());
             rating(other.getRating());
             ratingRemark(other.getRatingRemark());
+            createdAt(other.getCreatedAt());
+            updatedAt(other.getUpdatedAt());
             contentSources(other.getContentSources());
             return this;
         }
@@ -269,6 +303,34 @@ public final class AiAgent {
             return this;
         }
 
+        /**
+         * <p>The time when the AI agent rating was created.</p>
+         */
+        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
+        public Builder createdAt(Optional<Integer> createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public Builder createdAt(Integer createdAt) {
+            this.createdAt = Optional.ofNullable(createdAt);
+            return this;
+        }
+
+        /**
+         * <p>The time when the AI agent rating was last updated.</p>
+         */
+        @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
+        public Builder updatedAt(Optional<Integer> updatedAt) {
+            this.updatedAt = updatedAt;
+            return this;
+        }
+
+        public Builder updatedAt(Integer updatedAt) {
+            this.updatedAt = Optional.ofNullable(updatedAt);
+            return this;
+        }
+
         @JsonSetter(value = "content_sources", nulls = Nulls.SKIP)
         public Builder contentSources(Optional<ContentSourcesList> contentSources) {
             this.contentSources = contentSources;
@@ -288,6 +350,8 @@ public final class AiAgent {
                     resolutionState,
                     rating,
                     ratingRemark,
+                    createdAt,
+                    updatedAt,
                     contentSources,
                     additionalProperties);
         }

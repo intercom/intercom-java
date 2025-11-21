@@ -34,7 +34,7 @@ public final class DataAttribute {
 
     private final String label;
 
-    private final String description;
+    private final Optional<String> description;
 
     private final DataType dataType;
 
@@ -64,7 +64,7 @@ public final class DataAttribute {
             String name,
             String fullName,
             String label,
-            String description,
+            Optional<String> description,
             DataType dataType,
             Optional<List<String>> options,
             Optional<Boolean> apiWritable,
@@ -147,7 +147,7 @@ public final class DataAttribute {
      * @return Readable description of the attribute.
      */
     @JsonProperty("description")
-    public String getDescription() {
+    public Optional<String> getDescription() {
         return description;
     }
 
@@ -311,14 +311,7 @@ public final class DataAttribute {
         /**
          * Readable name of the attribute (i.e. name you see in the UI)
          */
-        DescriptionStage label(@NotNull String label);
-    }
-
-    public interface DescriptionStage {
-        /**
-         * Readable description of the attribute.
-         */
-        DataTypeStage description(@NotNull String description);
+        DataTypeStage label(@NotNull String label);
     }
 
     public interface DataTypeStage {
@@ -344,6 +337,13 @@ public final class DataAttribute {
         _FinalStage model(Optional<Model> model);
 
         _FinalStage model(Model model);
+
+        /**
+         * <p>Readable description of the attribute.</p>
+         */
+        _FinalStage description(Optional<String> description);
+
+        _FinalStage description(String description);
 
         /**
          * <p>List of predefined options for attribute value.</p>
@@ -410,15 +410,12 @@ public final class DataAttribute {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder
-            implements NameStage, FullNameStage, LabelStage, DescriptionStage, DataTypeStage, _FinalStage {
+    public static final class Builder implements NameStage, FullNameStage, LabelStage, DataTypeStage, _FinalStage {
         private String name;
 
         private String fullName;
 
         private String label;
-
-        private String description;
 
         private DataType dataType;
 
@@ -439,6 +436,8 @@ public final class DataAttribute {
         private Optional<Boolean> apiWritable = Optional.empty();
 
         private Optional<List<String>> options = Optional.empty();
+
+        private Optional<String> description = Optional.empty();
 
         private Optional<Model> model = Optional.empty();
 
@@ -498,19 +497,8 @@ public final class DataAttribute {
          */
         @java.lang.Override
         @JsonSetter("label")
-        public DescriptionStage label(@NotNull String label) {
+        public DataTypeStage label(@NotNull String label) {
             this.label = Objects.requireNonNull(label, "label must not be null");
-            return this;
-        }
-
-        /**
-         * Readable description of the attribute.<p>Readable description of the attribute.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("description")
-        public DataTypeStage description(@NotNull String description) {
-            this.description = Objects.requireNonNull(description, "description must not be null");
             return this;
         }
 
@@ -702,6 +690,26 @@ public final class DataAttribute {
         @JsonSetter(value = "options", nulls = Nulls.SKIP)
         public _FinalStage options(Optional<List<String>> options) {
             this.options = options;
+            return this;
+        }
+
+        /**
+         * <p>Readable description of the attribute.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage description(String description) {
+            this.description = Optional.ofNullable(description);
+            return this;
+        }
+
+        /**
+         * <p>Readable description of the attribute.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "description", nulls = Nulls.SKIP)
+        public _FinalStage description(Optional<String> description) {
+            this.description = description;
             return this;
         }
 

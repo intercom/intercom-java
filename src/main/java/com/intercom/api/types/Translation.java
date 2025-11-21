@@ -9,25 +9,30 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = Translation.Builder.class)
 public final class Translation {
-    private final String name;
+    private final Optional<String> name;
 
-    private final String description;
+    private final Optional<String> description;
 
-    private final String locale;
+    private final Optional<String> locale;
 
     private final Map<String, Object> additionalProperties;
 
-    private Translation(String name, String description, String locale, Map<String, Object> additionalProperties) {
+    private Translation(
+            Optional<String> name,
+            Optional<String> description,
+            Optional<String> locale,
+            Map<String, Object> additionalProperties) {
         this.name = name;
         this.description = description;
         this.locale = locale;
@@ -38,7 +43,7 @@ public final class Translation {
      * @return The localised name of the subscription type.
      */
     @JsonProperty("name")
-    public String getName() {
+    public Optional<String> getName() {
         return name;
     }
 
@@ -46,7 +51,7 @@ public final class Translation {
      * @return The localised description of the subscription type.
      */
     @JsonProperty("description")
-    public String getDescription() {
+    public Optional<String> getDescription() {
         return description;
     }
 
@@ -54,7 +59,7 @@ public final class Translation {
      * @return The two character identifier for the language of the translation object.
      */
     @JsonProperty("locale")
-    public String getLocale() {
+    public Optional<String> getLocale() {
         return locale;
     }
 
@@ -83,51 +88,23 @@ public final class Translation {
         return ObjectMappers.stringify(this);
     }
 
-    public static NameStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface NameStage {
-        /**
-         * The localised name of the subscription type.
-         */
-        DescriptionStage name(@NotNull String name);
-
-        Builder from(Translation other);
-    }
-
-    public interface DescriptionStage {
-        /**
-         * The localised description of the subscription type.
-         */
-        LocaleStage description(@NotNull String description);
-    }
-
-    public interface LocaleStage {
-        /**
-         * The two character identifier for the language of the translation object.
-         */
-        _FinalStage locale(@NotNull String locale);
-    }
-
-    public interface _FinalStage {
-        Translation build();
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements NameStage, DescriptionStage, LocaleStage, _FinalStage {
-        private String name;
+    public static final class Builder {
+        private Optional<String> name = Optional.empty();
 
-        private String description;
+        private Optional<String> description = Optional.empty();
 
-        private String locale;
+        private Optional<String> locale = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(Translation other) {
             name(other.getName());
             description(other.getDescription());
@@ -136,39 +113,47 @@ public final class Translation {
         }
 
         /**
-         * The localised name of the subscription type.<p>The localised name of the subscription type.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The localised name of the subscription type.</p>
          */
-        @java.lang.Override
-        @JsonSetter("name")
-        public DescriptionStage name(@NotNull String name) {
-            this.name = Objects.requireNonNull(name, "name must not be null");
+        @JsonSetter(value = "name", nulls = Nulls.SKIP)
+        public Builder name(Optional<String> name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = Optional.ofNullable(name);
             return this;
         }
 
         /**
-         * The localised description of the subscription type.<p>The localised description of the subscription type.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The localised description of the subscription type.</p>
          */
-        @java.lang.Override
-        @JsonSetter("description")
-        public LocaleStage description(@NotNull String description) {
-            this.description = Objects.requireNonNull(description, "description must not be null");
+        @JsonSetter(value = "description", nulls = Nulls.SKIP)
+        public Builder description(Optional<String> description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = Optional.ofNullable(description);
             return this;
         }
 
         /**
-         * The two character identifier for the language of the translation object.<p>The two character identifier for the language of the translation object.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The two character identifier for the language of the translation object.</p>
          */
-        @java.lang.Override
-        @JsonSetter("locale")
-        public _FinalStage locale(@NotNull String locale) {
-            this.locale = Objects.requireNonNull(locale, "locale must not be null");
+        @JsonSetter(value = "locale", nulls = Nulls.SKIP)
+        public Builder locale(Optional<String> locale) {
+            this.locale = locale;
             return this;
         }
 
-        @java.lang.Override
+        public Builder locale(String locale) {
+            this.locale = Optional.ofNullable(locale);
+            return this;
+        }
+
         public Translation build() {
             return new Translation(name, description, locale, additionalProperties);
         }

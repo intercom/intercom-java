@@ -28,9 +28,6 @@ public final class AutoAssignConversationRequest {
         this.additionalProperties = additionalProperties;
     }
 
-    /**
-     * @return The identifier for the conversation as given by Intercom.
-     */
     @JsonProperty("conversation_id")
     public String getConversationId() {
         return conversationId;
@@ -66,9 +63,6 @@ public final class AutoAssignConversationRequest {
     }
 
     public interface ConversationIdStage {
-        /**
-         * The identifier for the conversation as given by Intercom.
-         */
         _FinalStage conversationId(@NotNull String conversationId);
 
         Builder from(AutoAssignConversationRequest other);
@@ -93,10 +87,6 @@ public final class AutoAssignConversationRequest {
             return this;
         }
 
-        /**
-         * The identifier for the conversation as given by Intercom.<p>The identifier for the conversation as given by Intercom.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
         @JsonSetter("conversation_id")
         public _FinalStage conversationId(@NotNull String conversationId) {

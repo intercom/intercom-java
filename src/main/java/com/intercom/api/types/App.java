@@ -9,40 +9,41 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = App.Builder.class)
 public final class App {
-    private final String type;
+    private final Optional<String> type;
 
-    private final String idCode;
+    private final Optional<String> idCode;
 
-    private final String name;
+    private final Optional<String> name;
 
-    private final String region;
+    private final Optional<String> region;
 
-    private final String timezone;
+    private final Optional<String> timezone;
 
-    private final int createdAt;
+    private final Optional<Integer> createdAt;
 
-    private final boolean identityVerification;
+    private final Optional<Boolean> identityVerification;
 
     private final Map<String, Object> additionalProperties;
 
     private App(
-            String type,
-            String idCode,
-            String name,
-            String region,
-            String timezone,
-            int createdAt,
-            boolean identityVerification,
+            Optional<String> type,
+            Optional<String> idCode,
+            Optional<String> name,
+            Optional<String> region,
+            Optional<String> timezone,
+            Optional<Integer> createdAt,
+            Optional<Boolean> identityVerification,
             Map<String, Object> additionalProperties) {
         this.type = type;
         this.idCode = idCode;
@@ -58,7 +59,7 @@ public final class App {
      * @return
      */
     @JsonProperty("type")
-    public String getType() {
+    public Optional<String> getType() {
         return type;
     }
 
@@ -66,7 +67,7 @@ public final class App {
      * @return The id of the app.
      */
     @JsonProperty("id_code")
-    public String getIdCode() {
+    public Optional<String> getIdCode() {
         return idCode;
     }
 
@@ -74,7 +75,7 @@ public final class App {
      * @return The name of the app.
      */
     @JsonProperty("name")
-    public String getName() {
+    public Optional<String> getName() {
         return name;
     }
 
@@ -82,7 +83,7 @@ public final class App {
      * @return The Intercom region the app is located in.
      */
     @JsonProperty("region")
-    public String getRegion() {
+    public Optional<String> getRegion() {
         return region;
     }
 
@@ -90,7 +91,7 @@ public final class App {
      * @return The timezone of the region where the app is located.
      */
     @JsonProperty("timezone")
-    public String getTimezone() {
+    public Optional<String> getTimezone() {
         return timezone;
     }
 
@@ -98,7 +99,7 @@ public final class App {
      * @return When the app was created.
      */
     @JsonProperty("created_at")
-    public int getCreatedAt() {
+    public Optional<Integer> getCreatedAt() {
         return createdAt;
     }
 
@@ -106,7 +107,7 @@ public final class App {
      * @return Whether or not the app uses identity verification.
      */
     @JsonProperty("identity_verification")
-    public boolean getIdentityVerification() {
+    public Optional<Boolean> getIdentityVerification() {
         return identityVerification;
     }
 
@@ -127,8 +128,8 @@ public final class App {
                 && name.equals(other.name)
                 && region.equals(other.region)
                 && timezone.equals(other.timezone)
-                && createdAt == other.createdAt
-                && identityVerification == other.identityVerification;
+                && createdAt.equals(other.createdAt)
+                && identityVerification.equals(other.identityVerification);
     }
 
     @java.lang.Override
@@ -148,92 +149,31 @@ public final class App {
         return ObjectMappers.stringify(this);
     }
 
-    public static TypeStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface TypeStage {
-        IdCodeStage type(@NotNull String type);
-
-        Builder from(App other);
-    }
-
-    public interface IdCodeStage {
-        /**
-         * The id of the app.
-         */
-        NameStage idCode(@NotNull String idCode);
-    }
-
-    public interface NameStage {
-        /**
-         * The name of the app.
-         */
-        RegionStage name(@NotNull String name);
-    }
-
-    public interface RegionStage {
-        /**
-         * The Intercom region the app is located in.
-         */
-        TimezoneStage region(@NotNull String region);
-    }
-
-    public interface TimezoneStage {
-        /**
-         * The timezone of the region where the app is located.
-         */
-        CreatedAtStage timezone(@NotNull String timezone);
-    }
-
-    public interface CreatedAtStage {
-        /**
-         * When the app was created.
-         */
-        IdentityVerificationStage createdAt(int createdAt);
-    }
-
-    public interface IdentityVerificationStage {
-        /**
-         * Whether or not the app uses identity verification.
-         */
-        _FinalStage identityVerification(boolean identityVerification);
-    }
-
-    public interface _FinalStage {
-        App build();
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder
-            implements TypeStage,
-                    IdCodeStage,
-                    NameStage,
-                    RegionStage,
-                    TimezoneStage,
-                    CreatedAtStage,
-                    IdentityVerificationStage,
-                    _FinalStage {
-        private String type;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private String idCode;
+        private Optional<String> idCode = Optional.empty();
 
-        private String name;
+        private Optional<String> name = Optional.empty();
 
-        private String region;
+        private Optional<String> region = Optional.empty();
 
-        private String timezone;
+        private Optional<String> timezone = Optional.empty();
 
-        private int createdAt;
+        private Optional<Integer> createdAt = Optional.empty();
 
-        private boolean identityVerification;
+        private Optional<Boolean> identityVerification = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(App other) {
             type(other.getType());
             idCode(other.getIdCode());
@@ -245,83 +185,101 @@ public final class App {
             return this;
         }
 
-        /**
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("type")
-        public IdCodeStage type(@NotNull String type) {
-            this.type = Objects.requireNonNull(type, "type must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
-         * The id of the app.<p>The id of the app.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The id of the app.</p>
          */
-        @java.lang.Override
-        @JsonSetter("id_code")
-        public NameStage idCode(@NotNull String idCode) {
-            this.idCode = Objects.requireNonNull(idCode, "idCode must not be null");
+        @JsonSetter(value = "id_code", nulls = Nulls.SKIP)
+        public Builder idCode(Optional<String> idCode) {
+            this.idCode = idCode;
+            return this;
+        }
+
+        public Builder idCode(String idCode) {
+            this.idCode = Optional.ofNullable(idCode);
             return this;
         }
 
         /**
-         * The name of the app.<p>The name of the app.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The name of the app.</p>
          */
-        @java.lang.Override
-        @JsonSetter("name")
-        public RegionStage name(@NotNull String name) {
-            this.name = Objects.requireNonNull(name, "name must not be null");
+        @JsonSetter(value = "name", nulls = Nulls.SKIP)
+        public Builder name(Optional<String> name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = Optional.ofNullable(name);
             return this;
         }
 
         /**
-         * The Intercom region the app is located in.<p>The Intercom region the app is located in.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The Intercom region the app is located in.</p>
          */
-        @java.lang.Override
-        @JsonSetter("region")
-        public TimezoneStage region(@NotNull String region) {
-            this.region = Objects.requireNonNull(region, "region must not be null");
+        @JsonSetter(value = "region", nulls = Nulls.SKIP)
+        public Builder region(Optional<String> region) {
+            this.region = region;
+            return this;
+        }
+
+        public Builder region(String region) {
+            this.region = Optional.ofNullable(region);
             return this;
         }
 
         /**
-         * The timezone of the region where the app is located.<p>The timezone of the region where the app is located.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The timezone of the region where the app is located.</p>
          */
-        @java.lang.Override
-        @JsonSetter("timezone")
-        public CreatedAtStage timezone(@NotNull String timezone) {
-            this.timezone = Objects.requireNonNull(timezone, "timezone must not be null");
+        @JsonSetter(value = "timezone", nulls = Nulls.SKIP)
+        public Builder timezone(Optional<String> timezone) {
+            this.timezone = timezone;
+            return this;
+        }
+
+        public Builder timezone(String timezone) {
+            this.timezone = Optional.ofNullable(timezone);
             return this;
         }
 
         /**
-         * When the app was created.<p>When the app was created.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>When the app was created.</p>
          */
-        @java.lang.Override
-        @JsonSetter("created_at")
-        public IdentityVerificationStage createdAt(int createdAt) {
+        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
+        public Builder createdAt(Optional<Integer> createdAt) {
             this.createdAt = createdAt;
             return this;
         }
 
+        public Builder createdAt(Integer createdAt) {
+            this.createdAt = Optional.ofNullable(createdAt);
+            return this;
+        }
+
         /**
-         * Whether or not the app uses identity verification.<p>Whether or not the app uses identity verification.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Whether or not the app uses identity verification.</p>
          */
-        @java.lang.Override
-        @JsonSetter("identity_verification")
-        public _FinalStage identityVerification(boolean identityVerification) {
+        @JsonSetter(value = "identity_verification", nulls = Nulls.SKIP)
+        public Builder identityVerification(Optional<Boolean> identityVerification) {
             this.identityVerification = identityVerification;
             return this;
         }
 
-        @java.lang.Override
+        public Builder identityVerification(Boolean identityVerification) {
+            this.identityVerification = Optional.ofNullable(identityVerification);
+            return this;
+        }
+
         public App build() {
             return new App(type, idCode, name, region, timezone, createdAt, identityVerification, additionalProperties);
         }

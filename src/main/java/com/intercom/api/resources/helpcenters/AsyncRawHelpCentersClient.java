@@ -20,6 +20,7 @@ import com.intercom.api.resources.helpcenters.requests.FindHelpCenterRequest;
 import com.intercom.api.resources.helpcenters.requests.ListHelpCentersRequest;
 import com.intercom.api.types.Error;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -55,7 +56,7 @@ public class AsyncRawHelpCentersClient {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("help_center/help_centers")
-                .addPathSegment(request.getHelpCenterId())
+                .addPathSegment(Integer.toString(request.getHelpCenterId()))
                 .build();
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl)
@@ -171,7 +172,7 @@ public class AsyncRawHelpCentersClient {
                                 .from(request)
                                 .page(newPageNumber)
                                 .build();
-                        List<HelpCenter> result = parsedResponse.getData();
+                        List<HelpCenter> result = parsedResponse.getData().orElse(Collections.emptyList());
                         future.complete(new IntercomHttpResponse<>(
                                 new SyncPagingIterable<HelpCenter>(true, result, () -> {
                                     try {

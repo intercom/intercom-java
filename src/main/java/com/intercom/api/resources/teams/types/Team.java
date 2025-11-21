@@ -13,33 +13,35 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.types.AdminPriorityLevel;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = Team.Builder.class)
 public final class Team {
-    private final String id;
+    private final Optional<String> type;
 
-    private final String name;
+    private final Optional<String> id;
 
-    private final List<Integer> adminIds;
+    private final Optional<String> name;
+
+    private final Optional<List<Integer>> adminIds;
 
     private final Optional<AdminPriorityLevel> adminPriorityLevel;
 
     private final Map<String, Object> additionalProperties;
 
     private Team(
-            String id,
-            String name,
-            List<Integer> adminIds,
+            Optional<String> type,
+            Optional<String> id,
+            Optional<String> name,
+            Optional<List<Integer>> adminIds,
             Optional<AdminPriorityLevel> adminPriorityLevel,
             Map<String, Object> additionalProperties) {
+        this.type = type;
         this.id = id;
         this.name = name;
         this.adminIds = adminIds;
@@ -51,15 +53,15 @@ public final class Team {
      * @return Value is always &quot;team&quot;
      */
     @JsonProperty("type")
-    public String getType() {
-        return "team";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The id of the team
      */
     @JsonProperty("id")
-    public String getId() {
+    public Optional<String> getId() {
         return id;
     }
 
@@ -67,7 +69,7 @@ public final class Team {
      * @return The name of the team
      */
     @JsonProperty("name")
-    public String getName() {
+    public Optional<String> getName() {
         return name;
     }
 
@@ -75,7 +77,7 @@ public final class Team {
      * @return The list of admin IDs that are a part of the team.
      */
     @JsonProperty("admin_ids")
-    public List<Integer> getAdminIds() {
+    public Optional<List<Integer>> getAdminIds() {
         return adminIds;
     }
 
@@ -96,7 +98,8 @@ public final class Team {
     }
 
     private boolean equalTo(Team other) {
-        return id.equals(other.id)
+        return type.equals(other.type)
+                && id.equals(other.id)
                 && name.equals(other.name)
                 && adminIds.equals(other.adminIds)
                 && adminPriorityLevel.equals(other.adminPriorityLevel);
@@ -104,7 +107,7 @@ public final class Team {
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.id, this.name, this.adminIds, this.adminPriorityLevel);
+        return Objects.hash(this.type, this.id, this.name, this.adminIds, this.adminPriorityLevel);
     }
 
     @java.lang.Override
@@ -112,60 +115,29 @@ public final class Team {
         return ObjectMappers.stringify(this);
     }
 
-    public static IdStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface IdStage {
-        /**
-         * The id of the team
-         */
-        NameStage id(@NotNull String id);
-
-        Builder from(Team other);
-    }
-
-    public interface NameStage {
-        /**
-         * The name of the team
-         */
-        _FinalStage name(@NotNull String name);
-    }
-
-    public interface _FinalStage {
-        Team build();
-
-        /**
-         * <p>The list of admin IDs that are a part of the team.</p>
-         */
-        _FinalStage adminIds(List<Integer> adminIds);
-
-        _FinalStage addAdminIds(Integer adminIds);
-
-        _FinalStage addAllAdminIds(List<Integer> adminIds);
-
-        _FinalStage adminPriorityLevel(Optional<AdminPriorityLevel> adminPriorityLevel);
-
-        _FinalStage adminPriorityLevel(AdminPriorityLevel adminPriorityLevel);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements IdStage, NameStage, _FinalStage {
-        private String id;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private String name;
+        private Optional<String> id = Optional.empty();
+
+        private Optional<String> name = Optional.empty();
+
+        private Optional<List<Integer>> adminIds = Optional.empty();
 
         private Optional<AdminPriorityLevel> adminPriorityLevel = Optional.empty();
-
-        private List<Integer> adminIds = new ArrayList<>();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(Team other) {
+            type(other.getType());
             id(other.getId());
             name(other.getName());
             adminIds(other.getAdminIds());
@@ -174,74 +146,74 @@ public final class Team {
         }
 
         /**
-         * The id of the team<p>The id of the team</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Value is always &quot;team&quot;</p>
          */
-        @java.lang.Override
-        @JsonSetter("id")
-        public NameStage id(@NotNull String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
-         * The name of the team<p>The name of the team</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The id of the team</p>
          */
-        @java.lang.Override
-        @JsonSetter("name")
-        public _FinalStage name(@NotNull String name) {
-            this.name = Objects.requireNonNull(name, "name must not be null");
+        @JsonSetter(value = "id", nulls = Nulls.SKIP)
+        public Builder id(Optional<String> id) {
+            this.id = id;
             return this;
         }
 
-        @java.lang.Override
-        public _FinalStage adminPriorityLevel(AdminPriorityLevel adminPriorityLevel) {
-            this.adminPriorityLevel = Optional.ofNullable(adminPriorityLevel);
+        public Builder id(String id) {
+            this.id = Optional.ofNullable(id);
             return this;
         }
 
-        @java.lang.Override
+        /**
+         * <p>The name of the team</p>
+         */
+        @JsonSetter(value = "name", nulls = Nulls.SKIP)
+        public Builder name(Optional<String> name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = Optional.ofNullable(name);
+            return this;
+        }
+
+        /**
+         * <p>The list of admin IDs that are a part of the team.</p>
+         */
+        @JsonSetter(value = "admin_ids", nulls = Nulls.SKIP)
+        public Builder adminIds(Optional<List<Integer>> adminIds) {
+            this.adminIds = adminIds;
+            return this;
+        }
+
+        public Builder adminIds(List<Integer> adminIds) {
+            this.adminIds = Optional.ofNullable(adminIds);
+            return this;
+        }
+
         @JsonSetter(value = "admin_priority_level", nulls = Nulls.SKIP)
-        public _FinalStage adminPriorityLevel(Optional<AdminPriorityLevel> adminPriorityLevel) {
+        public Builder adminPriorityLevel(Optional<AdminPriorityLevel> adminPriorityLevel) {
             this.adminPriorityLevel = adminPriorityLevel;
             return this;
         }
 
-        /**
-         * <p>The list of admin IDs that are a part of the team.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addAllAdminIds(List<Integer> adminIds) {
-            this.adminIds.addAll(adminIds);
+        public Builder adminPriorityLevel(AdminPriorityLevel adminPriorityLevel) {
+            this.adminPriorityLevel = Optional.ofNullable(adminPriorityLevel);
             return this;
         }
 
-        /**
-         * <p>The list of admin IDs that are a part of the team.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addAdminIds(Integer adminIds) {
-            this.adminIds.add(adminIds);
-            return this;
-        }
-
-        /**
-         * <p>The list of admin IDs that are a part of the team.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "admin_ids", nulls = Nulls.SKIP)
-        public _FinalStage adminIds(List<Integer> adminIds) {
-            this.adminIds.clear();
-            this.adminIds.addAll(adminIds);
-            return this;
-        }
-
-        @java.lang.Override
         public Team build() {
-            return new Team(id, name, adminIds, adminPriorityLevel, additionalProperties);
+            return new Team(type, id, name, adminIds, adminPriorityLevel, additionalProperties);
         }
     }
 }

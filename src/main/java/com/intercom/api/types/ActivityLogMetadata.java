@@ -38,6 +38,16 @@ public final class ActivityLogMetadata {
 
     private final Optional<String> updateByName;
 
+    private final Optional<Integer> conversationAssignmentLimit;
+
+    private final Optional<Integer> ticketAssignmentLimit;
+
+    private final Optional<Team> team;
+
+    private final Optional<Integer> teamAssignmentLimit;
+
+    private final Optional<Boolean> enabled;
+
     private final Map<String, Object> additionalProperties;
 
     private ActivityLogMetadata(
@@ -50,6 +60,11 @@ public final class ActivityLogMetadata {
             Optional<String> autoChanged,
             Optional<Integer> updateBy,
             Optional<String> updateByName,
+            Optional<Integer> conversationAssignmentLimit,
+            Optional<Integer> ticketAssignmentLimit,
+            Optional<Team> team,
+            Optional<Integer> teamAssignmentLimit,
+            Optional<Boolean> enabled,
             Map<String, Object> additionalProperties) {
         this.signInMethod = signInMethod;
         this.externalId = externalId;
@@ -60,6 +75,11 @@ public final class ActivityLogMetadata {
         this.autoChanged = autoChanged;
         this.updateBy = updateBy;
         this.updateByName = updateByName;
+        this.conversationAssignmentLimit = conversationAssignmentLimit;
+        this.ticketAssignmentLimit = ticketAssignmentLimit;
+        this.team = team;
+        this.teamAssignmentLimit = teamAssignmentLimit;
+        this.enabled = enabled;
         this.additionalProperties = additionalProperties;
     }
 
@@ -135,6 +155,46 @@ public final class ActivityLogMetadata {
         return updateByName;
     }
 
+    /**
+     * @return The conversation assignment limit value for an admin.
+     */
+    @JsonProperty("conversation_assignment_limit")
+    public Optional<Integer> getConversationAssignmentLimit() {
+        return conversationAssignmentLimit;
+    }
+
+    /**
+     * @return The ticket assignment limit value for an admin.
+     */
+    @JsonProperty("ticket_assignment_limit")
+    public Optional<Integer> getTicketAssignmentLimit() {
+        return ticketAssignmentLimit;
+    }
+
+    /**
+     * @return Details about the team whose assignment limit was changed.
+     */
+    @JsonProperty("team")
+    public Optional<Team> getTeam() {
+        return team;
+    }
+
+    /**
+     * @return The team assignment limit value (null if limit was removed).
+     */
+    @JsonProperty("team_assignment_limit")
+    public Optional<Integer> getTeamAssignmentLimit() {
+        return teamAssignmentLimit;
+    }
+
+    /**
+     * @return Indicates if the setting is enabled or disabled.
+     */
+    @JsonProperty("enabled")
+    public Optional<Boolean> getEnabled() {
+        return enabled;
+    }
+
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
@@ -155,7 +215,12 @@ public final class ActivityLogMetadata {
                 && source.equals(other.source)
                 && autoChanged.equals(other.autoChanged)
                 && updateBy.equals(other.updateBy)
-                && updateByName.equals(other.updateByName);
+                && updateByName.equals(other.updateByName)
+                && conversationAssignmentLimit.equals(other.conversationAssignmentLimit)
+                && ticketAssignmentLimit.equals(other.ticketAssignmentLimit)
+                && team.equals(other.team)
+                && teamAssignmentLimit.equals(other.teamAssignmentLimit)
+                && enabled.equals(other.enabled);
     }
 
     @java.lang.Override
@@ -169,7 +234,12 @@ public final class ActivityLogMetadata {
                 this.source,
                 this.autoChanged,
                 this.updateBy,
-                this.updateByName);
+                this.updateByName,
+                this.conversationAssignmentLimit,
+                this.ticketAssignmentLimit,
+                this.team,
+                this.teamAssignmentLimit,
+                this.enabled);
     }
 
     @java.lang.Override
@@ -201,6 +271,16 @@ public final class ActivityLogMetadata {
 
         private Optional<String> updateByName = Optional.empty();
 
+        private Optional<Integer> conversationAssignmentLimit = Optional.empty();
+
+        private Optional<Integer> ticketAssignmentLimit = Optional.empty();
+
+        private Optional<Team> team = Optional.empty();
+
+        private Optional<Integer> teamAssignmentLimit = Optional.empty();
+
+        private Optional<Boolean> enabled = Optional.empty();
+
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -216,6 +296,11 @@ public final class ActivityLogMetadata {
             autoChanged(other.getAutoChanged());
             updateBy(other.getUpdateBy());
             updateByName(other.getUpdateByName());
+            conversationAssignmentLimit(other.getConversationAssignmentLimit());
+            ticketAssignmentLimit(other.getTicketAssignmentLimit());
+            team(other.getTeam());
+            teamAssignmentLimit(other.getTeamAssignmentLimit());
+            enabled(other.getEnabled());
             return this;
         }
 
@@ -345,6 +430,76 @@ public final class ActivityLogMetadata {
             return this;
         }
 
+        /**
+         * <p>The conversation assignment limit value for an admin.</p>
+         */
+        @JsonSetter(value = "conversation_assignment_limit", nulls = Nulls.SKIP)
+        public Builder conversationAssignmentLimit(Optional<Integer> conversationAssignmentLimit) {
+            this.conversationAssignmentLimit = conversationAssignmentLimit;
+            return this;
+        }
+
+        public Builder conversationAssignmentLimit(Integer conversationAssignmentLimit) {
+            this.conversationAssignmentLimit = Optional.ofNullable(conversationAssignmentLimit);
+            return this;
+        }
+
+        /**
+         * <p>The ticket assignment limit value for an admin.</p>
+         */
+        @JsonSetter(value = "ticket_assignment_limit", nulls = Nulls.SKIP)
+        public Builder ticketAssignmentLimit(Optional<Integer> ticketAssignmentLimit) {
+            this.ticketAssignmentLimit = ticketAssignmentLimit;
+            return this;
+        }
+
+        public Builder ticketAssignmentLimit(Integer ticketAssignmentLimit) {
+            this.ticketAssignmentLimit = Optional.ofNullable(ticketAssignmentLimit);
+            return this;
+        }
+
+        /**
+         * <p>Details about the team whose assignment limit was changed.</p>
+         */
+        @JsonSetter(value = "team", nulls = Nulls.SKIP)
+        public Builder team(Optional<Team> team) {
+            this.team = team;
+            return this;
+        }
+
+        public Builder team(Team team) {
+            this.team = Optional.ofNullable(team);
+            return this;
+        }
+
+        /**
+         * <p>The team assignment limit value (null if limit was removed).</p>
+         */
+        @JsonSetter(value = "team_assignment_limit", nulls = Nulls.SKIP)
+        public Builder teamAssignmentLimit(Optional<Integer> teamAssignmentLimit) {
+            this.teamAssignmentLimit = teamAssignmentLimit;
+            return this;
+        }
+
+        public Builder teamAssignmentLimit(Integer teamAssignmentLimit) {
+            this.teamAssignmentLimit = Optional.ofNullable(teamAssignmentLimit);
+            return this;
+        }
+
+        /**
+         * <p>Indicates if the setting is enabled or disabled.</p>
+         */
+        @JsonSetter(value = "enabled", nulls = Nulls.SKIP)
+        public Builder enabled(Optional<Boolean> enabled) {
+            this.enabled = enabled;
+            return this;
+        }
+
+        public Builder enabled(Boolean enabled) {
+            this.enabled = Optional.ofNullable(enabled);
+            return this;
+        }
+
         public ActivityLogMetadata build() {
             return new ActivityLogMetadata(
                     signInMethod,
@@ -356,7 +511,123 @@ public final class ActivityLogMetadata {
                     autoChanged,
                     updateBy,
                     updateByName,
+                    conversationAssignmentLimit,
+                    ticketAssignmentLimit,
+                    team,
+                    teamAssignmentLimit,
+                    enabled,
                     additionalProperties);
+        }
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_ABSENT)
+    @JsonDeserialize(builder = Team.Builder.class)
+    public static final class Team {
+        private final Optional<Integer> id;
+
+        private final Optional<String> name;
+
+        private final Map<String, Object> additionalProperties;
+
+        private Team(Optional<Integer> id, Optional<String> name, Map<String, Object> additionalProperties) {
+            this.id = id;
+            this.name = name;
+            this.additionalProperties = additionalProperties;
+        }
+
+        /**
+         * @return The ID of the team.
+         */
+        @JsonProperty("id")
+        public Optional<Integer> getId() {
+            return id;
+        }
+
+        /**
+         * @return The name of the team.
+         */
+        @JsonProperty("name")
+        public Optional<String> getName() {
+            return name;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            if (this == other) return true;
+            return other instanceof Team && equalTo((Team) other);
+        }
+
+        @JsonAnyGetter
+        public Map<String, Object> getAdditionalProperties() {
+            return this.additionalProperties;
+        }
+
+        private boolean equalTo(Team other) {
+            return id.equals(other.id) && name.equals(other.name);
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return Objects.hash(this.id, this.name);
+        }
+
+        @java.lang.Override
+        public String toString() {
+            return ObjectMappers.stringify(this);
+        }
+
+        public static Builder builder() {
+            return new Builder();
+        }
+
+        @JsonIgnoreProperties(ignoreUnknown = true)
+        public static final class Builder {
+            private Optional<Integer> id = Optional.empty();
+
+            private Optional<String> name = Optional.empty();
+
+            @JsonAnySetter
+            private Map<String, Object> additionalProperties = new HashMap<>();
+
+            private Builder() {}
+
+            public Builder from(Team other) {
+                id(other.getId());
+                name(other.getName());
+                return this;
+            }
+
+            /**
+             * <p>The ID of the team.</p>
+             */
+            @JsonSetter(value = "id", nulls = Nulls.SKIP)
+            public Builder id(Optional<Integer> id) {
+                this.id = id;
+                return this;
+            }
+
+            public Builder id(Integer id) {
+                this.id = Optional.ofNullable(id);
+                return this;
+            }
+
+            /**
+             * <p>The name of the team.</p>
+             */
+            @JsonSetter(value = "name", nulls = Nulls.SKIP)
+            public Builder name(Optional<String> name) {
+                this.name = name;
+                return this;
+            }
+
+            public Builder name(String name) {
+                this.name = Optional.ofNullable(name);
+                return this;
+            }
+
+            public Team build() {
+                return new Team(id, name, additionalProperties);
+            }
         }
     }
 }

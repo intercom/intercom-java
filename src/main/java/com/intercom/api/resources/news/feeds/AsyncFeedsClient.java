@@ -8,8 +8,7 @@ import com.intercom.api.core.RequestOptions;
 import com.intercom.api.resources.news.feeds.requests.FindNewsFeedRequest;
 import com.intercom.api.resources.news.feeds.requests.ListNewsFeedItemsRequest;
 import com.intercom.api.resources.news.types.Newsfeed;
-import com.intercom.api.types.PaginatedNewsItemResponse;
-import com.intercom.api.types.PaginatedNewsfeedResponse;
+import com.intercom.api.types.PaginatedResponse;
 import java.util.concurrent.CompletableFuture;
 
 public class AsyncFeedsClient {
@@ -32,14 +31,14 @@ public class AsyncFeedsClient {
     /**
      * You can fetch a list of all news items that are live on a given newsfeed
      */
-    public CompletableFuture<PaginatedNewsItemResponse> listItems(ListNewsFeedItemsRequest request) {
+    public CompletableFuture<PaginatedResponse> listItems(ListNewsFeedItemsRequest request) {
         return this.rawClient.listItems(request).thenApply(response -> response.body());
     }
 
     /**
      * You can fetch a list of all news items that are live on a given newsfeed
      */
-    public CompletableFuture<PaginatedNewsItemResponse> listItems(
+    public CompletableFuture<PaginatedResponse> listItems(
             ListNewsFeedItemsRequest request, RequestOptions requestOptions) {
         return this.rawClient.listItems(request, requestOptions).thenApply(response -> response.body());
     }
@@ -47,14 +46,14 @@ public class AsyncFeedsClient {
     /**
      * You can fetch a list of all newsfeeds
      */
-    public CompletableFuture<PaginatedNewsfeedResponse> list() {
+    public CompletableFuture<PaginatedResponse> list() {
         return this.rawClient.list().thenApply(response -> response.body());
     }
 
     /**
      * You can fetch a list of all newsfeeds
      */
-    public CompletableFuture<PaginatedNewsfeedResponse> list(RequestOptions requestOptions) {
+    public CompletableFuture<PaginatedResponse> list(RequestOptions requestOptions) {
         return this.rawClient.list(requestOptions).thenApply(response -> response.body());
     }
 

@@ -12,20 +12,20 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ContactSocialProfiles.Builder.class)
 public final class ContactSocialProfiles {
-    private final List<SocialProfile> data;
+    private final Optional<List<SocialProfile>> data;
 
     private final Map<String, Object> additionalProperties;
 
-    private ContactSocialProfiles(List<SocialProfile> data, Map<String, Object> additionalProperties) {
+    private ContactSocialProfiles(Optional<List<SocialProfile>> data, Map<String, Object> additionalProperties) {
         this.data = data;
         this.additionalProperties = additionalProperties;
     }
@@ -34,7 +34,7 @@ public final class ContactSocialProfiles {
      * @return A list of social profiles objects associated with the contact.
      */
     @JsonProperty("data")
-    public List<SocialProfile> getData() {
+    public Optional<List<SocialProfile>> getData() {
         return data;
     }
 
@@ -69,7 +69,7 @@ public final class ContactSocialProfiles {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
-        private List<SocialProfile> data = new ArrayList<>();
+        private Optional<List<SocialProfile>> data = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -85,19 +85,13 @@ public final class ContactSocialProfiles {
          * <p>A list of social profiles objects associated with the contact.</p>
          */
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
+        public Builder data(Optional<List<SocialProfile>> data) {
+            this.data = data;
+            return this;
+        }
+
         public Builder data(List<SocialProfile> data) {
-            this.data.clear();
-            this.data.addAll(data);
-            return this;
-        }
-
-        public Builder addData(SocialProfile data) {
-            this.data.add(data);
-            return this;
-        }
-
-        public Builder addAllData(List<SocialProfile> data) {
-            this.data.addAll(data);
+            this.data = Optional.ofNullable(data);
             return this;
         }
 

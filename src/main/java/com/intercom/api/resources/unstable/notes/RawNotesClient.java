@@ -14,6 +14,7 @@ import com.intercom.api.core.RequestOptions;
 import com.intercom.api.resources.unstable.errors.NotFoundError;
 import com.intercom.api.resources.unstable.errors.UnauthorizedError;
 import com.intercom.api.resources.unstable.notes.requests.CreateNoteRequest;
+import com.intercom.api.resources.unstable.notes.requests.ListCompanyNotesRequest;
 import com.intercom.api.resources.unstable.notes.requests.ListNotesRequest;
 import com.intercom.api.resources.unstable.notes.requests.RetrieveNoteRequest;
 import com.intercom.api.resources.unstable.notes.types.Note;
@@ -33,6 +34,60 @@ public class RawNotesClient {
 
     public RawNotesClient(ClientOptions clientOptions) {
         this.clientOptions = clientOptions;
+    }
+
+    /**
+     * You can fetch a list of notes that are associated to a company.
+     */
+    public IntercomHttpResponse<NoteList> listCompanyNotes(ListCompanyNotesRequest request) {
+        return listCompanyNotes(request, null);
+    }
+
+    /**
+     * You can fetch a list of notes that are associated to a company.
+     */
+    public IntercomHttpResponse<NoteList> listCompanyNotes(
+            ListCompanyNotesRequest request, RequestOptions requestOptions) {
+        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+                .newBuilder()
+                .addPathSegments("companies")
+                .addPathSegment(request.getId())
+                .addPathSegments("notes")
+                .build();
+        Request.Builder _requestBuilder = new Request.Builder()
+                .url(httpUrl)
+                .method("GET", null)
+                .headers(Headers.of(clientOptions.headers(requestOptions)))
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept", "application/json");
+        Request okhttpRequest = _requestBuilder.build();
+        OkHttpClient client = clientOptions.httpClient();
+        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+            client = clientOptions.httpClientWithTimeout(requestOptions);
+        }
+        try (Response response = client.newCall(okhttpRequest).execute()) {
+            ResponseBody responseBody = response.body();
+            if (response.isSuccessful()) {
+                return new IntercomHttpResponse<>(
+                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), NoteList.class), response);
+            }
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+            try {
+                if (response.code() == 404) {
+                    throw new NotFoundError(
+                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+                }
+            } catch (JsonProcessingException ignored) {
+                // unable to map error response, throwing generic error
+            }
+            throw new IntercomApiException(
+                    "Error with status code " + response.code(),
+                    response.code(),
+                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
+                    response);
+        } catch (IOException e) {
+            throw new IntercomException("Network error executing HTTP request", e);
+        }
     }
 
     /**

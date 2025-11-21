@@ -15,67 +15,69 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = TicketTypeAttribute.Builder.class)
 public final class TicketTypeAttribute {
-    private final String id;
+    private final Optional<String> type;
 
-    private final String workspaceId;
+    private final Optional<String> id;
 
-    private final String name;
+    private final Optional<String> workspaceId;
 
-    private final String description;
+    private final Optional<String> name;
 
-    private final DataType dataType;
+    private final Optional<String> description;
 
-    private final Map<String, Object> inputOptions;
+    private final Optional<DataType> dataType;
 
-    private final int order;
+    private final Optional<Map<String, Object>> inputOptions;
 
-    private final boolean requiredToCreate;
+    private final Optional<Integer> order;
 
-    private final boolean requiredToCreateForContacts;
+    private final Optional<Boolean> requiredToCreate;
 
-    private final boolean visibleOnCreate;
+    private final Optional<Boolean> requiredToCreateForContacts;
 
-    private final boolean visibleToContacts;
+    private final Optional<Boolean> visibleOnCreate;
 
-    private final boolean default_;
+    private final Optional<Boolean> visibleToContacts;
 
-    private final int ticketTypeId;
+    private final Optional<Boolean> default_;
 
-    private final boolean archived;
+    private final Optional<Integer> ticketTypeId;
 
-    private final int createdAt;
+    private final Optional<Boolean> archived;
+
+    private final Optional<Integer> createdAt;
 
     private final Optional<Integer> updatedAt;
 
     private final Map<String, Object> additionalProperties;
 
     private TicketTypeAttribute(
-            String id,
-            String workspaceId,
-            String name,
-            String description,
-            DataType dataType,
-            Map<String, Object> inputOptions,
-            int order,
-            boolean requiredToCreate,
-            boolean requiredToCreateForContacts,
-            boolean visibleOnCreate,
-            boolean visibleToContacts,
-            boolean default_,
-            int ticketTypeId,
-            boolean archived,
-            int createdAt,
+            Optional<String> type,
+            Optional<String> id,
+            Optional<String> workspaceId,
+            Optional<String> name,
+            Optional<String> description,
+            Optional<DataType> dataType,
+            Optional<Map<String, Object>> inputOptions,
+            Optional<Integer> order,
+            Optional<Boolean> requiredToCreate,
+            Optional<Boolean> requiredToCreateForContacts,
+            Optional<Boolean> visibleOnCreate,
+            Optional<Boolean> visibleToContacts,
+            Optional<Boolean> default_,
+            Optional<Integer> ticketTypeId,
+            Optional<Boolean> archived,
+            Optional<Integer> createdAt,
             Optional<Integer> updatedAt,
             Map<String, Object> additionalProperties) {
+        this.type = type;
         this.id = id;
         this.workspaceId = workspaceId;
         this.name = name;
@@ -99,15 +101,15 @@ public final class TicketTypeAttribute {
      * @return String representing the object's type. Always has the value <code>ticket_type_attribute</code>.
      */
     @JsonProperty("type")
-    public String getType() {
-        return "ticket_type_attribute";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The id representing the ticket type attribute.
      */
     @JsonProperty("id")
-    public String getId() {
+    public Optional<String> getId() {
         return id;
     }
 
@@ -115,7 +117,7 @@ public final class TicketTypeAttribute {
      * @return The id of the workspace that the ticket type attribute belongs to.
      */
     @JsonProperty("workspace_id")
-    public String getWorkspaceId() {
+    public Optional<String> getWorkspaceId() {
         return workspaceId;
     }
 
@@ -123,7 +125,7 @@ public final class TicketTypeAttribute {
      * @return The name of the ticket type attribute
      */
     @JsonProperty("name")
-    public String getName() {
+    public Optional<String> getName() {
         return name;
     }
 
@@ -131,7 +133,7 @@ public final class TicketTypeAttribute {
      * @return The description of the ticket type attribute
      */
     @JsonProperty("description")
-    public String getDescription() {
+    public Optional<String> getDescription() {
         return description;
     }
 
@@ -139,7 +141,7 @@ public final class TicketTypeAttribute {
      * @return The type of the data attribute (allowed values: &quot;string list integer decimal boolean datetime files&quot;)
      */
     @JsonProperty("data_type")
-    public DataType getDataType() {
+    public Optional<DataType> getDataType() {
         return dataType;
     }
 
@@ -147,7 +149,7 @@ public final class TicketTypeAttribute {
      * @return Input options for the attribute
      */
     @JsonProperty("input_options")
-    public Map<String, Object> getInputOptions() {
+    public Optional<Map<String, Object>> getInputOptions() {
         return inputOptions;
     }
 
@@ -155,7 +157,7 @@ public final class TicketTypeAttribute {
      * @return The order of the attribute against other attributes
      */
     @JsonProperty("order")
-    public int getOrder() {
+    public Optional<Integer> getOrder() {
         return order;
     }
 
@@ -163,7 +165,7 @@ public final class TicketTypeAttribute {
      * @return Whether the attribute is required or not for teammates.
      */
     @JsonProperty("required_to_create")
-    public boolean getRequiredToCreate() {
+    public Optional<Boolean> getRequiredToCreate() {
         return requiredToCreate;
     }
 
@@ -171,7 +173,7 @@ public final class TicketTypeAttribute {
      * @return Whether the attribute is required or not for contacts.
      */
     @JsonProperty("required_to_create_for_contacts")
-    public boolean getRequiredToCreateForContacts() {
+    public Optional<Boolean> getRequiredToCreateForContacts() {
         return requiredToCreateForContacts;
     }
 
@@ -179,7 +181,7 @@ public final class TicketTypeAttribute {
      * @return Whether the attribute is visible or not to teammates.
      */
     @JsonProperty("visible_on_create")
-    public boolean getVisibleOnCreate() {
+    public Optional<Boolean> getVisibleOnCreate() {
         return visibleOnCreate;
     }
 
@@ -187,7 +189,7 @@ public final class TicketTypeAttribute {
      * @return Whether the attribute is visible or not to contacts.
      */
     @JsonProperty("visible_to_contacts")
-    public boolean getVisibleToContacts() {
+    public Optional<Boolean> getVisibleToContacts() {
         return visibleToContacts;
     }
 
@@ -195,7 +197,7 @@ public final class TicketTypeAttribute {
      * @return Whether the attribute is built in or not.
      */
     @JsonProperty("default")
-    public boolean getDefault() {
+    public Optional<Boolean> getDefault() {
         return default_;
     }
 
@@ -203,7 +205,7 @@ public final class TicketTypeAttribute {
      * @return The id of the ticket type that the attribute belongs to.
      */
     @JsonProperty("ticket_type_id")
-    public int getTicketTypeId() {
+    public Optional<Integer> getTicketTypeId() {
         return ticketTypeId;
     }
 
@@ -211,7 +213,7 @@ public final class TicketTypeAttribute {
      * @return Whether the ticket type attribute is archived or not.
      */
     @JsonProperty("archived")
-    public boolean getArchived() {
+    public Optional<Boolean> getArchived() {
         return archived;
     }
 
@@ -219,7 +221,7 @@ public final class TicketTypeAttribute {
      * @return The date and time the ticket type attribute was created.
      */
     @JsonProperty("created_at")
-    public int getCreatedAt() {
+    public Optional<Integer> getCreatedAt() {
         return createdAt;
     }
 
@@ -243,27 +245,29 @@ public final class TicketTypeAttribute {
     }
 
     private boolean equalTo(TicketTypeAttribute other) {
-        return id.equals(other.id)
+        return type.equals(other.type)
+                && id.equals(other.id)
                 && workspaceId.equals(other.workspaceId)
                 && name.equals(other.name)
                 && description.equals(other.description)
                 && dataType.equals(other.dataType)
                 && inputOptions.equals(other.inputOptions)
-                && order == other.order
-                && requiredToCreate == other.requiredToCreate
-                && requiredToCreateForContacts == other.requiredToCreateForContacts
-                && visibleOnCreate == other.visibleOnCreate
-                && visibleToContacts == other.visibleToContacts
-                && default_ == other.default_
-                && ticketTypeId == other.ticketTypeId
-                && archived == other.archived
-                && createdAt == other.createdAt
+                && order.equals(other.order)
+                && requiredToCreate.equals(other.requiredToCreate)
+                && requiredToCreateForContacts.equals(other.requiredToCreateForContacts)
+                && visibleOnCreate.equals(other.visibleOnCreate)
+                && visibleToContacts.equals(other.visibleToContacts)
+                && default_.equals(other.default_)
+                && ticketTypeId.equals(other.ticketTypeId)
+                && archived.equals(other.archived)
+                && createdAt.equals(other.createdAt)
                 && updatedAt.equals(other.updatedAt);
     }
 
     @java.lang.Override
     public int hashCode() {
         return Objects.hash(
+                this.type,
                 this.id,
                 this.workspaceId,
                 this.name,
@@ -287,186 +291,53 @@ public final class TicketTypeAttribute {
         return ObjectMappers.stringify(this);
     }
 
-    public static IdStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface IdStage {
-        /**
-         * The id representing the ticket type attribute.
-         */
-        WorkspaceIdStage id(@NotNull String id);
-
-        Builder from(TicketTypeAttribute other);
-    }
-
-    public interface WorkspaceIdStage {
-        /**
-         * The id of the workspace that the ticket type attribute belongs to.
-         */
-        NameStage workspaceId(@NotNull String workspaceId);
-    }
-
-    public interface NameStage {
-        /**
-         * The name of the ticket type attribute
-         */
-        DescriptionStage name(@NotNull String name);
-    }
-
-    public interface DescriptionStage {
-        /**
-         * The description of the ticket type attribute
-         */
-        DataTypeStage description(@NotNull String description);
-    }
-
-    public interface DataTypeStage {
-        /**
-         * The type of the data attribute (allowed values: "string list integer decimal boolean datetime files")
-         */
-        OrderStage dataType(@NotNull DataType dataType);
-    }
-
-    public interface OrderStage {
-        /**
-         * The order of the attribute against other attributes
-         */
-        RequiredToCreateStage order(int order);
-    }
-
-    public interface RequiredToCreateStage {
-        /**
-         * Whether the attribute is required or not for teammates.
-         */
-        RequiredToCreateForContactsStage requiredToCreate(boolean requiredToCreate);
-    }
-
-    public interface RequiredToCreateForContactsStage {
-        /**
-         * Whether the attribute is required or not for contacts.
-         */
-        VisibleOnCreateStage requiredToCreateForContacts(boolean requiredToCreateForContacts);
-    }
-
-    public interface VisibleOnCreateStage {
-        /**
-         * Whether the attribute is visible or not to teammates.
-         */
-        VisibleToContactsStage visibleOnCreate(boolean visibleOnCreate);
-    }
-
-    public interface VisibleToContactsStage {
-        /**
-         * Whether the attribute is visible or not to contacts.
-         */
-        DefaultStage visibleToContacts(boolean visibleToContacts);
-    }
-
-    public interface DefaultStage {
-        /**
-         * Whether the attribute is built in or not.
-         */
-        TicketTypeIdStage default_(boolean default_);
-    }
-
-    public interface TicketTypeIdStage {
-        /**
-         * The id of the ticket type that the attribute belongs to.
-         */
-        ArchivedStage ticketTypeId(int ticketTypeId);
-    }
-
-    public interface ArchivedStage {
-        /**
-         * Whether the ticket type attribute is archived or not.
-         */
-        CreatedAtStage archived(boolean archived);
-    }
-
-    public interface CreatedAtStage {
-        /**
-         * The date and time the ticket type attribute was created.
-         */
-        _FinalStage createdAt(int createdAt);
-    }
-
-    public interface _FinalStage {
-        TicketTypeAttribute build();
-
-        /**
-         * <p>Input options for the attribute</p>
-         */
-        _FinalStage inputOptions(Map<String, Object> inputOptions);
-
-        _FinalStage putAllInputOptions(Map<String, Object> inputOptions);
-
-        _FinalStage inputOptions(String key, Object value);
-
-        /**
-         * <p>The date and time the ticket type attribute was last updated.</p>
-         */
-        _FinalStage updatedAt(Optional<Integer> updatedAt);
-
-        _FinalStage updatedAt(Integer updatedAt);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder
-            implements IdStage,
-                    WorkspaceIdStage,
-                    NameStage,
-                    DescriptionStage,
-                    DataTypeStage,
-                    OrderStage,
-                    RequiredToCreateStage,
-                    RequiredToCreateForContactsStage,
-                    VisibleOnCreateStage,
-                    VisibleToContactsStage,
-                    DefaultStage,
-                    TicketTypeIdStage,
-                    ArchivedStage,
-                    CreatedAtStage,
-                    _FinalStage {
-        private String id;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private String workspaceId;
+        private Optional<String> id = Optional.empty();
 
-        private String name;
+        private Optional<String> workspaceId = Optional.empty();
 
-        private String description;
+        private Optional<String> name = Optional.empty();
 
-        private DataType dataType;
+        private Optional<String> description = Optional.empty();
 
-        private int order;
+        private Optional<DataType> dataType = Optional.empty();
 
-        private boolean requiredToCreate;
+        private Optional<Map<String, Object>> inputOptions = Optional.empty();
 
-        private boolean requiredToCreateForContacts;
+        private Optional<Integer> order = Optional.empty();
 
-        private boolean visibleOnCreate;
+        private Optional<Boolean> requiredToCreate = Optional.empty();
 
-        private boolean visibleToContacts;
+        private Optional<Boolean> requiredToCreateForContacts = Optional.empty();
 
-        private boolean default_;
+        private Optional<Boolean> visibleOnCreate = Optional.empty();
 
-        private int ticketTypeId;
+        private Optional<Boolean> visibleToContacts = Optional.empty();
 
-        private boolean archived;
+        private Optional<Boolean> default_ = Optional.empty();
 
-        private int createdAt;
+        private Optional<Integer> ticketTypeId = Optional.empty();
+
+        private Optional<Boolean> archived = Optional.empty();
+
+        private Optional<Integer> createdAt = Optional.empty();
 
         private Optional<Integer> updatedAt = Optional.empty();
-
-        private Map<String, Object> inputOptions = new LinkedHashMap<>();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(TicketTypeAttribute other) {
+            type(other.getType());
             id(other.getId());
             workspaceId(other.getWorkspaceId());
             name(other.getName());
@@ -487,213 +358,246 @@ public final class TicketTypeAttribute {
         }
 
         /**
-         * The id representing the ticket type attribute.<p>The id representing the ticket type attribute.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>String representing the object's type. Always has the value <code>ticket_type_attribute</code>.</p>
          */
-        @java.lang.Override
-        @JsonSetter("id")
-        public WorkspaceIdStage id(@NotNull String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
-         * The id of the workspace that the ticket type attribute belongs to.<p>The id of the workspace that the ticket type attribute belongs to.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The id representing the ticket type attribute.</p>
          */
-        @java.lang.Override
-        @JsonSetter("workspace_id")
-        public NameStage workspaceId(@NotNull String workspaceId) {
-            this.workspaceId = Objects.requireNonNull(workspaceId, "workspaceId must not be null");
+        @JsonSetter(value = "id", nulls = Nulls.SKIP)
+        public Builder id(Optional<String> id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder id(String id) {
+            this.id = Optional.ofNullable(id);
             return this;
         }
 
         /**
-         * The name of the ticket type attribute<p>The name of the ticket type attribute</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The id of the workspace that the ticket type attribute belongs to.</p>
          */
-        @java.lang.Override
-        @JsonSetter("name")
-        public DescriptionStage name(@NotNull String name) {
-            this.name = Objects.requireNonNull(name, "name must not be null");
+        @JsonSetter(value = "workspace_id", nulls = Nulls.SKIP)
+        public Builder workspaceId(Optional<String> workspaceId) {
+            this.workspaceId = workspaceId;
+            return this;
+        }
+
+        public Builder workspaceId(String workspaceId) {
+            this.workspaceId = Optional.ofNullable(workspaceId);
             return this;
         }
 
         /**
-         * The description of the ticket type attribute<p>The description of the ticket type attribute</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The name of the ticket type attribute</p>
          */
-        @java.lang.Override
-        @JsonSetter("description")
-        public DataTypeStage description(@NotNull String description) {
-            this.description = Objects.requireNonNull(description, "description must not be null");
+        @JsonSetter(value = "name", nulls = Nulls.SKIP)
+        public Builder name(Optional<String> name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = Optional.ofNullable(name);
             return this;
         }
 
         /**
-         * The type of the data attribute (allowed values: "string list integer decimal boolean datetime files")<p>The type of the data attribute (allowed values: &quot;string list integer decimal boolean datetime files&quot;)</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The description of the ticket type attribute</p>
          */
-        @java.lang.Override
-        @JsonSetter("data_type")
-        public OrderStage dataType(@NotNull DataType dataType) {
-            this.dataType = Objects.requireNonNull(dataType, "dataType must not be null");
+        @JsonSetter(value = "description", nulls = Nulls.SKIP)
+        public Builder description(Optional<String> description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = Optional.ofNullable(description);
             return this;
         }
 
         /**
-         * The order of the attribute against other attributes<p>The order of the attribute against other attributes</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The type of the data attribute (allowed values: &quot;string list integer decimal boolean datetime files&quot;)</p>
          */
-        @java.lang.Override
-        @JsonSetter("order")
-        public RequiredToCreateStage order(int order) {
+        @JsonSetter(value = "data_type", nulls = Nulls.SKIP)
+        public Builder dataType(Optional<DataType> dataType) {
+            this.dataType = dataType;
+            return this;
+        }
+
+        public Builder dataType(DataType dataType) {
+            this.dataType = Optional.ofNullable(dataType);
+            return this;
+        }
+
+        /**
+         * <p>Input options for the attribute</p>
+         */
+        @JsonSetter(value = "input_options", nulls = Nulls.SKIP)
+        public Builder inputOptions(Optional<Map<String, Object>> inputOptions) {
+            this.inputOptions = inputOptions;
+            return this;
+        }
+
+        public Builder inputOptions(Map<String, Object> inputOptions) {
+            this.inputOptions = Optional.ofNullable(inputOptions);
+            return this;
+        }
+
+        /**
+         * <p>The order of the attribute against other attributes</p>
+         */
+        @JsonSetter(value = "order", nulls = Nulls.SKIP)
+        public Builder order(Optional<Integer> order) {
             this.order = order;
             return this;
         }
 
+        public Builder order(Integer order) {
+            this.order = Optional.ofNullable(order);
+            return this;
+        }
+
         /**
-         * Whether the attribute is required or not for teammates.<p>Whether the attribute is required or not for teammates.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Whether the attribute is required or not for teammates.</p>
          */
-        @java.lang.Override
-        @JsonSetter("required_to_create")
-        public RequiredToCreateForContactsStage requiredToCreate(boolean requiredToCreate) {
+        @JsonSetter(value = "required_to_create", nulls = Nulls.SKIP)
+        public Builder requiredToCreate(Optional<Boolean> requiredToCreate) {
             this.requiredToCreate = requiredToCreate;
             return this;
         }
 
+        public Builder requiredToCreate(Boolean requiredToCreate) {
+            this.requiredToCreate = Optional.ofNullable(requiredToCreate);
+            return this;
+        }
+
         /**
-         * Whether the attribute is required or not for contacts.<p>Whether the attribute is required or not for contacts.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Whether the attribute is required or not for contacts.</p>
          */
-        @java.lang.Override
-        @JsonSetter("required_to_create_for_contacts")
-        public VisibleOnCreateStage requiredToCreateForContacts(boolean requiredToCreateForContacts) {
+        @JsonSetter(value = "required_to_create_for_contacts", nulls = Nulls.SKIP)
+        public Builder requiredToCreateForContacts(Optional<Boolean> requiredToCreateForContacts) {
             this.requiredToCreateForContacts = requiredToCreateForContacts;
             return this;
         }
 
+        public Builder requiredToCreateForContacts(Boolean requiredToCreateForContacts) {
+            this.requiredToCreateForContacts = Optional.ofNullable(requiredToCreateForContacts);
+            return this;
+        }
+
         /**
-         * Whether the attribute is visible or not to teammates.<p>Whether the attribute is visible or not to teammates.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Whether the attribute is visible or not to teammates.</p>
          */
-        @java.lang.Override
-        @JsonSetter("visible_on_create")
-        public VisibleToContactsStage visibleOnCreate(boolean visibleOnCreate) {
+        @JsonSetter(value = "visible_on_create", nulls = Nulls.SKIP)
+        public Builder visibleOnCreate(Optional<Boolean> visibleOnCreate) {
             this.visibleOnCreate = visibleOnCreate;
             return this;
         }
 
+        public Builder visibleOnCreate(Boolean visibleOnCreate) {
+            this.visibleOnCreate = Optional.ofNullable(visibleOnCreate);
+            return this;
+        }
+
         /**
-         * Whether the attribute is visible or not to contacts.<p>Whether the attribute is visible or not to contacts.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Whether the attribute is visible or not to contacts.</p>
          */
-        @java.lang.Override
-        @JsonSetter("visible_to_contacts")
-        public DefaultStage visibleToContacts(boolean visibleToContacts) {
+        @JsonSetter(value = "visible_to_contacts", nulls = Nulls.SKIP)
+        public Builder visibleToContacts(Optional<Boolean> visibleToContacts) {
             this.visibleToContacts = visibleToContacts;
             return this;
         }
 
+        public Builder visibleToContacts(Boolean visibleToContacts) {
+            this.visibleToContacts = Optional.ofNullable(visibleToContacts);
+            return this;
+        }
+
         /**
-         * Whether the attribute is built in or not.<p>Whether the attribute is built in or not.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Whether the attribute is built in or not.</p>
          */
-        @java.lang.Override
-        @JsonSetter("default")
-        public TicketTypeIdStage default_(boolean default_) {
+        @JsonSetter(value = "default", nulls = Nulls.SKIP)
+        public Builder default_(Optional<Boolean> default_) {
             this.default_ = default_;
             return this;
         }
 
+        public Builder default_(Boolean default_) {
+            this.default_ = Optional.ofNullable(default_);
+            return this;
+        }
+
         /**
-         * The id of the ticket type that the attribute belongs to.<p>The id of the ticket type that the attribute belongs to.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The id of the ticket type that the attribute belongs to.</p>
          */
-        @java.lang.Override
-        @JsonSetter("ticket_type_id")
-        public ArchivedStage ticketTypeId(int ticketTypeId) {
+        @JsonSetter(value = "ticket_type_id", nulls = Nulls.SKIP)
+        public Builder ticketTypeId(Optional<Integer> ticketTypeId) {
             this.ticketTypeId = ticketTypeId;
             return this;
         }
 
+        public Builder ticketTypeId(Integer ticketTypeId) {
+            this.ticketTypeId = Optional.ofNullable(ticketTypeId);
+            return this;
+        }
+
         /**
-         * Whether the ticket type attribute is archived or not.<p>Whether the ticket type attribute is archived or not.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Whether the ticket type attribute is archived or not.</p>
          */
-        @java.lang.Override
-        @JsonSetter("archived")
-        public CreatedAtStage archived(boolean archived) {
+        @JsonSetter(value = "archived", nulls = Nulls.SKIP)
+        public Builder archived(Optional<Boolean> archived) {
             this.archived = archived;
             return this;
         }
 
+        public Builder archived(Boolean archived) {
+            this.archived = Optional.ofNullable(archived);
+            return this;
+        }
+
         /**
-         * The date and time the ticket type attribute was created.<p>The date and time the ticket type attribute was created.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The date and time the ticket type attribute was created.</p>
          */
-        @java.lang.Override
-        @JsonSetter("created_at")
-        public _FinalStage createdAt(int createdAt) {
+        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
+        public Builder createdAt(Optional<Integer> createdAt) {
             this.createdAt = createdAt;
             return this;
         }
 
-        /**
-         * <p>The date and time the ticket type attribute was last updated.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage updatedAt(Integer updatedAt) {
-            this.updatedAt = Optional.ofNullable(updatedAt);
+        public Builder createdAt(Integer createdAt) {
+            this.createdAt = Optional.ofNullable(createdAt);
             return this;
         }
 
         /**
          * <p>The date and time the ticket type attribute was last updated.</p>
          */
-        @java.lang.Override
         @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
-        public _FinalStage updatedAt(Optional<Integer> updatedAt) {
+        public Builder updatedAt(Optional<Integer> updatedAt) {
             this.updatedAt = updatedAt;
             return this;
         }
 
-        /**
-         * <p>Input options for the attribute</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage inputOptions(String key, Object value) {
-            this.inputOptions.put(key, value);
+        public Builder updatedAt(Integer updatedAt) {
+            this.updatedAt = Optional.ofNullable(updatedAt);
             return this;
         }
 
-        /**
-         * <p>Input options for the attribute</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage putAllInputOptions(Map<String, Object> inputOptions) {
-            this.inputOptions.putAll(inputOptions);
-            return this;
-        }
-
-        /**
-         * <p>Input options for the attribute</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "input_options", nulls = Nulls.SKIP)
-        public _FinalStage inputOptions(Map<String, Object> inputOptions) {
-            this.inputOptions.clear();
-            this.inputOptions.putAll(inputOptions);
-            return this;
-        }
-
-        @java.lang.Override
         public TicketTypeAttribute build() {
             return new TicketTypeAttribute(
+                    type,
                     id,
                     workspaceId,
                     name,

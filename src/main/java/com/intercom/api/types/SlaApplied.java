@@ -11,25 +11,30 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = SlaApplied.Builder.class)
 public final class SlaApplied {
-    private final String type;
+    private final Optional<String> type;
 
-    private final String slaName;
+    private final Optional<String> slaName;
 
-    private final SlaStatus slaStatus;
+    private final Optional<SlaStatus> slaStatus;
 
     private final Map<String, Object> additionalProperties;
 
-    private SlaApplied(String type, String slaName, SlaStatus slaStatus, Map<String, Object> additionalProperties) {
+    private SlaApplied(
+            Optional<String> type,
+            Optional<String> slaName,
+            Optional<SlaStatus> slaStatus,
+            Map<String, Object> additionalProperties) {
         this.type = type;
         this.slaName = slaName;
         this.slaStatus = slaStatus;
@@ -40,7 +45,7 @@ public final class SlaApplied {
      * @return object type
      */
     @JsonProperty("type")
-    public String getType() {
+    public Optional<String> getType() {
         return type;
     }
 
@@ -48,7 +53,7 @@ public final class SlaApplied {
      * @return The name of the SLA as given by the teammate when it was created.
      */
     @JsonProperty("sla_name")
-    public String getSlaName() {
+    public Optional<String> getSlaName() {
         return slaName;
     }
 
@@ -59,7 +64,7 @@ public final class SlaApplied {
      * - <code>active</code>: An SLA has been applied to a conversation, but has not yet been fulfilled. SLA status is active only if there are no “hit, “missed”, or “canceled” events.
      */
     @JsonProperty("sla_status")
-    public SlaStatus getSlaStatus() {
+    public Optional<SlaStatus> getSlaStatus() {
         return slaStatus;
     }
 
@@ -88,54 +93,23 @@ public final class SlaApplied {
         return ObjectMappers.stringify(this);
     }
 
-    public static TypeStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface TypeStage {
-        /**
-         * object type
-         */
-        SlaNameStage type(@NotNull String type);
-
-        Builder from(SlaApplied other);
-    }
-
-    public interface SlaNameStage {
-        /**
-         * The name of the SLA as given by the teammate when it was created.
-         */
-        SlaStatusStage slaName(@NotNull String slaName);
-    }
-
-    public interface SlaStatusStage {
-        /**
-         * SLA statuses:
-         *             - `hit`: If there’s at least one hit event in the underlying sla_events table, and no “missed” or “canceled” events for the conversation.
-         *             - `missed`: If there are any missed sla_events for the conversation and no canceled events. If there’s even a single missed sla event, the status will always be missed. A missed status is not applied when the SLA expires, only the next time a teammate replies.
-         *             - `active`: An SLA has been applied to a conversation, but has not yet been fulfilled. SLA status is active only if there are no “hit, “missed”, or “canceled” events.
-         */
-        _FinalStage slaStatus(@NotNull SlaStatus slaStatus);
-    }
-
-    public interface _FinalStage {
-        SlaApplied build();
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements TypeStage, SlaNameStage, SlaStatusStage, _FinalStage {
-        private String type;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private String slaName;
+        private Optional<String> slaName = Optional.empty();
 
-        private SlaStatus slaStatus;
+        private Optional<SlaStatus> slaStatus = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(SlaApplied other) {
             type(other.getType());
             slaName(other.getSlaName());
@@ -144,45 +118,50 @@ public final class SlaApplied {
         }
 
         /**
-         * object type<p>object type</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>object type</p>
          */
-        @java.lang.Override
-        @JsonSetter("type")
-        public SlaNameStage type(@NotNull String type) {
-            this.type = Objects.requireNonNull(type, "type must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
-         * The name of the SLA as given by the teammate when it was created.<p>The name of the SLA as given by the teammate when it was created.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The name of the SLA as given by the teammate when it was created.</p>
          */
-        @java.lang.Override
-        @JsonSetter("sla_name")
-        public SlaStatusStage slaName(@NotNull String slaName) {
-            this.slaName = Objects.requireNonNull(slaName, "slaName must not be null");
+        @JsonSetter(value = "sla_name", nulls = Nulls.SKIP)
+        public Builder slaName(Optional<String> slaName) {
+            this.slaName = slaName;
+            return this;
+        }
+
+        public Builder slaName(String slaName) {
+            this.slaName = Optional.ofNullable(slaName);
             return this;
         }
 
         /**
-         * SLA statuses:
-         *             - `hit`: If there’s at least one hit event in the underlying sla_events table, and no “missed” or “canceled” events for the conversation.
-         *             - `missed`: If there are any missed sla_events for the conversation and no canceled events. If there’s even a single missed sla event, the status will always be missed. A missed status is not applied when the SLA expires, only the next time a teammate replies.
-         *             - `active`: An SLA has been applied to a conversation, but has not yet been fulfilled. SLA status is active only if there are no “hit, “missed”, or “canceled” events.<p>SLA statuses:
+         * <p>SLA statuses:
          * - <code>hit</code>: If there’s at least one hit event in the underlying sla_events table, and no “missed” or “canceled” events for the conversation.
          * - <code>missed</code>: If there are any missed sla_events for the conversation and no canceled events. If there’s even a single missed sla event, the status will always be missed. A missed status is not applied when the SLA expires, only the next time a teammate replies.
          * - <code>active</code>: An SLA has been applied to a conversation, but has not yet been fulfilled. SLA status is active only if there are no “hit, “missed”, or “canceled” events.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @java.lang.Override
-        @JsonSetter("sla_status")
-        public _FinalStage slaStatus(@NotNull SlaStatus slaStatus) {
-            this.slaStatus = Objects.requireNonNull(slaStatus, "slaStatus must not be null");
+        @JsonSetter(value = "sla_status", nulls = Nulls.SKIP)
+        public Builder slaStatus(Optional<SlaStatus> slaStatus) {
+            this.slaStatus = slaStatus;
             return this;
         }
 
-        @java.lang.Override
+        public Builder slaStatus(SlaStatus slaStatus) {
+            this.slaStatus = Optional.ofNullable(slaStatus);
+            return this;
+        }
+
         public SlaApplied build() {
             return new SlaApplied(type, slaName, slaStatus, additionalProperties);
         }

@@ -380,8 +380,8 @@ public class RawTicketsClient {
      * | id                                        | String                                                                                   |
      * | created_at                                | Date (UNIX timestamp)                                                                    |
      * | updated_at                                | Date (UNIX timestamp)                                                                    |
-     * | <em>default_title</em>                           | String                                                                                   |
-     * | <em>default_description</em>                     | String                                                                                   |
+     * | title                           | String                                                                                   |
+     * | description                     | String                                                                                   |
      * | category                                  | String                                                                                   |
      * | ticket_type_id                            | String                                                                                   |
      * | contact_ids                               | String                                                                                   |
@@ -392,6 +392,14 @@ public class RawTicketsClient {
      * | state                                     | String                                                                                   |
      * | snoozed_until                             | Date (UNIX timestamp)                                                                    |
      * | ticket_attribute.{id}                     | String or Boolean or Date (UNIX timestamp) or Float or Integer                           |</p>
+     * <p>{% admonition type=&quot;info&quot; name=&quot;Searching by Category&quot; %}
+     * When searching for tickets by the <strong><code>category</code></strong> field, specific terms must be used instead of the category names:</p>
+     * <ul>
+     * <li>For <strong>Customer</strong> category tickets, use the term <code>request</code>.</li>
+     * <li>For <strong>Back-office</strong> category tickets, use the term <code>task</code>.</li>
+     * <li>For <strong>Tracker</strong> category tickets, use the term <code>tracker</code>.
+     * {% /admonition %}</li>
+     * </ul>
      * <h3>Accepted Operators</h3>
      * <p>{% admonition type=&quot;info&quot; name=&quot;Searching based on <code>created_at</code>&quot; %}
      * You may use the <code>&lt;=</code> or <code>&gt;=</code> operators to search by <code>created_at</code>.
@@ -439,8 +447,8 @@ public class RawTicketsClient {
      * | id                                        | String                                                                                   |
      * | created_at                                | Date (UNIX timestamp)                                                                    |
      * | updated_at                                | Date (UNIX timestamp)                                                                    |
-     * | <em>default_title</em>                           | String                                                                                   |
-     * | <em>default_description</em>                     | String                                                                                   |
+     * | title                           | String                                                                                   |
+     * | description                     | String                                                                                   |
      * | category                                  | String                                                                                   |
      * | ticket_type_id                            | String                                                                                   |
      * | contact_ids                               | String                                                                                   |
@@ -451,6 +459,14 @@ public class RawTicketsClient {
      * | state                                     | String                                                                                   |
      * | snoozed_until                             | Date (UNIX timestamp)                                                                    |
      * | ticket_attribute.{id}                     | String or Boolean or Date (UNIX timestamp) or Float or Integer                           |</p>
+     * <p>{% admonition type=&quot;info&quot; name=&quot;Searching by Category&quot; %}
+     * When searching for tickets by the <strong><code>category</code></strong> field, specific terms must be used instead of the category names:</p>
+     * <ul>
+     * <li>For <strong>Customer</strong> category tickets, use the term <code>request</code>.</li>
+     * <li>For <strong>Back-office</strong> category tickets, use the term <code>task</code>.</li>
+     * <li>For <strong>Tracker</strong> category tickets, use the term <code>tracker</code>.
+     * {% /admonition %}</li>
+     * </ul>
      * <h3>Accepted Operators</h3>
      * <p>{% admonition type=&quot;info&quot; name=&quot;Searching based on <code>created_at</code>&quot; %}
      * You may use the <code>&lt;=</code> or <code>&gt;=</code> operators to search by <code>created_at</code>.

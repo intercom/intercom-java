@@ -26,6 +26,7 @@ import com.intercom.api.types.CollectionList;
 import com.intercom.api.types.DeletedCollectionObject;
 import com.intercom.api.types.Error;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -106,7 +107,7 @@ public class AsyncRawCollectionsClient {
                                 .from(request)
                                 .page(newPageNumber)
                                 .build();
-                        List<Collection> result = parsedResponse.getData();
+                        List<Collection> result = parsedResponse.getData().orElse(Collections.emptyList());
                         future.complete(new IntercomHttpResponse<>(
                                 new SyncPagingIterable<Collection>(true, result, () -> {
                                     try {
@@ -245,7 +246,7 @@ public class AsyncRawCollectionsClient {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("help_center/collections")
-                .addPathSegment(request.getCollectionId())
+                .addPathSegment(Integer.toString(request.getCollectionId()))
                 .build();
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl)
@@ -320,7 +321,7 @@ public class AsyncRawCollectionsClient {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("help_center/collections")
-                .addPathSegment(request.getCollectionId())
+                .addPathSegment(Integer.toString(request.getCollectionId()))
                 .build();
         RequestBody body;
         try {
@@ -402,7 +403,7 @@ public class AsyncRawCollectionsClient {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("help_center/collections")
-                .addPathSegment(request.getCollectionId())
+                .addPathSegment(Integer.toString(request.getCollectionId()))
                 .build();
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl)

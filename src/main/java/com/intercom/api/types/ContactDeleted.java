@@ -16,21 +16,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ContactDeleted.Builder.class)
-public final class ContactDeleted {
-    private final String id;
+public final class ContactDeleted implements IContactReference {
+    private final Optional<String> type;
+
+    private final Optional<String> id;
 
     private final Optional<String> externalId;
 
-    private final boolean deleted;
+    private final Optional<Boolean> deleted;
 
     private final Map<String, Object> additionalProperties;
 
     private ContactDeleted(
-            String id, Optional<String> externalId, boolean deleted, Map<String, Object> additionalProperties) {
+            Optional<String> type,
+            Optional<String> id,
+            Optional<String> externalId,
+            Optional<Boolean> deleted,
+            Map<String, Object> additionalProperties) {
+        this.type = type;
         this.id = id;
         this.externalId = externalId;
         this.deleted = deleted;
@@ -41,15 +47,15 @@ public final class ContactDeleted {
      * @return always contact
      */
     @JsonProperty("type")
-    public String getType() {
-        return "contact";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The unique identifier for the contact which is given by Intercom.
      */
     @JsonProperty("id")
-    public String getId() {
+    public Optional<String> getId() {
         return id;
     }
 
@@ -65,7 +71,7 @@ public final class ContactDeleted {
      * @return Whether the contact is deleted or not.
      */
     @JsonProperty("deleted")
-    public boolean getDeleted() {
+    public Optional<Boolean> getDeleted() {
         return deleted;
     }
 
@@ -81,12 +87,15 @@ public final class ContactDeleted {
     }
 
     private boolean equalTo(ContactDeleted other) {
-        return id.equals(other.id) && externalId.equals(other.externalId) && deleted == other.deleted;
+        return type.equals(other.type)
+                && id.equals(other.id)
+                && externalId.equals(other.externalId)
+                && deleted.equals(other.deleted);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.id, this.externalId, this.deleted);
+        return Objects.hash(this.type, this.id, this.externalId, this.deleted);
     }
 
     @java.lang.Override
@@ -94,52 +103,27 @@ public final class ContactDeleted {
         return ObjectMappers.stringify(this);
     }
 
-    public static IdStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface IdStage {
-        /**
-         * The unique identifier for the contact which is given by Intercom.
-         */
-        DeletedStage id(@NotNull String id);
-
-        Builder from(ContactDeleted other);
-    }
-
-    public interface DeletedStage {
-        /**
-         * Whether the contact is deleted or not.
-         */
-        _FinalStage deleted(boolean deleted);
-    }
-
-    public interface _FinalStage {
-        ContactDeleted build();
-
-        /**
-         * <p>The unique identifier for the contact which is provided by the Client.</p>
-         */
-        _FinalStage externalId(Optional<String> externalId);
-
-        _FinalStage externalId(String externalId);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements IdStage, DeletedStage, _FinalStage {
-        private String id;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private boolean deleted;
+        private Optional<String> id = Optional.empty();
 
         private Optional<String> externalId = Optional.empty();
+
+        private Optional<Boolean> deleted = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(ContactDeleted other) {
+            type(other.getType());
             id(other.getId());
             externalId(other.getExternalId());
             deleted(other.getDeleted());
@@ -147,50 +131,63 @@ public final class ContactDeleted {
         }
 
         /**
-         * The unique identifier for the contact which is given by Intercom.<p>The unique identifier for the contact which is given by Intercom.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>always contact</p>
          */
-        @java.lang.Override
-        @JsonSetter("id")
-        public DeletedStage id(@NotNull String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
-         * Whether the contact is deleted or not.<p>Whether the contact is deleted or not.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The unique identifier for the contact which is given by Intercom.</p>
          */
-        @java.lang.Override
-        @JsonSetter("deleted")
-        public _FinalStage deleted(boolean deleted) {
-            this.deleted = deleted;
+        @JsonSetter(value = "id", nulls = Nulls.SKIP)
+        public Builder id(Optional<String> id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder id(String id) {
+            this.id = Optional.ofNullable(id);
             return this;
         }
 
         /**
          * <p>The unique identifier for the contact which is provided by the Client.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @java.lang.Override
-        public _FinalStage externalId(String externalId) {
+        @JsonSetter(value = "external_id", nulls = Nulls.SKIP)
+        public Builder externalId(Optional<String> externalId) {
+            this.externalId = externalId;
+            return this;
+        }
+
+        public Builder externalId(String externalId) {
             this.externalId = Optional.ofNullable(externalId);
             return this;
         }
 
         /**
-         * <p>The unique identifier for the contact which is provided by the Client.</p>
+         * <p>Whether the contact is deleted or not.</p>
          */
-        @java.lang.Override
-        @JsonSetter(value = "external_id", nulls = Nulls.SKIP)
-        public _FinalStage externalId(Optional<String> externalId) {
-            this.externalId = externalId;
+        @JsonSetter(value = "deleted", nulls = Nulls.SKIP)
+        public Builder deleted(Optional<Boolean> deleted) {
+            this.deleted = deleted;
             return this;
         }
 
-        @java.lang.Override
+        public Builder deleted(Boolean deleted) {
+            this.deleted = Optional.ofNullable(deleted);
+            return this;
+        }
+
         public ContactDeleted build() {
-            return new ContactDeleted(id, externalId, deleted, additionalProperties);
+            return new ContactDeleted(type, id, externalId, deleted, additionalProperties);
         }
     }
 }

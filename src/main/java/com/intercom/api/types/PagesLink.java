@@ -20,18 +20,26 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = PagesLink.Builder.class)
 public final class PagesLink {
-    private final int page;
+    private final Optional<String> type;
+
+    private final Optional<Integer> page;
 
     private final Optional<String> next;
 
-    private final int perPage;
+    private final Optional<Integer> perPage;
 
-    private final int totalPages;
+    private final Optional<Integer> totalPages;
 
     private final Map<String, Object> additionalProperties;
 
     private PagesLink(
-            int page, Optional<String> next, int perPage, int totalPages, Map<String, Object> additionalProperties) {
+            Optional<String> type,
+            Optional<Integer> page,
+            Optional<String> next,
+            Optional<Integer> perPage,
+            Optional<Integer> totalPages,
+            Map<String, Object> additionalProperties) {
+        this.type = type;
         this.page = page;
         this.next = next;
         this.perPage = perPage;
@@ -40,12 +48,12 @@ public final class PagesLink {
     }
 
     @JsonProperty("type")
-    public String getType() {
-        return "pages";
+    public Optional<String> getType() {
+        return type;
     }
 
     @JsonProperty("page")
-    public int getPage() {
+    public Optional<Integer> getPage() {
         return page;
     }
 
@@ -58,12 +66,12 @@ public final class PagesLink {
     }
 
     @JsonProperty("per_page")
-    public int getPerPage() {
+    public Optional<Integer> getPerPage() {
         return perPage;
     }
 
     @JsonProperty("total_pages")
-    public int getTotalPages() {
+    public Optional<Integer> getTotalPages() {
         return totalPages;
     }
 
@@ -79,15 +87,16 @@ public final class PagesLink {
     }
 
     private boolean equalTo(PagesLink other) {
-        return page == other.page
+        return type.equals(other.type)
+                && page.equals(other.page)
                 && next.equals(other.next)
-                && perPage == other.perPage
-                && totalPages == other.totalPages;
+                && perPage.equals(other.perPage)
+                && totalPages.equals(other.totalPages);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.page, this.next, this.perPage, this.totalPages);
+        return Objects.hash(this.type, this.page, this.next, this.perPage, this.totalPages);
     }
 
     @java.lang.Override
@@ -95,52 +104,29 @@ public final class PagesLink {
         return ObjectMappers.stringify(this);
     }
 
-    public static PageStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface PageStage {
-        PerPageStage page(int page);
-
-        Builder from(PagesLink other);
-    }
-
-    public interface PerPageStage {
-        TotalPagesStage perPage(int perPage);
-    }
-
-    public interface TotalPagesStage {
-        _FinalStage totalPages(int totalPages);
-    }
-
-    public interface _FinalStage {
-        PagesLink build();
-
-        /**
-         * <p>A link to the next page of results. A response that does not contain a next link does not have further data to fetch.</p>
-         */
-        _FinalStage next(Optional<String> next);
-
-        _FinalStage next(String next);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements PageStage, PerPageStage, TotalPagesStage, _FinalStage {
-        private int page;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private int perPage;
-
-        private int totalPages;
+        private Optional<Integer> page = Optional.empty();
 
         private Optional<String> next = Optional.empty();
+
+        private Optional<Integer> perPage = Optional.empty();
+
+        private Optional<Integer> totalPages = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(PagesLink other) {
+            type(other.getType());
             page(other.getPage());
             next(other.getNext());
             perPage(other.getPerPage());
@@ -148,50 +134,66 @@ public final class PagesLink {
             return this;
         }
 
-        @java.lang.Override
-        @JsonSetter("page")
-        public PerPageStage page(int page) {
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
+            return this;
+        }
+
+        @JsonSetter(value = "page", nulls = Nulls.SKIP)
+        public Builder page(Optional<Integer> page) {
             this.page = page;
             return this;
         }
 
-        @java.lang.Override
-        @JsonSetter("per_page")
-        public TotalPagesStage perPage(int perPage) {
-            this.perPage = perPage;
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter("total_pages")
-        public _FinalStage totalPages(int totalPages) {
-            this.totalPages = totalPages;
-            return this;
-        }
-
-        /**
-         * <p>A link to the next page of results. A response that does not contain a next link does not have further data to fetch.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage next(String next) {
-            this.next = Optional.ofNullable(next);
+        public Builder page(Integer page) {
+            this.page = Optional.ofNullable(page);
             return this;
         }
 
         /**
          * <p>A link to the next page of results. A response that does not contain a next link does not have further data to fetch.</p>
          */
-        @java.lang.Override
         @JsonSetter(value = "next", nulls = Nulls.SKIP)
-        public _FinalStage next(Optional<String> next) {
+        public Builder next(Optional<String> next) {
             this.next = next;
             return this;
         }
 
-        @java.lang.Override
+        public Builder next(String next) {
+            this.next = Optional.ofNullable(next);
+            return this;
+        }
+
+        @JsonSetter(value = "per_page", nulls = Nulls.SKIP)
+        public Builder perPage(Optional<Integer> perPage) {
+            this.perPage = perPage;
+            return this;
+        }
+
+        public Builder perPage(Integer perPage) {
+            this.perPage = Optional.ofNullable(perPage);
+            return this;
+        }
+
+        @JsonSetter(value = "total_pages", nulls = Nulls.SKIP)
+        public Builder totalPages(Optional<Integer> totalPages) {
+            this.totalPages = totalPages;
+            return this;
+        }
+
+        public Builder totalPages(Integer totalPages) {
+            this.totalPages = Optional.ofNullable(totalPages);
+            return this;
+        }
+
         public PagesLink build() {
-            return new PagesLink(page, next, perPage, totalPages, additionalProperties);
+            return new PagesLink(type, page, next, perPage, totalPages, additionalProperties);
         }
     }
 }
