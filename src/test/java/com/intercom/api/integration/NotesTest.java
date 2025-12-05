@@ -4,7 +4,7 @@ import com.intercom.api.Intercom;
 import com.intercom.api.core.pagination.SyncPage;
 import com.intercom.api.core.pagination.SyncPagingIterable;
 import com.intercom.api.resources.contacts.requests.DeleteContactRequest;
-import com.intercom.api.resources.contacts.types.Contact;
+import com.intercom.api.resources.contacts.types.ContactsCreateResponse;
 import com.intercom.api.resources.notes.requests.CreateContactNoteRequest;
 import com.intercom.api.resources.notes.requests.FindNoteRequest;
 import com.intercom.api.resources.notes.requests.ListContactNotesRequest;
@@ -22,26 +22,36 @@ public class NotesTest {
 
     private Intercom client;
     private String adminId;
-    private Contact contact;
+    private ContactsCreateResponse contact;
+    private String contactId;
     private Note note;
+    private int noteId;
 
     @BeforeEach
     public void before() {
         // arrange
         client = TestClientFactory.create();
-        adminId = client.admins().list().getAdmins().get(0).getId();
+        adminId = client.admins().list().getAdmins()
+                .orElseThrow(() -> new RuntimeException("Admins list is required"))
+                .get(0)
+                .orElseThrow(() -> new RuntimeException("Admin is required"))
+                .getId();
 
         contact = client.contacts()
                 .create(CreateContactRequest.of(CreateContactRequest.WithExternalId.builder()
                         .externalId(Utils.randomString())
                         .build()));
+        contactId = contact.getId()
+                .orElseThrow(() -> new RuntimeException("Contact ID is required"));
 
         note = client.notes()
                 .create(CreateContactNoteRequest.builder()
-                        .contactId(contact.getId())
+                        .contactId(contactId)
                         .body(Utils.randomString())
                         .adminId(adminId)
                         .build());
+        noteId = Integer.parseInt(note.getId()
+                .orElseThrow(() -> new RuntimeException("Note ID is required")));
     }
 
     @AfterEach
@@ -60,7 +70,7 @@ public class NotesTest {
     public void testFind() {
         // act
         Note response = client.notes()
-                .find(FindNoteRequest.builder().noteId(note.getId()).build());
+                .find(FindNoteRequest.builder().noteId(noteId).build());
 
         // assert
         Assertions.assertNotNull(response);
@@ -71,7 +81,7 @@ public class NotesTest {
         // act
         SyncPagingIterable<Note> response = client.notes()
                 .list(ListContactNotesRequest.builder()
-                        .contactId(contact.getId())
+                        .contactId(contactId)
                         .perPage(25)
                         .page(1)
                         .build());
@@ -86,19 +96,19 @@ public class NotesTest {
         int limit = 2;
         client.notes()
                 .create(CreateContactNoteRequest.builder()
-                        .contactId(contact.getId())
+                        .contactId(contactId)
                         .body("one")
                         .build());
         client.notes()
                 .create(CreateContactNoteRequest.builder()
-                        .contactId(contact.getId())
+                        .contactId(contactId)
                         .body("two")
                         .build());
 
         // act
         Iterator<Note> iterator = client.notes()
                 .list(ListContactNotesRequest.builder()
-                        .contactId(contact.getId())
+                        .contactId(contactId)
                         .perPage(1)
                         .build())
                 .iterator();
@@ -129,19 +139,19 @@ public class NotesTest {
         int limit = 2;
         client.notes()
                 .create(CreateContactNoteRequest.builder()
-                        .contactId(contact.getId())
+                        .contactId(contactId)
                         .body("one")
                         .build());
         client.notes()
                 .create(CreateContactNoteRequest.builder()
-                        .contactId(contact.getId())
+                        .contactId(contactId)
                         .body("two")
                         .build());
 
         // act
         SyncPagingIterable<Note> pager = client.notes()
                 .list(ListContactNotesRequest.builder()
-                        .contactId(contact.getId())
+                        .contactId(contactId)
                         .perPage(1)
                         .build());
 
@@ -165,7 +175,7 @@ public class NotesTest {
         try {
             client.contacts()
                     .delete(DeleteContactRequest.builder()
-                            .contactId(contact.getId())
+                            .contactId(contactId)
                             .build());
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete contact.", e);

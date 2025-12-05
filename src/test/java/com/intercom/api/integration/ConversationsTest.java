@@ -1,11 +1,12 @@
 package com.intercom.api.integration;
 
 import com.intercom.api.Intercom;
+import com.intercom.api.core.ApiVersion;
 import com.intercom.api.core.pagination.SyncPage;
 import com.intercom.api.core.pagination.SyncPagingIterable;
 import com.intercom.api.resources.admins.types.Admin;
 import com.intercom.api.resources.contacts.requests.DeleteContactRequest;
-import com.intercom.api.resources.contacts.types.Contact;
+import com.intercom.api.resources.contacts.types.ContactsCreateResponse;
 import com.intercom.api.resources.conversations.requests.AttachContactToConversationRequest;
 import com.intercom.api.resources.conversations.requests.AutoAssignConversationRequest;
 import com.intercom.api.resources.conversations.requests.CreateConversationRequest;
@@ -25,7 +26,6 @@ import com.intercom.api.types.ContactReplyConversationRequest;
 import com.intercom.api.types.ContactReplyIntercomUserIdRequest;
 import com.intercom.api.types.CreateContactRequest;
 import com.intercom.api.types.MultipleFilterSearchRequest;
-import com.intercom.api.types.MultipleOrSingleFilterSearchRequest;
 import com.intercom.api.types.OpenConversationRequest;
 import com.intercom.api.types.RedactConversationRequest;
 import com.intercom.api.types.ReplyConversationRequest;
@@ -51,10 +51,14 @@ public class ConversationsTest {
     private Intercom client;
     private String adminId;
     private String secondAdminId;
-    private Contact user;
-    private Contact secondUser;
-    private Contact lead;
+    private ContactsCreateResponse user;
+    private ContactsCreateResponse secondUser;
+    private ContactsCreateResponse lead;
+    private String userId;
+    private String secondUserId;
+    private String leadId;
     private Conversation conversation;
+    private String conversationId;
 
     @BeforeEach
     @SuppressWarnings("CallToPrintStackTrace")
@@ -62,7 +66,11 @@ public class ConversationsTest {
         // arrange
         client = TestClientFactory.create();
 
-        List<Admin> admins = client.admins().list().getAdmins().stream()
+        List<Admin> admins = client.admins().list().getAdmins()
+                .orElseThrow(() -> new RuntimeException("Admins list is required"))
+                .stream()
+                .filter(opt -> opt.isPresent())
+                .map(opt -> opt.get())
                 .filter(Admin::getHasInboxSeat)
                 .collect(Collectors.toList());
         adminId = admins.get(0).getId();
@@ -73,23 +81,26 @@ public class ConversationsTest {
                         .externalId(Utils.randomString())
                         .name("Baba Booey")
                         .build()));
+        userId = user.getId().orElseThrow(() -> new RuntimeException("User ID is required"));
         secondUser = client.contacts()
                 .create(CreateContactRequest.of(CreateContactRequest.WithExternalId.builder()
                         .externalId(Utils.randomString())
                         .name("Babusha Boy")
                         .build()));
+        secondUserId = secondUser.getId().orElseThrow(() -> new RuntimeException("Second user ID is required"));
         lead = client.contacts()
                 .create(CreateContactRequest.of(CreateContactRequest.WithExternalId.builder()
                         .externalId(Utils.randomString())
                         .name("Babushka Lead")
                         .build()));
+        leadId = lead.getId().orElseThrow(() -> new RuntimeException("Lead ID is required"));
 
         Message conversationMessage = client.conversations()
                 .create(CreateConversationRequest.builder()
                         .from(CreateConversationRequest.builder()
                                 .from(CreateConversationRequest.From.builder()
                                         .type(CreateConversationRequest.From.Type.USER)
-                                        .id(user.getId())
+                                        .id(userId)
                                         .build())
                                 .body("Raz-dwa-try kalyna, czorniawaja diwczyna")
                                 .build())
@@ -104,10 +115,13 @@ public class ConversationsTest {
             after();
         }
 
+        String msgConversationId = conversationMessage.getConversationId()
+                .orElseThrow(() -> new RuntimeException("Conversation ID is required"));
         conversation = client.conversations()
                 .find(FindConversationRequest.builder()
-                        .conversationId(conversationMessage.getConversationId())
+                        .conversationId(msgConversationId)
                         .build());
+        conversationId = conversation.getId().orElseThrow(() -> new RuntimeException("Conversation ID is required"));
     }
 
     @AfterEach
@@ -130,7 +144,7 @@ public class ConversationsTest {
                         .from(CreateConversationRequest.builder()
                                 .from(CreateConversationRequest.From.builder()
                                         .type(CreateConversationRequest.From.Type.USER)
-                                        .id(lead.getId())
+                                        .id(leadId)
                                         .build())
                                 .body("Raz-dwa-try kalyna, czorniawaja diwczyna")
                                 .build())
@@ -145,7 +159,7 @@ public class ConversationsTest {
         // act
         Conversation response = client.conversations()
                 .update(UpdateConversationRequest.builder()
-                        .conversationId(conversation.getId())
+                        .conversationId(conversationId)
                         .read(false)
                         .build());
 
@@ -158,7 +172,7 @@ public class ConversationsTest {
         // act
         Conversation response = client.conversations()
                 .reply(ReplyToConversationRequest.builder()
-                        .conversationId(conversation.getId())
+                        .conversationId(conversationId)
                         .body(ReplyConversationRequest.of(AdminReplyConversationRequest.builder()
                                 .messageType(AdminReplyConversationRequest.MessageType.COMMENT)
                                 .adminId(adminId)
@@ -175,11 +189,11 @@ public class ConversationsTest {
         // act
         Conversation response = client.conversations()
                 .reply(ReplyToConversationRequest.builder()
-                        .conversationId(conversation.getId())
+                        .conversationId(conversationId)
                         .body(ReplyConversationRequest.of(
                                 ContactReplyConversationRequest.of(ContactReplyIntercomUserIdRequest.builder()
                                         .body("*click* Nice!")
-                                        .intercomUserId(user.getId())
+                                        .intercomUserId(userId)
                                         .build())))
                         .build());
 
@@ -192,7 +206,7 @@ public class ConversationsTest {
         // act
         Conversation response = client.conversations()
                 .manage(ManageConversationPartsRequest.builder()
-                        .conversationId(conversation.getId())
+                        .conversationId(conversationId)
                         .body(ConversationsManageRequestBody.assignment(AssignConversationRequest.builder()
                                 .type(AssignConversationRequest.Type.ADMIN)
                                 .adminId(adminId)
@@ -206,14 +220,15 @@ public class ConversationsTest {
 
     @Test
     public void testRunAssignmentRules() {
-        // act
-        Conversation response = client.conversations()
+        Intercom legacyServiceClient = TestClientFactory.create(ApiVersion._2_11);
+        // act - runAssignmentRules returns void
+        legacyServiceClient.conversations()
                 .runAssignmentRules(AutoAssignConversationRequest.builder()
-                        .conversationId(conversation.getId())
+                        .conversationId(conversationId)
                         .build());
 
-        // assert
-        Assertions.assertNotNull(response);
+        // assert - if no exception was thrown, the test passed
+        Assertions.assertTrue(true);
     }
 
     @Test
@@ -221,7 +236,7 @@ public class ConversationsTest {
         // act
         Conversation response = client.conversations()
                 .manage(ManageConversationPartsRequest.builder()
-                        .conversationId(conversation.getId())
+                        .conversationId(conversationId)
                         .body(ConversationsManageRequestBody.snoozed(SnoozeConversationRequest.builder()
                                 .adminId(adminId)
                                 .snoozedUntil((int)
@@ -238,7 +253,7 @@ public class ConversationsTest {
         // act
         Conversation response = client.conversations()
                 .manage(ManageConversationPartsRequest.builder()
-                        .conversationId(conversation.getId())
+                        .conversationId(conversationId)
                         .body(ConversationsManageRequestBody.open(OpenConversationRequest.builder()
                                 .adminId(adminId)
                                 .build()))
@@ -253,10 +268,10 @@ public class ConversationsTest {
         // act
         Conversation response = client.conversations()
                 .attachContactAsAdmin(AttachContactToConversationRequest.builder()
-                        .conversationId(conversation.getId())
+                        .conversationId(conversationId)
                         .customer(AttachContactToConversationRequest.Customer.of(
                                 AttachContactToConversationRequest.Customer.IntercomUserId.builder()
-                                        .intercomUserId(secondUser.getId())
+                                        .intercomUserId(secondUserId)
                                         .build()))
                         .adminId(adminId)
                         .build());
@@ -270,17 +285,17 @@ public class ConversationsTest {
         // act
         client.conversations()
                 .attachContactAsAdmin(AttachContactToConversationRequest.builder()
-                        .conversationId(conversation.getId())
+                        .conversationId(conversationId)
                         .customer(AttachContactToConversationRequest.Customer.of(
                                 AttachContactToConversationRequest.Customer.IntercomUserId.builder()
-                                        .intercomUserId(secondUser.getId())
+                                        .intercomUserId(secondUserId)
                                         .build()))
                         .adminId(adminId)
                         .build());
         Conversation response = client.conversations()
                 .detachContactAsAdmin(DetachContactFromConversationRequest.builder()
-                        .conversationId(conversation.getId())
-                        .contactId(secondUser.getId())
+                        .conversationId(conversationId)
+                        .contactId(secondUserId)
                         .adminId(adminId)
                         .build());
 
@@ -294,12 +309,12 @@ public class ConversationsTest {
         Conversation response = client.conversations()
                 .redactConversationPart(
                         RedactConversationRequest.conversationPart(RedactConversationRequest.ConversationPart.builder()
-                                .conversationId(conversation.getId())
+                                .conversationId(conversationId)
                                 .conversationPartId(conversation
                                         .getConversationParts()
-                                        .map(conv -> conv.getConversationParts()
-                                                .get(2)
-                                                .getId())
+                                        .flatMap(parts -> parts.getConversationParts())
+                                        .map(list -> list.get(2))
+                                        .flatMap(part -> part.getId())
                                         .orElse(""))
                                 .build()));
 
@@ -312,7 +327,7 @@ public class ConversationsTest {
         // act
         Conversation response = client.conversations()
                 .manage(ManageConversationPartsRequest.builder()
-                        .conversationId(conversation.getId())
+                        .conversationId(conversationId)
                         .body(ConversationsManageRequestBody.close(CloseConversationRequest.builder()
                                 .adminId(adminId)
                                 .body("Hasta la vista, baby")
@@ -326,19 +341,19 @@ public class ConversationsTest {
     @Test
     public void testSearch() {
         // act
-        List<MultipleOrSingleFilterSearchRequest> value = new ArrayList<>();
+        List<SingleFilterSearchRequest> value = new ArrayList<>();
         SingleFilterSearchRequest query = SingleFilterSearchRequest.builder()
                 .operator(SingleFilterSearchRequest.Operator.NOT_EQUALS)
                 .field("id")
                 .value(SingleFilterSearchRequest.Value.of("123"))
                 .build();
-        value.add(MultipleOrSingleFilterSearchRequest.of(query));
+        value.add(query);
 
         SyncPagingIterable<Conversation> response = client.conversations()
                 .search(SearchRequest.builder()
                         .query(SearchRequest.Query.of(MultipleFilterSearchRequest.builder()
                                 .operator(MultipleFilterSearchRequest.Operator.AND)
-                                .value(value)
+                                .value(MultipleFilterSearchRequest.Value.ofListOfSingleFilterSearchRequest(value))
                                 .build()))
                         .build());
 
@@ -405,15 +420,15 @@ public class ConversationsTest {
         try {
             client.contacts()
                     .delete(DeleteContactRequest.builder()
-                            .contactId(user.getId())
+                            .contactId(userId)
                             .build());
             client.contacts()
                     .delete(DeleteContactRequest.builder()
-                            .contactId(secondUser.getId())
+                            .contactId(secondUserId)
                             .build());
             client.contacts()
                     .delete(DeleteContactRequest.builder()
-                            .contactId(lead.getId())
+                            .contactId(leadId)
                             .build());
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete contacts.", e);

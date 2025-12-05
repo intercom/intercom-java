@@ -4,7 +4,11 @@ import com.intercom.api.Intercom;
 import com.intercom.api.core.pagination.SyncPage;
 import com.intercom.api.core.pagination.SyncPagingIterable;
 import com.intercom.api.resources.companies.requests.AttachContactToCompanyRequest;
-import com.intercom.api.resources.companies.requests.CreateOrUpdateCompanyRequest;
+import com.intercom.api.resources.contacts.types.ContactsCreateResponse;
+import com.intercom.api.resources.contacts.types.ContactsFindResponse;
+import com.intercom.api.resources.contacts.types.ContactsUpdateResponse;
+import com.intercom.api.resources.contacts.types.ContactsMergeLeadInUserResponse;
+import com.intercom.api.types.CreateOrUpdateCompanyRequest;
 import com.intercom.api.resources.companies.requests.DeleteCompanyRequest;
 import com.intercom.api.resources.companies.types.Company;
 import com.intercom.api.resources.contacts.requests.ArchiveContactRequest;
@@ -47,7 +51,8 @@ public class ContactsTest {
     private Intercom client;
     private String subscriptionId;
     private Tag tag;
-    private Contact contact;
+    private ContactsCreateResponse contact;
+    private String contactId;
     private Company company;
 
     @BeforeEach
@@ -59,10 +64,11 @@ public class ContactsTest {
                         .externalId(Utils.randomString())
                         .phone("+353871234567")
                         .build()));
+        contactId = contact.getId().orElseThrow(() -> new RuntimeException("Contact ID is required"));
 
         // act
         company = client.companies()
-                .createOrUpdate(CreateOrUpdateCompanyRequest.builder()
+                .createOrUpdate(java.util.Optional.of(CreateOrUpdateCompanyRequest.builder()
                         .name(Utils.randomString())
                         .companyId(Utils.randomString())
                         .plan("1. Get pizzaid")
@@ -71,19 +77,22 @@ public class ContactsTest {
                         .industry("The Best One")
                         .remoteCreatedAt((int) (new Date().toInstant().toEpochMilli() / 1000L))
                         .monthlySpend(9001)
-                        .build());
+                        .build()));
 
         client.companies()
                 .attachContact(AttachContactToCompanyRequest.builder()
-                        .contactId(contact.getId())
+                        .contactId(contactId)
                         .companyId(company.getId())
                         .build());
 
         SubscriptionTypeList subscriptionTypes = client.subscriptionTypes().list();
-        subscriptionId = subscriptionTypes.getData().get(0).getId();
+        subscriptionId = subscriptionTypes.getData()
+                .orElseThrow(() -> new RuntimeException("No subscription types found"))
+                .get(0).getId()
+                .orElseThrow(() -> new RuntimeException("Subscription type ID is required"));
         client.contacts()
                 .attachSubscription(AttachSubscriptionToContactRequest.builder()
-                        .contactId(contact.getId())
+                        .contactId(contactId)
                         .subscriptionId(subscriptionId)
                         .consentType("opt_in")
                         .build());
@@ -94,7 +103,7 @@ public class ContactsTest {
                         .build()));
         client.tags()
                 .tagContact(TagContactRequest.builder()
-                        .contactId(contact.getId())
+                        .contactId(contactId)
                         .tagId(tag.getId())
                         .build());
     }
@@ -127,7 +136,7 @@ public class ContactsTest {
     @Test
     public void testCreateLead() {
         // act
-        Contact response = client.contacts()
+        ContactsCreateResponse response = client.contacts()
                 .create(CreateContactRequest.of(CreateContactRequest.WithRole.builder()
                         .role("lead")
                         .name("Roman Bowling")
@@ -140,7 +149,7 @@ public class ContactsTest {
         try {
             client.contacts()
                     .delete(DeleteContactRequest.builder()
-                            .contactId(response.getId())
+                            .contactId(response.getId().orElseThrow(() -> new RuntimeException("Contact ID is required")))
                             .build());
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete contact.", e);
@@ -150,8 +159,8 @@ public class ContactsTest {
     @Test
     public void testFindById() {
         // act
-        Contact response = client.contacts()
-                .find(FindContactRequest.builder().contactId(contact.getId()).build());
+        ContactsFindResponse response = client.contacts()
+                .find(FindContactRequest.builder().contactId(contactId).build());
 
         // assert
         Assertions.assertNotNull(response);
@@ -160,9 +169,9 @@ public class ContactsTest {
     @Test
     public void testUpdate() {
         // act
-        Contact response = client.contacts()
+        ContactsUpdateResponse response = client.contacts()
                 .update(UpdateContactRequest.builder()
-                        .contactId(contact.getId())
+                        .contactId(contactId)
                         .name("Nico Bellic")
                         .build());
 
@@ -175,7 +184,7 @@ public class ContactsTest {
         // act
         ContactArchived response = client.contacts()
                 .archive(ArchiveContactRequest.builder()
-                        .contactId(contact.getId())
+                        .contactId(contactId)
                         .build());
 
         // assert
@@ -184,7 +193,7 @@ public class ContactsTest {
         // cleanup
         client.contacts()
                 .unarchive(UnarchiveContactRequest.builder()
-                        .contactId(contact.getId())
+                        .contactId(contactId)
                         .build());
     }
 
@@ -193,11 +202,11 @@ public class ContactsTest {
         // act
         client.contacts()
                 .archive(ArchiveContactRequest.builder()
-                        .contactId(contact.getId())
+                        .contactId(contactId)
                         .build());
         ContactUnarchived response = client.contacts()
                 .unarchive(UnarchiveContactRequest.builder()
-                        .contactId(contact.getId())
+                        .contactId(contactId)
                         .build());
 
         // assert
@@ -207,14 +216,15 @@ public class ContactsTest {
     @Test
     public void testDelete() {
         // act
-        Contact created = client.contacts()
+        ContactsCreateResponse created = client.contacts()
                 .create(CreateContactRequest.of(CreateContactRequest.WithRole.builder()
                         .role("lead")
                         .name("Roman Bowling")
                         .build()));
+        String createdId = created.getId().orElseThrow(() -> new RuntimeException("Contact ID is required"));
         ContactDeleted response = client.contacts()
                 .delete(DeleteContactRequest.builder()
-                        .contactId(created.getId())
+                        .contactId(createdId)
                         .build());
 
         // assert
@@ -224,15 +234,16 @@ public class ContactsTest {
     @Test
     public void testMergeLeadInUser() {
         // act
-        Contact lead = client.contacts()
+        ContactsCreateResponse lead = client.contacts()
                 .create(CreateContactRequest.of(CreateContactRequest.WithRole.builder()
                         .role("lead")
                         .name("Roman Bowling")
                         .build()));
-        Contact response = client.contacts()
+        String leadId = lead.getId().orElseThrow(() -> new RuntimeException("Lead ID is required"));
+        ContactsMergeLeadInUserResponse response = client.contacts()
                 .mergeLeadInUser(MergeContactsRequest.builder()
-                        .leadId(lead.getId())
-                        .contactId(contact.getId())
+                        .leadId(leadId)
+                        .contactId(contactId)
                         .build());
 
         // assert
@@ -242,7 +253,7 @@ public class ContactsTest {
         try {
             client.contacts()
                     .delete(DeleteContactRequest.builder()
-                            .contactId(lead.getId())
+                            .contactId(leadId)
                             .build());
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete contact.", e);
@@ -254,7 +265,7 @@ public class ContactsTest {
         // act
         SyncPagingIterable<Company> response = client.contacts()
                 .listAttachedCompanies(ListAttachedCompaniesRequest.builder()
-                        .contactId(contact.getId())
+                        .contactId(contactId)
                         .build());
 
         // assert
@@ -266,7 +277,7 @@ public class ContactsTest {
         // act
         SubscriptionTypeList response = client.contacts()
                 .listAttachedSubscriptions(ListAttachedSubscriptionsRequest.builder()
-                        .contactId(contact.getId())
+                        .contactId(contactId)
                         .build());
 
         // assert
@@ -278,7 +289,7 @@ public class ContactsTest {
         // act
         ContactSegments response = client.contacts()
                 .listAttachedSegments(ListSegmentsAttachedToContactRequest.builder()
-                        .contactId(contact.getId())
+                        .contactId(contactId)
                         .build());
 
         // assert
@@ -290,7 +301,7 @@ public class ContactsTest {
         // act
         TagList response = client.contacts()
                 .listAttachedTags(ListTagsAttachedToContactRequest.builder()
-                        .contactId(contact.getId())
+                        .contactId(contactId)
                         .build());
 
         // assert
@@ -356,7 +367,7 @@ public class ContactsTest {
         try {
             client.contacts()
                     .detachSubscription(DetachSubscriptionFromContactRequest.builder()
-                            .contactId(contact.getId())
+                            .contactId(contactId)
                             .subscriptionId(subscriptionId)
                             .build());
         } catch (Exception e) {
@@ -368,7 +379,7 @@ public class ContactsTest {
         try {
             client.tags()
                     .untagContact(UntagContactRequest.builder()
-                            .contactId(contact.getId())
+                            .contactId(contactId)
                             .tagId(tag.getId())
                             .build());
         } catch (Exception e) {
@@ -391,7 +402,7 @@ public class ContactsTest {
         try {
             client.contacts()
                     .delete(DeleteContactRequest.builder()
-                            .contactId(contact.getId())
+                            .contactId(contactId)
                             .build());
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete contact.", e);

@@ -30,7 +30,8 @@ public class VisitorsTest {
     public void testFindById() {
         // act
         Visitor response = client.visitors()
-                .find(FindVisitorRequest.builder().userId(VISITOR_ID).build());
+                .find(FindVisitorRequest.builder().userId(VISITOR_ID).build())
+                .orElseThrow(() -> new RuntimeException("Visitor not found"));
 
         // assert
         Assertions.assertNotNull(response);
@@ -40,7 +41,8 @@ public class VisitorsTest {
     public void testFindByUserId() {
         // act
         Visitor response = client.visitors()
-                .find(FindVisitorRequest.builder().userId(USER_ID).build());
+                .find(FindVisitorRequest.builder().userId(USER_ID).build())
+                .orElseThrow(() -> new RuntimeException("Visitor not found"));
 
         // assert
         Assertions.assertNotNull(response);
@@ -53,7 +55,8 @@ public class VisitorsTest {
                 .update(UpdateVisitorRequest.of(UpdateVisitorRequest.WithUserId.builder()
                         .userId(USER_ID)
                         .name("Winston Smith")
-                        .build()));
+                        .build()))
+                .orElseThrow(() -> new RuntimeException("Visitor not found"));
 
         // assert
         Assertions.assertNotNull(response);

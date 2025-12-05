@@ -7,7 +7,6 @@ import com.intercom.api.resources.events.requests.ListEventsRequest;
 import com.intercom.api.types.CreateDataEventRequest;
 import com.intercom.api.types.DataEventSummary;
 import com.intercom.api.types.MultipleFilterSearchRequest;
-import com.intercom.api.types.MultipleOrSingleFilterSearchRequest;
 import com.intercom.api.types.SearchRequest;
 import com.intercom.api.types.SingleFilterSearchRequest;
 import com.intercom.api.types.StartingAfterPaging;
@@ -32,25 +31,25 @@ public class EventsTest {
         // arrange
         client = TestClientFactory.create();
 
-        List<MultipleOrSingleFilterSearchRequest> value = new ArrayList<>();
+        List<SingleFilterSearchRequest> value = new ArrayList<>();
         SingleFilterSearchRequest query1 = SingleFilterSearchRequest.builder()
                 .field("role")
                 .operator(SingleFilterSearchRequest.Operator.EQUALS)
                 .value(SingleFilterSearchRequest.Value.of("user"))
                 .build();
-        value.add(MultipleOrSingleFilterSearchRequest.of(query1));
+        value.add(query1);
         SingleFilterSearchRequest query2 = SingleFilterSearchRequest.builder()
                 .field("external_id")
                 .operator(SingleFilterSearchRequest.Operator.NOT_EQUALS)
                 .value(Optional.empty())
                 .build();
-        value.add(MultipleOrSingleFilterSearchRequest.of(query2));
+        value.add(query2);
 
         SyncPagingIterable<Contact> randomUsers = client.contacts()
                 .search(SearchRequest.builder()
                         .query(SearchRequest.Query.of(MultipleFilterSearchRequest.builder()
                                 .operator(MultipleFilterSearchRequest.Operator.AND)
-                                .value(value)
+                                .value(MultipleFilterSearchRequest.Value.ofListOfSingleFilterSearchRequest(value))
                                 .build()))
                         .pagination(StartingAfterPaging.builder().perPage(1).build())
                         .build());

@@ -14,6 +14,7 @@ public class DataExportTest {
 
     private Intercom client;
     private DataExport export;
+    private String jobIdentifier;
 
     @BeforeEach
     public void before() {
@@ -25,6 +26,8 @@ public class DataExportTest {
                         .createdAtAfter(1670000000)
                         .createdAtBefore(1670940528)
                         .build());
+        jobIdentifier = export.getJobIdentifier()
+                .orElseThrow(() -> new RuntimeException("Job identifier is required"));
     }
 
     @Test
@@ -35,7 +38,7 @@ public class DataExportTest {
         // cleanup
         client.dataExport()
                 .cancel(CancelDataExportRequest.builder()
-                        .jobIdentifier(export.getJobIdentifier())
+                        .jobIdentifier(jobIdentifier)
                         .build());
     }
 
@@ -44,7 +47,7 @@ public class DataExportTest {
         // act
         DataExport response = client.dataExport()
                 .find(FindDataExportRequest.builder()
-                        .jobIdentifier(export.getJobIdentifier())
+                        .jobIdentifier(jobIdentifier)
                         .build());
 
         // assert
@@ -53,7 +56,7 @@ public class DataExportTest {
         // cleanup
         client.dataExport()
                 .cancel(CancelDataExportRequest.builder()
-                        .jobIdentifier(export.getJobIdentifier())
+                        .jobIdentifier(jobIdentifier)
                         .build());
     }
 
@@ -62,7 +65,7 @@ public class DataExportTest {
         // act
         DataExport response = client.dataExport()
                 .cancel(CancelDataExportRequest.builder()
-                        .jobIdentifier(export.getJobIdentifier())
+                        .jobIdentifier(jobIdentifier)
                         .build());
 
         // assert

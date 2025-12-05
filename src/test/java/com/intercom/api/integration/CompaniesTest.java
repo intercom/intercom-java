@@ -4,7 +4,7 @@ import com.intercom.api.Intercom;
 import com.intercom.api.core.pagination.SyncPage;
 import com.intercom.api.core.pagination.SyncPagingIterable;
 import com.intercom.api.resources.companies.requests.AttachContactToCompanyRequest;
-import com.intercom.api.resources.companies.requests.CreateOrUpdateCompanyRequest;
+import com.intercom.api.types.CreateOrUpdateCompanyRequest;
 import com.intercom.api.resources.companies.requests.DeleteCompanyRequest;
 import com.intercom.api.resources.companies.requests.DetachContactFromCompanyRequest;
 import com.intercom.api.resources.companies.requests.FindCompanyRequest;
@@ -42,9 +42,9 @@ public class CompaniesTest {
                 client.contacts().list(ListContactsRequest.builder().perPage(1).build());
 
         // act
-        contactId = randomContacts.getItems().get(0).getId();
+        contactId = randomContacts.getItems().get(0).getId().orElseThrow(() -> new RuntimeException("Contact ID is required"));
         company = client.companies()
-                .createOrUpdate(CreateOrUpdateCompanyRequest.builder()
+                .createOrUpdate(java.util.Optional.of(CreateOrUpdateCompanyRequest.builder()
                         .name(Utils.randomString())
                         .companyId(Utils.randomString())
                         .plan("1. Get pizzaid")
@@ -53,7 +53,7 @@ public class CompaniesTest {
                         .industry("The Best One")
                         .remoteCreatedAt((int) (new Date().toInstant().toEpochMilli() / 1000L))
                         .monthlySpend(9001)
-                        .build());
+                        .build()));
         companyId = company.getId();
 
         deleteAfter = true;
@@ -77,7 +77,7 @@ public class CompaniesTest {
     public void testUpdate() {
         // act
         Company response = client.companies()
-                .createOrUpdate(CreateOrUpdateCompanyRequest.builder()
+                .createOrUpdate(java.util.Optional.of(CreateOrUpdateCompanyRequest.builder()
                         .name(Utils.randomString())
                         .companyId(Utils.randomString())
                         .plan("1. Get pizzaid")
@@ -86,7 +86,7 @@ public class CompaniesTest {
                         .industry("The Best One")
                         .remoteCreatedAt((int) (new Date().toInstant().toEpochMilli() / 1000L))
                         .monthlySpend(9001)
-                        .build());
+                        .build()));
 
         // assert
         Assertions.assertNotNull(response);
@@ -164,8 +164,6 @@ public class CompaniesTest {
         CompanyAttachedContacts response = client.companies()
                 .listAttachedContacts(ListAttachedContactsRequest.builder()
                         .companyId(companyId)
-                        .page(1)
-                        .perPage(25)
                         .build());
 
         // assert
