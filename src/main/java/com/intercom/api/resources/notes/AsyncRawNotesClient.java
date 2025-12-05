@@ -22,6 +22,7 @@ import com.intercom.api.resources.notes.types.Note;
 import com.intercom.api.types.Error;
 import com.intercom.api.types.NoteList;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -62,17 +63,16 @@ public class AsyncRawNotesClient {
                 .addPathSegments("notes");
         if (request.getPage().isPresent()) {
             QueryStringMapper.addQueryParameter(
-                    httpUrl, "page", request.getPage().get().toString(), false);
+                    httpUrl, "page", request.getPage().get(), false);
         }
         if (request.getPerPage().isPresent()) {
             QueryStringMapper.addQueryParameter(
-                    httpUrl, "per_page", request.getPerPage().get().toString(), false);
+                    httpUrl, "per_page", request.getPerPage().get(), false);
         }
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl.build())
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -84,18 +84,20 @@ public class AsyncRawNotesClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         NoteList parsedResponse =
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), NoteList.class);
-                        int newPageNumber =
-                                request.getPage().map(page -> page + 1).orElse(1);
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, NoteList.class);
+                        int newPageNumber = request.getPage()
+                                .map((Integer page) -> page + 1)
+                                .orElse(1);
                         ListContactNotesRequest nextRequest = ListContactNotesRequest.builder()
                                 .from(request)
                                 .page(newPageNumber)
                                 .build();
-                        List<Note> result = parsedResponse.getData();
+                        List<Note> result = parsedResponse.getData().orElse(Collections.emptyList());
                         future.complete(new IntercomHttpResponse<>(
-                                new SyncPagingIterable<Note>(true, result, () -> {
+                                new SyncPagingIterable<Note>(true, result, parsedResponse, () -> {
                                     try {
                                         return list(nextRequest, requestOptions)
                                                 .get()
@@ -107,7 +109,6 @@ public class AsyncRawNotesClient {
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         if (response.code() == 404) {
                             future.completeExceptionally(new NotFoundError(
@@ -117,11 +118,9 @@ public class AsyncRawNotesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -177,12 +176,12 @@ public class AsyncRawNotesClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Note.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Note.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         if (response.code() == 404) {
                             future.completeExceptionally(new NotFoundError(
@@ -192,11 +191,9 @@ public class AsyncRawNotesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -225,13 +222,12 @@ public class AsyncRawNotesClient {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("notes")
-                .addPathSegment(request.getNoteId())
+                .addPathSegment(Integer.toString(request.getNoteId()))
                 .build();
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl)
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -243,12 +239,12 @@ public class AsyncRawNotesClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Note.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Note.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -265,11 +261,9 @@ public class AsyncRawNotesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));

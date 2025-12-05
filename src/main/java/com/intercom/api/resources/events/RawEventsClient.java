@@ -85,17 +85,16 @@ public class RawEventsClient {
         QueryStringMapper.addQueryParameter(httpUrl, "type", request.getType(), false);
         if (request.getSummary().isPresent()) {
             QueryStringMapper.addQueryParameter(
-                    httpUrl, "summary", request.getSummary().get().toString(), false);
+                    httpUrl, "summary", request.getSummary().get(), false);
         }
         if (request.getPerPage().isPresent()) {
             QueryStringMapper.addQueryParameter(
-                    httpUrl, "per_page", request.getPerPage().get().toString(), false);
+                    httpUrl, "per_page", request.getPerPage().get(), false);
         }
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl.build())
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -104,11 +103,11 @@ public class RawEventsClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), DataEventSummary.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, DataEventSummary.class), response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 if (response.code() == 401) {
                     throw new UnauthorizedError(
@@ -117,11 +116,9 @@ public class RawEventsClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }
@@ -234,11 +231,9 @@ public class RawEventsClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }
@@ -298,11 +293,9 @@ public class RawEventsClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }

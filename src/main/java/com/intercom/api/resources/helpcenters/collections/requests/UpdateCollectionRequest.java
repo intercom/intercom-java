@@ -17,12 +17,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = UpdateCollectionRequest.Builder.class)
 public final class UpdateCollectionRequest {
-    private final String collectionId;
+    private final int collectionId;
 
     private final Optional<String> name;
 
@@ -35,7 +34,7 @@ public final class UpdateCollectionRequest {
     private final Map<String, Object> additionalProperties;
 
     private UpdateCollectionRequest(
-            String collectionId,
+            int collectionId,
             Optional<String> name,
             Optional<String> description,
             Optional<GroupTranslatedContent> translatedContent,
@@ -53,7 +52,7 @@ public final class UpdateCollectionRequest {
      * @return The unique identifier for the collection which is given by Intercom.
      */
     @JsonProperty("collection_id")
-    public String getCollectionId() {
+    public int getCollectionId() {
         return collectionId;
     }
 
@@ -98,7 +97,7 @@ public final class UpdateCollectionRequest {
     }
 
     private boolean equalTo(UpdateCollectionRequest other) {
-        return collectionId.equals(other.collectionId)
+        return collectionId == other.collectionId
                 && name.equals(other.name)
                 && description.equals(other.description)
                 && translatedContent.equals(other.translatedContent)
@@ -121,9 +120,9 @@ public final class UpdateCollectionRequest {
 
     public interface CollectionIdStage {
         /**
-         * The unique identifier for the collection which is given by Intercom.
+         * <p>The unique identifier for the collection which is given by Intercom.</p>
          */
-        _FinalStage collectionId(@NotNull String collectionId);
+        _FinalStage collectionId(int collectionId);
 
         Builder from(UpdateCollectionRequest other);
     }
@@ -159,7 +158,7 @@ public final class UpdateCollectionRequest {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder implements CollectionIdStage, _FinalStage {
-        private String collectionId;
+        private int collectionId;
 
         private Optional<String> parentId = Optional.empty();
 
@@ -185,13 +184,14 @@ public final class UpdateCollectionRequest {
         }
 
         /**
-         * The unique identifier for the collection which is given by Intercom.<p>The unique identifier for the collection which is given by Intercom.</p>
+         * <p>The unique identifier for the collection which is given by Intercom.</p>
+         * <p>The unique identifier for the collection which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
         @JsonSetter("collection_id")
-        public _FinalStage collectionId(@NotNull String collectionId) {
-            this.collectionId = Objects.requireNonNull(collectionId, "collectionId must not be null");
+        public _FinalStage collectionId(int collectionId) {
+            this.collectionId = collectionId;
             return this;
         }
 

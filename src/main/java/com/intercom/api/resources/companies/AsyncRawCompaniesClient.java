@@ -4,6 +4,7 @@
 package com.intercom.api.resources.companies;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.IntercomApiException;
 import com.intercom.api.core.IntercomException;
@@ -17,7 +18,6 @@ import com.intercom.api.errors.BadRequestError;
 import com.intercom.api.errors.NotFoundError;
 import com.intercom.api.errors.UnauthorizedError;
 import com.intercom.api.resources.companies.requests.AttachContactToCompanyRequest;
-import com.intercom.api.resources.companies.requests.CreateOrUpdateCompanyRequest;
 import com.intercom.api.resources.companies.requests.DeleteCompanyRequest;
 import com.intercom.api.resources.companies.requests.DetachContactFromCompanyRequest;
 import com.intercom.api.resources.companies.requests.FindCompanyRequest;
@@ -33,9 +33,11 @@ import com.intercom.api.types.CompanyAttachedContacts;
 import com.intercom.api.types.CompanyAttachedSegments;
 import com.intercom.api.types.CompanyList;
 import com.intercom.api.types.CompanyScroll;
+import com.intercom.api.types.CreateOrUpdateCompanyRequest;
 import com.intercom.api.types.DeletedCompanyObject;
 import com.intercom.api.types.Error;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -113,17 +115,16 @@ public class AsyncRawCompaniesClient {
         }
         if (request.getPage().isPresent()) {
             QueryStringMapper.addQueryParameter(
-                    httpUrl, "page", request.getPage().get().toString(), false);
+                    httpUrl, "page", request.getPage().get(), false);
         }
         if (request.getPerPage().isPresent()) {
             QueryStringMapper.addQueryParameter(
-                    httpUrl, "per_page", request.getPerPage().get().toString(), false);
+                    httpUrl, "per_page", request.getPerPage().get(), false);
         }
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl.build())
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -135,14 +136,14 @@ public class AsyncRawCompaniesClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
                                 ObjectMappers.JSON_MAPPER.readValue(
-                                        responseBody.string(), CompaniesRetrieveResponse.class),
+                                        responseBodyString, CompaniesRetrieveResponse.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -159,11 +160,9 @@ public class AsyncRawCompaniesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -187,7 +186,7 @@ public class AsyncRawCompaniesClient {
      * {% /admonition %}</p>
      */
     public CompletableFuture<IntercomHttpResponse<Company>> createOrUpdate() {
-        return createOrUpdate(CreateOrUpdateCompanyRequest.builder().build());
+        return createOrUpdate(Optional.empty());
     }
 
     /**
@@ -198,7 +197,8 @@ public class AsyncRawCompaniesClient {
      * You can set a unique <code>company_id</code> value when creating a company. However, it is not possible to update <code>company_id</code>. Be sure to set a unique value once upon creation of the company.
      * {% /admonition %}</p>
      */
-    public CompletableFuture<IntercomHttpResponse<Company>> createOrUpdate(CreateOrUpdateCompanyRequest request) {
+    public CompletableFuture<IntercomHttpResponse<Company>> createOrUpdate(
+            Optional<CreateOrUpdateCompanyRequest> request) {
         return createOrUpdate(request, null);
     }
 
@@ -211,15 +211,18 @@ public class AsyncRawCompaniesClient {
      * {% /admonition %}</p>
      */
     public CompletableFuture<IntercomHttpResponse<Company>> createOrUpdate(
-            CreateOrUpdateCompanyRequest request, RequestOptions requestOptions) {
+            Optional<CreateOrUpdateCompanyRequest> request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("companies")
                 .build();
         RequestBody body;
         try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+            body = RequestBody.create("", null);
+            if (request.isPresent()) {
+                body = RequestBody.create(
+                        ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+            }
         } catch (JsonProcessingException e) {
             throw new IntercomException("Failed to serialize request", e);
         }
@@ -239,12 +242,12 @@ public class AsyncRawCompaniesClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Company.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Company.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -261,11 +264,9 @@ public class AsyncRawCompaniesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -301,7 +302,6 @@ public class AsyncRawCompaniesClient {
                 .url(httpUrl)
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -313,12 +313,12 @@ public class AsyncRawCompaniesClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Company.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Company.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -335,11 +335,9 @@ public class AsyncRawCompaniesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -377,13 +375,25 @@ public class AsyncRawCompaniesClient {
                 .addPathSegments("companies")
                 .addPathSegment(request.getCompanyId())
                 .build();
-        Request.Builder _requestBuilder = new Request.Builder()
+        RequestBody body;
+        try {
+            body = RequestBody.create("", null);
+            if (request.getBody().isPresent()) {
+                body = RequestBody.create(
+                        ObjectMappers.JSON_MAPPER.writeValueAsBytes(
+                                request.getBody().get()),
+                        MediaTypes.APPLICATION_JSON);
+            }
+        } catch (JsonProcessingException e) {
+            throw new IntercomException("Failed to serialize request", e);
+        }
+        Request okhttpRequest = new Request.Builder()
                 .url(httpUrl)
-                .method("PUT", RequestBody.create("", null))
+                .method("PUT", body)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
                 .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
+                .addHeader("Accept", "application/json")
+                .build();
         OkHttpClient client = clientOptions.httpClient();
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
@@ -393,12 +403,12 @@ public class AsyncRawCompaniesClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Company.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Company.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -415,11 +425,9 @@ public class AsyncRawCompaniesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -455,7 +463,6 @@ public class AsyncRawCompaniesClient {
                 .url(httpUrl)
                 .method("DELETE", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -467,13 +474,13 @@ public class AsyncRawCompaniesClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), DeletedCompanyObject.class),
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, DeletedCompanyObject.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -490,11 +497,9 @@ public class AsyncRawCompaniesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -522,24 +527,16 @@ public class AsyncRawCompaniesClient {
      */
     public CompletableFuture<IntercomHttpResponse<CompanyAttachedContacts>> listAttachedContacts(
             ListAttachedContactsRequest request, RequestOptions requestOptions) {
-        HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("companies")
                 .addPathSegment(request.getCompanyId())
-                .addPathSegments("contacts");
-        if (request.getPage().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "page", request.getPage().get().toString(), false);
-        }
-        if (request.getPerPage().isPresent()) {
-            QueryStringMapper.addQueryParameter(
-                    httpUrl, "per_page", request.getPerPage().get().toString(), false);
-        }
+                .addPathSegments("contacts")
+                .build();
         Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl.build())
+                .url(httpUrl)
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -551,14 +548,13 @@ public class AsyncRawCompaniesClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(
-                                        responseBody.string(), CompanyAttachedContacts.class),
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, CompanyAttachedContacts.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -575,11 +571,9 @@ public class AsyncRawCompaniesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -617,7 +611,6 @@ public class AsyncRawCompaniesClient {
                 .url(httpUrl)
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -629,14 +622,13 @@ public class AsyncRawCompaniesClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(
-                                        responseBody.string(), CompanyAttachedSegments.class),
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, CompanyAttachedSegments.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -653,11 +645,9 @@ public class AsyncRawCompaniesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -714,11 +704,11 @@ public class AsyncRawCompaniesClient {
                 .addPathSegments("companies/list");
         if (request.getPage().isPresent()) {
             QueryStringMapper.addQueryParameter(
-                    httpUrl, "page", request.getPage().get().toString(), false);
+                    httpUrl, "page", request.getPage().get(), false);
         }
         if (request.getPerPage().isPresent()) {
             QueryStringMapper.addQueryParameter(
-                    httpUrl, "per_page", request.getPerPage().get().toString(), false);
+                    httpUrl, "per_page", request.getPerPage().get(), false);
         }
         if (request.getOrder().isPresent()) {
             QueryStringMapper.addQueryParameter(
@@ -728,7 +718,6 @@ public class AsyncRawCompaniesClient {
                 .url(httpUrl.build())
                 .method("POST", RequestBody.create("", null))
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -740,18 +729,20 @@ public class AsyncRawCompaniesClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         CompanyList parsedResponse =
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), CompanyList.class);
-                        int newPageNumber =
-                                request.getPage().map(page -> page + 1).orElse(1);
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, CompanyList.class);
+                        int newPageNumber = request.getPage()
+                                .map((Integer page) -> page + 1)
+                                .orElse(1);
                         ListCompaniesRequest nextRequest = ListCompaniesRequest.builder()
                                 .from(request)
                                 .page(newPageNumber)
                                 .build();
-                        List<Company> result = parsedResponse.getData();
+                        List<Company> result = parsedResponse.getData().orElse(Collections.emptyList());
                         future.complete(new IntercomHttpResponse<>(
-                                new SyncPagingIterable<Company>(true, result, () -> {
+                                new SyncPagingIterable<Company>(true, result, parsedResponse, () -> {
                                     try {
                                         return list(nextRequest, requestOptions)
                                                 .get()
@@ -763,7 +754,6 @@ public class AsyncRawCompaniesClient {
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         if (response.code() == 401) {
                             future.completeExceptionally(new UnauthorizedError(
@@ -773,11 +763,9 @@ public class AsyncRawCompaniesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -864,7 +852,6 @@ public class AsyncRawCompaniesClient {
                 .url(httpUrl.build())
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -876,29 +863,31 @@ public class AsyncRawCompaniesClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
-                        CompanyScroll parsedResponse =
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), CompanyScroll.class);
-                        Optional<String> startingAfter = parsedResponse.getScrollParam();
+                        Optional<CompanyScroll> parsedResponse = ObjectMappers.JSON_MAPPER.readValue(
+                                responseBodyString, new TypeReference<Optional<CompanyScroll>>() {});
+                        Optional<String> startingAfter = parsedResponse.flatMap(CompanyScroll::getScrollParam);
                         ScrollCompaniesRequest nextRequest = ScrollCompaniesRequest.builder()
                                 .from(request)
                                 .scrollParam(startingAfter)
                                 .build();
-                        List<Company> result = parsedResponse.getData();
+                        List<Company> result =
+                                parsedResponse.flatMap(CompanyScroll::getData).orElse(Collections.emptyList());
                         future.complete(new IntercomHttpResponse<>(
-                                new SyncPagingIterable<Company>(startingAfter.isPresent(), result, () -> {
-                                    try {
-                                        return scroll(nextRequest, requestOptions)
-                                                .get()
-                                                .body();
-                                    } catch (InterruptedException | ExecutionException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                }),
+                                new SyncPagingIterable<Company>(
+                                        startingAfter.isPresent(), result, parsedResponse, () -> {
+                                            try {
+                                                return scroll(nextRequest, requestOptions)
+                                                        .get()
+                                                        .body();
+                                            } catch (InterruptedException | ExecutionException e) {
+                                                throw new RuntimeException(e);
+                                            }
+                                        }),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         if (response.code() == 401) {
                             future.completeExceptionally(new UnauthorizedError(
@@ -908,11 +897,9 @@ public class AsyncRawCompaniesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -968,12 +955,12 @@ public class AsyncRawCompaniesClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Company.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Company.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -995,11 +982,9 @@ public class AsyncRawCompaniesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -1037,7 +1022,6 @@ public class AsyncRawCompaniesClient {
                 .url(httpUrl)
                 .method("DELETE", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -1049,12 +1033,12 @@ public class AsyncRawCompaniesClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Company.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Company.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -1071,11 +1055,9 @@ public class AsyncRawCompaniesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));

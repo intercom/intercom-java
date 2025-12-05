@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.resources.companies.types.Company;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,19 +22,23 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ContactAttachedCompanies.Builder.class)
 public final class ContactAttachedCompanies {
-    private final List<Company> companies;
+    private final Optional<String> type;
 
-    private final int totalCount;
+    private final Optional<List<Company>> companies;
+
+    private final Optional<Integer> totalCount;
 
     private final Optional<PagesLink> pages;
 
     private final Map<String, Object> additionalProperties;
 
     private ContactAttachedCompanies(
-            List<Company> companies,
-            int totalCount,
+            Optional<String> type,
+            Optional<List<Company>> companies,
+            Optional<Integer> totalCount,
             Optional<PagesLink> pages,
             Map<String, Object> additionalProperties) {
+        this.type = type;
         this.companies = companies;
         this.totalCount = totalCount;
         this.pages = pages;
@@ -46,15 +49,15 @@ public final class ContactAttachedCompanies {
      * @return The type of object
      */
     @JsonProperty("type")
-    public String getType() {
-        return "list";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return An array containing Company Objects
      */
     @JsonProperty("companies")
-    public List<Company> getCompanies() {
+    public Optional<List<Company>> getCompanies() {
         return companies;
     }
 
@@ -62,7 +65,7 @@ public final class ContactAttachedCompanies {
      * @return The total number of companies associated to this contact
      */
     @JsonProperty("total_count")
-    public int getTotalCount() {
+    public Optional<Integer> getTotalCount() {
         return totalCount;
     }
 
@@ -83,12 +86,15 @@ public final class ContactAttachedCompanies {
     }
 
     private boolean equalTo(ContactAttachedCompanies other) {
-        return companies.equals(other.companies) && totalCount == other.totalCount && pages.equals(other.pages);
+        return type.equals(other.type)
+                && companies.equals(other.companies)
+                && totalCount.equals(other.totalCount)
+                && pages.equals(other.pages);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.companies, this.totalCount, this.pages);
+        return Objects.hash(this.type, this.companies, this.totalCount, this.pages);
     }
 
     @java.lang.Override
@@ -96,51 +102,27 @@ public final class ContactAttachedCompanies {
         return ObjectMappers.stringify(this);
     }
 
-    public static TotalCountStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface TotalCountStage {
-        /**
-         * The total number of companies associated to this contact
-         */
-        _FinalStage totalCount(int totalCount);
-
-        Builder from(ContactAttachedCompanies other);
-    }
-
-    public interface _FinalStage {
-        ContactAttachedCompanies build();
-
-        /**
-         * <p>An array containing Company Objects</p>
-         */
-        _FinalStage companies(List<Company> companies);
-
-        _FinalStage addCompanies(Company companies);
-
-        _FinalStage addAllCompanies(List<Company> companies);
-
-        _FinalStage pages(Optional<PagesLink> pages);
-
-        _FinalStage pages(PagesLink pages);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements TotalCountStage, _FinalStage {
-        private int totalCount;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
+
+        private Optional<List<Company>> companies = Optional.empty();
+
+        private Optional<Integer> totalCount = Optional.empty();
 
         private Optional<PagesLink> pages = Optional.empty();
-
-        private List<Company> companies = new ArrayList<>();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(ContactAttachedCompanies other) {
+            type(other.getType());
             companies(other.getCompanies());
             totalCount(other.getTotalCount());
             pages(other.getPages());
@@ -148,63 +130,60 @@ public final class ContactAttachedCompanies {
         }
 
         /**
-         * The total number of companies associated to this contact<p>The total number of companies associated to this contact</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The type of object</p>
          */
-        @java.lang.Override
-        @JsonSetter("total_count")
-        public _FinalStage totalCount(int totalCount) {
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
+            return this;
+        }
+
+        /**
+         * <p>An array containing Company Objects</p>
+         */
+        @JsonSetter(value = "companies", nulls = Nulls.SKIP)
+        public Builder companies(Optional<List<Company>> companies) {
+            this.companies = companies;
+            return this;
+        }
+
+        public Builder companies(List<Company> companies) {
+            this.companies = Optional.ofNullable(companies);
+            return this;
+        }
+
+        /**
+         * <p>The total number of companies associated to this contact</p>
+         */
+        @JsonSetter(value = "total_count", nulls = Nulls.SKIP)
+        public Builder totalCount(Optional<Integer> totalCount) {
             this.totalCount = totalCount;
             return this;
         }
 
-        @java.lang.Override
-        public _FinalStage pages(PagesLink pages) {
-            this.pages = Optional.ofNullable(pages);
+        public Builder totalCount(Integer totalCount) {
+            this.totalCount = Optional.ofNullable(totalCount);
             return this;
         }
 
-        @java.lang.Override
         @JsonSetter(value = "pages", nulls = Nulls.SKIP)
-        public _FinalStage pages(Optional<PagesLink> pages) {
+        public Builder pages(Optional<PagesLink> pages) {
             this.pages = pages;
             return this;
         }
 
-        /**
-         * <p>An array containing Company Objects</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addAllCompanies(List<Company> companies) {
-            this.companies.addAll(companies);
+        public Builder pages(PagesLink pages) {
+            this.pages = Optional.ofNullable(pages);
             return this;
         }
 
-        /**
-         * <p>An array containing Company Objects</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addCompanies(Company companies) {
-            this.companies.add(companies);
-            return this;
-        }
-
-        /**
-         * <p>An array containing Company Objects</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "companies", nulls = Nulls.SKIP)
-        public _FinalStage companies(List<Company> companies) {
-            this.companies.clear();
-            this.companies.addAll(companies);
-            return this;
-        }
-
-        @java.lang.Override
         public ContactAttachedCompanies build() {
-            return new ContactAttachedCompanies(companies, totalCount, pages, additionalProperties);
+            return new ContactAttachedCompanies(type, companies, totalCount, pages, additionalProperties);
         }
     }
 }

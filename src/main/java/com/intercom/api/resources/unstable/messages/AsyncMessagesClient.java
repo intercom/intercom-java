@@ -8,6 +8,7 @@ import com.intercom.api.core.RequestOptions;
 import com.intercom.api.resources.unstable.messages.requests.GetWhatsAppMessageStatusRequest;
 import com.intercom.api.resources.unstable.messages.types.Message;
 import com.intercom.api.resources.unstable.types.WhatsappMessageStatusList;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class AsyncMessagesClient {
@@ -28,7 +29,7 @@ public class AsyncMessagesClient {
     }
 
     /**
-     * You can create a message that has been initiated by an admin. The conversation can be either an in-app message, an email or sms.
+     * You can create a message that has been initiated by an admin. The conversation can be either an in-app message, an email, sms or whatsapp.
      * <blockquote>
      * <p>🚧 Sending for visitors</p>
      * <p>There can be a short delay between when a contact is created and when a contact becomes available to be messaged through the API. A 404 Not Found error will be returned in this case.</p>
@@ -39,12 +40,28 @@ public class AsyncMessagesClient {
      * <p>As this is a message, there will be no conversation present until the contact responds. Once they do, you will have to search for a contact's conversations with the id of the message.</p>
      * </blockquote>
      */
-    public CompletableFuture<Message> createMessage(Object request) {
+    public CompletableFuture<Message> createMessage() {
+        return this.rawClient.createMessage().thenApply(response -> response.body());
+    }
+
+    /**
+     * You can create a message that has been initiated by an admin. The conversation can be either an in-app message, an email, sms or whatsapp.
+     * <blockquote>
+     * <p>🚧 Sending for visitors</p>
+     * <p>There can be a short delay between when a contact is created and when a contact becomes available to be messaged through the API. A 404 Not Found error will be returned in this case.</p>
+     * </blockquote>
+     * <p>This will return the Message model that has been created.</p>
+     * <blockquote>
+     * <p>🚧 Retrieving Associated Conversations</p>
+     * <p>As this is a message, there will be no conversation present until the contact responds. Once they do, you will have to search for a contact's conversations with the id of the message.</p>
+     * </blockquote>
+     */
+    public CompletableFuture<Message> createMessage(Optional<Object> request) {
         return this.rawClient.createMessage(request).thenApply(response -> response.body());
     }
 
     /**
-     * You can create a message that has been initiated by an admin. The conversation can be either an in-app message, an email or sms.
+     * You can create a message that has been initiated by an admin. The conversation can be either an in-app message, an email, sms or whatsapp.
      * <blockquote>
      * <p>🚧 Sending for visitors</p>
      * <p>There can be a short delay between when a contact is created and when a contact becomes available to be messaged through the API. A 404 Not Found error will be returned in this case.</p>
@@ -55,7 +72,7 @@ public class AsyncMessagesClient {
      * <p>As this is a message, there will be no conversation present until the contact responds. Once they do, you will have to search for a contact's conversations with the id of the message.</p>
      * </blockquote>
      */
-    public CompletableFuture<Message> createMessage(Object request, RequestOptions requestOptions) {
+    public CompletableFuture<Message> createMessage(Optional<Object> request, RequestOptions requestOptions) {
         return this.rawClient.createMessage(request, requestOptions).thenApply(response -> response.body());
     }
 

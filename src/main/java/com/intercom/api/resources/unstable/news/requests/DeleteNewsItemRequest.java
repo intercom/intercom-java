@@ -66,7 +66,7 @@ public final class DeleteNewsItemRequest {
 
     public interface IdStage {
         /**
-         * The unique identifier for the news item which is given by Intercom.
+         * <p>The unique identifier for the news item which is given by Intercom.</p>
          */
         _FinalStage id(int id);
 
@@ -93,7 +93,8 @@ public final class DeleteNewsItemRequest {
         }
 
         /**
-         * The unique identifier for the news item which is given by Intercom.<p>The unique identifier for the news item which is given by Intercom.</p>
+         * <p>The unique identifier for the news item which is given by Intercom.</p>
+         * <p>The unique identifier for the news item which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

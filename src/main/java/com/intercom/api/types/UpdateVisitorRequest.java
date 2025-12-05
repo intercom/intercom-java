@@ -94,11 +94,11 @@ public final class UpdateVisitorRequest {
             Object value = p.readValueAs(Object.class);
             try {
                 return of(ObjectMappers.JSON_MAPPER.convertValue(value, WithId.class));
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
             }
             try {
                 return of(ObjectMappers.JSON_MAPPER.convertValue(value, WithUserId.class));
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
             }
             throw new JsonParseException(p, "Failed to deserialize");
         }
@@ -183,7 +183,7 @@ public final class UpdateVisitorRequest {
 
         public interface UserIdStage {
             /**
-             * A unique identified for the visitor which is given by you.
+             * <p>A unique identified for the visitor which is given by you.</p>
              */
             _FinalStage userId(@NotNull String userId);
 
@@ -230,7 +230,8 @@ public final class UpdateVisitorRequest {
             }
 
             /**
-             * A unique identified for the visitor which is given by you.<p>A unique identified for the visitor which is given by you.</p>
+             * <p>A unique identified for the visitor which is given by you.</p>
+             * <p>A unique identified for the visitor which is given by you.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -364,7 +365,7 @@ public final class UpdateVisitorRequest {
 
         public interface IdStage {
             /**
-             * A unique identified for the visitor which is given by Intercom.
+             * <p>A unique identified for the visitor which is given by Intercom.</p>
              */
             _FinalStage id(@NotNull String id);
 
@@ -411,7 +412,8 @@ public final class UpdateVisitorRequest {
             }
 
             /**
-             * A unique identified for the visitor which is given by Intercom.<p>A unique identified for the visitor which is given by Intercom.</p>
+             * <p>A unique identified for the visitor which is given by Intercom.</p>
+             * <p>A unique identified for the visitor which is given by Intercom.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override

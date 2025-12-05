@@ -12,20 +12,24 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = HelpCenterList.Builder.class)
 public final class HelpCenterList {
-    private final List<HelpCenter> data;
+    private final Optional<String> type;
+
+    private final Optional<List<HelpCenter>> data;
 
     private final Map<String, Object> additionalProperties;
 
-    private HelpCenterList(List<HelpCenter> data, Map<String, Object> additionalProperties) {
+    private HelpCenterList(
+            Optional<String> type, Optional<List<HelpCenter>> data, Map<String, Object> additionalProperties) {
+        this.type = type;
         this.data = data;
         this.additionalProperties = additionalProperties;
     }
@@ -34,15 +38,15 @@ public final class HelpCenterList {
      * @return The type of the object - <code>list</code>.
      */
     @JsonProperty("type")
-    public String getType() {
-        return "list";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return An array of Help Center objects
      */
     @JsonProperty("data")
-    public List<HelpCenter> getData() {
+    public Optional<List<HelpCenter>> getData() {
         return data;
     }
 
@@ -58,12 +62,12 @@ public final class HelpCenterList {
     }
 
     private boolean equalTo(HelpCenterList other) {
-        return data.equals(other.data);
+        return type.equals(other.type) && data.equals(other.data);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.data);
+        return Objects.hash(this.type, this.data);
     }
 
     @java.lang.Override
@@ -77,7 +81,9 @@ public final class HelpCenterList {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
-        private List<HelpCenter> data = new ArrayList<>();
+        private Optional<String> type = Optional.empty();
+
+        private Optional<List<HelpCenter>> data = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -85,7 +91,22 @@ public final class HelpCenterList {
         private Builder() {}
 
         public Builder from(HelpCenterList other) {
+            type(other.getType());
             data(other.getData());
+            return this;
+        }
+
+        /**
+         * <p>The type of the object - <code>list</code>.</p>
+         */
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
@@ -93,24 +114,18 @@ public final class HelpCenterList {
          * <p>An array of Help Center objects</p>
          */
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
+        public Builder data(Optional<List<HelpCenter>> data) {
+            this.data = data;
+            return this;
+        }
+
         public Builder data(List<HelpCenter> data) {
-            this.data.clear();
-            this.data.addAll(data);
-            return this;
-        }
-
-        public Builder addData(HelpCenter data) {
-            this.data.add(data);
-            return this;
-        }
-
-        public Builder addAllData(List<HelpCenter> data) {
-            this.data.addAll(data);
+            this.data = Optional.ofNullable(data);
             return this;
         }
 
         public HelpCenterList build() {
-            return new HelpCenterList(data, additionalProperties);
+            return new HelpCenterList(type, data, additionalProperties);
         }
     }
 }

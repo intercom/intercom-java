@@ -152,7 +152,7 @@ public final class Jobs {
 
     public interface IdStage {
         /**
-         * The id of the job that's currently being processed or has completed.
+         * <p>The id of the job that's currently being processed or has completed.</p>
          */
         _FinalStage id(@NotNull String id);
 
@@ -239,7 +239,8 @@ public final class Jobs {
         }
 
         /**
-         * The id of the job that's currently being processed or has completed.<p>The id of the job that's currently being processed or has completed.</p>
+         * <p>The id of the job that's currently being processed or has completed.</p>
+         * <p>The id of the job that's currently being processed or has completed.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

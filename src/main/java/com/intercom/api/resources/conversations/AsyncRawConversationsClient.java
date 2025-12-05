@@ -4,6 +4,7 @@
 package com.intercom.api.resources.conversations;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.IntercomApiException;
 import com.intercom.api.core.IntercomException;
@@ -22,6 +23,7 @@ import com.intercom.api.resources.conversations.requests.AttachContactToConversa
 import com.intercom.api.resources.conversations.requests.AutoAssignConversationRequest;
 import com.intercom.api.resources.conversations.requests.ConvertConversationToTicketRequest;
 import com.intercom.api.resources.conversations.requests.CreateConversationRequest;
+import com.intercom.api.resources.conversations.requests.DeleteConversationRequest;
 import com.intercom.api.resources.conversations.requests.DetachContactFromConversationRequest;
 import com.intercom.api.resources.conversations.requests.FindConversationRequest;
 import com.intercom.api.resources.conversations.requests.ListConversationsRequest;
@@ -31,16 +33,16 @@ import com.intercom.api.resources.conversations.requests.UpdateConversationReque
 import com.intercom.api.resources.conversations.types.Conversation;
 import com.intercom.api.resources.messages.types.Message;
 import com.intercom.api.resources.tickets.types.Ticket;
+import com.intercom.api.types.ConversationDeleted;
+import com.intercom.api.types.ConversationList;
 import com.intercom.api.types.CursorPages;
 import com.intercom.api.types.Error;
-import com.intercom.api.types.PaginatedConversationResponse;
 import com.intercom.api.types.RedactConversationRequest;
 import com.intercom.api.types.SearchRequest;
 import com.intercom.api.types.StartingAfterPaging;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -102,7 +104,7 @@ public class AsyncRawConversationsClient {
                 .addPathSegments("conversations");
         if (request.getPerPage().isPresent()) {
             QueryStringMapper.addQueryParameter(
-                    httpUrl, "per_page", request.getPerPage().get().toString(), false);
+                    httpUrl, "per_page", request.getPerPage().get(), false);
         }
         if (request.getStartingAfter().isPresent()) {
             QueryStringMapper.addQueryParameter(
@@ -112,7 +114,6 @@ public class AsyncRawConversationsClient {
                 .url(httpUrl.build())
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -124,9 +125,10 @@ public class AsyncRawConversationsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
-                        PaginatedConversationResponse parsedResponse = ObjectMappers.JSON_MAPPER.readValue(
-                                responseBody.string(), PaginatedConversationResponse.class);
+                        ConversationList parsedResponse =
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ConversationList.class);
                         Optional<String> startingAfter = parsedResponse
                                 .getPages()
                                 .flatMap(CursorPages::getNext)
@@ -135,21 +137,22 @@ public class AsyncRawConversationsClient {
                                 .from(request)
                                 .startingAfter(startingAfter)
                                 .build();
-                        List<Conversation> result = parsedResponse.getConversations();
+                        List<Conversation> result =
+                                parsedResponse.getConversations().orElse(Collections.emptyList());
                         future.complete(new IntercomHttpResponse<>(
-                                new SyncPagingIterable<Conversation>(startingAfter.isPresent(), result, () -> {
-                                    try {
-                                        return list(nextRequest, requestOptions)
-                                                .get()
-                                                .body();
-                                    } catch (InterruptedException | ExecutionException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                }),
+                                new SyncPagingIterable<Conversation>(
+                                        startingAfter.isPresent(), result, parsedResponse, () -> {
+                                            try {
+                                                return list(nextRequest, requestOptions)
+                                                        .get()
+                                                        .body();
+                                            } catch (InterruptedException | ExecutionException e) {
+                                                throw new RuntimeException(e);
+                                            }
+                                        }),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -166,11 +169,9 @@ public class AsyncRawConversationsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -236,12 +237,12 @@ public class AsyncRawConversationsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Message.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Message.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -263,11 +264,9 @@ public class AsyncRawConversationsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -312,11 +311,17 @@ public class AsyncRawConversationsClient {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "display_as", request.getDisplayAs().get(), false);
         }
+        if (request.getIncludeTranslations().isPresent()) {
+            QueryStringMapper.addQueryParameter(
+                    httpUrl,
+                    "include_translations",
+                    request.getIncludeTranslations().get(),
+                    false);
+        }
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl.build())
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -328,13 +333,12 @@ public class AsyncRawConversationsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class),
-                                response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Conversation.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -356,11 +360,9 @@ public class AsyncRawConversationsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -380,6 +382,10 @@ public class AsyncRawConversationsClient {
      * <p>{% admonition type=&quot;info&quot; name=&quot;Replying and other actions&quot; %}
      * If you want to reply to a coveration or take an action such as assign, unassign, open, close or snooze, take a look at the reply and manage endpoints.
      * {% /admonition %}</p>
+     * <p>{% admonition type=&quot;info&quot; %}
+     * This endpoint handles both <strong>conversation updates</strong> and <strong>custom object associations</strong>.</p>
+     * <p>See <em><code>update a conversation with an association to a custom object instance</code></em> in the request/response examples to see the custom object association format.
+     * {% /admonition %}</p>
      */
     public CompletableFuture<IntercomHttpResponse<Conversation>> update(UpdateConversationRequest request) {
         return update(request, null);
@@ -389,6 +395,10 @@ public class AsyncRawConversationsClient {
      * You can update an existing conversation.
      * <p>{% admonition type=&quot;info&quot; name=&quot;Replying and other actions&quot; %}
      * If you want to reply to a coveration or take an action such as assign, unassign, open, close or snooze, take a look at the reply and manage endpoints.
+     * {% /admonition %}</p>
+     * <p>{% admonition type=&quot;info&quot; %}
+     * This endpoint handles both <strong>conversation updates</strong> and <strong>custom object associations</strong>.</p>
+     * <p>See <em><code>update a conversation with an association to a custom object instance</code></em> in the request/response examples to see the custom object association format.
      * {% /admonition %}</p>
      */
     public CompletableFuture<IntercomHttpResponse<Conversation>> update(
@@ -401,17 +411,10 @@ public class AsyncRawConversationsClient {
             QueryStringMapper.addQueryParameter(
                     httpUrl, "display_as", request.getDisplayAs().get(), false);
         }
-        Map<String, Object> properties = new HashMap<>();
-        if (request.getRead().isPresent()) {
-            properties.put("read", request.getRead());
-        }
-        if (request.getCustomAttributes().isPresent()) {
-            properties.put("custom_attributes", request.getCustomAttributes());
-        }
         RequestBody body;
         try {
             body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(properties), MediaTypes.APPLICATION_JSON);
+                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -431,13 +434,12 @@ public class AsyncRawConversationsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class),
-                                response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Conversation.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -459,11 +461,82 @@ public class AsyncRawConversationsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
+                    return;
+                } catch (IOException e) {
+                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
+            }
+        });
+        return future;
+    }
+
+    /**
+     * You can delete a single conversation.
+     */
+    public CompletableFuture<IntercomHttpResponse<ConversationDeleted>> deleteConversation(
+            DeleteConversationRequest request) {
+        return deleteConversation(request, null);
+    }
+
+    /**
+     * You can delete a single conversation.
+     */
+    public CompletableFuture<IntercomHttpResponse<ConversationDeleted>> deleteConversation(
+            DeleteConversationRequest request, RequestOptions requestOptions) {
+        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+                .newBuilder()
+                .addPathSegments("conversations")
+                .addPathSegment(Integer.toString(request.getConversationId()))
+                .build();
+        Request.Builder _requestBuilder = new Request.Builder()
+                .url(httpUrl)
+                .method("DELETE", null)
+                .headers(Headers.of(clientOptions.headers(requestOptions)))
+                .addHeader("Accept", "application/json");
+        Request okhttpRequest = _requestBuilder.build();
+        OkHttpClient client = clientOptions.httpClient();
+        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+            client = clientOptions.httpClientWithTimeout(requestOptions);
+        }
+        CompletableFuture<IntercomHttpResponse<ConversationDeleted>> future = new CompletableFuture<>();
+        client.newCall(okhttpRequest).enqueue(new Callback() {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+                    if (response.isSuccessful()) {
+                        future.complete(new IntercomHttpResponse<>(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ConversationDeleted.class),
+                                response));
+                        return;
+                    }
+                    try {
+                        switch (response.code()) {
+                            case 401:
+                                future.completeExceptionally(new UnauthorizedError(
+                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class),
+                                        response));
+                                return;
+                            case 403:
+                                future.completeExceptionally(new ForbiddenError(
+                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class),
+                                        response));
+                                return;
+                        }
+                    } catch (JsonProcessingException ignored) {
+                        // unable to map error response, throwing generic error
+                    }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
+                    future.completeExceptionally(new IntercomApiException(
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -496,7 +569,7 @@ public class AsyncRawConversationsClient {
      * <li>There's a limit of max 15 filters for each AND or OR group</li>
      * </ul>
      * <h3>Accepted Fields</h3>
-     * <p>Most keys listed as part of the The conversation model is searchable, whether writeable or not. The value you search for has to match the accepted type, otherwise the query will fail (ie. as <code>created_at</code> accepts a date, the <code>value</code> cannot be a string such as <code>&quot;foorbar&quot;</code>).
+     * <p>Most keys listed in the conversation model are searchable, whether writeable or not. The value you search for has to match the accepted type, otherwise the query will fail (ie. as <code>created_at</code> accepts a date, the <code>value</code> cannot be a string such as <code>&quot;foorbar&quot;</code>).
      * The <code>source.body</code> field is unique as the search will not be performed against the entire value, but instead against every element of the value separately. For example, when searching for a conversation with a <code>&quot;I need support&quot;</code> body - the query should contain a <code>=</code> operator with the value <code>&quot;support&quot;</code> for such conversation to be returned. A query with a <code>=</code> operator and a <code>&quot;need support&quot;</code> value will not yield a result.</p>
      * <p>| Field                                     | Type                                                                                                                                                   |
      * | :---------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -593,7 +666,7 @@ public class AsyncRawConversationsClient {
      * <li>There's a limit of max 15 filters for each AND or OR group</li>
      * </ul>
      * <h3>Accepted Fields</h3>
-     * <p>Most keys listed as part of the The conversation model is searchable, whether writeable or not. The value you search for has to match the accepted type, otherwise the query will fail (ie. as <code>created_at</code> accepts a date, the <code>value</code> cannot be a string such as <code>&quot;foorbar&quot;</code>).
+     * <p>Most keys listed in the conversation model are searchable, whether writeable or not. The value you search for has to match the accepted type, otherwise the query will fail (ie. as <code>created_at</code> accepts a date, the <code>value</code> cannot be a string such as <code>&quot;foorbar&quot;</code>).
      * The <code>source.body</code> field is unique as the search will not be performed against the entire value, but instead against every element of the value separately. For example, when searching for a conversation with a <code>&quot;I need support&quot;</code> body - the query should contain a <code>=</code> operator with the value <code>&quot;support&quot;</code> for such conversation to be returned. A query with a <code>=</code> operator and a <code>&quot;need support&quot;</code> value will not yield a result.</p>
      * <p>| Field                                     | Type                                                                                                                                                   |
      * | :---------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -697,15 +770,16 @@ public class AsyncRawConversationsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
-                        PaginatedConversationResponse parsedResponse = ObjectMappers.JSON_MAPPER.readValue(
-                                responseBody.string(), PaginatedConversationResponse.class);
+                        ConversationList parsedResponse =
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ConversationList.class);
                         Optional<String> startingAfter = parsedResponse
                                 .getPages()
                                 .flatMap(CursorPages::getNext)
                                 .flatMap(StartingAfterPaging::getStartingAfter);
                         Optional<StartingAfterPaging> pagination = request.getPagination()
-                                .map(pagination_ -> StartingAfterPaging.builder()
+                                .map((StartingAfterPaging pagination_) -> StartingAfterPaging.builder()
                                         .from(pagination_)
                                         .startingAfter(startingAfter)
                                         .build());
@@ -713,26 +787,25 @@ public class AsyncRawConversationsClient {
                                 .from(request)
                                 .pagination(pagination)
                                 .build();
-                        List<Conversation> result = parsedResponse.getConversations();
+                        List<Conversation> result =
+                                parsedResponse.getConversations().orElse(Collections.emptyList());
                         future.complete(new IntercomHttpResponse<>(
-                                new SyncPagingIterable<Conversation>(startingAfter.isPresent(), result, () -> {
-                                    try {
-                                        return search(nextRequest, requestOptions)
-                                                .get()
-                                                .body();
-                                    } catch (InterruptedException | ExecutionException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                }),
+                                new SyncPagingIterable<Conversation>(
+                                        startingAfter.isPresent(), result, parsedResponse, () -> {
+                                            try {
+                                                return search(nextRequest, requestOptions)
+                                                        .get()
+                                                        .body();
+                                            } catch (InterruptedException | ExecutionException e) {
+                                                throw new RuntimeException(e);
+                                            }
+                                        }),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -788,13 +861,12 @@ public class AsyncRawConversationsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class),
-                                response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Conversation.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -816,11 +888,9 @@ public class AsyncRawConversationsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -888,13 +958,12 @@ public class AsyncRawConversationsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class),
-                                response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Conversation.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -916,105 +985,9 @@ public class AsyncRawConversationsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
-                    return;
-                } catch (IOException e) {
-                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
-            }
-        });
-        return future;
-    }
-
-    /**
-     * {% admonition type=&quot;danger&quot; name=&quot;Deprecation of Run Assignment Rules&quot; %}
-     * Run assignment rules is now deprecated in version 2.12 and future versions and will be permanently removed on December 31, 2026. After this date, any requests made to this endpoint will fail.
-     * {% /admonition %}
-     * You can let a conversation be automatically assigned following assignment rules.
-     * {% admonition type=&quot;warning&quot; name=&quot;When using workflows&quot; %}
-     * It is not possible to use this endpoint with Workflows.
-     * {% /admonition %}
-     */
-    public CompletableFuture<IntercomHttpResponse<Conversation>> runAssignmentRules(
-            AutoAssignConversationRequest request) {
-        return runAssignmentRules(request, null);
-    }
-
-    /**
-     * {% admonition type=&quot;danger&quot; name=&quot;Deprecation of Run Assignment Rules&quot; %}
-     * Run assignment rules is now deprecated in version 2.12 and future versions and will be permanently removed on December 31, 2026. After this date, any requests made to this endpoint will fail.
-     * {% /admonition %}
-     * You can let a conversation be automatically assigned following assignment rules.
-     * {% admonition type=&quot;warning&quot; name=&quot;When using workflows&quot; %}
-     * It is not possible to use this endpoint with Workflows.
-     * {% /admonition %}
-     */
-    public CompletableFuture<IntercomHttpResponse<Conversation>> runAssignmentRules(
-            AutoAssignConversationRequest request, RequestOptions requestOptions) {
-        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
-                .newBuilder()
-                .addPathSegments("conversations")
-                .addPathSegment(request.getConversationId())
-                .addPathSegments("run_assignment_rules")
-                .build();
-        Request.Builder _requestBuilder = new Request.Builder()
-                .url(httpUrl)
-                .method("POST", RequestBody.create("", null))
-                .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Accept", "application/json");
-        Request okhttpRequest = _requestBuilder.build();
-        OkHttpClient client = clientOptions.httpClient();
-        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
-            client = clientOptions.httpClientWithTimeout(requestOptions);
-        }
-        CompletableFuture<IntercomHttpResponse<Conversation>> future = new CompletableFuture<>();
-        client.newCall(okhttpRequest).enqueue(new Callback() {
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class),
-                                response));
-                        return;
-                    }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
-                    try {
-                        switch (response.code()) {
-                            case 401:
-                                future.completeExceptionally(new UnauthorizedError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class),
-                                        response));
-                                return;
-                            case 403:
-                                future.completeExceptionally(new ForbiddenError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class),
-                                        response));
-                                return;
-                            case 404:
-                                future.completeExceptionally(new NotFoundError(
-                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                                        response));
-                                return;
-                        }
-                    } catch (JsonProcessingException ignored) {
-                        // unable to map error response, throwing generic error
-                    }
-                    future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -1077,13 +1050,12 @@ public class AsyncRawConversationsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class),
-                                response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Conversation.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -1105,11 +1077,9 @@ public class AsyncRawConversationsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -1173,13 +1143,12 @@ public class AsyncRawConversationsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class),
-                                response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Conversation.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -1206,11 +1175,9 @@ public class AsyncRawConversationsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -1271,13 +1238,12 @@ public class AsyncRawConversationsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Conversation.class),
-                                response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Conversation.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -1294,11 +1260,9 @@ public class AsyncRawConversationsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -1316,19 +1280,20 @@ public class AsyncRawConversationsClient {
     /**
      * You can convert a conversation to a ticket.
      */
-    public CompletableFuture<IntercomHttpResponse<Ticket>> convertToTicket(ConvertConversationToTicketRequest request) {
+    public CompletableFuture<IntercomHttpResponse<Optional<Ticket>>> convertToTicket(
+            ConvertConversationToTicketRequest request) {
         return convertToTicket(request, null);
     }
 
     /**
      * You can convert a conversation to a ticket.
      */
-    public CompletableFuture<IntercomHttpResponse<Ticket>> convertToTicket(
+    public CompletableFuture<IntercomHttpResponse<Optional<Ticket>>> convertToTicket(
             ConvertConversationToTicketRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("conversations")
-                .addPathSegment(request.getConversationId())
+                .addPathSegment(Integer.toString(request.getConversationId()))
                 .addPathSegments("convert")
                 .build();
         RequestBody body;
@@ -1349,17 +1314,19 @@ public class AsyncRawConversationsClient {
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<IntercomHttpResponse<Ticket>> future = new CompletableFuture<>();
+        CompletableFuture<IntercomHttpResponse<Optional<Ticket>>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Ticket.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(
+                                        responseBodyString, new TypeReference<Optional<Ticket>>() {}),
+                                response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         if (response.code() == 400) {
                             future.completeExceptionally(new BadRequestError(
@@ -1369,11 +1336,99 @@ public class AsyncRawConversationsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
+                    return;
+                } catch (IOException e) {
+                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
+            }
+        });
+        return future;
+    }
+
+    /**
+     * {% admonition type=&quot;danger&quot; name=&quot;Deprecation of Run Assignment Rules&quot; %}
+     * Run assignment rules is now deprecated in version 2.12 and future versions and will be permanently removed on December 31, 2026. After this date, any requests made to this endpoint will fail.
+     * {% /admonition %}
+     * You can let a conversation be automatically assigned following assignment rules.
+     * {% admonition type=&quot;warning&quot; name=&quot;When using workflows&quot; %}
+     * It is not possible to use this endpoint with Workflows.
+     * {% /admonition %}
+     */
+    public CompletableFuture<IntercomHttpResponse<Conversation>> runAssignmentRules(
+            AutoAssignConversationRequest request) {
+        return runAssignmentRules(request, null);
+    }
+
+    /**
+     * {% admonition type=&quot;danger&quot; name=&quot;Deprecation of Run Assignment Rules&quot; %}
+     * Run assignment rules is now deprecated in version 2.12 and future versions and will be permanently removed on December 31, 2026. After this date, any requests made to this endpoint will fail.
+     * {% /admonition %}
+     * You can let a conversation be automatically assigned following assignment rules.
+     * {% admonition type=&quot;warning&quot; name=&quot;When using workflows&quot; %}
+     * It is not possible to use this endpoint with Workflows.
+     * {% /admonition %}
+     */
+    public CompletableFuture<IntercomHttpResponse<Conversation>> runAssignmentRules(
+            AutoAssignConversationRequest request, RequestOptions requestOptions) {
+        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+                .newBuilder()
+                .addPathSegments("conversations")
+                .addPathSegment(request.getConversationId())
+                .addPathSegments("run_assignment_rules")
+                .build();
+        Request.Builder _requestBuilder = new Request.Builder()
+                .url(httpUrl)
+                .method("POST", RequestBody.create("", null))
+                .headers(Headers.of(clientOptions.headers(requestOptions)))
+                .addHeader("Accept", "application/json");
+        Request okhttpRequest = _requestBuilder.build();
+        OkHttpClient client = clientOptions.httpClient();
+        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+            client = clientOptions.httpClientWithTimeout(requestOptions);
+        }
+        CompletableFuture<IntercomHttpResponse<Conversation>> future = new CompletableFuture<>();
+        client.newCall(okhttpRequest).enqueue(new Callback() {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+                    if (response.isSuccessful()) {
+                        future.complete(new IntercomHttpResponse<>(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Conversation.class), response));
+                        return;
+                    }
+                    try {
+                        switch (response.code()) {
+                            case 401:
+                                future.completeExceptionally(new UnauthorizedError(
+                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class),
+                                        response));
+                                return;
+                            case 403:
+                                future.completeExceptionally(new ForbiddenError(
+                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class),
+                                        response));
+                                return;
+                            case 404:
+                                future.completeExceptionally(new NotFoundError(
+                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
+                                        response));
+                                return;
+                        }
+                    } catch (JsonProcessingException ignored) {
+                        // unable to map error response, throwing generic error
+                    }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
+                    future.completeExceptionally(new IntercomApiException(
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));

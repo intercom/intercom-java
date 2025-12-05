@@ -10,6 +10,7 @@ import com.intercom.api.resources.visitors.requests.FindVisitorRequest;
 import com.intercom.api.resources.visitors.requests.MergeVisitorToContactRequest;
 import com.intercom.api.types.UpdateVisitorRequest;
 import com.intercom.api.types.Visitor;
+import java.util.Optional;
 
 public class VisitorsClient {
     protected final ClientOptions clientOptions;
@@ -31,14 +32,14 @@ public class VisitorsClient {
     /**
      * You can fetch the details of a single visitor.
      */
-    public Visitor find(FindVisitorRequest request) {
+    public Optional<Visitor> find(FindVisitorRequest request) {
         return this.rawClient.find(request).body();
     }
 
     /**
      * You can fetch the details of a single visitor.
      */
-    public Visitor find(FindVisitorRequest request, RequestOptions requestOptions) {
+    public Optional<Visitor> find(FindVisitorRequest request, RequestOptions requestOptions) {
         return this.rawClient.find(request, requestOptions).body();
     }
 
@@ -47,7 +48,7 @@ public class VisitorsClient {
      * <p><strong>Option 1.</strong> You can update a visitor by passing in the <code>user_id</code> of the visitor in the Request body.</p>
      * <p><strong>Option 2.</strong> You can update a visitor by passing in the <code>id</code> of the visitor in the Request body.</p>
      */
-    public Visitor update(UpdateVisitorRequest request) {
+    public Optional<Visitor> update(UpdateVisitorRequest request) {
         return this.rawClient.update(request).body();
     }
 
@@ -56,7 +57,7 @@ public class VisitorsClient {
      * <p><strong>Option 1.</strong> You can update a visitor by passing in the <code>user_id</code> of the visitor in the Request body.</p>
      * <p><strong>Option 2.</strong> You can update a visitor by passing in the <code>id</code> of the visitor in the Request body.</p>
      */
-    public Visitor update(UpdateVisitorRequest request, RequestOptions requestOptions) {
+    public Optional<Visitor> update(UpdateVisitorRequest request, RequestOptions requestOptions) {
         return this.rawClient.update(request, requestOptions).body();
     }
 

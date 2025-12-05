@@ -21,13 +21,15 @@ public final class ClientOptions {
 
     private final int timeout;
 
+    private final int maxRetries;
+
     /**
      * version.toString() is sent as the "Intercom-Version" header.
      */
     private final ApiVersion version;
 
     /**
-     * @param version Defaults to "2.11" if empty
+     * @param version Defaults to "2.14" if empty
      */
     private ClientOptions(
             Environment environment,
@@ -35,22 +37,24 @@ public final class ClientOptions {
             Map<String, Supplier<String>> headerSuppliers,
             OkHttpClient httpClient,
             int timeout,
+            int maxRetries,
             Optional<ApiVersion> version) {
         this.environment = environment;
         this.headers = new HashMap<>();
         this.headers.putAll(headers);
         this.headers.putAll(new HashMap<String, String>() {
             {
-                put("User-Agent", "io.intercom:intercom-java/3.0.0");
+                put("User-Agent", "io.intercom:intercom-java/4.0.0");
                 put("X-Fern-Language", "JAVA");
                 put("X-Fern-SDK-Name", "com.intercom.fern:api-sdk");
-                put("X-Fern-SDK-Version", "3.0.0");
+                put("X-Fern-SDK-Version", "4.0.0");
             }
         });
         this.headerSuppliers = headerSuppliers;
         this.httpClient = httpClient;
         this.timeout = timeout;
-        this.version = version.orElse(ApiVersion._2_11);
+        this.maxRetries = maxRetries;
+        this.version = version.orElse(ApiVersion._2_14);
         this.headers.put("Intercom-Version", this.version.toString());
     }
 
@@ -100,11 +104,15 @@ public final class ClientOptions {
                 .build();
     }
 
+    public int maxRetries() {
+        return this.maxRetries;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
 
-    public static final class Builder {
+    public static class Builder {
         private Environment environment;
 
         private final Map<String, String> headers = new HashMap<>();
@@ -167,7 +175,7 @@ public final class ClientOptions {
          * version.toString() is sent as the "Intercom-Version" header.
          */
         public Builder version(ApiVersion version) {
-            this.version = Optional.of(version);
+            this.version = Optional.ofNullable(version);
             return this;
         }
 
@@ -193,7 +201,24 @@ public final class ClientOptions {
             this.httpClient = httpClientBuilder.build();
             this.timeout = Optional.of(httpClient.callTimeoutMillis() / 1000);
 
-            return new ClientOptions(environment, headers, headerSuppliers, httpClient, this.timeout.get(), version);
+            return new ClientOptions(
+                    environment, headers, headerSuppliers, httpClient, this.timeout.get(), this.maxRetries, version);
+        }
+
+        /**
+         * Create a new Builder initialized with values from an existing ClientOptions
+         */
+        public static Builder from(ClientOptions clientOptions) {
+            Builder builder = new Builder();
+            builder.environment = clientOptions.environment();
+            builder.timeout = Optional.of(clientOptions.timeout(null));
+            builder.httpClient = clientOptions.httpClient();
+            if (clientOptions.version != null) {
+                builder.version = Optional.ofNullable(clientOptions.version);
+            } else {
+                builder.version = Optional.of(ApiVersion._2_14);
+            }
+            return builder;
         }
     }
 }

@@ -26,14 +26,14 @@ public final class LinkedObject {
 
     private final Optional<String> id;
 
-    private final Optional<String> category;
+    private final Optional<Category> category;
 
     private final Map<String, Object> additionalProperties;
 
     private LinkedObject(
             Optional<Type> type,
             Optional<String> id,
-            Optional<String> category,
+            Optional<Category> category,
             Map<String, Object> additionalProperties) {
         this.type = type;
         this.id = id;
@@ -61,7 +61,7 @@ public final class LinkedObject {
      * @return Category of the Linked Ticket Object.
      */
     @JsonProperty("category")
-    public Optional<String> getCategory() {
+    public Optional<Category> getCategory() {
         return category;
     }
 
@@ -100,7 +100,7 @@ public final class LinkedObject {
 
         private Optional<String> id = Optional.empty();
 
-        private Optional<String> category = Optional.empty();
+        private Optional<Category> category = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -146,18 +146,103 @@ public final class LinkedObject {
          * <p>Category of the Linked Ticket Object.</p>
          */
         @JsonSetter(value = "category", nulls = Nulls.SKIP)
-        public Builder category(Optional<String> category) {
+        public Builder category(Optional<Category> category) {
             this.category = category;
             return this;
         }
 
-        public Builder category(String category) {
+        public Builder category(Category category) {
             this.category = Optional.ofNullable(category);
             return this;
         }
 
         public LinkedObject build() {
             return new LinkedObject(type, id, category, additionalProperties);
+        }
+    }
+
+    public static final class Category {
+        public static final Category BACK_OFFICE = new Category(Value.BACK_OFFICE, "Back-office");
+
+        public static final Category CUSTOMER = new Category(Value.CUSTOMER, "Customer");
+
+        public static final Category TRACKER = new Category(Value.TRACKER, "Tracker");
+
+        private final Value value;
+
+        private final String string;
+
+        Category(Value value, String string) {
+            this.value = value;
+            this.string = string;
+        }
+
+        public Value getEnumValue() {
+            return value;
+        }
+
+        @java.lang.Override
+        @JsonValue
+        public String toString() {
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof Category && this.string.equals(((Category) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case BACK_OFFICE:
+                    return visitor.visitBackOffice();
+                case CUSTOMER:
+                    return visitor.visitCustomer();
+                case TRACKER:
+                    return visitor.visitTracker();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static Category valueOf(String value) {
+            switch (value) {
+                case "Back-office":
+                    return BACK_OFFICE;
+                case "Customer":
+                    return CUSTOMER;
+                case "Tracker":
+                    return TRACKER;
+                default:
+                    return new Category(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            CUSTOMER,
+
+            BACK_OFFICE,
+
+            TRACKER,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitCustomer();
+
+            T visitBackOffice();
+
+            T visitTracker();
+
+            T visitUnknown(String unknownType);
         }
     }
 

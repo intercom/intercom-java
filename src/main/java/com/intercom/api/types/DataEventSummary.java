@@ -17,27 +17,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = DataEventSummary.Builder.class)
 public final class DataEventSummary {
-    private final String email;
+    private final Optional<String> type;
 
-    private final String intercomUserId;
+    private final Optional<String> email;
 
-    private final String userId;
+    private final Optional<String> intercomUserId;
 
-    private final List<DataEventSummaryItem> events;
+    private final Optional<String> userId;
+
+    private final List<Optional<DataEventSummaryItem>> events;
 
     private final Map<String, Object> additionalProperties;
 
     private DataEventSummary(
-            String email,
-            String intercomUserId,
-            String userId,
-            List<DataEventSummaryItem> events,
+            Optional<String> type,
+            Optional<String> email,
+            Optional<String> intercomUserId,
+            Optional<String> userId,
+            List<Optional<DataEventSummaryItem>> events,
             Map<String, Object> additionalProperties) {
+        this.type = type;
         this.email = email;
         this.intercomUserId = intercomUserId;
         this.userId = userId;
@@ -49,15 +53,15 @@ public final class DataEventSummary {
      * @return The type of the object
      */
     @JsonProperty("type")
-    public String getType() {
-        return "event.summary";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The email address of the user
      */
     @JsonProperty("email")
-    public String getEmail() {
+    public Optional<String> getEmail() {
         return email;
     }
 
@@ -65,7 +69,7 @@ public final class DataEventSummary {
      * @return The Intercom user ID of the user
      */
     @JsonProperty("intercom_user_id")
-    public String getIntercomUserId() {
+    public Optional<String> getIntercomUserId() {
         return intercomUserId;
     }
 
@@ -73,7 +77,7 @@ public final class DataEventSummary {
      * @return The user ID of the user
      */
     @JsonProperty("user_id")
-    public String getUserId() {
+    public Optional<String> getUserId() {
         return userId;
     }
 
@@ -81,7 +85,7 @@ public final class DataEventSummary {
      * @return A summary of data events
      */
     @JsonProperty("events")
-    public List<DataEventSummaryItem> getEvents() {
+    public List<Optional<DataEventSummaryItem>> getEvents() {
         return events;
     }
 
@@ -97,7 +101,8 @@ public final class DataEventSummary {
     }
 
     private boolean equalTo(DataEventSummary other) {
-        return email.equals(other.email)
+        return type.equals(other.type)
+                && email.equals(other.email)
                 && intercomUserId.equals(other.intercomUserId)
                 && userId.equals(other.userId)
                 && events.equals(other.events);
@@ -105,7 +110,7 @@ public final class DataEventSummary {
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.email, this.intercomUserId, this.userId, this.events);
+        return Objects.hash(this.type, this.email, this.intercomUserId, this.userId, this.events);
     }
 
     @java.lang.Override
@@ -113,63 +118,29 @@ public final class DataEventSummary {
         return ObjectMappers.stringify(this);
     }
 
-    public static EmailStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface EmailStage {
-        /**
-         * The email address of the user
-         */
-        IntercomUserIdStage email(@NotNull String email);
-
-        Builder from(DataEventSummary other);
-    }
-
-    public interface IntercomUserIdStage {
-        /**
-         * The Intercom user ID of the user
-         */
-        UserIdStage intercomUserId(@NotNull String intercomUserId);
-    }
-
-    public interface UserIdStage {
-        /**
-         * The user ID of the user
-         */
-        _FinalStage userId(@NotNull String userId);
-    }
-
-    public interface _FinalStage {
-        DataEventSummary build();
-
-        /**
-         * <p>A summary of data events</p>
-         */
-        _FinalStage events(List<DataEventSummaryItem> events);
-
-        _FinalStage addEvents(DataEventSummaryItem events);
-
-        _FinalStage addAllEvents(List<DataEventSummaryItem> events);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements EmailStage, IntercomUserIdStage, UserIdStage, _FinalStage {
-        private String email;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private String intercomUserId;
+        private Optional<String> email = Optional.empty();
 
-        private String userId;
+        private Optional<String> intercomUserId = Optional.empty();
 
-        private List<DataEventSummaryItem> events = new ArrayList<>();
+        private Optional<String> userId = Optional.empty();
+
+        private List<Optional<DataEventSummaryItem>> events = new ArrayList<>();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(DataEventSummary other) {
+            type(other.getType());
             email(other.getEmail());
             intercomUserId(other.getIntercomUserId());
             userId(other.getUserId());
@@ -178,72 +149,87 @@ public final class DataEventSummary {
         }
 
         /**
-         * The email address of the user<p>The email address of the user</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The type of the object</p>
          */
-        @java.lang.Override
-        @JsonSetter("email")
-        public IntercomUserIdStage email(@NotNull String email) {
-            this.email = Objects.requireNonNull(email, "email must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
-         * The Intercom user ID of the user<p>The Intercom user ID of the user</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The email address of the user</p>
          */
-        @java.lang.Override
-        @JsonSetter("intercom_user_id")
-        public UserIdStage intercomUserId(@NotNull String intercomUserId) {
-            this.intercomUserId = Objects.requireNonNull(intercomUserId, "intercomUserId must not be null");
+        @JsonSetter(value = "email", nulls = Nulls.SKIP)
+        public Builder email(Optional<String> email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder email(String email) {
+            this.email = Optional.ofNullable(email);
             return this;
         }
 
         /**
-         * The user ID of the user<p>The user ID of the user</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The Intercom user ID of the user</p>
          */
-        @java.lang.Override
-        @JsonSetter("user_id")
-        public _FinalStage userId(@NotNull String userId) {
-            this.userId = Objects.requireNonNull(userId, "userId must not be null");
+        @JsonSetter(value = "intercom_user_id", nulls = Nulls.SKIP)
+        public Builder intercomUserId(Optional<String> intercomUserId) {
+            this.intercomUserId = intercomUserId;
+            return this;
+        }
+
+        public Builder intercomUserId(String intercomUserId) {
+            this.intercomUserId = Optional.ofNullable(intercomUserId);
+            return this;
+        }
+
+        /**
+         * <p>The user ID of the user</p>
+         */
+        @JsonSetter(value = "user_id", nulls = Nulls.SKIP)
+        public Builder userId(Optional<String> userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public Builder userId(String userId) {
+            this.userId = Optional.ofNullable(userId);
             return this;
         }
 
         /**
          * <p>A summary of data events</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @java.lang.Override
-        public _FinalStage addAllEvents(List<DataEventSummaryItem> events) {
-            this.events.addAll(events);
+        @JsonSetter(value = "events", nulls = Nulls.SKIP)
+        public Builder events(List<Optional<DataEventSummaryItem>> events) {
+            this.events.clear();
+            if (events != null) {
+                this.events.addAll(events);
+            }
             return this;
         }
 
-        /**
-         * <p>A summary of data events</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addEvents(DataEventSummaryItem events) {
+        public Builder addEvents(Optional<DataEventSummaryItem> events) {
             this.events.add(events);
             return this;
         }
 
-        /**
-         * <p>A summary of data events</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "events", nulls = Nulls.SKIP)
-        public _FinalStage events(List<DataEventSummaryItem> events) {
-            this.events.clear();
-            this.events.addAll(events);
+        public Builder addAllEvents(List<Optional<DataEventSummaryItem>> events) {
+            if (events != null) {
+                this.events.addAll(events);
+            }
             return this;
         }
 
-        @java.lang.Override
         public DataEventSummary build() {
-            return new DataEventSummary(email, intercomUserId, userId, events, additionalProperties);
+            return new DataEventSummary(type, email, intercomUserId, userId, events, additionalProperties);
         }
     }
 }

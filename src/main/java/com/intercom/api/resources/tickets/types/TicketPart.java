@@ -12,11 +12,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.Nulls;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.types.PartAttachment;
 import com.intercom.api.types.Reference;
 import com.intercom.api.types.TicketPartAuthor;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,17 +33,19 @@ import org.jetbrains.annotations.NotNull;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = TicketPart.Builder.class)
 public final class TicketPart {
-    private final String id;
+    private final Optional<String> type;
 
-    private final String partType;
+    private final Optional<String> id;
+
+    private final Optional<String> partType;
 
     private final Optional<String> body;
 
     private final Optional<PreviousTicketState> previousTicketState;
 
-    private final TicketState ticketState;
+    private final Optional<TicketState> ticketState;
 
-    private final int createdAt;
+    private final Optional<Integer> createdAt;
 
     private final Optional<Integer> updatedAt;
 
@@ -51,22 +59,30 @@ public final class TicketPart {
 
     private final Optional<Boolean> redacted;
 
+    private final Optional<String> appPackageCode;
+
+    private final Optional<UpdatedAttributeData> updatedAttributeData;
+
     private final Map<String, Object> additionalProperties;
 
     private TicketPart(
-            String id,
-            String partType,
+            Optional<String> type,
+            Optional<String> id,
+            Optional<String> partType,
             Optional<String> body,
             Optional<PreviousTicketState> previousTicketState,
-            TicketState ticketState,
-            int createdAt,
+            Optional<TicketState> ticketState,
+            Optional<Integer> createdAt,
             Optional<Integer> updatedAt,
             Optional<Reference> assignedTo,
             Optional<TicketPartAuthor> author,
             Optional<List<PartAttachment>> attachments,
             Optional<String> externalId,
             Optional<Boolean> redacted,
+            Optional<String> appPackageCode,
+            Optional<UpdatedAttributeData> updatedAttributeData,
             Map<String, Object> additionalProperties) {
+        this.type = type;
         this.id = id;
         this.partType = partType;
         this.body = body;
@@ -79,6 +95,8 @@ public final class TicketPart {
         this.attachments = attachments;
         this.externalId = externalId;
         this.redacted = redacted;
+        this.appPackageCode = appPackageCode;
+        this.updatedAttributeData = updatedAttributeData;
         this.additionalProperties = additionalProperties;
     }
 
@@ -86,15 +104,15 @@ public final class TicketPart {
      * @return Always ticket_part
      */
     @JsonProperty("type")
-    public String getType() {
-        return "ticket_part";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The id representing the ticket part.
      */
     @JsonProperty("id")
-    public String getId() {
+    public Optional<String> getId() {
         return id;
     }
 
@@ -102,7 +120,7 @@ public final class TicketPart {
      * @return The type of ticket part.
      */
     @JsonProperty("part_type")
-    public String getPartType() {
+    public Optional<String> getPartType() {
         return partType;
     }
 
@@ -126,7 +144,7 @@ public final class TicketPart {
      * @return The state of the ticket.
      */
     @JsonProperty("ticket_state")
-    public TicketState getTicketState() {
+    public Optional<TicketState> getTicketState() {
         return ticketState;
     }
 
@@ -134,7 +152,7 @@ public final class TicketPart {
      * @return The time the ticket part was created.
      */
     @JsonProperty("created_at")
-    public int getCreatedAt() {
+    public Optional<Integer> getCreatedAt() {
         return createdAt;
     }
 
@@ -183,6 +201,22 @@ public final class TicketPart {
         return redacted;
     }
 
+    /**
+     * @return The app package code if this part was created via API. Note this field won't show if the part was not created via API.
+     */
+    @JsonProperty("app_package_code")
+    public Optional<String> getAppPackageCode() {
+        return appPackageCode;
+    }
+
+    /**
+     * @return The updated attribute data of the ticket part. Only present for attribute update parts.
+     */
+    @JsonProperty("updated_attribute_data")
+    public Optional<UpdatedAttributeData> getUpdatedAttributeData() {
+        return updatedAttributeData;
+    }
+
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
@@ -195,23 +229,27 @@ public final class TicketPart {
     }
 
     private boolean equalTo(TicketPart other) {
-        return id.equals(other.id)
+        return type.equals(other.type)
+                && id.equals(other.id)
                 && partType.equals(other.partType)
                 && body.equals(other.body)
                 && previousTicketState.equals(other.previousTicketState)
                 && ticketState.equals(other.ticketState)
-                && createdAt == other.createdAt
+                && createdAt.equals(other.createdAt)
                 && updatedAt.equals(other.updatedAt)
                 && assignedTo.equals(other.assignedTo)
                 && author.equals(other.author)
                 && attachments.equals(other.attachments)
                 && externalId.equals(other.externalId)
-                && redacted.equals(other.redacted);
+                && redacted.equals(other.redacted)
+                && appPackageCode.equals(other.appPackageCode)
+                && updatedAttributeData.equals(other.updatedAttributeData);
     }
 
     @java.lang.Override
     public int hashCode() {
         return Objects.hash(
+                this.type,
                 this.id,
                 this.partType,
                 this.body,
@@ -223,7 +261,9 @@ public final class TicketPart {
                 this.author,
                 this.attachments,
                 this.externalId,
-                this.redacted);
+                this.redacted,
+                this.appPackageCode,
+                this.updatedAttributeData);
     }
 
     @java.lang.Override
@@ -231,130 +271,49 @@ public final class TicketPart {
         return ObjectMappers.stringify(this);
     }
 
-    public static IdStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface IdStage {
-        /**
-         * The id representing the ticket part.
-         */
-        PartTypeStage id(@NotNull String id);
-
-        Builder from(TicketPart other);
-    }
-
-    public interface PartTypeStage {
-        /**
-         * The type of ticket part.
-         */
-        TicketStateStage partType(@NotNull String partType);
-    }
-
-    public interface TicketStateStage {
-        /**
-         * The state of the ticket.
-         */
-        CreatedAtStage ticketState(@NotNull TicketState ticketState);
-    }
-
-    public interface CreatedAtStage {
-        /**
-         * The time the ticket part was created.
-         */
-        _FinalStage createdAt(int createdAt);
-    }
-
-    public interface _FinalStage {
-        TicketPart build();
-
-        /**
-         * <p>The message body, which may contain HTML.</p>
-         */
-        _FinalStage body(Optional<String> body);
-
-        _FinalStage body(String body);
-
-        /**
-         * <p>The previous state of the ticket.</p>
-         */
-        _FinalStage previousTicketState(Optional<PreviousTicketState> previousTicketState);
-
-        _FinalStage previousTicketState(PreviousTicketState previousTicketState);
-
-        /**
-         * <p>The last time the ticket part was updated.</p>
-         */
-        _FinalStage updatedAt(Optional<Integer> updatedAt);
-
-        _FinalStage updatedAt(Integer updatedAt);
-
-        /**
-         * <p>The id of the admin that was assigned the ticket by this ticket_part (null if there has been no change in assignment.)</p>
-         */
-        _FinalStage assignedTo(Optional<Reference> assignedTo);
-
-        _FinalStage assignedTo(Reference assignedTo);
-
-        _FinalStage author(Optional<TicketPartAuthor> author);
-
-        _FinalStage author(TicketPartAuthor author);
-
-        /**
-         * <p>A list of attachments for the part.</p>
-         */
-        _FinalStage attachments(Optional<List<PartAttachment>> attachments);
-
-        _FinalStage attachments(List<PartAttachment> attachments);
-
-        /**
-         * <p>The external id of the ticket part</p>
-         */
-        _FinalStage externalId(Optional<String> externalId);
-
-        _FinalStage externalId(String externalId);
-
-        /**
-         * <p>Whether or not the ticket part has been redacted.</p>
-         */
-        _FinalStage redacted(Optional<Boolean> redacted);
-
-        _FinalStage redacted(Boolean redacted);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements IdStage, PartTypeStage, TicketStateStage, CreatedAtStage, _FinalStage {
-        private String id;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private String partType;
+        private Optional<String> id = Optional.empty();
 
-        private TicketState ticketState;
+        private Optional<String> partType = Optional.empty();
 
-        private int createdAt;
-
-        private Optional<Boolean> redacted = Optional.empty();
-
-        private Optional<String> externalId = Optional.empty();
-
-        private Optional<List<PartAttachment>> attachments = Optional.empty();
-
-        private Optional<TicketPartAuthor> author = Optional.empty();
-
-        private Optional<Reference> assignedTo = Optional.empty();
-
-        private Optional<Integer> updatedAt = Optional.empty();
+        private Optional<String> body = Optional.empty();
 
         private Optional<PreviousTicketState> previousTicketState = Optional.empty();
 
-        private Optional<String> body = Optional.empty();
+        private Optional<TicketState> ticketState = Optional.empty();
+
+        private Optional<Integer> createdAt = Optional.empty();
+
+        private Optional<Integer> updatedAt = Optional.empty();
+
+        private Optional<Reference> assignedTo = Optional.empty();
+
+        private Optional<TicketPartAuthor> author = Optional.empty();
+
+        private Optional<List<PartAttachment>> attachments = Optional.empty();
+
+        private Optional<String> externalId = Optional.empty();
+
+        private Optional<Boolean> redacted = Optional.empty();
+
+        private Optional<String> appPackageCode = Optional.empty();
+
+        private Optional<UpdatedAttributeData> updatedAttributeData = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(TicketPart other) {
+            type(other.getType());
             id(other.getId());
             partType(other.getPartType());
             body(other.getBody());
@@ -367,209 +326,221 @@ public final class TicketPart {
             attachments(other.getAttachments());
             externalId(other.getExternalId());
             redacted(other.getRedacted());
+            appPackageCode(other.getAppPackageCode());
+            updatedAttributeData(other.getUpdatedAttributeData());
             return this;
         }
 
         /**
-         * The id representing the ticket part.<p>The id representing the ticket part.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Always ticket_part</p>
          */
-        @java.lang.Override
-        @JsonSetter("id")
-        public PartTypeStage id(@NotNull String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
-         * The type of ticket part.<p>The type of ticket part.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The id representing the ticket part.</p>
          */
-        @java.lang.Override
-        @JsonSetter("part_type")
-        public TicketStateStage partType(@NotNull String partType) {
-            this.partType = Objects.requireNonNull(partType, "partType must not be null");
+        @JsonSetter(value = "id", nulls = Nulls.SKIP)
+        public Builder id(Optional<String> id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder id(String id) {
+            this.id = Optional.ofNullable(id);
             return this;
         }
 
         /**
-         * The state of the ticket.<p>The state of the ticket.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The type of ticket part.</p>
          */
-        @java.lang.Override
-        @JsonSetter("ticket_state")
-        public CreatedAtStage ticketState(@NotNull TicketState ticketState) {
-            this.ticketState = Objects.requireNonNull(ticketState, "ticketState must not be null");
+        @JsonSetter(value = "part_type", nulls = Nulls.SKIP)
+        public Builder partType(Optional<String> partType) {
+            this.partType = partType;
             return this;
         }
 
-        /**
-         * The time the ticket part was created.<p>The time the ticket part was created.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("created_at")
-        public _FinalStage createdAt(int createdAt) {
-            this.createdAt = createdAt;
-            return this;
-        }
-
-        /**
-         * <p>Whether or not the ticket part has been redacted.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage redacted(Boolean redacted) {
-            this.redacted = Optional.ofNullable(redacted);
-            return this;
-        }
-
-        /**
-         * <p>Whether or not the ticket part has been redacted.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "redacted", nulls = Nulls.SKIP)
-        public _FinalStage redacted(Optional<Boolean> redacted) {
-            this.redacted = redacted;
-            return this;
-        }
-
-        /**
-         * <p>The external id of the ticket part</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage externalId(String externalId) {
-            this.externalId = Optional.ofNullable(externalId);
-            return this;
-        }
-
-        /**
-         * <p>The external id of the ticket part</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "external_id", nulls = Nulls.SKIP)
-        public _FinalStage externalId(Optional<String> externalId) {
-            this.externalId = externalId;
-            return this;
-        }
-
-        /**
-         * <p>A list of attachments for the part.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage attachments(List<PartAttachment> attachments) {
-            this.attachments = Optional.ofNullable(attachments);
-            return this;
-        }
-
-        /**
-         * <p>A list of attachments for the part.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "attachments", nulls = Nulls.SKIP)
-        public _FinalStage attachments(Optional<List<PartAttachment>> attachments) {
-            this.attachments = attachments;
-            return this;
-        }
-
-        @java.lang.Override
-        public _FinalStage author(TicketPartAuthor author) {
-            this.author = Optional.ofNullable(author);
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter(value = "author", nulls = Nulls.SKIP)
-        public _FinalStage author(Optional<TicketPartAuthor> author) {
-            this.author = author;
-            return this;
-        }
-
-        /**
-         * <p>The id of the admin that was assigned the ticket by this ticket_part (null if there has been no change in assignment.)</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage assignedTo(Reference assignedTo) {
-            this.assignedTo = Optional.ofNullable(assignedTo);
-            return this;
-        }
-
-        /**
-         * <p>The id of the admin that was assigned the ticket by this ticket_part (null if there has been no change in assignment.)</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "assigned_to", nulls = Nulls.SKIP)
-        public _FinalStage assignedTo(Optional<Reference> assignedTo) {
-            this.assignedTo = assignedTo;
-            return this;
-        }
-
-        /**
-         * <p>The last time the ticket part was updated.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage updatedAt(Integer updatedAt) {
-            this.updatedAt = Optional.ofNullable(updatedAt);
-            return this;
-        }
-
-        /**
-         * <p>The last time the ticket part was updated.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
-        public _FinalStage updatedAt(Optional<Integer> updatedAt) {
-            this.updatedAt = updatedAt;
-            return this;
-        }
-
-        /**
-         * <p>The previous state of the ticket.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage previousTicketState(PreviousTicketState previousTicketState) {
-            this.previousTicketState = Optional.ofNullable(previousTicketState);
-            return this;
-        }
-
-        /**
-         * <p>The previous state of the ticket.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "previous_ticket_state", nulls = Nulls.SKIP)
-        public _FinalStage previousTicketState(Optional<PreviousTicketState> previousTicketState) {
-            this.previousTicketState = previousTicketState;
+        public Builder partType(String partType) {
+            this.partType = Optional.ofNullable(partType);
             return this;
         }
 
         /**
          * <p>The message body, which may contain HTML.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @java.lang.Override
-        public _FinalStage body(String body) {
+        @JsonSetter(value = "body", nulls = Nulls.SKIP)
+        public Builder body(Optional<String> body) {
+            this.body = body;
+            return this;
+        }
+
+        public Builder body(String body) {
             this.body = Optional.ofNullable(body);
             return this;
         }
 
         /**
-         * <p>The message body, which may contain HTML.</p>
+         * <p>The previous state of the ticket.</p>
          */
-        @java.lang.Override
-        @JsonSetter(value = "body", nulls = Nulls.SKIP)
-        public _FinalStage body(Optional<String> body) {
-            this.body = body;
+        @JsonSetter(value = "previous_ticket_state", nulls = Nulls.SKIP)
+        public Builder previousTicketState(Optional<PreviousTicketState> previousTicketState) {
+            this.previousTicketState = previousTicketState;
             return this;
         }
 
-        @java.lang.Override
+        public Builder previousTicketState(PreviousTicketState previousTicketState) {
+            this.previousTicketState = Optional.ofNullable(previousTicketState);
+            return this;
+        }
+
+        /**
+         * <p>The state of the ticket.</p>
+         */
+        @JsonSetter(value = "ticket_state", nulls = Nulls.SKIP)
+        public Builder ticketState(Optional<TicketState> ticketState) {
+            this.ticketState = ticketState;
+            return this;
+        }
+
+        public Builder ticketState(TicketState ticketState) {
+            this.ticketState = Optional.ofNullable(ticketState);
+            return this;
+        }
+
+        /**
+         * <p>The time the ticket part was created.</p>
+         */
+        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
+        public Builder createdAt(Optional<Integer> createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public Builder createdAt(Integer createdAt) {
+            this.createdAt = Optional.ofNullable(createdAt);
+            return this;
+        }
+
+        /**
+         * <p>The last time the ticket part was updated.</p>
+         */
+        @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
+        public Builder updatedAt(Optional<Integer> updatedAt) {
+            this.updatedAt = updatedAt;
+            return this;
+        }
+
+        public Builder updatedAt(Integer updatedAt) {
+            this.updatedAt = Optional.ofNullable(updatedAt);
+            return this;
+        }
+
+        /**
+         * <p>The id of the admin that was assigned the ticket by this ticket_part (null if there has been no change in assignment.)</p>
+         */
+        @JsonSetter(value = "assigned_to", nulls = Nulls.SKIP)
+        public Builder assignedTo(Optional<Reference> assignedTo) {
+            this.assignedTo = assignedTo;
+            return this;
+        }
+
+        public Builder assignedTo(Reference assignedTo) {
+            this.assignedTo = Optional.ofNullable(assignedTo);
+            return this;
+        }
+
+        @JsonSetter(value = "author", nulls = Nulls.SKIP)
+        public Builder author(Optional<TicketPartAuthor> author) {
+            this.author = author;
+            return this;
+        }
+
+        public Builder author(TicketPartAuthor author) {
+            this.author = Optional.ofNullable(author);
+            return this;
+        }
+
+        /**
+         * <p>A list of attachments for the part.</p>
+         */
+        @JsonSetter(value = "attachments", nulls = Nulls.SKIP)
+        public Builder attachments(Optional<List<PartAttachment>> attachments) {
+            this.attachments = attachments;
+            return this;
+        }
+
+        public Builder attachments(List<PartAttachment> attachments) {
+            this.attachments = Optional.ofNullable(attachments);
+            return this;
+        }
+
+        /**
+         * <p>The external id of the ticket part</p>
+         */
+        @JsonSetter(value = "external_id", nulls = Nulls.SKIP)
+        public Builder externalId(Optional<String> externalId) {
+            this.externalId = externalId;
+            return this;
+        }
+
+        public Builder externalId(String externalId) {
+            this.externalId = Optional.ofNullable(externalId);
+            return this;
+        }
+
+        /**
+         * <p>Whether or not the ticket part has been redacted.</p>
+         */
+        @JsonSetter(value = "redacted", nulls = Nulls.SKIP)
+        public Builder redacted(Optional<Boolean> redacted) {
+            this.redacted = redacted;
+            return this;
+        }
+
+        public Builder redacted(Boolean redacted) {
+            this.redacted = Optional.ofNullable(redacted);
+            return this;
+        }
+
+        /**
+         * <p>The app package code if this part was created via API. Note this field won't show if the part was not created via API.</p>
+         */
+        @JsonSetter(value = "app_package_code", nulls = Nulls.SKIP)
+        public Builder appPackageCode(Optional<String> appPackageCode) {
+            this.appPackageCode = appPackageCode;
+            return this;
+        }
+
+        public Builder appPackageCode(String appPackageCode) {
+            this.appPackageCode = Optional.ofNullable(appPackageCode);
+            return this;
+        }
+
+        /**
+         * <p>The updated attribute data of the ticket part. Only present for attribute update parts.</p>
+         */
+        @JsonSetter(value = "updated_attribute_data", nulls = Nulls.SKIP)
+        public Builder updatedAttributeData(Optional<UpdatedAttributeData> updatedAttributeData) {
+            this.updatedAttributeData = updatedAttributeData;
+            return this;
+        }
+
+        public Builder updatedAttributeData(UpdatedAttributeData updatedAttributeData) {
+            this.updatedAttributeData = Optional.ofNullable(updatedAttributeData);
+            return this;
+        }
+
         public TicketPart build() {
             return new TicketPart(
+                    type,
                     id,
                     partType,
                     body,
@@ -582,6 +553,8 @@ public final class TicketPart {
                     attachments,
                     externalId,
                     redacted,
+                    appPackageCode,
+                    updatedAttributeData,
                     additionalProperties);
         }
     }
@@ -778,6 +751,552 @@ public final class TicketPart {
             T visitResolved();
 
             T visitUnknown(String unknownType);
+        }
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_ABSENT)
+    @JsonDeserialize(builder = UpdatedAttributeData.Builder.class)
+    public static final class UpdatedAttributeData {
+        private final Attribute attribute;
+
+        private final Value value;
+
+        private final Map<String, Object> additionalProperties;
+
+        private UpdatedAttributeData(Attribute attribute, Value value, Map<String, Object> additionalProperties) {
+            this.attribute = attribute;
+            this.value = value;
+            this.additionalProperties = additionalProperties;
+        }
+
+        /**
+         * @return Information about the attribute that was updated.
+         */
+        @JsonProperty("attribute")
+        public Attribute getAttribute() {
+            return attribute;
+        }
+
+        /**
+         * @return The new value of the attribute.
+         */
+        @JsonProperty("value")
+        public Value getValue() {
+            return value;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            if (this == other) return true;
+            return other instanceof UpdatedAttributeData && equalTo((UpdatedAttributeData) other);
+        }
+
+        @JsonAnyGetter
+        public Map<String, Object> getAdditionalProperties() {
+            return this.additionalProperties;
+        }
+
+        private boolean equalTo(UpdatedAttributeData other) {
+            return attribute.equals(other.attribute) && value.equals(other.value);
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return Objects.hash(this.attribute, this.value);
+        }
+
+        @java.lang.Override
+        public String toString() {
+            return ObjectMappers.stringify(this);
+        }
+
+        public static AttributeStage builder() {
+            return new Builder();
+        }
+
+        public interface AttributeStage {
+            /**
+             * <p>Information about the attribute that was updated.</p>
+             */
+            ValueStage attribute(@NotNull Attribute attribute);
+
+            Builder from(UpdatedAttributeData other);
+        }
+
+        public interface ValueStage {
+            /**
+             * <p>The new value of the attribute.</p>
+             */
+            _FinalStage value(@NotNull Value value);
+        }
+
+        public interface _FinalStage {
+            UpdatedAttributeData build();
+        }
+
+        @JsonIgnoreProperties(ignoreUnknown = true)
+        public static final class Builder implements AttributeStage, ValueStage, _FinalStage {
+            private Attribute attribute;
+
+            private Value value;
+
+            @JsonAnySetter
+            private Map<String, Object> additionalProperties = new HashMap<>();
+
+            private Builder() {}
+
+            @java.lang.Override
+            public Builder from(UpdatedAttributeData other) {
+                attribute(other.getAttribute());
+                value(other.getValue());
+                return this;
+            }
+
+            /**
+             * <p>Information about the attribute that was updated.</p>
+             * <p>Information about the attribute that was updated.</p>
+             * @return Reference to {@code this} so that method calls can be chained together.
+             */
+            @java.lang.Override
+            @JsonSetter("attribute")
+            public ValueStage attribute(@NotNull Attribute attribute) {
+                this.attribute = Objects.requireNonNull(attribute, "attribute must not be null");
+                return this;
+            }
+
+            /**
+             * <p>The new value of the attribute.</p>
+             * <p>The new value of the attribute.</p>
+             * @return Reference to {@code this} so that method calls can be chained together.
+             */
+            @java.lang.Override
+            @JsonSetter("value")
+            public _FinalStage value(@NotNull Value value) {
+                this.value = Objects.requireNonNull(value, "value must not be null");
+                return this;
+            }
+
+            @java.lang.Override
+            public UpdatedAttributeData build() {
+                return new UpdatedAttributeData(attribute, value, additionalProperties);
+            }
+        }
+
+        @JsonInclude(JsonInclude.Include.NON_ABSENT)
+        @JsonDeserialize(builder = Attribute.Builder.class)
+        public static final class Attribute {
+            private final String id;
+
+            private final String label;
+
+            private final Map<String, Object> additionalProperties;
+
+            private Attribute(String id, String label, Map<String, Object> additionalProperties) {
+                this.id = id;
+                this.label = label;
+                this.additionalProperties = additionalProperties;
+            }
+
+            /**
+             * @return The type of the object. Always 'attribute'.
+             */
+            @JsonProperty("type")
+            public String getType() {
+                return "attribute";
+            }
+
+            /**
+             * @return The unique identifier of the attribute.
+             */
+            @JsonProperty("id")
+            public String getId() {
+                return id;
+            }
+
+            /**
+             * @return The human-readable name of the attribute.
+             */
+            @JsonProperty("label")
+            public String getLabel() {
+                return label;
+            }
+
+            @java.lang.Override
+            public boolean equals(Object other) {
+                if (this == other) return true;
+                return other instanceof Attribute && equalTo((Attribute) other);
+            }
+
+            @JsonAnyGetter
+            public Map<String, Object> getAdditionalProperties() {
+                return this.additionalProperties;
+            }
+
+            private boolean equalTo(Attribute other) {
+                return id.equals(other.id) && label.equals(other.label);
+            }
+
+            @java.lang.Override
+            public int hashCode() {
+                return Objects.hash(this.id, this.label);
+            }
+
+            @java.lang.Override
+            public String toString() {
+                return ObjectMappers.stringify(this);
+            }
+
+            public static IdStage builder() {
+                return new Builder();
+            }
+
+            public interface IdStage {
+                /**
+                 * <p>The unique identifier of the attribute.</p>
+                 */
+                LabelStage id(@NotNull String id);
+
+                Builder from(Attribute other);
+            }
+
+            public interface LabelStage {
+                /**
+                 * <p>The human-readable name of the attribute.</p>
+                 */
+                _FinalStage label(@NotNull String label);
+            }
+
+            public interface _FinalStage {
+                Attribute build();
+            }
+
+            @JsonIgnoreProperties(ignoreUnknown = true)
+            public static final class Builder implements IdStage, LabelStage, _FinalStage {
+                private String id;
+
+                private String label;
+
+                @JsonAnySetter
+                private Map<String, Object> additionalProperties = new HashMap<>();
+
+                private Builder() {}
+
+                @java.lang.Override
+                public Builder from(Attribute other) {
+                    id(other.getId());
+                    label(other.getLabel());
+                    return this;
+                }
+
+                /**
+                 * <p>The unique identifier of the attribute.</p>
+                 * <p>The unique identifier of the attribute.</p>
+                 * @return Reference to {@code this} so that method calls can be chained together.
+                 */
+                @java.lang.Override
+                @JsonSetter("id")
+                public LabelStage id(@NotNull String id) {
+                    this.id = Objects.requireNonNull(id, "id must not be null");
+                    return this;
+                }
+
+                /**
+                 * <p>The human-readable name of the attribute.</p>
+                 * <p>The human-readable name of the attribute.</p>
+                 * @return Reference to {@code this} so that method calls can be chained together.
+                 */
+                @java.lang.Override
+                @JsonSetter("label")
+                public _FinalStage label(@NotNull String label) {
+                    this.label = Objects.requireNonNull(label, "label must not be null");
+                    return this;
+                }
+
+                @java.lang.Override
+                public Attribute build() {
+                    return new Attribute(id, label, additionalProperties);
+                }
+            }
+        }
+
+        @JsonInclude(JsonInclude.Include.NON_ABSENT)
+        @JsonDeserialize(builder = Value.Builder.class)
+        public static final class Value {
+            private final Id id;
+
+            private final Label label;
+
+            private final Map<String, Object> additionalProperties;
+
+            private Value(Id id, Label label, Map<String, Object> additionalProperties) {
+                this.id = id;
+                this.label = label;
+                this.additionalProperties = additionalProperties;
+            }
+
+            /**
+             * @return The type of the object. Always 'value'.
+             */
+            @JsonProperty("type")
+            public String getType() {
+                return "value";
+            }
+
+            @JsonProperty("id")
+            public Id getId() {
+                return id;
+            }
+
+            @JsonProperty("label")
+            public Label getLabel() {
+                return label;
+            }
+
+            @java.lang.Override
+            public boolean equals(Object other) {
+                if (this == other) return true;
+                return other instanceof Value && equalTo((Value) other);
+            }
+
+            @JsonAnyGetter
+            public Map<String, Object> getAdditionalProperties() {
+                return this.additionalProperties;
+            }
+
+            private boolean equalTo(Value other) {
+                return id.equals(other.id) && label.equals(other.label);
+            }
+
+            @java.lang.Override
+            public int hashCode() {
+                return Objects.hash(this.id, this.label);
+            }
+
+            @java.lang.Override
+            public String toString() {
+                return ObjectMappers.stringify(this);
+            }
+
+            public static IdStage builder() {
+                return new Builder();
+            }
+
+            public interface IdStage {
+                LabelStage id(@NotNull Id id);
+
+                Builder from(Value other);
+            }
+
+            public interface LabelStage {
+                _FinalStage label(@NotNull Label label);
+            }
+
+            public interface _FinalStage {
+                Value build();
+            }
+
+            @JsonIgnoreProperties(ignoreUnknown = true)
+            public static final class Builder implements IdStage, LabelStage, _FinalStage {
+                private Id id;
+
+                private Label label;
+
+                @JsonAnySetter
+                private Map<String, Object> additionalProperties = new HashMap<>();
+
+                private Builder() {}
+
+                @java.lang.Override
+                public Builder from(Value other) {
+                    id(other.getId());
+                    label(other.getLabel());
+                    return this;
+                }
+
+                @java.lang.Override
+                @JsonSetter("id")
+                public LabelStage id(@NotNull Id id) {
+                    this.id = Objects.requireNonNull(id, "id must not be null");
+                    return this;
+                }
+
+                @java.lang.Override
+                @JsonSetter("label")
+                public _FinalStage label(@NotNull Label label) {
+                    this.label = Objects.requireNonNull(label, "label must not be null");
+                    return this;
+                }
+
+                @java.lang.Override
+                public Value build() {
+                    return new Value(id, label, additionalProperties);
+                }
+            }
+
+            @JsonDeserialize(using = Label.Deserializer.class)
+            public static final class Label {
+                private final Object value;
+
+                private final int type;
+
+                private Label(Object value, int type) {
+                    this.value = value;
+                    this.type = type;
+                }
+
+                @JsonValue
+                public Object get() {
+                    return this.value;
+                }
+
+                @SuppressWarnings("unchecked")
+                public <T> T visit(Visitor<T> visitor) {
+                    if (this.type == 0) {
+                        return visitor.visit((String) this.value);
+                    } else if (this.type == 1) {
+                        return visitor.visit((List<String>) this.value);
+                    }
+                    throw new IllegalStateException("Failed to visit value. This should never happen.");
+                }
+
+                @java.lang.Override
+                public boolean equals(Object other) {
+                    if (this == other) return true;
+                    return other instanceof Label && equalTo((Label) other);
+                }
+
+                private boolean equalTo(Label other) {
+                    return value.equals(other.value);
+                }
+
+                @java.lang.Override
+                public int hashCode() {
+                    return Objects.hash(this.value);
+                }
+
+                @java.lang.Override
+                public String toString() {
+                    return this.value.toString();
+                }
+
+                public static Label of(String value) {
+                    return new Label(value, 0);
+                }
+
+                public static Label of(List<String> value) {
+                    return new Label(value, 1);
+                }
+
+                public interface Visitor<T> {
+                    T visit(String value);
+
+                    T visit(List<String> value);
+                }
+
+                static final class Deserializer extends StdDeserializer<Label> {
+                    Deserializer() {
+                        super(Label.class);
+                    }
+
+                    @java.lang.Override
+                    public Label deserialize(JsonParser p, DeserializationContext context) throws IOException {
+                        Object value = p.readValueAs(Object.class);
+                        try {
+                            return of(ObjectMappers.JSON_MAPPER.convertValue(value, String.class));
+                        } catch (RuntimeException e) {
+                        }
+                        try {
+                            return of(ObjectMappers.JSON_MAPPER.convertValue(
+                                    value, new TypeReference<List<String>>() {}));
+                        } catch (RuntimeException e) {
+                        }
+                        throw new JsonParseException(p, "Failed to deserialize");
+                    }
+                }
+            }
+
+            @JsonDeserialize(using = Id.Deserializer.class)
+            public static final class Id {
+                private final Object value;
+
+                private final int type;
+
+                private Id(Object value, int type) {
+                    this.value = value;
+                    this.type = type;
+                }
+
+                @JsonValue
+                public Object get() {
+                    return this.value;
+                }
+
+                @SuppressWarnings("unchecked")
+                public <T> T visit(Visitor<T> visitor) {
+                    if (this.type == 0) {
+                        return visitor.visit((Optional<String>) this.value);
+                    } else if (this.type == 1) {
+                        return visitor.visit((List<Integer>) this.value);
+                    }
+                    throw new IllegalStateException("Failed to visit value. This should never happen.");
+                }
+
+                @java.lang.Override
+                public boolean equals(Object other) {
+                    if (this == other) return true;
+                    return other instanceof Id && equalTo((Id) other);
+                }
+
+                private boolean equalTo(Id other) {
+                    return value.equals(other.value);
+                }
+
+                @java.lang.Override
+                public int hashCode() {
+                    return Objects.hash(this.value);
+                }
+
+                @java.lang.Override
+                public String toString() {
+                    return this.value.toString();
+                }
+
+                public static Id of(Optional<String> value) {
+                    return new Id(value, 0);
+                }
+
+                public static Id of(List<Integer> value) {
+                    return new Id(value, 1);
+                }
+
+                public interface Visitor<T> {
+                    T visit(Optional<String> value);
+
+                    T visit(List<Integer> value);
+                }
+
+                static final class Deserializer extends StdDeserializer<Id> {
+                    Deserializer() {
+                        super(Id.class);
+                    }
+
+                    @java.lang.Override
+                    public Id deserialize(JsonParser p, DeserializationContext context) throws IOException {
+                        Object value = p.readValueAs(Object.class);
+                        try {
+                            return of(ObjectMappers.JSON_MAPPER.convertValue(
+                                    value, new TypeReference<Optional<String>>() {}));
+                        } catch (RuntimeException e) {
+                        }
+                        try {
+                            return of(ObjectMappers.JSON_MAPPER.convertValue(
+                                    value, new TypeReference<List<Integer>>() {}));
+                        } catch (RuntimeException e) {
+                        }
+                        throw new JsonParseException(p, "Failed to deserialize");
+                    }
+                }
+            }
         }
     }
 }

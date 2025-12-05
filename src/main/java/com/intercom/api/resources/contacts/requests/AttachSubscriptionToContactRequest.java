@@ -93,7 +93,7 @@ public final class AttachSubscriptionToContactRequest {
 
     public interface ContactIdStage {
         /**
-         * The unique identifier for the contact which is given by Intercom
+         * <p>The unique identifier for the contact which is given by Intercom</p>
          */
         SubscriptionIdStage contactId(@NotNull String contactId);
 
@@ -102,14 +102,14 @@ public final class AttachSubscriptionToContactRequest {
 
     public interface SubscriptionIdStage {
         /**
-         * The unique identifier for the subscription which is given by Intercom
+         * <p>The unique identifier for the subscription which is given by Intercom</p>
          */
         ConsentTypeStage subscriptionId(@NotNull String subscriptionId);
     }
 
     public interface ConsentTypeStage {
         /**
-         * The consent_type of a subscription, opt_out or opt_in.
+         * <p>The consent_type of a subscription, opt_out or opt_in.</p>
          */
         _FinalStage consentType(@NotNull String consentType);
     }
@@ -140,7 +140,8 @@ public final class AttachSubscriptionToContactRequest {
         }
 
         /**
-         * The unique identifier for the contact which is given by Intercom<p>The unique identifier for the contact which is given by Intercom</p>
+         * <p>The unique identifier for the contact which is given by Intercom</p>
+         * <p>The unique identifier for the contact which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -151,7 +152,8 @@ public final class AttachSubscriptionToContactRequest {
         }
 
         /**
-         * The unique identifier for the subscription which is given by Intercom<p>The unique identifier for the subscription which is given by Intercom</p>
+         * <p>The unique identifier for the subscription which is given by Intercom</p>
+         * <p>The unique identifier for the subscription which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -162,7 +164,8 @@ public final class AttachSubscriptionToContactRequest {
         }
 
         /**
-         * The consent_type of a subscription, opt_out or opt_in.<p>The consent_type of a subscription, opt_out or opt_in.</p>
+         * <p>The consent_type of a subscription, opt_out or opt_in.</p>
+         * <p>The consent_type of a subscription, opt_out or opt_in.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

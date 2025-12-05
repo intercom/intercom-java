@@ -153,7 +153,7 @@ public final class ContactReplyIntercomUserIdRequest implements IContactReplyBas
 
     public interface BodyStage {
         /**
-         * The text body of the comment.
+         * <p>The text body of the comment.</p>
          */
         IntercomUserIdStage body(@NotNull String body);
 
@@ -162,7 +162,7 @@ public final class ContactReplyIntercomUserIdRequest implements IContactReplyBas
 
     public interface IntercomUserIdStage {
         /**
-         * The identifier for the contact as given by Intercom.
+         * <p>The identifier for the contact as given by Intercom.</p>
          */
         _FinalStage intercomUserId(@NotNull String intercomUserId);
     }
@@ -230,7 +230,8 @@ public final class ContactReplyIntercomUserIdRequest implements IContactReplyBas
         }
 
         /**
-         * The text body of the comment.<p>The text body of the comment.</p>
+         * <p>The text body of the comment.</p>
+         * <p>The text body of the comment.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -241,7 +242,8 @@ public final class ContactReplyIntercomUserIdRequest implements IContactReplyBas
         }
 
         /**
-         * The identifier for the contact as given by Intercom.<p>The identifier for the contact as given by Intercom.</p>
+         * <p>The identifier for the contact as given by Intercom.</p>
+         * <p>The identifier for the contact as given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -406,7 +408,7 @@ public final class ContactReplyIntercomUserIdRequest implements IContactReplyBas
 
         public interface TextStage {
             /**
-             * The text of the chosen reply option.
+             * <p>The text of the chosen reply option.</p>
              */
             UuidStage text(@NotNull String text);
 
@@ -415,7 +417,7 @@ public final class ContactReplyIntercomUserIdRequest implements IContactReplyBas
 
         public interface UuidStage {
             /**
-             * The unique identifier for the quick reply option selected.
+             * <p>The unique identifier for the quick reply option selected.</p>
              */
             _FinalStage uuid(@NotNull String uuid);
         }
@@ -443,7 +445,8 @@ public final class ContactReplyIntercomUserIdRequest implements IContactReplyBas
             }
 
             /**
-             * The text of the chosen reply option.<p>The text of the chosen reply option.</p>
+             * <p>The text of the chosen reply option.</p>
+             * <p>The text of the chosen reply option.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -454,7 +457,8 @@ public final class ContactReplyIntercomUserIdRequest implements IContactReplyBas
             }
 
             /**
-             * The unique identifier for the quick reply option selected.<p>The unique identifier for the quick reply option selected.</p>
+             * <p>The unique identifier for the quick reply option selected.</p>
+             * <p>The unique identifier for the quick reply option selected.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override

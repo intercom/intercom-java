@@ -90,7 +90,7 @@ public final class AttachTagToTicketRequest {
 
     public interface TicketIdStage {
         /**
-         * ticket_id
+         * <p>ticket_id</p>
          */
         IdStage ticketId(@NotNull String ticketId);
 
@@ -99,14 +99,14 @@ public final class AttachTagToTicketRequest {
 
     public interface IdStage {
         /**
-         * The unique identifier for the tag which is given by Intercom
+         * <p>The unique identifier for the tag which is given by Intercom</p>
          */
         AdminIdStage id(@NotNull String id);
     }
 
     public interface AdminIdStage {
         /**
-         * The unique identifier for the admin which is given by Intercom.
+         * <p>The unique identifier for the admin which is given by Intercom.</p>
          */
         _FinalStage adminId(@NotNull String adminId);
     }
@@ -137,7 +137,8 @@ public final class AttachTagToTicketRequest {
         }
 
         /**
-         * ticket_id<p>ticket_id</p>
+         * <p>ticket_id</p>
+         * <p>ticket_id</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -148,7 +149,8 @@ public final class AttachTagToTicketRequest {
         }
 
         /**
-         * The unique identifier for the tag which is given by Intercom<p>The unique identifier for the tag which is given by Intercom</p>
+         * <p>The unique identifier for the tag which is given by Intercom</p>
+         * <p>The unique identifier for the tag which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -159,7 +161,8 @@ public final class AttachTagToTicketRequest {
         }
 
         /**
-         * The unique identifier for the admin which is given by Intercom.<p>The unique identifier for the admin which is given by Intercom.</p>
+         * <p>The unique identifier for the admin which is given by Intercom.</p>
+         * <p>The unique identifier for the admin which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

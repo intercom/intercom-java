@@ -4,6 +4,7 @@
 package com.intercom.api.resources.admins;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.IntercomApiException;
 import com.intercom.api.core.IntercomException;
@@ -12,6 +13,7 @@ import com.intercom.api.core.MediaTypes;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.core.QueryStringMapper;
 import com.intercom.api.core.RequestOptions;
+import com.intercom.api.errors.BadRequestError;
 import com.intercom.api.errors.NotFoundError;
 import com.intercom.api.errors.UnauthorizedError;
 import com.intercom.api.resources.admins.requests.ConfigureAwayAdminRequest;
@@ -23,6 +25,7 @@ import com.intercom.api.types.AdminList;
 import com.intercom.api.types.AdminWithApp;
 import com.intercom.api.types.Error;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -49,7 +52,7 @@ public class AsyncRawAdminsClient {
      * <p>If you are building a custom &quot;Log in with Intercom&quot; flow for your site, and you call the <code>/me</code> endpoint to identify the logged-in user, you should not accept any sign-ins from users with unverified email addresses as it poses a potential impersonation security risk.</p>
      * </blockquote>
      */
-    public CompletableFuture<IntercomHttpResponse<AdminWithApp>> identify() {
+    public CompletableFuture<IntercomHttpResponse<Optional<AdminWithApp>>> identify() {
         return identify(null);
     }
 
@@ -60,7 +63,7 @@ public class AsyncRawAdminsClient {
      * <p>If you are building a custom &quot;Log in with Intercom&quot; flow for your site, and you call the <code>/me</code> endpoint to identify the logged-in user, you should not accept any sign-ins from users with unverified email addresses as it poses a potential impersonation security risk.</p>
      * </blockquote>
      */
-    public CompletableFuture<IntercomHttpResponse<AdminWithApp>> identify(RequestOptions requestOptions) {
+    public CompletableFuture<IntercomHttpResponse<Optional<AdminWithApp>>> identify(RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("me")
@@ -69,30 +72,28 @@ public class AsyncRawAdminsClient {
                 .url(httpUrl)
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json")
                 .build();
         OkHttpClient client = clientOptions.httpClient();
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<IntercomHttpResponse<AdminWithApp>> future = new CompletableFuture<>();
+        CompletableFuture<IntercomHttpResponse<Optional<AdminWithApp>>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), AdminWithApp.class),
+                                ObjectMappers.JSON_MAPPER.readValue(
+                                        responseBodyString, new TypeReference<Optional<AdminWithApp>>() {}),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -110,19 +111,19 @@ public class AsyncRawAdminsClient {
     /**
      * You can set an Admin as away for the Inbox.
      */
-    public CompletableFuture<IntercomHttpResponse<Admin>> away(ConfigureAwayAdminRequest request) {
+    public CompletableFuture<IntercomHttpResponse<Optional<Admin>>> away(ConfigureAwayAdminRequest request) {
         return away(request, null);
     }
 
     /**
      * You can set an Admin as away for the Inbox.
      */
-    public CompletableFuture<IntercomHttpResponse<Admin>> away(
+    public CompletableFuture<IntercomHttpResponse<Optional<Admin>>> away(
             ConfigureAwayAdminRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("admins")
-                .addPathSegment(request.getAdminId())
+                .addPathSegment(Integer.toString(request.getAdminId()))
                 .addPathSegments("away")
                 .build();
         RequestBody body;
@@ -143,19 +144,26 @@ public class AsyncRawAdminsClient {
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<IntercomHttpResponse<Admin>> future = new CompletableFuture<>();
+        CompletableFuture<IntercomHttpResponse<Optional<Admin>>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Admin.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(
+                                        responseBodyString, new TypeReference<Optional<Admin>>() {}),
+                                response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
+                            case 400:
+                                future.completeExceptionally(new BadRequestError(
+                                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
+                                        response));
+                                return;
                             case 401:
                                 future.completeExceptionally(new UnauthorizedError(
                                         ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class),
@@ -170,11 +178,9 @@ public class AsyncRawAdminsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -214,7 +220,6 @@ public class AsyncRawAdminsClient {
                 .url(httpUrl.build())
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -226,13 +231,13 @@ public class AsyncRawAdminsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), ActivityLogList.class),
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ActivityLogList.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         if (response.code() == 401) {
                             future.completeExceptionally(new UnauthorizedError(
@@ -242,11 +247,9 @@ public class AsyncRawAdminsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -280,7 +283,6 @@ public class AsyncRawAdminsClient {
                 .url(httpUrl)
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json")
                 .build();
         OkHttpClient client = clientOptions.httpClient();
@@ -292,12 +294,12 @@ public class AsyncRawAdminsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), AdminList.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, AdminList.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         if (response.code() == 401) {
                             future.completeExceptionally(new UnauthorizedError(
@@ -307,11 +309,9 @@ public class AsyncRawAdminsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -329,42 +329,43 @@ public class AsyncRawAdminsClient {
     /**
      * You can retrieve the details of a single admin.
      */
-    public CompletableFuture<IntercomHttpResponse<Admin>> find(FindAdminRequest request) {
+    public CompletableFuture<IntercomHttpResponse<Optional<Admin>>> find(FindAdminRequest request) {
         return find(request, null);
     }
 
     /**
      * You can retrieve the details of a single admin.
      */
-    public CompletableFuture<IntercomHttpResponse<Admin>> find(
+    public CompletableFuture<IntercomHttpResponse<Optional<Admin>>> find(
             FindAdminRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("admins")
-                .addPathSegment(request.getAdminId())
+                .addPathSegment(Integer.toString(request.getAdminId()))
                 .build();
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl)
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<IntercomHttpResponse<Admin>> future = new CompletableFuture<>();
+        CompletableFuture<IntercomHttpResponse<Optional<Admin>>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Admin.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(
+                                        responseBodyString, new TypeReference<Optional<Admin>>() {}),
+                                response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -381,11 +382,9 @@ public class AsyncRawAdminsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));

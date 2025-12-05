@@ -7,6 +7,7 @@ import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.RequestOptions;
 import com.intercom.api.resources.messages.types.Message;
 import com.intercom.api.types.CreateMessageRequest;
+import java.util.Optional;
 
 public class MessagesClient {
     protected final ClientOptions clientOptions;
@@ -37,7 +38,23 @@ public class MessagesClient {
      * <p>As this is a message, there will be no conversation present until the contact responds. Once they do, you will have to search for a contact's conversations with the id of the message.</p>
      * </blockquote>
      */
-    public Message create(CreateMessageRequest request) {
+    public Message create() {
+        return this.rawClient.create().body();
+    }
+
+    /**
+     * You can create a message that has been initiated by an admin. The conversation can be either an in-app message or an email.
+     * <blockquote>
+     * <p>🚧 Sending for visitors</p>
+     * <p>There can be a short delay between when a contact is created and when a contact becomes available to be messaged through the API. A 404 Not Found error will be returned in this case.</p>
+     * </blockquote>
+     * <p>This will return the Message model that has been created.</p>
+     * <blockquote>
+     * <p>🚧 Retrieving Associated Conversations</p>
+     * <p>As this is a message, there will be no conversation present until the contact responds. Once they do, you will have to search for a contact's conversations with the id of the message.</p>
+     * </blockquote>
+     */
+    public Message create(Optional<CreateMessageRequest> request) {
         return this.rawClient.create(request).body();
     }
 
@@ -53,7 +70,7 @@ public class MessagesClient {
      * <p>As this is a message, there will be no conversation present until the contact responds. Once they do, you will have to search for a contact's conversations with the id of the message.</p>
      * </blockquote>
      */
-    public Message create(CreateMessageRequest request, RequestOptions requestOptions) {
+    public Message create(Optional<CreateMessageRequest> request, RequestOptions requestOptions) {
         return this.rawClient.create(request, requestOptions).body();
     }
 }

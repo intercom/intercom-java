@@ -9,18 +9,20 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ArticleStatistics.Builder.class)
 public final class ArticleStatistics {
     private final int views;
 
-    private final int conversions;
+    private final Optional<Integer> conversions;
 
     private final int reactions;
 
@@ -34,7 +36,7 @@ public final class ArticleStatistics {
 
     private ArticleStatistics(
             int views,
-            int conversions,
+            Optional<Integer> conversions,
             int reactions,
             float happyReactionPercentage,
             float neutralReactionPercentage,
@@ -69,7 +71,7 @@ public final class ArticleStatistics {
      * @return The number of conversations started from the article.
      */
     @JsonProperty("conversions")
-    public int getConversions() {
+    public Optional<Integer> getConversions() {
         return conversions;
     }
 
@@ -118,7 +120,7 @@ public final class ArticleStatistics {
 
     private boolean equalTo(ArticleStatistics other) {
         return views == other.views
-                && conversions == other.conversions
+                && conversions.equals(other.conversions)
                 && reactions == other.reactions
                 && happyReactionPercentage == other.happyReactionPercentage
                 && neutralReactionPercentage == other.neutralReactionPercentage
@@ -147,64 +149,61 @@ public final class ArticleStatistics {
 
     public interface ViewsStage {
         /**
-         * The number of total views the article has received.
+         * <p>The number of total views the article has received.</p>
          */
-        ConversionsStage views(int views);
+        ReactionsStage views(int views);
 
         Builder from(ArticleStatistics other);
     }
 
-    public interface ConversionsStage {
-        /**
-         * The number of conversations started from the article.
-         */
-        ReactionsStage conversions(int conversions);
-    }
-
     public interface ReactionsStage {
         /**
-         * The number of total reactions the article has received.
+         * <p>The number of total reactions the article has received.</p>
          */
         HappyReactionPercentageStage reactions(int reactions);
     }
 
     public interface HappyReactionPercentageStage {
         /**
-         * The percentage of happy reactions the article has received against other types of reaction.
+         * <p>The percentage of happy reactions the article has received against other types of reaction.</p>
          */
         NeutralReactionPercentageStage happyReactionPercentage(float happyReactionPercentage);
     }
 
     public interface NeutralReactionPercentageStage {
         /**
-         * The percentage of neutral reactions the article has received against other types of reaction.
+         * <p>The percentage of neutral reactions the article has received against other types of reaction.</p>
          */
         SadReactionPercentageStage neutralReactionPercentage(float neutralReactionPercentage);
     }
 
     public interface SadReactionPercentageStage {
         /**
-         * The percentage of sad reactions the article has received against other types of reaction.
+         * <p>The percentage of sad reactions the article has received against other types of reaction.</p>
          */
         _FinalStage sadReactionPercentage(float sadReactionPercentage);
     }
 
     public interface _FinalStage {
         ArticleStatistics build();
+
+        /**
+         * <p>The number of conversations started from the article.</p>
+         */
+        _FinalStage conversions(Optional<Integer> conversions);
+
+        _FinalStage conversions(Integer conversions);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder
             implements ViewsStage,
-                    ConversionsStage,
                     ReactionsStage,
                     HappyReactionPercentageStage,
                     NeutralReactionPercentageStage,
                     SadReactionPercentageStage,
                     _FinalStage {
         private int views;
-
-        private int conversions;
 
         private int reactions;
 
@@ -213,6 +212,8 @@ public final class ArticleStatistics {
         private float neutralReactionPercentage;
 
         private float sadReactionPercentage;
+
+        private Optional<Integer> conversions = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -231,29 +232,20 @@ public final class ArticleStatistics {
         }
 
         /**
-         * The number of total views the article has received.<p>The number of total views the article has received.</p>
+         * <p>The number of total views the article has received.</p>
+         * <p>The number of total views the article has received.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
         @JsonSetter("views")
-        public ConversionsStage views(int views) {
+        public ReactionsStage views(int views) {
             this.views = views;
             return this;
         }
 
         /**
-         * The number of conversations started from the article.<p>The number of conversations started from the article.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("conversions")
-        public ReactionsStage conversions(int conversions) {
-            this.conversions = conversions;
-            return this;
-        }
-
-        /**
-         * The number of total reactions the article has received.<p>The number of total reactions the article has received.</p>
+         * <p>The number of total reactions the article has received.</p>
+         * <p>The number of total reactions the article has received.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -264,7 +256,8 @@ public final class ArticleStatistics {
         }
 
         /**
-         * The percentage of happy reactions the article has received against other types of reaction.<p>The percentage of happy reactions the article has received against other types of reaction.</p>
+         * <p>The percentage of happy reactions the article has received against other types of reaction.</p>
+         * <p>The percentage of happy reactions the article has received against other types of reaction.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -275,7 +268,8 @@ public final class ArticleStatistics {
         }
 
         /**
-         * The percentage of neutral reactions the article has received against other types of reaction.<p>The percentage of neutral reactions the article has received against other types of reaction.</p>
+         * <p>The percentage of neutral reactions the article has received against other types of reaction.</p>
+         * <p>The percentage of neutral reactions the article has received against other types of reaction.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -286,13 +280,34 @@ public final class ArticleStatistics {
         }
 
         /**
-         * The percentage of sad reactions the article has received against other types of reaction.<p>The percentage of sad reactions the article has received against other types of reaction.</p>
+         * <p>The percentage of sad reactions the article has received against other types of reaction.</p>
+         * <p>The percentage of sad reactions the article has received against other types of reaction.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
         @JsonSetter("sad_reaction_percentage")
         public _FinalStage sadReactionPercentage(float sadReactionPercentage) {
             this.sadReactionPercentage = sadReactionPercentage;
+            return this;
+        }
+
+        /**
+         * <p>The number of conversations started from the article.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage conversions(Integer conversions) {
+            this.conversions = Optional.ofNullable(conversions);
+            return this;
+        }
+
+        /**
+         * <p>The number of conversations started from the article.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "conversions", nulls = Nulls.SKIP)
+        public _FinalStage conversions(Optional<Integer> conversions) {
+            this.conversions = conversions;
             return this;
         }
 

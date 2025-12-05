@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.resources.companies.types.Company;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,9 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = CompanyScroll.Builder.class)
 public final class CompanyScroll {
-    private final List<Company> data;
+    private final Optional<String> type;
+
+    private final Optional<List<Company>> data;
 
     private final Optional<CursorPages> pages;
 
@@ -34,11 +35,13 @@ public final class CompanyScroll {
     private final Map<String, Object> additionalProperties;
 
     private CompanyScroll(
-            List<Company> data,
+            Optional<String> type,
+            Optional<List<Company>> data,
             Optional<CursorPages> pages,
             Optional<Integer> totalCount,
             Optional<String> scrollParam,
             Map<String, Object> additionalProperties) {
+        this.type = type;
         this.data = data;
         this.pages = pages;
         this.totalCount = totalCount;
@@ -50,12 +53,12 @@ public final class CompanyScroll {
      * @return The type of object - <code>list</code>
      */
     @JsonProperty("type")
-    public String getType() {
-        return "list";
+    public Optional<String> getType() {
+        return type;
     }
 
     @JsonProperty("data")
-    public List<Company> getData() {
+    public Optional<List<Company>> getData() {
         return data;
     }
 
@@ -92,7 +95,8 @@ public final class CompanyScroll {
     }
 
     private boolean equalTo(CompanyScroll other) {
-        return data.equals(other.data)
+        return type.equals(other.type)
+                && data.equals(other.data)
                 && pages.equals(other.pages)
                 && totalCount.equals(other.totalCount)
                 && scrollParam.equals(other.scrollParam);
@@ -100,7 +104,7 @@ public final class CompanyScroll {
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.data, this.pages, this.totalCount, this.scrollParam);
+        return Objects.hash(this.type, this.data, this.pages, this.totalCount, this.scrollParam);
     }
 
     @java.lang.Override
@@ -114,7 +118,9 @@ public final class CompanyScroll {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
-        private List<Company> data = new ArrayList<>();
+        private Optional<String> type = Optional.empty();
+
+        private Optional<List<Company>> data = Optional.empty();
 
         private Optional<CursorPages> pages = Optional.empty();
 
@@ -128,6 +134,7 @@ public final class CompanyScroll {
         private Builder() {}
 
         public Builder from(CompanyScroll other) {
+            type(other.getType());
             data(other.getData());
             pages(other.getPages());
             totalCount(other.getTotalCount());
@@ -135,20 +142,28 @@ public final class CompanyScroll {
             return this;
         }
 
+        /**
+         * <p>The type of object - <code>list</code></p>
+         */
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
+            return this;
+        }
+
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
+        public Builder data(Optional<List<Company>> data) {
+            this.data = data;
+            return this;
+        }
+
         public Builder data(List<Company> data) {
-            this.data.clear();
-            this.data.addAll(data);
-            return this;
-        }
-
-        public Builder addData(Company data) {
-            this.data.add(data);
-            return this;
-        }
-
-        public Builder addAllData(List<Company> data) {
-            this.data.addAll(data);
+            this.data = Optional.ofNullable(data);
             return this;
         }
 
@@ -192,7 +207,7 @@ public final class CompanyScroll {
         }
 
         public CompanyScroll build() {
-            return new CompanyScroll(data, pages, totalCount, scrollParam, additionalProperties);
+            return new CompanyScroll(type, data, pages, totalCount, scrollParam, additionalProperties);
         }
     }
 }

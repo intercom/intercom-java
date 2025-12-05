@@ -15,8 +15,7 @@ import com.intercom.api.resources.news.feeds.requests.FindNewsFeedRequest;
 import com.intercom.api.resources.news.feeds.requests.ListNewsFeedItemsRequest;
 import com.intercom.api.resources.news.types.Newsfeed;
 import com.intercom.api.types.Error;
-import com.intercom.api.types.PaginatedNewsItemResponse;
-import com.intercom.api.types.PaginatedNewsfeedResponse;
+import com.intercom.api.types.PaginatedResponse;
 import java.io.IOException;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
@@ -35,14 +34,14 @@ public class RawFeedsClient {
     /**
      * You can fetch a list of all news items that are live on a given newsfeed
      */
-    public IntercomHttpResponse<PaginatedNewsItemResponse> listItems(ListNewsFeedItemsRequest request) {
+    public IntercomHttpResponse<PaginatedResponse> listItems(ListNewsFeedItemsRequest request) {
         return listItems(request, null);
     }
 
     /**
      * You can fetch a list of all news items that are live on a given newsfeed
      */
-    public IntercomHttpResponse<PaginatedNewsItemResponse> listItems(
+    public IntercomHttpResponse<PaginatedResponse> listItems(
             ListNewsFeedItemsRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
@@ -54,7 +53,6 @@ public class RawFeedsClient {
                 .url(httpUrl)
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -63,12 +61,11 @@ public class RawFeedsClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), PaginatedNewsItemResponse.class),
-                        response);
+                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, PaginatedResponse.class), response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 if (response.code() == 401) {
                     throw new UnauthorizedError(
@@ -77,11 +74,9 @@ public class RawFeedsClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }
@@ -90,14 +85,14 @@ public class RawFeedsClient {
     /**
      * You can fetch a list of all newsfeeds
      */
-    public IntercomHttpResponse<PaginatedNewsfeedResponse> list() {
+    public IntercomHttpResponse<PaginatedResponse> list() {
         return list(null);
     }
 
     /**
      * You can fetch a list of all newsfeeds
      */
-    public IntercomHttpResponse<PaginatedNewsfeedResponse> list(RequestOptions requestOptions) {
+    public IntercomHttpResponse<PaginatedResponse> list(RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("news/newsfeeds")
@@ -106,7 +101,6 @@ public class RawFeedsClient {
                 .url(httpUrl)
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json")
                 .build();
         OkHttpClient client = clientOptions.httpClient();
@@ -115,12 +109,11 @@ public class RawFeedsClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), PaginatedNewsfeedResponse.class),
-                        response);
+                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, PaginatedResponse.class), response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 if (response.code() == 401) {
                     throw new UnauthorizedError(
@@ -129,11 +122,9 @@ public class RawFeedsClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }
@@ -159,7 +150,6 @@ public class RawFeedsClient {
                 .url(httpUrl)
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -168,11 +158,11 @@ public class RawFeedsClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Newsfeed.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Newsfeed.class), response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 if (response.code() == 401) {
                     throw new UnauthorizedError(
@@ -181,11 +171,9 @@ public class RawFeedsClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }

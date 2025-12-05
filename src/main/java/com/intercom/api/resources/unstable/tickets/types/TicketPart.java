@@ -718,7 +718,7 @@ public final class TicketPart {
 
         public interface AttributeStage {
             /**
-             * Information about the attribute that was updated.
+             * <p>Information about the attribute that was updated.</p>
              */
             ValueStage attribute(@NotNull Attribute attribute);
 
@@ -727,7 +727,7 @@ public final class TicketPart {
 
         public interface ValueStage {
             /**
-             * The new value of the attribute.
+             * <p>The new value of the attribute.</p>
              */
             _FinalStage value(@NotNull Value value);
         }
@@ -755,7 +755,8 @@ public final class TicketPart {
             }
 
             /**
-             * Information about the attribute that was updated.<p>Information about the attribute that was updated.</p>
+             * <p>Information about the attribute that was updated.</p>
+             * <p>Information about the attribute that was updated.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -766,7 +767,8 @@ public final class TicketPart {
             }
 
             /**
-             * The new value of the attribute.<p>The new value of the attribute.</p>
+             * <p>The new value of the attribute.</p>
+             * <p>The new value of the attribute.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -966,12 +968,12 @@ public final class TicketPart {
                         Object value = p.readValueAs(Object.class);
                         try {
                             return of(ObjectMappers.JSON_MAPPER.convertValue(value, String.class));
-                        } catch (IllegalArgumentException e) {
+                        } catch (RuntimeException e) {
                         }
                         try {
                             return of(ObjectMappers.JSON_MAPPER.convertValue(
                                     value, new TypeReference<List<String>>() {}));
-                        } catch (IllegalArgumentException e) {
+                        } catch (RuntimeException e) {
                         }
                         throw new JsonParseException(p, "Failed to deserialize");
                     }
@@ -1049,12 +1051,12 @@ public final class TicketPart {
                         try {
                             return of(ObjectMappers.JSON_MAPPER.convertValue(
                                     value, new TypeReference<Optional<String>>() {}));
-                        } catch (IllegalArgumentException e) {
+                        } catch (RuntimeException e) {
                         }
                         try {
                             return of(ObjectMappers.JSON_MAPPER.convertValue(
                                     value, new TypeReference<List<Integer>>() {}));
-                        } catch (IllegalArgumentException e) {
+                        } catch (RuntimeException e) {
                         }
                         throw new JsonParseException(p, "Failed to deserialize");
                     }
@@ -1132,7 +1134,7 @@ public final class TicketPart {
 
             public interface IdStage {
                 /**
-                 * The unique identifier of the attribute.
+                 * <p>The unique identifier of the attribute.</p>
                  */
                 LabelStage id(@NotNull String id);
 
@@ -1141,7 +1143,7 @@ public final class TicketPart {
 
             public interface LabelStage {
                 /**
-                 * The human-readable name of the attribute.
+                 * <p>The human-readable name of the attribute.</p>
                  */
                 _FinalStage label(@NotNull String label);
             }
@@ -1169,7 +1171,8 @@ public final class TicketPart {
                 }
 
                 /**
-                 * The unique identifier of the attribute.<p>The unique identifier of the attribute.</p>
+                 * <p>The unique identifier of the attribute.</p>
+                 * <p>The unique identifier of the attribute.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override
@@ -1180,7 +1183,8 @@ public final class TicketPart {
                 }
 
                 /**
-                 * The human-readable name of the attribute.<p>The human-readable name of the attribute.</p>
+                 * <p>The human-readable name of the attribute.</p>
+                 * <p>The human-readable name of the attribute.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override

@@ -169,7 +169,9 @@ public final class PostExportReportingDataEnqueueRequest {
 
         @java.lang.Override
         public _FinalStage addAllAttributeIds(List<String> attributeIds) {
-            this.attributeIds.addAll(attributeIds);
+            if (attributeIds != null) {
+                this.attributeIds.addAll(attributeIds);
+            }
             return this;
         }
 
@@ -183,7 +185,9 @@ public final class PostExportReportingDataEnqueueRequest {
         @JsonSetter(value = "attribute_ids", nulls = Nulls.SKIP)
         public _FinalStage attributeIds(List<String> attributeIds) {
             this.attributeIds.clear();
-            this.attributeIds.addAll(attributeIds);
+            if (attributeIds != null) {
+                this.attributeIds.addAll(attributeIds);
+            }
             return this;
         }
 

@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public final class ApiVersion {
     public static final ApiVersion _2_1 = new ApiVersion(Value._2_1, "2.1");
 
+    public static final ApiVersion _2_14 = new ApiVersion(Value._2_14, "2.14");
+
     public static final ApiVersion _2_2 = new ApiVersion(Value._2_2, "2.2");
 
     public static final ApiVersion _1_0 = new ApiVersion(Value._1_0, "1.0");
@@ -41,7 +43,11 @@ public final class ApiVersion {
 
     public static final ApiVersion UNSTABLE = new ApiVersion(Value.UNSTABLE, "Unstable");
 
+    public static final ApiVersion _2_12 = new ApiVersion(Value._2_12, "2.12");
+
     public static final ApiVersion _2_0 = new ApiVersion(Value._2_0, "2.0");
+
+    public static final ApiVersion _2_13 = new ApiVersion(Value._2_13, "2.13");
 
     private final Value value;
 
@@ -76,6 +82,8 @@ public final class ApiVersion {
         switch (value) {
             case _2_1:
                 return visitor.visit_21();
+            case _2_14:
+                return visitor.visit_214();
             case _2_2:
                 return visitor.visit_22();
             case _1_0:
@@ -108,8 +116,12 @@ public final class ApiVersion {
                 return visitor.visit_211();
             case UNSTABLE:
                 return visitor.visitUnstable();
+            case _2_12:
+                return visitor.visit_212();
             case _2_0:
                 return visitor.visit_20();
+            case _2_13:
+                return visitor.visit_213();
             case UNKNOWN:
             default:
                 return visitor.visitUnknown(string);
@@ -121,6 +133,8 @@ public final class ApiVersion {
         switch (value) {
             case "2.1":
                 return _2_1;
+            case "2.14":
+                return _2_14;
             case "2.2":
                 return _2_2;
             case "1.0":
@@ -153,8 +167,12 @@ public final class ApiVersion {
                 return _2_11;
             case "Unstable":
                 return UNSTABLE;
+            case "2.12":
+                return _2_12;
             case "2.0":
                 return _2_0;
+            case "2.13":
+                return _2_13;
             default:
                 return new ApiVersion(Value.UNKNOWN, value);
         }
@@ -195,6 +213,12 @@ public final class ApiVersion {
 
         _2_11,
 
+        _2_12,
+
+        _2_13,
+
+        _2_14,
+
         UNSTABLE,
 
         UNKNOWN
@@ -234,6 +258,12 @@ public final class ApiVersion {
         T visit_210();
 
         T visit_211();
+
+        T visit_212();
+
+        T visit_213();
+
+        T visit_214();
 
         T visitUnstable();
 

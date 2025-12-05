@@ -67,7 +67,7 @@ public final class FindCompanyRequest {
 
     public interface CompanyIdStage {
         /**
-         * The unique identifier for the company which is given by Intercom
+         * <p>The unique identifier for the company which is given by Intercom</p>
          */
         _FinalStage companyId(@NotNull String companyId);
 
@@ -94,7 +94,8 @@ public final class FindCompanyRequest {
         }
 
         /**
-         * The unique identifier for the company which is given by Intercom<p>The unique identifier for the company which is given by Intercom</p>
+         * <p>The unique identifier for the company which is given by Intercom</p>
+         * <p>The unique identifier for the company which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

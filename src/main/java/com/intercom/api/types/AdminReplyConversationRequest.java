@@ -32,6 +32,8 @@ public final class AdminReplyConversationRequest {
 
     private final Optional<Integer> createdAt;
 
+    private final Optional<List<QuickReplyOption>> replyOptions;
+
     private final Optional<List<String>> attachmentUrls;
 
     private final Optional<List<ConversationAttachmentFiles>> attachmentFiles;
@@ -43,6 +45,7 @@ public final class AdminReplyConversationRequest {
             Optional<String> body,
             String adminId,
             Optional<Integer> createdAt,
+            Optional<List<QuickReplyOption>> replyOptions,
             Optional<List<String>> attachmentUrls,
             Optional<List<ConversationAttachmentFiles>> attachmentFiles,
             Map<String, Object> additionalProperties) {
@@ -50,6 +53,7 @@ public final class AdminReplyConversationRequest {
         this.body = body;
         this.adminId = adminId;
         this.createdAt = createdAt;
+        this.replyOptions = replyOptions;
         this.attachmentUrls = attachmentUrls;
         this.attachmentFiles = attachmentFiles;
         this.additionalProperties = additionalProperties;
@@ -90,6 +94,14 @@ public final class AdminReplyConversationRequest {
     }
 
     /**
+     * @return The quick reply options to display to the end user. Must be present for quick_reply message types.
+     */
+    @JsonProperty("reply_options")
+    public Optional<List<QuickReplyOption>> getReplyOptions() {
+        return replyOptions;
+    }
+
+    /**
      * @return A list of image URLs that will be added as attachments. You can include up to 10 URLs.
      */
     @JsonProperty("attachment_urls")
@@ -121,6 +133,7 @@ public final class AdminReplyConversationRequest {
                 && body.equals(other.body)
                 && adminId.equals(other.adminId)
                 && createdAt.equals(other.createdAt)
+                && replyOptions.equals(other.replyOptions)
                 && attachmentUrls.equals(other.attachmentUrls)
                 && attachmentFiles.equals(other.attachmentFiles);
     }
@@ -128,7 +141,13 @@ public final class AdminReplyConversationRequest {
     @java.lang.Override
     public int hashCode() {
         return Objects.hash(
-                this.messageType, this.body, this.adminId, this.createdAt, this.attachmentUrls, this.attachmentFiles);
+                this.messageType,
+                this.body,
+                this.adminId,
+                this.createdAt,
+                this.replyOptions,
+                this.attachmentUrls,
+                this.attachmentFiles);
     }
 
     @java.lang.Override
@@ -148,7 +167,7 @@ public final class AdminReplyConversationRequest {
 
     public interface AdminIdStage {
         /**
-         * The id of the admin who is authoring the comment.
+         * <p>The id of the admin who is authoring the comment.</p>
          */
         _FinalStage adminId(@NotNull String adminId);
     }
@@ -169,6 +188,13 @@ public final class AdminReplyConversationRequest {
         _FinalStage createdAt(Optional<Integer> createdAt);
 
         _FinalStage createdAt(Integer createdAt);
+
+        /**
+         * <p>The quick reply options to display to the end user. Must be present for quick_reply message types.</p>
+         */
+        _FinalStage replyOptions(Optional<List<QuickReplyOption>> replyOptions);
+
+        _FinalStage replyOptions(List<QuickReplyOption> replyOptions);
 
         /**
          * <p>A list of image URLs that will be added as attachments. You can include up to 10 URLs.</p>
@@ -195,6 +221,8 @@ public final class AdminReplyConversationRequest {
 
         private Optional<List<String>> attachmentUrls = Optional.empty();
 
+        private Optional<List<QuickReplyOption>> replyOptions = Optional.empty();
+
         private Optional<Integer> createdAt = Optional.empty();
 
         private Optional<String> body = Optional.empty();
@@ -210,6 +238,7 @@ public final class AdminReplyConversationRequest {
             body(other.getBody());
             adminId(other.getAdminId());
             createdAt(other.getCreatedAt());
+            replyOptions(other.getReplyOptions());
             attachmentUrls(other.getAttachmentUrls());
             attachmentFiles(other.getAttachmentFiles());
             return this;
@@ -223,7 +252,8 @@ public final class AdminReplyConversationRequest {
         }
 
         /**
-         * The id of the admin who is authoring the comment.<p>The id of the admin who is authoring the comment.</p>
+         * <p>The id of the admin who is authoring the comment.</p>
+         * <p>The id of the admin who is authoring the comment.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -274,6 +304,26 @@ public final class AdminReplyConversationRequest {
         }
 
         /**
+         * <p>The quick reply options to display to the end user. Must be present for quick_reply message types.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage replyOptions(List<QuickReplyOption> replyOptions) {
+            this.replyOptions = Optional.ofNullable(replyOptions);
+            return this;
+        }
+
+        /**
+         * <p>The quick reply options to display to the end user. Must be present for quick_reply message types.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "reply_options", nulls = Nulls.SKIP)
+        public _FinalStage replyOptions(Optional<List<QuickReplyOption>> replyOptions) {
+            this.replyOptions = replyOptions;
+            return this;
+        }
+
+        /**
          * <p>The time the reply was created. If not provided, the current time will be used.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
@@ -316,12 +366,21 @@ public final class AdminReplyConversationRequest {
         @java.lang.Override
         public AdminReplyConversationRequest build() {
             return new AdminReplyConversationRequest(
-                    messageType, body, adminId, createdAt, attachmentUrls, attachmentFiles, additionalProperties);
+                    messageType,
+                    body,
+                    adminId,
+                    createdAt,
+                    replyOptions,
+                    attachmentUrls,
+                    attachmentFiles,
+                    additionalProperties);
         }
     }
 
     public static final class MessageType {
         public static final MessageType NOTE = new MessageType(Value.NOTE, "note");
+
+        public static final MessageType QUICK_REPLY = new MessageType(Value.QUICK_REPLY, "quick_reply");
 
         public static final MessageType COMMENT = new MessageType(Value.COMMENT, "comment");
 
@@ -359,6 +418,8 @@ public final class AdminReplyConversationRequest {
             switch (value) {
                 case NOTE:
                     return visitor.visitNote();
+                case QUICK_REPLY:
+                    return visitor.visitQuickReply();
                 case COMMENT:
                     return visitor.visitComment();
                 case UNKNOWN:
@@ -372,6 +433,8 @@ public final class AdminReplyConversationRequest {
             switch (value) {
                 case "note":
                     return NOTE;
+                case "quick_reply":
+                    return QUICK_REPLY;
                 case "comment":
                     return COMMENT;
                 default:
@@ -384,6 +447,8 @@ public final class AdminReplyConversationRequest {
 
             NOTE,
 
+            QUICK_REPLY,
+
             UNKNOWN
         }
 
@@ -391,6 +456,8 @@ public final class AdminReplyConversationRequest {
             T visitComment();
 
             T visitNote();
+
+            T visitQuickReply();
 
             T visitUnknown(String unknownType);
         }

@@ -1,0 +1,12 @@
+{
+  "cliVersion": "3.0.2",
+  "generatorName": "fernapi/fern-java-sdk",
+  "generatorVersion": "3.21.0",
+  "generatorConfig": {
+    "enable-inline-types": true,
+    "client-class-name": "Intercom",
+    "inline-path-parameters": true,
+    "enable-forward-compatible-enums": true,
+    "enable-wire-tests": false
+  }
+}

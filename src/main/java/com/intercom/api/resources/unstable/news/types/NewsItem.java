@@ -23,6 +23,8 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = NewsItem.Builder.class)
 public final class NewsItem {
+    private final Optional<String> type;
+
     private final Optional<String> id;
 
     private final Optional<String> workspaceId;
@@ -52,6 +54,7 @@ public final class NewsItem {
     private final Map<String, Object> additionalProperties;
 
     private NewsItem(
+            Optional<String> type,
             Optional<String> id,
             Optional<String> workspaceId,
             Optional<String> title,
@@ -66,6 +69,7 @@ public final class NewsItem {
             Optional<Integer> createdAt,
             Optional<Integer> updatedAt,
             Map<String, Object> additionalProperties) {
+        this.type = type;
         this.id = id;
         this.workspaceId = workspaceId;
         this.title = title;
@@ -80,6 +84,14 @@ public final class NewsItem {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.additionalProperties = additionalProperties;
+    }
+
+    /**
+     * @return The type of object.
+     */
+    @JsonProperty("type")
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
@@ -198,7 +210,8 @@ public final class NewsItem {
     }
 
     private boolean equalTo(NewsItem other) {
-        return id.equals(other.id)
+        return type.equals(other.type)
+                && id.equals(other.id)
                 && workspaceId.equals(other.workspaceId)
                 && title.equals(other.title)
                 && body.equals(other.body)
@@ -216,6 +229,7 @@ public final class NewsItem {
     @java.lang.Override
     public int hashCode() {
         return Objects.hash(
+                this.type,
                 this.id,
                 this.workspaceId,
                 this.title,
@@ -242,6 +256,8 @@ public final class NewsItem {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
+        private Optional<String> type = Optional.empty();
+
         private Optional<String> id = Optional.empty();
 
         private Optional<String> workspaceId = Optional.empty();
@@ -274,6 +290,7 @@ public final class NewsItem {
         private Builder() {}
 
         public Builder from(NewsItem other) {
+            type(other.getType());
             id(other.getId());
             workspaceId(other.getWorkspaceId());
             title(other.getTitle());
@@ -287,6 +304,20 @@ public final class NewsItem {
             deliverSilently(other.getDeliverSilently());
             createdAt(other.getCreatedAt());
             updatedAt(other.getUpdatedAt());
+            return this;
+        }
+
+        /**
+         * <p>The type of object.</p>
+         */
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
@@ -474,6 +505,7 @@ public final class NewsItem {
 
         public NewsItem build() {
             return new NewsItem(
+                    type,
                     id,
                     workspaceId,
                     title,

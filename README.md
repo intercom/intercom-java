@@ -1,8 +1,53 @@
 # Intercom Java Library
 
 [![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fintercom%2Fintercom-java)
+[![Maven Central](https://img.shields.io/maven-central/v/io.intercom/intercom-java)](https://central.sonatype.com/artifact/io.intercom/intercom-java)
 
-The Intercom Java library provides convenient access to the Intercom API from Java.
+The Intercom Java library provides convenient access to the Intercom APIs from Java.
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Reference](#reference)
+- [Usage](#usage)
+- [Environments](#environments)
+- [Base Url](#base-url)
+- [Exception Handling](#exception-handling)
+- [Advanced](#advanced)
+  - [Custom Client](#custom-client)
+  - [Retries](#retries)
+  - [Timeouts](#timeouts)
+  - [Custom Headers](#custom-headers)
+  - [Access Raw Response Data](#access-raw-response-data)
+- [Contributing](#contributing)
+
+## Installation
+
+### Gradle
+
+Add the dependency in your `build.gradle` file:
+
+```groovy
+dependencies {
+  implementation 'io.intercom:intercom-java'
+}
+```
+
+### Maven
+
+Add the dependency in your `pom.xml` file:
+
+```xml
+<dependency>
+  <groupId>io.intercom</groupId>
+  <artifactId>intercom-java</artifactId>
+  <version>4.0.0</version>
+</dependency>
+```
+
+## Reference
+
+A full reference for this library is available [here](https://github.com/intercom/intercom-java/blob/HEAD/./reference.md).
 
 ## Usage
 
@@ -12,8 +57,7 @@ Instantiate and use the client with the following:
 package com.example.usage;
 
 import com.intercom.api.Intercom;
-import com.intercom.api.resources.articles.requests.CreateArticleRequest;
-import com.intercom.api.resources.articles.types.CreateArticleRequestState;
+import com.intercom.api.resources.aicontent.requests.CreateContentImportSourceRequest;
 
 public class Example {
     public static void main(String[] args) {
@@ -22,14 +66,10 @@ public class Example {
             .token("<token>")
             .build();
 
-        client.articles().create(
-            CreateArticleRequest
+        client.aiContent().createContentImportSource(
+            CreateContentImportSourceRequest
                 .builder()
-                .title("Thanks for everything")
-                .authorId(1295)
-                .description("Description of the Article")
-                .body("Body of the Article")
-                .state(CreateArticleRequestState.PUBLISHED)
+                .url("https://www.example.com")
                 .build()
         );
     }
@@ -70,9 +110,9 @@ When the API returns a non-success status code (4xx or 5xx response), an API exc
 ```java
 import com.intercom.api.core.IntercomApiApiException;
 
-try {
-    client.articles().create(...);
-} catch (IntercomApiApiException e) {
+try{
+    client.aiContent().createContentImportSource(...);
+} catch (IntercomApiApiException e){
     // Do something with the API exception...
 }
 ```
@@ -81,7 +121,7 @@ try {
 
 ### Custom Client
 
-This SDK is built to work with any instance of `OkHttpClient`. By default, if no client is provided, the SDK will construct one. 
+This SDK is built to work with any instance of `OkHttpClient`. By default, if no client is provided, the SDK will construct one.
 However, you can pass your own client like so:
 
 ```java
@@ -100,7 +140,9 @@ Intercom client = Intercom
 
 The SDK is instrumented with automatic retries with exponential backoff. A request will be retried as long
 as the request is deemed retryable and the number of retry attempts has not grown larger than the configured
-retry limit (default: 2).
+retry limit (default: 2). Before defaulting to exponential backoff, the SDK will first attempt to respect
+the `Retry-After` header (as either in seconds or as an HTTP date), and then the `X-RateLimit-Reset` header
+(as a Unix timestamp in epoch seconds); failing both of those, it will fall back to exponential backoff.
 
 A request is deemed retryable when any of the following HTTP status codes is returned:
 
@@ -134,13 +176,52 @@ Intercom client = Intercom
     .build();
 
 // Request level
-client.articles().create(
+client.aiContent().createContentImportSource(
     ...,
     RequestOptions
         .builder()
         .timeout(10)
         .build()
 );
+```
+
+### Custom Headers
+
+The SDK allows you to add custom headers to requests. You can configure headers at the client level or at the request level.
+
+```java
+import com.intercom.api.Intercom;
+import com.intercom.api.core.RequestOptions;
+
+// Client level
+Intercom client = Intercom
+    .builder()
+    .addHeader("X-Custom-Header", "custom-value")
+    .addHeader("X-Request-Id", "abc-123")
+    .build();
+;
+
+// Request level
+client.aiContent().createContentImportSource(
+    ...,
+    RequestOptions
+        .builder()
+        .addHeader("X-Request-Header", "request-value")
+        .build()
+);
+```
+
+### Access Raw Response Data
+
+The SDK provides access to raw response data, including headers, through the `withRawResponse()` method.
+The `withRawResponse()` method returns a raw client that wraps all responses with `body()` and `headers()` methods.
+(A normal client's `response` is identical to a raw client's `response.body()`.)
+
+```java
+CreateContentImportSourceHttpResponse response = client.aiContent().withRawResponse().createContentImportSource(...);
+
+System.out.println(response.body());
+System.out.println(response.headers().get("X-My-Header"));
 ```
 
 ## Contributing

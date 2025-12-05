@@ -9,24 +9,32 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = DeletedObject.Builder.class)
 public final class DeletedObject {
-    private final String id;
+    private final Optional<String> id;
 
-    private final boolean deleted;
+    private final Optional<String> object;
+
+    private final Optional<Boolean> deleted;
 
     private final Map<String, Object> additionalProperties;
 
-    private DeletedObject(String id, boolean deleted, Map<String, Object> additionalProperties) {
+    private DeletedObject(
+            Optional<String> id,
+            Optional<String> object,
+            Optional<Boolean> deleted,
+            Map<String, Object> additionalProperties) {
         this.id = id;
+        this.object = object;
         this.deleted = deleted;
         this.additionalProperties = additionalProperties;
     }
@@ -35,7 +43,7 @@ public final class DeletedObject {
      * @return The unique identifier for the news item which you provided in the URL.
      */
     @JsonProperty("id")
-    public String getId() {
+    public Optional<String> getId() {
         return id;
     }
 
@@ -43,15 +51,15 @@ public final class DeletedObject {
      * @return The type of object which was deleted - news-item.
      */
     @JsonProperty("object")
-    public String getObject() {
-        return "news-item";
+    public Optional<String> getObject() {
+        return object;
     }
 
     /**
      * @return Whether the news item was deleted successfully or not.
      */
     @JsonProperty("deleted")
-    public boolean getDeleted() {
+    public Optional<Boolean> getDeleted() {
         return deleted;
     }
 
@@ -67,12 +75,12 @@ public final class DeletedObject {
     }
 
     private boolean equalTo(DeletedObject other) {
-        return id.equals(other.id) && deleted == other.deleted;
+        return id.equals(other.id) && object.equals(other.object) && deleted.equals(other.deleted);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.id, this.deleted);
+        return Objects.hash(this.id, this.object, this.deleted);
     }
 
     @java.lang.Override
@@ -80,73 +88,74 @@ public final class DeletedObject {
         return ObjectMappers.stringify(this);
     }
 
-    public static IdStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface IdStage {
-        /**
-         * The unique identifier for the news item which you provided in the URL.
-         */
-        DeletedStage id(@NotNull String id);
-
-        Builder from(DeletedObject other);
-    }
-
-    public interface DeletedStage {
-        /**
-         * Whether the news item was deleted successfully or not.
-         */
-        _FinalStage deleted(boolean deleted);
-    }
-
-    public interface _FinalStage {
-        DeletedObject build();
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements IdStage, DeletedStage, _FinalStage {
-        private String id;
+    public static final class Builder {
+        private Optional<String> id = Optional.empty();
 
-        private boolean deleted;
+        private Optional<String> object = Optional.empty();
+
+        private Optional<Boolean> deleted = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(DeletedObject other) {
             id(other.getId());
+            object(other.getObject());
             deleted(other.getDeleted());
             return this;
         }
 
         /**
-         * The unique identifier for the news item which you provided in the URL.<p>The unique identifier for the news item which you provided in the URL.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The unique identifier for the news item which you provided in the URL.</p>
          */
-        @java.lang.Override
-        @JsonSetter("id")
-        public DeletedStage id(@NotNull String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+        @JsonSetter(value = "id", nulls = Nulls.SKIP)
+        public Builder id(Optional<String> id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder id(String id) {
+            this.id = Optional.ofNullable(id);
             return this;
         }
 
         /**
-         * Whether the news item was deleted successfully or not.<p>Whether the news item was deleted successfully or not.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The type of object which was deleted - news-item.</p>
          */
-        @java.lang.Override
-        @JsonSetter("deleted")
-        public _FinalStage deleted(boolean deleted) {
+        @JsonSetter(value = "object", nulls = Nulls.SKIP)
+        public Builder object(Optional<String> object) {
+            this.object = object;
+            return this;
+        }
+
+        public Builder object(String object) {
+            this.object = Optional.ofNullable(object);
+            return this;
+        }
+
+        /**
+         * <p>Whether the news item was deleted successfully or not.</p>
+         */
+        @JsonSetter(value = "deleted", nulls = Nulls.SKIP)
+        public Builder deleted(Optional<Boolean> deleted) {
             this.deleted = deleted;
             return this;
         }
 
-        @java.lang.Override
+        public Builder deleted(Boolean deleted) {
+            this.deleted = Optional.ofNullable(deleted);
+            return this;
+        }
+
         public DeletedObject build() {
-            return new DeletedObject(id, deleted, additionalProperties);
+            return new DeletedObject(id, object, deleted, additionalProperties);
         }
     }
 }

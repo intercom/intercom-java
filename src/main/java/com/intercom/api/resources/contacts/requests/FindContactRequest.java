@@ -29,7 +29,7 @@ public final class FindContactRequest {
     }
 
     /**
-     * @return id
+     * @return contact_id
      */
     @JsonProperty("contact_id")
     public String getContactId() {
@@ -67,7 +67,7 @@ public final class FindContactRequest {
 
     public interface ContactIdStage {
         /**
-         * id
+         * <p>contact_id</p>
          */
         _FinalStage contactId(@NotNull String contactId);
 
@@ -94,7 +94,8 @@ public final class FindContactRequest {
         }
 
         /**
-         * id<p>id</p>
+         * <p>contact_id</p>
+         * <p>contact_id</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

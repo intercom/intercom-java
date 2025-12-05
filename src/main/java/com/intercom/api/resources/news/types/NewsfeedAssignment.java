@@ -9,22 +9,25 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = NewsfeedAssignment.Builder.class)
 public final class NewsfeedAssignment {
-    private final int newsfeedId;
+    private final Optional<Integer> newsfeedId;
 
-    private final int publishedAt;
+    private final Optional<Integer> publishedAt;
 
     private final Map<String, Object> additionalProperties;
 
-    private NewsfeedAssignment(int newsfeedId, int publishedAt, Map<String, Object> additionalProperties) {
+    private NewsfeedAssignment(
+            Optional<Integer> newsfeedId, Optional<Integer> publishedAt, Map<String, Object> additionalProperties) {
         this.newsfeedId = newsfeedId;
         this.publishedAt = publishedAt;
         this.additionalProperties = additionalProperties;
@@ -34,7 +37,7 @@ public final class NewsfeedAssignment {
      * @return The unique identifier for the newsfeed which is given by Intercom. Publish dates cannot be in the future, to schedule news items use the dedicated feature in app (see this article).
      */
     @JsonProperty("newsfeed_id")
-    public int getNewsfeedId() {
+    public Optional<Integer> getNewsfeedId() {
         return newsfeedId;
     }
 
@@ -42,7 +45,7 @@ public final class NewsfeedAssignment {
      * @return Publish date of the news item on the newsfeed, use this field if you want to set a publish date in the past (e.g. when importing existing news items). On write, this field will be ignored if the news item state is &quot;draft&quot;.
      */
     @JsonProperty("published_at")
-    public int getPublishedAt() {
+    public Optional<Integer> getPublishedAt() {
         return publishedAt;
     }
 
@@ -58,7 +61,7 @@ public final class NewsfeedAssignment {
     }
 
     private boolean equalTo(NewsfeedAssignment other) {
-        return newsfeedId == other.newsfeedId && publishedAt == other.publishedAt;
+        return newsfeedId.equals(other.newsfeedId) && publishedAt.equals(other.publishedAt);
     }
 
     @java.lang.Override
@@ -71,42 +74,21 @@ public final class NewsfeedAssignment {
         return ObjectMappers.stringify(this);
     }
 
-    public static NewsfeedIdStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface NewsfeedIdStage {
-        /**
-         * The unique identifier for the newsfeed which is given by Intercom. Publish dates cannot be in the future, to schedule news items use the dedicated feature in app (see this article).
-         */
-        PublishedAtStage newsfeedId(int newsfeedId);
-
-        Builder from(NewsfeedAssignment other);
-    }
-
-    public interface PublishedAtStage {
-        /**
-         * Publish date of the news item on the newsfeed, use this field if you want to set a publish date in the past (e.g. when importing existing news items). On write, this field will be ignored if the news item state is "draft".
-         */
-        _FinalStage publishedAt(int publishedAt);
-    }
-
-    public interface _FinalStage {
-        NewsfeedAssignment build();
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements NewsfeedIdStage, PublishedAtStage, _FinalStage {
-        private int newsfeedId;
+    public static final class Builder {
+        private Optional<Integer> newsfeedId = Optional.empty();
 
-        private int publishedAt;
+        private Optional<Integer> publishedAt = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(NewsfeedAssignment other) {
             newsfeedId(other.getNewsfeedId());
             publishedAt(other.getPublishedAt());
@@ -114,28 +96,33 @@ public final class NewsfeedAssignment {
         }
 
         /**
-         * The unique identifier for the newsfeed which is given by Intercom. Publish dates cannot be in the future, to schedule news items use the dedicated feature in app (see this article).<p>The unique identifier for the newsfeed which is given by Intercom. Publish dates cannot be in the future, to schedule news items use the dedicated feature in app (see this article).</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The unique identifier for the newsfeed which is given by Intercom. Publish dates cannot be in the future, to schedule news items use the dedicated feature in app (see this article).</p>
          */
-        @java.lang.Override
-        @JsonSetter("newsfeed_id")
-        public PublishedAtStage newsfeedId(int newsfeedId) {
+        @JsonSetter(value = "newsfeed_id", nulls = Nulls.SKIP)
+        public Builder newsfeedId(Optional<Integer> newsfeedId) {
             this.newsfeedId = newsfeedId;
             return this;
         }
 
+        public Builder newsfeedId(Integer newsfeedId) {
+            this.newsfeedId = Optional.ofNullable(newsfeedId);
+            return this;
+        }
+
         /**
-         * Publish date of the news item on the newsfeed, use this field if you want to set a publish date in the past (e.g. when importing existing news items). On write, this field will be ignored if the news item state is "draft".<p>Publish date of the news item on the newsfeed, use this field if you want to set a publish date in the past (e.g. when importing existing news items). On write, this field will be ignored if the news item state is &quot;draft&quot;.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Publish date of the news item on the newsfeed, use this field if you want to set a publish date in the past (e.g. when importing existing news items). On write, this field will be ignored if the news item state is &quot;draft&quot;.</p>
          */
-        @java.lang.Override
-        @JsonSetter("published_at")
-        public _FinalStage publishedAt(int publishedAt) {
+        @JsonSetter(value = "published_at", nulls = Nulls.SKIP)
+        public Builder publishedAt(Optional<Integer> publishedAt) {
             this.publishedAt = publishedAt;
             return this;
         }
 
-        @java.lang.Override
+        public Builder publishedAt(Integer publishedAt) {
+            this.publishedAt = Optional.ofNullable(publishedAt);
+            return this;
+        }
+
         public NewsfeedAssignment build() {
             return new NewsfeedAssignment(newsfeedId, publishedAt, additionalProperties);
         }

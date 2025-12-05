@@ -102,15 +102,15 @@ public final class CreateDataEventRequest {
             Object value = p.readValueAs(Object.class);
             try {
                 return of(ObjectMappers.JSON_MAPPER.convertValue(value, WithId.class));
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
             }
             try {
                 return of(ObjectMappers.JSON_MAPPER.convertValue(value, WithUserId.class));
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
             }
             try {
                 return of(ObjectMappers.JSON_MAPPER.convertValue(value, WithEmail.class));
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
             }
             throw new JsonParseException(p, "Failed to deserialize");
         }
@@ -208,7 +208,7 @@ public final class CreateDataEventRequest {
 
         public interface UserIdStage {
             /**
-             * Your identifier for the user.
+             * <p>Your identifier for the user.</p>
              */
             EventNameStage userId(@NotNull String userId);
 
@@ -217,14 +217,14 @@ public final class CreateDataEventRequest {
 
         public interface EventNameStage {
             /**
-             * The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example `updated-plan`.
+             * <p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
              */
             CreatedAtStage eventName(@NotNull String eventName);
         }
 
         public interface CreatedAtStage {
             /**
-             * The time the event occurred as a UTC Unix timestamp
+             * <p>The time the event occurred as a UTC Unix timestamp</p>
              */
             _FinalStage createdAt(int createdAt);
         }
@@ -265,7 +265,8 @@ public final class CreateDataEventRequest {
             }
 
             /**
-             * Your identifier for the user.<p>Your identifier for the user.</p>
+             * <p>Your identifier for the user.</p>
+             * <p>Your identifier for the user.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -276,7 +277,8 @@ public final class CreateDataEventRequest {
             }
 
             /**
-             * The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example `updated-plan`.<p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
+             * <p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
+             * <p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -287,7 +289,8 @@ public final class CreateDataEventRequest {
             }
 
             /**
-             * The time the event occurred as a UTC Unix timestamp<p>The time the event occurred as a UTC Unix timestamp</p>
+             * <p>The time the event occurred as a UTC Unix timestamp</p>
+             * <p>The time the event occurred as a UTC Unix timestamp</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -416,7 +419,7 @@ public final class CreateDataEventRequest {
 
         public interface EmailStage {
             /**
-             * An email address for your user. An email should only be used where your application uses email to uniquely identify users.
+             * <p>An email address for your user. An email should only be used where your application uses email to uniquely identify users.</p>
              */
             EventNameStage email(@NotNull String email);
 
@@ -425,14 +428,14 @@ public final class CreateDataEventRequest {
 
         public interface EventNameStage {
             /**
-             * The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example `updated-plan`.
+             * <p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
              */
             CreatedAtStage eventName(@NotNull String eventName);
         }
 
         public interface CreatedAtStage {
             /**
-             * The time the event occurred as a UTC Unix timestamp
+             * <p>The time the event occurred as a UTC Unix timestamp</p>
              */
             _FinalStage createdAt(int createdAt);
         }
@@ -473,7 +476,8 @@ public final class CreateDataEventRequest {
             }
 
             /**
-             * An email address for your user. An email should only be used where your application uses email to uniquely identify users.<p>An email address for your user. An email should only be used where your application uses email to uniquely identify users.</p>
+             * <p>An email address for your user. An email should only be used where your application uses email to uniquely identify users.</p>
+             * <p>An email address for your user. An email should only be used where your application uses email to uniquely identify users.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -484,7 +488,8 @@ public final class CreateDataEventRequest {
             }
 
             /**
-             * The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example `updated-plan`.<p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
+             * <p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
+             * <p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -495,7 +500,8 @@ public final class CreateDataEventRequest {
             }
 
             /**
-             * The time the event occurred as a UTC Unix timestamp<p>The time the event occurred as a UTC Unix timestamp</p>
+             * <p>The time the event occurred as a UTC Unix timestamp</p>
+             * <p>The time the event occurred as a UTC Unix timestamp</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -624,7 +630,7 @@ public final class CreateDataEventRequest {
 
         public interface IdStage {
             /**
-             * The unique identifier for the contact (lead or user) which is given by Intercom.
+             * <p>The unique identifier for the contact (lead or user) which is given by Intercom.</p>
              */
             EventNameStage id(@NotNull String id);
 
@@ -633,14 +639,14 @@ public final class CreateDataEventRequest {
 
         public interface EventNameStage {
             /**
-             * The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example `updated-plan`.
+             * <p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
              */
             CreatedAtStage eventName(@NotNull String eventName);
         }
 
         public interface CreatedAtStage {
             /**
-             * The time the event occurred as a UTC Unix timestamp
+             * <p>The time the event occurred as a UTC Unix timestamp</p>
              */
             _FinalStage createdAt(int createdAt);
         }
@@ -681,7 +687,8 @@ public final class CreateDataEventRequest {
             }
 
             /**
-             * The unique identifier for the contact (lead or user) which is given by Intercom.<p>The unique identifier for the contact (lead or user) which is given by Intercom.</p>
+             * <p>The unique identifier for the contact (lead or user) which is given by Intercom.</p>
+             * <p>The unique identifier for the contact (lead or user) which is given by Intercom.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -692,7 +699,8 @@ public final class CreateDataEventRequest {
             }
 
             /**
-             * The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example `updated-plan`.<p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
+             * <p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
+             * <p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -703,7 +711,8 @@ public final class CreateDataEventRequest {
             }
 
             /**
-             * The time the event occurred as a UTC Unix timestamp<p>The time the event occurred as a UTC Unix timestamp</p>
+             * <p>The time the event occurred as a UTC Unix timestamp</p>
+             * <p>The time the event occurred as a UTC Unix timestamp</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override

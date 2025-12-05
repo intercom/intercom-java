@@ -20,13 +20,13 @@ import org.jetbrains.annotations.NotNull;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = UpdateNewsItemRequest.Builder.class)
 public final class UpdateNewsItemRequest {
-    private final String newsItemId;
+    private final int newsItemId;
 
     private final NewsItemRequest body;
 
     private final Map<String, Object> additionalProperties;
 
-    private UpdateNewsItemRequest(String newsItemId, NewsItemRequest body, Map<String, Object> additionalProperties) {
+    private UpdateNewsItemRequest(int newsItemId, NewsItemRequest body, Map<String, Object> additionalProperties) {
         this.newsItemId = newsItemId;
         this.body = body;
         this.additionalProperties = additionalProperties;
@@ -36,7 +36,7 @@ public final class UpdateNewsItemRequest {
      * @return The unique identifier for the news item which is given by Intercom.
      */
     @JsonProperty("news_item_id")
-    public String getNewsItemId() {
+    public int getNewsItemId() {
         return newsItemId;
     }
 
@@ -57,7 +57,7 @@ public final class UpdateNewsItemRequest {
     }
 
     private boolean equalTo(UpdateNewsItemRequest other) {
-        return newsItemId.equals(other.newsItemId) && body.equals(other.body);
+        return newsItemId == other.newsItemId && body.equals(other.body);
     }
 
     @java.lang.Override
@@ -76,9 +76,9 @@ public final class UpdateNewsItemRequest {
 
     public interface NewsItemIdStage {
         /**
-         * The unique identifier for the news item which is given by Intercom.
+         * <p>The unique identifier for the news item which is given by Intercom.</p>
          */
-        BodyStage newsItemId(@NotNull String newsItemId);
+        BodyStage newsItemId(int newsItemId);
 
         Builder from(UpdateNewsItemRequest other);
     }
@@ -93,7 +93,7 @@ public final class UpdateNewsItemRequest {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder implements NewsItemIdStage, BodyStage, _FinalStage {
-        private String newsItemId;
+        private int newsItemId;
 
         private NewsItemRequest body;
 
@@ -110,13 +110,14 @@ public final class UpdateNewsItemRequest {
         }
 
         /**
-         * The unique identifier for the news item which is given by Intercom.<p>The unique identifier for the news item which is given by Intercom.</p>
+         * <p>The unique identifier for the news item which is given by Intercom.</p>
+         * <p>The unique identifier for the news item which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
         @JsonSetter("news_item_id")
-        public BodyStage newsItemId(@NotNull String newsItemId) {
-            this.newsItemId = Objects.requireNonNull(newsItemId, "newsItemId must not be null");
+        public BodyStage newsItemId(int newsItemId) {
+            this.newsItemId = newsItemId;
             return this;
         }
 

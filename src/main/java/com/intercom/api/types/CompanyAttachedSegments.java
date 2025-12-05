@@ -13,20 +13,24 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.resources.segments.types.Segment;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = CompanyAttachedSegments.Builder.class)
 public final class CompanyAttachedSegments {
-    private final List<Segment> data;
+    private final Optional<String> type;
+
+    private final Optional<List<Segment>> data;
 
     private final Map<String, Object> additionalProperties;
 
-    private CompanyAttachedSegments(List<Segment> data, Map<String, Object> additionalProperties) {
+    private CompanyAttachedSegments(
+            Optional<String> type, Optional<List<Segment>> data, Map<String, Object> additionalProperties) {
+        this.type = type;
         this.data = data;
         this.additionalProperties = additionalProperties;
     }
@@ -35,15 +39,15 @@ public final class CompanyAttachedSegments {
      * @return The type of object - <code>list</code>
      */
     @JsonProperty("type")
-    public String getType() {
-        return "list";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return An array containing Segment Objects
      */
     @JsonProperty("data")
-    public List<Segment> getData() {
+    public Optional<List<Segment>> getData() {
         return data;
     }
 
@@ -59,12 +63,12 @@ public final class CompanyAttachedSegments {
     }
 
     private boolean equalTo(CompanyAttachedSegments other) {
-        return data.equals(other.data);
+        return type.equals(other.type) && data.equals(other.data);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.data);
+        return Objects.hash(this.type, this.data);
     }
 
     @java.lang.Override
@@ -78,7 +82,9 @@ public final class CompanyAttachedSegments {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
-        private List<Segment> data = new ArrayList<>();
+        private Optional<String> type = Optional.empty();
+
+        private Optional<List<Segment>> data = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -86,7 +92,22 @@ public final class CompanyAttachedSegments {
         private Builder() {}
 
         public Builder from(CompanyAttachedSegments other) {
+            type(other.getType());
             data(other.getData());
+            return this;
+        }
+
+        /**
+         * <p>The type of object - <code>list</code></p>
+         */
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
@@ -94,24 +115,18 @@ public final class CompanyAttachedSegments {
          * <p>An array containing Segment Objects</p>
          */
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
+        public Builder data(Optional<List<Segment>> data) {
+            this.data = data;
+            return this;
+        }
+
         public Builder data(List<Segment> data) {
-            this.data.clear();
-            this.data.addAll(data);
-            return this;
-        }
-
-        public Builder addData(Segment data) {
-            this.data.add(data);
-            return this;
-        }
-
-        public Builder addAllData(List<Segment> data) {
-            this.data.addAll(data);
+            this.data = Optional.ofNullable(data);
             return this;
         }
 
         public CompanyAttachedSegments build() {
-            return new CompanyAttachedSegments(data, additionalProperties);
+            return new CompanyAttachedSegments(type, data, additionalProperties);
         }
     }
 }

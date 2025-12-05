@@ -13,20 +13,24 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.resources.admins.types.Admin;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = AdminList.Builder.class)
 public final class AdminList {
-    private final List<Admin> admins;
+    private final Optional<String> type;
+
+    private final Optional<List<Optional<Admin>>> admins;
 
     private final Map<String, Object> additionalProperties;
 
-    private AdminList(List<Admin> admins, Map<String, Object> additionalProperties) {
+    private AdminList(
+            Optional<String> type, Optional<List<Optional<Admin>>> admins, Map<String, Object> additionalProperties) {
+        this.type = type;
         this.admins = admins;
         this.additionalProperties = additionalProperties;
     }
@@ -35,15 +39,15 @@ public final class AdminList {
      * @return String representing the object's type. Always has the value <code>admin.list</code>.
      */
     @JsonProperty("type")
-    public String getType() {
-        return "admin.list";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return A list of admins associated with a given workspace.
      */
     @JsonProperty("admins")
-    public List<Admin> getAdmins() {
+    public Optional<List<Optional<Admin>>> getAdmins() {
         return admins;
     }
 
@@ -59,12 +63,12 @@ public final class AdminList {
     }
 
     private boolean equalTo(AdminList other) {
-        return admins.equals(other.admins);
+        return type.equals(other.type) && admins.equals(other.admins);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.admins);
+        return Objects.hash(this.type, this.admins);
     }
 
     @java.lang.Override
@@ -78,7 +82,9 @@ public final class AdminList {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
-        private List<Admin> admins = new ArrayList<>();
+        private Optional<String> type = Optional.empty();
+
+        private Optional<List<Optional<Admin>>> admins = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -86,7 +92,22 @@ public final class AdminList {
         private Builder() {}
 
         public Builder from(AdminList other) {
+            type(other.getType());
             admins(other.getAdmins());
+            return this;
+        }
+
+        /**
+         * <p>String representing the object's type. Always has the value <code>admin.list</code>.</p>
+         */
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
@@ -94,24 +115,18 @@ public final class AdminList {
          * <p>A list of admins associated with a given workspace.</p>
          */
         @JsonSetter(value = "admins", nulls = Nulls.SKIP)
-        public Builder admins(List<Admin> admins) {
-            this.admins.clear();
-            this.admins.addAll(admins);
+        public Builder admins(Optional<List<Optional<Admin>>> admins) {
+            this.admins = admins;
             return this;
         }
 
-        public Builder addAdmins(Admin admins) {
-            this.admins.add(admins);
-            return this;
-        }
-
-        public Builder addAllAdmins(List<Admin> admins) {
-            this.admins.addAll(admins);
+        public Builder admins(List<Optional<Admin>> admins) {
+            this.admins = Optional.ofNullable(admins);
             return this;
         }
 
         public AdminList build() {
-            return new AdminList(admins, additionalProperties);
+            return new AdminList(type, admins, additionalProperties);
         }
     }
 }

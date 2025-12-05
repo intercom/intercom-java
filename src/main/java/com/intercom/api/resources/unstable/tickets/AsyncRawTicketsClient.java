@@ -89,13 +89,12 @@ public class AsyncRawTicketsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), TicketReply.class),
-                                response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, TicketReply.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -117,11 +116,9 @@ public class AsyncRawTicketsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -175,12 +172,12 @@ public class AsyncRawTicketsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Jobs.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Jobs.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -197,11 +194,9 @@ public class AsyncRawTicketsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -237,7 +232,6 @@ public class AsyncRawTicketsClient {
                 .url(httpUrl)
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -249,14 +243,14 @@ public class AsyncRawTicketsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
                                 ObjectMappers.JSON_MAPPER.readValue(
-                                        responseBody.string(), new TypeReference<Optional<Ticket>>() {}),
+                                        responseBodyString, new TypeReference<Optional<Ticket>>() {}),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         if (response.code() == 401) {
                             future.completeExceptionally(new UnauthorizedError(
@@ -266,11 +260,9 @@ public class AsyncRawTicketsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -325,14 +317,14 @@ public class AsyncRawTicketsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
                                 ObjectMappers.JSON_MAPPER.readValue(
-                                        responseBody.string(), new TypeReference<Optional<Ticket>>() {}),
+                                        responseBodyString, new TypeReference<Optional<Ticket>>() {}),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -354,11 +346,9 @@ public class AsyncRawTicketsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -394,7 +384,6 @@ public class AsyncRawTicketsClient {
                 .url(httpUrl)
                 .method("DELETE", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -406,13 +395,13 @@ public class AsyncRawTicketsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), DeleteTicketResponse.class),
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, DeleteTicketResponse.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -429,11 +418,9 @@ public class AsyncRawTicketsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -473,8 +460,8 @@ public class AsyncRawTicketsClient {
      * | id                                        | String                                                                                   |
      * | created_at                                | Date (UNIX timestamp)                                                                    |
      * | updated_at                                | Date (UNIX timestamp)                                                                    |
-     * | <em>default_title</em>                           | String                                                                                   |
-     * | <em>default_description</em>                     | String                                                                                   |
+     * | title                           | String                                                                                   |
+     * | description                     | String                                                                                   |
      * | category                                  | String                                                                                   |
      * | ticket_type_id                            | String                                                                                   |
      * | contact_ids                               | String                                                                                   |
@@ -485,6 +472,14 @@ public class AsyncRawTicketsClient {
      * | state                                     | String                                                                                   |
      * | snoozed_until                             | Date (UNIX timestamp)                                                                    |
      * | ticket_attribute.{id}                     | String or Boolean or Date (UNIX timestamp) or Float or Integer                           |</p>
+     * <p>{% admonition type=&quot;info&quot; name=&quot;Searching by Category&quot; %}
+     * When searching for tickets by the <strong><code>category</code></strong> field, specific terms must be used instead of the category names:</p>
+     * <ul>
+     * <li>For <strong>Customer</strong> category tickets, use the term <code>request</code>.</li>
+     * <li>For <strong>Back-office</strong> category tickets, use the term <code>task</code>.</li>
+     * <li>For <strong>Tracker</strong> category tickets, use the term <code>tracker</code>.
+     * {% /admonition %}</li>
+     * </ul>
      * <h3>Accepted Operators</h3>
      * <p>{% admonition type=&quot;info&quot; name=&quot;Searching based on <code>created_at</code>&quot; %}
      * You may use the <code>&lt;=</code> or <code>&gt;=</code> operators to search by <code>created_at</code>.
@@ -532,8 +527,8 @@ public class AsyncRawTicketsClient {
      * | id                                        | String                                                                                   |
      * | created_at                                | Date (UNIX timestamp)                                                                    |
      * | updated_at                                | Date (UNIX timestamp)                                                                    |
-     * | <em>default_title</em>                           | String                                                                                   |
-     * | <em>default_description</em>                     | String                                                                                   |
+     * | title                           | String                                                                                   |
+     * | description                     | String                                                                                   |
      * | category                                  | String                                                                                   |
      * | ticket_type_id                            | String                                                                                   |
      * | contact_ids                               | String                                                                                   |
@@ -544,6 +539,14 @@ public class AsyncRawTicketsClient {
      * | state                                     | String                                                                                   |
      * | snoozed_until                             | Date (UNIX timestamp)                                                                    |
      * | ticket_attribute.{id}                     | String or Boolean or Date (UNIX timestamp) or Float or Integer                           |</p>
+     * <p>{% admonition type=&quot;info&quot; name=&quot;Searching by Category&quot; %}
+     * When searching for tickets by the <strong><code>category</code></strong> field, specific terms must be used instead of the category names:</p>
+     * <ul>
+     * <li>For <strong>Customer</strong> category tickets, use the term <code>request</code>.</li>
+     * <li>For <strong>Back-office</strong> category tickets, use the term <code>task</code>.</li>
+     * <li>For <strong>Tracker</strong> category tickets, use the term <code>tracker</code>.
+     * {% /admonition %}</li>
+     * </ul>
      * <h3>Accepted Operators</h3>
      * <p>{% admonition type=&quot;info&quot; name=&quot;Searching based on <code>created_at</code>&quot; %}
      * You may use the <code>&lt;=</code> or <code>&gt;=</code> operators to search by <code>created_at</code>.
@@ -591,18 +594,15 @@ public class AsyncRawTicketsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), TicketList.class),
-                                response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, TicketList.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));

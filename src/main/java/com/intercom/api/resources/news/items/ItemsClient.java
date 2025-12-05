@@ -11,7 +11,7 @@ import com.intercom.api.resources.news.items.requests.UpdateNewsItemRequest;
 import com.intercom.api.resources.news.types.NewsItem;
 import com.intercom.api.types.DeletedObject;
 import com.intercom.api.types.NewsItemRequest;
-import com.intercom.api.types.PaginatedNewsItemResponse;
+import com.intercom.api.types.PaginatedResponse;
 
 public class ItemsClient {
     protected final ClientOptions clientOptions;
@@ -33,14 +33,14 @@ public class ItemsClient {
     /**
      * You can fetch a list of all news items
      */
-    public PaginatedNewsItemResponse list() {
+    public PaginatedResponse list() {
         return this.rawClient.list().body();
     }
 
     /**
      * You can fetch a list of all news items
      */
-    public PaginatedNewsItemResponse list(RequestOptions requestOptions) {
+    public PaginatedResponse list(RequestOptions requestOptions) {
         return this.rawClient.list(requestOptions).body();
     }
 

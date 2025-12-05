@@ -109,7 +109,7 @@ public final class SetAwayAdminRequest {
 
     public interface IdStage {
         /**
-         * The unique identifier of a given admin
+         * <p>The unique identifier of a given admin</p>
          */
         AwayModeEnabledStage id(int id);
 
@@ -118,14 +118,14 @@ public final class SetAwayAdminRequest {
 
     public interface AwayModeEnabledStage {
         /**
-         * Set to "true" to change the status of the admin to away.
+         * <p>Set to &quot;true&quot; to change the status of the admin to away.</p>
          */
         AwayModeReassignStage awayModeEnabled(boolean awayModeEnabled);
     }
 
     public interface AwayModeReassignStage {
         /**
-         * Set to "true" to assign any new conversation replies to your default inbox.
+         * <p>Set to &quot;true&quot; to assign any new conversation replies to your default inbox.</p>
          */
         _FinalStage awayModeReassign(boolean awayModeReassign);
     }
@@ -166,7 +166,8 @@ public final class SetAwayAdminRequest {
         }
 
         /**
-         * The unique identifier of a given admin<p>The unique identifier of a given admin</p>
+         * <p>The unique identifier of a given admin</p>
+         * <p>The unique identifier of a given admin</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -177,7 +178,8 @@ public final class SetAwayAdminRequest {
         }
 
         /**
-         * Set to "true" to change the status of the admin to away.<p>Set to &quot;true&quot; to change the status of the admin to away.</p>
+         * <p>Set to &quot;true&quot; to change the status of the admin to away.</p>
+         * <p>Set to &quot;true&quot; to change the status of the admin to away.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -188,7 +190,8 @@ public final class SetAwayAdminRequest {
         }
 
         /**
-         * Set to "true" to assign any new conversation replies to your default inbox.<p>Set to &quot;true&quot; to assign any new conversation replies to your default inbox.</p>
+         * <p>Set to &quot;true&quot; to assign any new conversation replies to your default inbox.</p>
+         * <p>Set to &quot;true&quot; to assign any new conversation replies to your default inbox.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

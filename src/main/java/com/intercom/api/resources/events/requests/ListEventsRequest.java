@@ -136,7 +136,7 @@ public final class ListEventsRequest {
 
     public interface TypeStage {
         /**
-         * The value must be user
+         * <p>The value must be user</p>
          */
         _FinalStage type(@NotNull String type);
 
@@ -213,7 +213,8 @@ public final class ListEventsRequest {
         }
 
         /**
-         * The value must be user<p>The value must be user</p>
+         * <p>The value must be user</p>
+         * <p>The value must be user</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

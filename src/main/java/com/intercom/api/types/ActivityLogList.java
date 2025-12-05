@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,14 +21,20 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ActivityLogList.Builder.class)
 public final class ActivityLogList {
+    private final Optional<String> type;
+
     private final Optional<CursorPages> pages;
 
-    private final List<ActivityLog> activityLogs;
+    private final Optional<List<Optional<ActivityLog>>> activityLogs;
 
     private final Map<String, Object> additionalProperties;
 
     private ActivityLogList(
-            Optional<CursorPages> pages, List<ActivityLog> activityLogs, Map<String, Object> additionalProperties) {
+            Optional<String> type,
+            Optional<CursorPages> pages,
+            Optional<List<Optional<ActivityLog>>> activityLogs,
+            Map<String, Object> additionalProperties) {
+        this.type = type;
         this.pages = pages;
         this.activityLogs = activityLogs;
         this.additionalProperties = additionalProperties;
@@ -39,8 +44,8 @@ public final class ActivityLogList {
      * @return String representing the object's type. Always has the value <code>activity_log.list</code>.
      */
     @JsonProperty("type")
-    public String getType() {
-        return "activity_log.list";
+    public Optional<String> getType() {
+        return type;
     }
 
     @JsonProperty("pages")
@@ -52,7 +57,7 @@ public final class ActivityLogList {
      * @return An array of activity logs
      */
     @JsonProperty("activity_logs")
-    public List<ActivityLog> getActivityLogs() {
+    public Optional<List<Optional<ActivityLog>>> getActivityLogs() {
         return activityLogs;
     }
 
@@ -68,12 +73,12 @@ public final class ActivityLogList {
     }
 
     private boolean equalTo(ActivityLogList other) {
-        return pages.equals(other.pages) && activityLogs.equals(other.activityLogs);
+        return type.equals(other.type) && pages.equals(other.pages) && activityLogs.equals(other.activityLogs);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.pages, this.activityLogs);
+        return Objects.hash(this.type, this.pages, this.activityLogs);
     }
 
     @java.lang.Override
@@ -87,9 +92,11 @@ public final class ActivityLogList {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
+        private Optional<String> type = Optional.empty();
+
         private Optional<CursorPages> pages = Optional.empty();
 
-        private List<ActivityLog> activityLogs = new ArrayList<>();
+        private Optional<List<Optional<ActivityLog>>> activityLogs = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -97,8 +104,23 @@ public final class ActivityLogList {
         private Builder() {}
 
         public Builder from(ActivityLogList other) {
+            type(other.getType());
             pages(other.getPages());
             activityLogs(other.getActivityLogs());
+            return this;
+        }
+
+        /**
+         * <p>String representing the object's type. Always has the value <code>activity_log.list</code>.</p>
+         */
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
@@ -117,24 +139,18 @@ public final class ActivityLogList {
          * <p>An array of activity logs</p>
          */
         @JsonSetter(value = "activity_logs", nulls = Nulls.SKIP)
-        public Builder activityLogs(List<ActivityLog> activityLogs) {
-            this.activityLogs.clear();
-            this.activityLogs.addAll(activityLogs);
+        public Builder activityLogs(Optional<List<Optional<ActivityLog>>> activityLogs) {
+            this.activityLogs = activityLogs;
             return this;
         }
 
-        public Builder addActivityLogs(ActivityLog activityLogs) {
-            this.activityLogs.add(activityLogs);
-            return this;
-        }
-
-        public Builder addAllActivityLogs(List<ActivityLog> activityLogs) {
-            this.activityLogs.addAll(activityLogs);
+        public Builder activityLogs(List<Optional<ActivityLog>> activityLogs) {
+            this.activityLogs = Optional.ofNullable(activityLogs);
             return this;
         }
 
         public ActivityLogList build() {
-            return new ActivityLogList(pages, activityLogs, additionalProperties);
+            return new ActivityLogList(type, pages, activityLogs, additionalProperties);
         }
     }
 }

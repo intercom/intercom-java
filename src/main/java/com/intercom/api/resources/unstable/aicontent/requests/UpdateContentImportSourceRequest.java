@@ -112,7 +112,7 @@ public final class UpdateContentImportSourceRequest {
 
     public interface IdStage {
         /**
-         * The unique identifier for the content import source which is given by Intercom.
+         * <p>The unique identifier for the content import source which is given by Intercom.</p>
          */
         SyncBehaviorStage id(@NotNull String id);
 
@@ -121,14 +121,14 @@ public final class UpdateContentImportSourceRequest {
 
     public interface SyncBehaviorStage {
         /**
-         * If you intend to create or update External Pages via the API, this should be set to `api`. You can not change the value to or from api.
+         * <p>If you intend to create or update External Pages via the API, this should be set to <code>api</code>. You can not change the value to or from api.</p>
          */
         UrlStage syncBehavior(@NotNull SyncBehavior syncBehavior);
     }
 
     public interface UrlStage {
         /**
-         * The URL of the content import source. This may only be different from the existing value if the sync behavior is API.
+         * <p>The URL of the content import source. This may only be different from the existing value if the sync behavior is API.</p>
          */
         _FinalStage url(@NotNull String url);
     }
@@ -169,7 +169,8 @@ public final class UpdateContentImportSourceRequest {
         }
 
         /**
-         * The unique identifier for the content import source which is given by Intercom.<p>The unique identifier for the content import source which is given by Intercom.</p>
+         * <p>The unique identifier for the content import source which is given by Intercom.</p>
+         * <p>The unique identifier for the content import source which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -180,7 +181,8 @@ public final class UpdateContentImportSourceRequest {
         }
 
         /**
-         * If you intend to create or update External Pages via the API, this should be set to `api`. You can not change the value to or from api.<p>If you intend to create or update External Pages via the API, this should be set to <code>api</code>. You can not change the value to or from api.</p>
+         * <p>If you intend to create or update External Pages via the API, this should be set to <code>api</code>. You can not change the value to or from api.</p>
+         * <p>If you intend to create or update External Pages via the API, this should be set to <code>api</code>. You can not change the value to or from api.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -191,7 +193,8 @@ public final class UpdateContentImportSourceRequest {
         }
 
         /**
-         * The URL of the content import source. This may only be different from the existing value if the sync behavior is API.<p>The URL of the content import source. This may only be different from the existing value if the sync behavior is API.</p>
+         * <p>The URL of the content import source. This may only be different from the existing value if the sync behavior is API.</p>
+         * <p>The URL of the content import source. This may only be different from the existing value if the sync behavior is API.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

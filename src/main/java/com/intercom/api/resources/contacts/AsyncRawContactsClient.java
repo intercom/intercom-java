@@ -18,6 +18,7 @@ import com.intercom.api.errors.UnauthorizedError;
 import com.intercom.api.resources.companies.types.Company;
 import com.intercom.api.resources.contacts.requests.ArchiveContactRequest;
 import com.intercom.api.resources.contacts.requests.AttachSubscriptionToContactRequest;
+import com.intercom.api.resources.contacts.requests.BlockContactRequest;
 import com.intercom.api.resources.contacts.requests.DeleteContactRequest;
 import com.intercom.api.resources.contacts.requests.DetachSubscriptionFromContactRequest;
 import com.intercom.api.resources.contacts.requests.FindContactRequest;
@@ -27,12 +28,19 @@ import com.intercom.api.resources.contacts.requests.ListContactsRequest;
 import com.intercom.api.resources.contacts.requests.ListSegmentsAttachedToContactRequest;
 import com.intercom.api.resources.contacts.requests.ListTagsAttachedToContactRequest;
 import com.intercom.api.resources.contacts.requests.MergeContactsRequest;
+import com.intercom.api.resources.contacts.requests.ShowContactByExternalIdRequest;
 import com.intercom.api.resources.contacts.requests.UnarchiveContactRequest;
 import com.intercom.api.resources.contacts.requests.UpdateContactRequest;
 import com.intercom.api.resources.contacts.types.Contact;
+import com.intercom.api.resources.contacts.types.ContactsCreateResponse;
+import com.intercom.api.resources.contacts.types.ContactsFindResponse;
+import com.intercom.api.resources.contacts.types.ContactsMergeLeadInUserResponse;
+import com.intercom.api.resources.contacts.types.ContactsUpdateResponse;
+import com.intercom.api.resources.contacts.types.ShowContactByExternalIdResponse;
 import com.intercom.api.resources.subscriptiontypes.types.SubscriptionType;
 import com.intercom.api.types.ContactArchived;
 import com.intercom.api.types.ContactAttachedCompanies;
+import com.intercom.api.types.ContactBlocked;
 import com.intercom.api.types.ContactDeleted;
 import com.intercom.api.types.ContactList;
 import com.intercom.api.types.ContactSegments;
@@ -45,6 +53,7 @@ import com.intercom.api.types.StartingAfterPaging;
 import com.intercom.api.types.SubscriptionTypeList;
 import com.intercom.api.types.TagList;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -87,17 +96,16 @@ public class AsyncRawContactsClient {
                 .addPathSegments("companies");
         if (request.getPage().isPresent()) {
             QueryStringMapper.addQueryParameter(
-                    httpUrl, "page", request.getPage().get().toString(), false);
+                    httpUrl, "page", request.getPage().get(), false);
         }
         if (request.getPerPage().isPresent()) {
             QueryStringMapper.addQueryParameter(
-                    httpUrl, "per_page", request.getPerPage().get().toString(), false);
+                    httpUrl, "per_page", request.getPerPage().get(), false);
         }
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl.build())
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -109,18 +117,20 @@ public class AsyncRawContactsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
-                        ContactAttachedCompanies parsedResponse = ObjectMappers.JSON_MAPPER.readValue(
-                                responseBody.string(), ContactAttachedCompanies.class);
-                        int newPageNumber =
-                                request.getPage().map(page -> page + 1).orElse(1);
+                        ContactAttachedCompanies parsedResponse =
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ContactAttachedCompanies.class);
+                        int newPageNumber = request.getPage()
+                                .map((Integer page) -> page + 1)
+                                .orElse(1);
                         ListAttachedCompaniesRequest nextRequest = ListAttachedCompaniesRequest.builder()
                                 .from(request)
                                 .page(newPageNumber)
                                 .build();
-                        List<Company> result = parsedResponse.getCompanies();
+                        List<Company> result = parsedResponse.getCompanies().orElse(Collections.emptyList());
                         future.complete(new IntercomHttpResponse<>(
-                                new SyncPagingIterable<Company>(true, result, () -> {
+                                new SyncPagingIterable<Company>(true, result, parsedResponse, () -> {
                                     try {
                                         return listAttachedCompanies(nextRequest, requestOptions)
                                                 .get()
@@ -132,7 +142,6 @@ public class AsyncRawContactsClient {
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -149,11 +158,9 @@ public class AsyncRawContactsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -191,7 +198,6 @@ public class AsyncRawContactsClient {
                 .url(httpUrl)
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -203,13 +209,13 @@ public class AsyncRawContactsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), ContactSegments.class),
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ContactSegments.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -226,11 +232,9 @@ public class AsyncRawContactsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -276,7 +280,6 @@ public class AsyncRawContactsClient {
                 .url(httpUrl)
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -288,13 +291,13 @@ public class AsyncRawContactsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), SubscriptionTypeList.class),
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, SubscriptionTypeList.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -311,11 +314,9 @@ public class AsyncRawContactsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -378,13 +379,13 @@ public class AsyncRawContactsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), SubscriptionType.class),
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, SubscriptionType.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -401,11 +402,9 @@ public class AsyncRawContactsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -444,7 +443,6 @@ public class AsyncRawContactsClient {
                 .url(httpUrl)
                 .method("DELETE", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -456,13 +454,13 @@ public class AsyncRawContactsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), SubscriptionType.class),
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, SubscriptionType.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -479,11 +477,9 @@ public class AsyncRawContactsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -520,7 +516,6 @@ public class AsyncRawContactsClient {
                 .url(httpUrl)
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -532,12 +527,12 @@ public class AsyncRawContactsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), TagList.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, TagList.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -554,11 +549,9 @@ public class AsyncRawContactsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -576,14 +569,14 @@ public class AsyncRawContactsClient {
     /**
      * You can fetch the details of a single contact.
      */
-    public CompletableFuture<IntercomHttpResponse<Contact>> find(FindContactRequest request) {
+    public CompletableFuture<IntercomHttpResponse<ContactsFindResponse>> find(FindContactRequest request) {
         return find(request, null);
     }
 
     /**
      * You can fetch the details of a single contact.
      */
-    public CompletableFuture<IntercomHttpResponse<Contact>> find(
+    public CompletableFuture<IntercomHttpResponse<ContactsFindResponse>> find(
             FindContactRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
@@ -594,24 +587,24 @@ public class AsyncRawContactsClient {
                 .url(httpUrl)
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<IntercomHttpResponse<Contact>> future = new CompletableFuture<>();
+        CompletableFuture<IntercomHttpResponse<ContactsFindResponse>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Contact.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ContactsFindResponse.class),
+                                response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         if (response.code() == 401) {
                             future.completeExceptionally(new UnauthorizedError(
@@ -621,11 +614,9 @@ public class AsyncRawContactsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -642,15 +633,23 @@ public class AsyncRawContactsClient {
 
     /**
      * You can update an existing contact (ie. user or lead).
+     * <p>{% admonition type=&quot;info&quot; %}
+     * This endpoint handles both <strong>contact updates</strong> and <strong>custom object associations</strong>.</p>
+     * <p>See <em><code>update a contact with an association to a custom object instance</code></em> in the request/response examples to see the custom object association format.
+     * {% /admonition %}</p>
      */
-    public CompletableFuture<IntercomHttpResponse<Contact>> update(UpdateContactRequest request) {
+    public CompletableFuture<IntercomHttpResponse<ContactsUpdateResponse>> update(UpdateContactRequest request) {
         return update(request, null);
     }
 
     /**
      * You can update an existing contact (ie. user or lead).
+     * <p>{% admonition type=&quot;info&quot; %}
+     * This endpoint handles both <strong>contact updates</strong> and <strong>custom object associations</strong>.</p>
+     * <p>See <em><code>update a contact with an association to a custom object instance</code></em> in the request/response examples to see the custom object association format.
+     * {% /admonition %}</p>
      */
-    public CompletableFuture<IntercomHttpResponse<Contact>> update(
+    public CompletableFuture<IntercomHttpResponse<ContactsUpdateResponse>> update(
             UpdateContactRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
@@ -675,17 +674,18 @@ public class AsyncRawContactsClient {
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<IntercomHttpResponse<Contact>> future = new CompletableFuture<>();
+        CompletableFuture<IntercomHttpResponse<ContactsUpdateResponse>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Contact.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ContactsUpdateResponse.class),
+                                response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         if (response.code() == 401) {
                             future.completeExceptionally(new UnauthorizedError(
@@ -695,11 +695,9 @@ public class AsyncRawContactsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -735,7 +733,6 @@ public class AsyncRawContactsClient {
                 .url(httpUrl)
                 .method("DELETE", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -747,13 +744,13 @@ public class AsyncRawContactsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), ContactDeleted.class),
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ContactDeleted.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         if (response.code() == 401) {
                             future.completeExceptionally(new UnauthorizedError(
@@ -763,11 +760,9 @@ public class AsyncRawContactsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -785,14 +780,22 @@ public class AsyncRawContactsClient {
     /**
      * You can merge a contact with a <code>role</code> of <code>lead</code> into a contact with a <code>role</code> of <code>user</code>.
      */
-    public CompletableFuture<IntercomHttpResponse<Contact>> mergeLeadInUser(MergeContactsRequest request) {
+    public CompletableFuture<IntercomHttpResponse<ContactsMergeLeadInUserResponse>> mergeLeadInUser() {
+        return mergeLeadInUser(MergeContactsRequest.builder().build());
+    }
+
+    /**
+     * You can merge a contact with a <code>role</code> of <code>lead</code> into a contact with a <code>role</code> of <code>user</code>.
+     */
+    public CompletableFuture<IntercomHttpResponse<ContactsMergeLeadInUserResponse>> mergeLeadInUser(
+            MergeContactsRequest request) {
         return mergeLeadInUser(request, null);
     }
 
     /**
      * You can merge a contact with a <code>role</code> of <code>lead</code> into a contact with a <code>role</code> of <code>user</code>.
      */
-    public CompletableFuture<IntercomHttpResponse<Contact>> mergeLeadInUser(
+    public CompletableFuture<IntercomHttpResponse<ContactsMergeLeadInUserResponse>> mergeLeadInUser(
             MergeContactsRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
@@ -816,17 +819,19 @@ public class AsyncRawContactsClient {
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<IntercomHttpResponse<Contact>> future = new CompletableFuture<>();
+        CompletableFuture<IntercomHttpResponse<ContactsMergeLeadInUserResponse>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Contact.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(
+                                        responseBodyString, ContactsMergeLeadInUserResponse.class),
+                                response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         if (response.code() == 401) {
                             future.completeExceptionally(new UnauthorizedError(
@@ -836,11 +841,9 @@ public class AsyncRawContactsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -1064,15 +1067,16 @@ public class AsyncRawContactsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         ContactList parsedResponse =
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), ContactList.class);
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ContactList.class);
                         Optional<String> startingAfter = parsedResponse
                                 .getPages()
                                 .flatMap(CursorPages::getNext)
                                 .flatMap(StartingAfterPaging::getStartingAfter);
                         Optional<StartingAfterPaging> pagination = request.getPagination()
-                                .map(pagination_ -> StartingAfterPaging.builder()
+                                .map((StartingAfterPaging pagination_) -> StartingAfterPaging.builder()
                                         .from(pagination_)
                                         .startingAfter(startingAfter)
                                         .build());
@@ -1080,21 +1084,21 @@ public class AsyncRawContactsClient {
                                 .from(request)
                                 .pagination(pagination)
                                 .build();
-                        List<Contact> result = parsedResponse.getData();
+                        List<Contact> result = parsedResponse.getData().orElse(Collections.emptyList());
                         future.complete(new IntercomHttpResponse<>(
-                                new SyncPagingIterable<Contact>(startingAfter.isPresent(), result, () -> {
-                                    try {
-                                        return search(nextRequest, requestOptions)
-                                                .get()
-                                                .body();
-                                    } catch (InterruptedException | ExecutionException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                }),
+                                new SyncPagingIterable<Contact>(
+                                        startingAfter.isPresent(), result, parsedResponse, () -> {
+                                            try {
+                                                return search(nextRequest, requestOptions)
+                                                        .get()
+                                                        .body();
+                                            } catch (InterruptedException | ExecutionException e) {
+                                                throw new RuntimeException(e);
+                                            }
+                                        }),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         if (response.code() == 401) {
                             future.completeExceptionally(new UnauthorizedError(
@@ -1104,11 +1108,9 @@ public class AsyncRawContactsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -1159,11 +1161,11 @@ public class AsyncRawContactsClient {
                 .addPathSegments("contacts");
         if (request.getPage().isPresent()) {
             QueryStringMapper.addQueryParameter(
-                    httpUrl, "page", request.getPage().get().toString(), false);
+                    httpUrl, "page", request.getPage().get(), false);
         }
         if (request.getPerPage().isPresent()) {
             QueryStringMapper.addQueryParameter(
-                    httpUrl, "per_page", request.getPerPage().get().toString(), false);
+                    httpUrl, "per_page", request.getPerPage().get(), false);
         }
         if (request.getStartingAfter().isPresent()) {
             QueryStringMapper.addQueryParameter(
@@ -1173,7 +1175,6 @@ public class AsyncRawContactsClient {
                 .url(httpUrl.build())
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -1185,9 +1186,10 @@ public class AsyncRawContactsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         ContactList parsedResponse =
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), ContactList.class);
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ContactList.class);
                         Optional<String> startingAfter = parsedResponse
                                 .getPages()
                                 .flatMap(CursorPages::getNext)
@@ -1196,21 +1198,21 @@ public class AsyncRawContactsClient {
                                 .from(request)
                                 .startingAfter(startingAfter)
                                 .build();
-                        List<Contact> result = parsedResponse.getData();
+                        List<Contact> result = parsedResponse.getData().orElse(Collections.emptyList());
                         future.complete(new IntercomHttpResponse<>(
-                                new SyncPagingIterable<Contact>(startingAfter.isPresent(), result, () -> {
-                                    try {
-                                        return list(nextRequest, requestOptions)
-                                                .get()
-                                                .body();
-                                    } catch (InterruptedException | ExecutionException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                }),
+                                new SyncPagingIterable<Contact>(
+                                        startingAfter.isPresent(), result, parsedResponse, () -> {
+                                            try {
+                                                return list(nextRequest, requestOptions)
+                                                        .get()
+                                                        .body();
+                                            } catch (InterruptedException | ExecutionException e) {
+                                                throw new RuntimeException(e);
+                                            }
+                                        }),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         if (response.code() == 401) {
                             future.completeExceptionally(new UnauthorizedError(
@@ -1220,11 +1222,9 @@ public class AsyncRawContactsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -1242,14 +1242,14 @@ public class AsyncRawContactsClient {
     /**
      * You can create a new contact (ie. user or lead).
      */
-    public CompletableFuture<IntercomHttpResponse<Contact>> create(CreateContactRequest request) {
+    public CompletableFuture<IntercomHttpResponse<ContactsCreateResponse>> create(CreateContactRequest request) {
         return create(request, null);
     }
 
     /**
      * You can create a new contact (ie. user or lead).
      */
-    public CompletableFuture<IntercomHttpResponse<Contact>> create(
+    public CompletableFuture<IntercomHttpResponse<ContactsCreateResponse>> create(
             CreateContactRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
@@ -1273,17 +1273,18 @@ public class AsyncRawContactsClient {
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<IntercomHttpResponse<Contact>> future = new CompletableFuture<>();
+        CompletableFuture<IntercomHttpResponse<ContactsCreateResponse>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Contact.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ContactsCreateResponse.class),
+                                response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         if (response.code() == 401) {
                             future.completeExceptionally(new UnauthorizedError(
@@ -1293,11 +1294,76 @@ public class AsyncRawContactsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
+                    return;
+                } catch (IOException e) {
+                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
+            }
+        });
+        return future;
+    }
+
+    /**
+     * You can fetch the details of a single contact by external ID. Note that this endpoint only supports users and not leads.
+     */
+    public CompletableFuture<IntercomHttpResponse<ShowContactByExternalIdResponse>> showContactByExternalId(
+            ShowContactByExternalIdRequest request) {
+        return showContactByExternalId(request, null);
+    }
+
+    /**
+     * You can fetch the details of a single contact by external ID. Note that this endpoint only supports users and not leads.
+     */
+    public CompletableFuture<IntercomHttpResponse<ShowContactByExternalIdResponse>> showContactByExternalId(
+            ShowContactByExternalIdRequest request, RequestOptions requestOptions) {
+        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+                .newBuilder()
+                .addPathSegments("contacts/find_by_external_id")
+                .addPathSegment(request.getExternalId())
+                .build();
+        Request.Builder _requestBuilder = new Request.Builder()
+                .url(httpUrl)
+                .method("GET", null)
+                .headers(Headers.of(clientOptions.headers(requestOptions)))
+                .addHeader("Accept", "application/json");
+        Request okhttpRequest = _requestBuilder.build();
+        OkHttpClient client = clientOptions.httpClient();
+        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+            client = clientOptions.httpClientWithTimeout(requestOptions);
+        }
+        CompletableFuture<IntercomHttpResponse<ShowContactByExternalIdResponse>> future = new CompletableFuture<>();
+        client.newCall(okhttpRequest).enqueue(new Callback() {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+                    if (response.isSuccessful()) {
+                        future.complete(new IntercomHttpResponse<>(
+                                ObjectMappers.JSON_MAPPER.readValue(
+                                        responseBodyString, ShowContactByExternalIdResponse.class),
+                                response));
+                        return;
+                    }
+                    try {
+                        if (response.code() == 401) {
+                            future.completeExceptionally(new UnauthorizedError(
+                                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class), response));
+                            return;
+                        }
+                    } catch (JsonProcessingException ignored) {
+                        // unable to map error response, throwing generic error
+                    }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
+                    future.completeExceptionally(new IntercomApiException(
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -1334,7 +1400,6 @@ public class AsyncRawContactsClient {
                 .url(httpUrl)
                 .method("POST", RequestBody.create("", null))
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -1346,18 +1411,16 @@ public class AsyncRawContactsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), ContactArchived.class),
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ContactArchived.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -1394,7 +1457,6 @@ public class AsyncRawContactsClient {
                 .url(httpUrl)
                 .method("POST", RequestBody.create("", null))
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -1406,18 +1468,73 @@ public class AsyncRawContactsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), ContactUnarchived.class),
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ContactUnarchived.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
+                    return;
+                } catch (IOException e) {
+                    future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
+            }
+        });
+        return future;
+    }
+
+    /**
+     * Block a single contact.&lt;br&gt;<strong>Note:</strong> conversations of the contact will also be archived during the process.&lt;br&gt;More details in <a href="https://www.intercom.com/help/en/articles/8838656-inbox-faqs">FAQ How do I block Inbox spam?</a>
+     */
+    public CompletableFuture<IntercomHttpResponse<ContactBlocked>> blockContact(BlockContactRequest request) {
+        return blockContact(request, null);
+    }
+
+    /**
+     * Block a single contact.&lt;br&gt;<strong>Note:</strong> conversations of the contact will also be archived during the process.&lt;br&gt;More details in <a href="https://www.intercom.com/help/en/articles/8838656-inbox-faqs">FAQ How do I block Inbox spam?</a>
+     */
+    public CompletableFuture<IntercomHttpResponse<ContactBlocked>> blockContact(
+            BlockContactRequest request, RequestOptions requestOptions) {
+        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+                .newBuilder()
+                .addPathSegments("contacts")
+                .addPathSegment(request.getContactId())
+                .addPathSegments("block")
+                .build();
+        Request.Builder _requestBuilder = new Request.Builder()
+                .url(httpUrl)
+                .method("POST", RequestBody.create("", null))
+                .headers(Headers.of(clientOptions.headers(requestOptions)))
+                .addHeader("Accept", "application/json");
+        Request okhttpRequest = _requestBuilder.build();
+        OkHttpClient client = clientOptions.httpClient();
+        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+            client = clientOptions.httpClientWithTimeout(requestOptions);
+        }
+        CompletableFuture<IntercomHttpResponse<ContactBlocked>> future = new CompletableFuture<>();
+        client.newCall(okhttpRequest).enqueue(new Callback() {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+                    if (response.isSuccessful()) {
+                        future.complete(new IntercomHttpResponse<>(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, ContactBlocked.class),
+                                response));
+                        return;
+                    }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
+                    future.completeExceptionally(new IntercomApiException(
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));

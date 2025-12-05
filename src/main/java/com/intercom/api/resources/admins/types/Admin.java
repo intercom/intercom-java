@@ -32,11 +32,13 @@ public final class Admin {
 
     private final String email;
 
-    private final String jobTitle;
+    private final Optional<String> jobTitle;
 
     private final boolean awayModeEnabled;
 
     private final boolean awayModeReassign;
+
+    private final Optional<Integer> awayStatusReasonId;
 
     private final boolean hasInboxSeat;
 
@@ -53,9 +55,10 @@ public final class Admin {
             String id,
             String name,
             String email,
-            String jobTitle,
+            Optional<String> jobTitle,
             boolean awayModeEnabled,
             boolean awayModeReassign,
+            Optional<Integer> awayStatusReasonId,
             boolean hasInboxSeat,
             List<Integer> teamIds,
             Optional<Avatar> avatar,
@@ -68,6 +71,7 @@ public final class Admin {
         this.jobTitle = jobTitle;
         this.awayModeEnabled = awayModeEnabled;
         this.awayModeReassign = awayModeReassign;
+        this.awayStatusReasonId = awayStatusReasonId;
         this.hasInboxSeat = hasInboxSeat;
         this.teamIds = teamIds;
         this.avatar = avatar;
@@ -111,7 +115,7 @@ public final class Admin {
      * @return The job title of the admin.
      */
     @JsonProperty("job_title")
-    public String getJobTitle() {
+    public Optional<String> getJobTitle() {
         return jobTitle;
     }
 
@@ -129,6 +133,14 @@ public final class Admin {
     @JsonProperty("away_mode_reassign")
     public boolean getAwayModeReassign() {
         return awayModeReassign;
+    }
+
+    /**
+     * @return The unique identifier of the away status reason
+     */
+    @JsonProperty("away_status_reason_id")
+    public Optional<Integer> getAwayStatusReasonId() {
+        return awayStatusReasonId;
     }
 
     /**
@@ -179,6 +191,7 @@ public final class Admin {
                 && jobTitle.equals(other.jobTitle)
                 && awayModeEnabled == other.awayModeEnabled
                 && awayModeReassign == other.awayModeReassign
+                && awayStatusReasonId.equals(other.awayStatusReasonId)
                 && hasInboxSeat == other.hasInboxSeat
                 && teamIds.equals(other.teamIds)
                 && avatar.equals(other.avatar)
@@ -195,6 +208,7 @@ public final class Admin {
                 this.jobTitle,
                 this.awayModeEnabled,
                 this.awayModeReassign,
+                this.awayStatusReasonId,
                 this.hasInboxSeat,
                 this.teamIds,
                 this.avatar,
@@ -212,7 +226,7 @@ public final class Admin {
 
     public interface IdStage {
         /**
-         * The id representing the admin.
+         * <p>The id representing the admin.</p>
          */
         NameStage id(@NotNull String id);
 
@@ -221,42 +235,35 @@ public final class Admin {
 
     public interface NameStage {
         /**
-         * The name of the admin.
+         * <p>The name of the admin.</p>
          */
         EmailStage name(@NotNull String name);
     }
 
     public interface EmailStage {
         /**
-         * The email of the admin.
+         * <p>The email of the admin.</p>
          */
-        JobTitleStage email(@NotNull String email);
-    }
-
-    public interface JobTitleStage {
-        /**
-         * The job title of the admin.
-         */
-        AwayModeEnabledStage jobTitle(@NotNull String jobTitle);
+        AwayModeEnabledStage email(@NotNull String email);
     }
 
     public interface AwayModeEnabledStage {
         /**
-         * Identifies if this admin is currently set in away mode.
+         * <p>Identifies if this admin is currently set in away mode.</p>
          */
         AwayModeReassignStage awayModeEnabled(boolean awayModeEnabled);
     }
 
     public interface AwayModeReassignStage {
         /**
-         * Identifies if this admin is set to automatically reassign new conversations to the apps default inbox.
+         * <p>Identifies if this admin is set to automatically reassign new conversations to the apps default inbox.</p>
          */
         HasInboxSeatStage awayModeReassign(boolean awayModeReassign);
     }
 
     public interface HasInboxSeatStage {
         /**
-         * Identifies if this admin has a paid inbox seat to restrict/allow features that require them.
+         * <p>Identifies if this admin has a paid inbox seat to restrict/allow features that require them.</p>
          */
         _FinalStage hasInboxSeat(boolean hasInboxSeat);
     }
@@ -270,6 +277,20 @@ public final class Admin {
         _FinalStage type(Optional<String> type);
 
         _FinalStage type(String type);
+
+        /**
+         * <p>The job title of the admin.</p>
+         */
+        _FinalStage jobTitle(Optional<String> jobTitle);
+
+        _FinalStage jobTitle(String jobTitle);
+
+        /**
+         * <p>The unique identifier of the away status reason</p>
+         */
+        _FinalStage awayStatusReasonId(Optional<Integer> awayStatusReasonId);
+
+        _FinalStage awayStatusReasonId(Integer awayStatusReasonId);
 
         /**
          * <p>This object represents the avatar associated with the admin.</p>
@@ -297,7 +318,6 @@ public final class Admin {
             implements IdStage,
                     NameStage,
                     EmailStage,
-                    JobTitleStage,
                     AwayModeEnabledStage,
                     AwayModeReassignStage,
                     HasInboxSeatStage,
@@ -307,8 +327,6 @@ public final class Admin {
         private String name;
 
         private String email;
-
-        private String jobTitle;
 
         private boolean awayModeEnabled;
 
@@ -321,6 +339,10 @@ public final class Admin {
         private Optional<Avatar> avatar = Optional.empty();
 
         private List<Integer> teamIds = new ArrayList<>();
+
+        private Optional<Integer> awayStatusReasonId = Optional.empty();
+
+        private Optional<String> jobTitle = Optional.empty();
 
         private Optional<String> type = Optional.empty();
 
@@ -338,6 +360,7 @@ public final class Admin {
             jobTitle(other.getJobTitle());
             awayModeEnabled(other.getAwayModeEnabled());
             awayModeReassign(other.getAwayModeReassign());
+            awayStatusReasonId(other.getAwayStatusReasonId());
             hasInboxSeat(other.getHasInboxSeat());
             teamIds(other.getTeamIds());
             avatar(other.getAvatar());
@@ -346,7 +369,8 @@ public final class Admin {
         }
 
         /**
-         * The id representing the admin.<p>The id representing the admin.</p>
+         * <p>The id representing the admin.</p>
+         * <p>The id representing the admin.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -357,7 +381,8 @@ public final class Admin {
         }
 
         /**
-         * The name of the admin.<p>The name of the admin.</p>
+         * <p>The name of the admin.</p>
+         * <p>The name of the admin.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -368,29 +393,20 @@ public final class Admin {
         }
 
         /**
-         * The email of the admin.<p>The email of the admin.</p>
+         * <p>The email of the admin.</p>
+         * <p>The email of the admin.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
         @JsonSetter("email")
-        public JobTitleStage email(@NotNull String email) {
+        public AwayModeEnabledStage email(@NotNull String email) {
             this.email = Objects.requireNonNull(email, "email must not be null");
             return this;
         }
 
         /**
-         * The job title of the admin.<p>The job title of the admin.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("job_title")
-        public AwayModeEnabledStage jobTitle(@NotNull String jobTitle) {
-            this.jobTitle = Objects.requireNonNull(jobTitle, "jobTitle must not be null");
-            return this;
-        }
-
-        /**
-         * Identifies if this admin is currently set in away mode.<p>Identifies if this admin is currently set in away mode.</p>
+         * <p>Identifies if this admin is currently set in away mode.</p>
+         * <p>Identifies if this admin is currently set in away mode.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -401,7 +417,8 @@ public final class Admin {
         }
 
         /**
-         * Identifies if this admin is set to automatically reassign new conversations to the apps default inbox.<p>Identifies if this admin is set to automatically reassign new conversations to the apps default inbox.</p>
+         * <p>Identifies if this admin is set to automatically reassign new conversations to the apps default inbox.</p>
+         * <p>Identifies if this admin is set to automatically reassign new conversations to the apps default inbox.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -412,7 +429,8 @@ public final class Admin {
         }
 
         /**
-         * Identifies if this admin has a paid inbox seat to restrict/allow features that require them.<p>Identifies if this admin has a paid inbox seat to restrict/allow features that require them.</p>
+         * <p>Identifies if this admin has a paid inbox seat to restrict/allow features that require them.</p>
+         * <p>Identifies if this admin has a paid inbox seat to restrict/allow features that require them.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -461,7 +479,9 @@ public final class Admin {
          */
         @java.lang.Override
         public _FinalStage addAllTeamIds(List<Integer> teamIds) {
-            this.teamIds.addAll(teamIds);
+            if (teamIds != null) {
+                this.teamIds.addAll(teamIds);
+            }
             return this;
         }
 
@@ -482,7 +502,49 @@ public final class Admin {
         @JsonSetter(value = "team_ids", nulls = Nulls.SKIP)
         public _FinalStage teamIds(List<Integer> teamIds) {
             this.teamIds.clear();
-            this.teamIds.addAll(teamIds);
+            if (teamIds != null) {
+                this.teamIds.addAll(teamIds);
+            }
+            return this;
+        }
+
+        /**
+         * <p>The unique identifier of the away status reason</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage awayStatusReasonId(Integer awayStatusReasonId) {
+            this.awayStatusReasonId = Optional.ofNullable(awayStatusReasonId);
+            return this;
+        }
+
+        /**
+         * <p>The unique identifier of the away status reason</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "away_status_reason_id", nulls = Nulls.SKIP)
+        public _FinalStage awayStatusReasonId(Optional<Integer> awayStatusReasonId) {
+            this.awayStatusReasonId = awayStatusReasonId;
+            return this;
+        }
+
+        /**
+         * <p>The job title of the admin.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage jobTitle(String jobTitle) {
+            this.jobTitle = Optional.ofNullable(jobTitle);
+            return this;
+        }
+
+        /**
+         * <p>The job title of the admin.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "job_title", nulls = Nulls.SKIP)
+        public _FinalStage jobTitle(Optional<String> jobTitle) {
+            this.jobTitle = jobTitle;
             return this;
         }
 
@@ -516,6 +578,7 @@ public final class Admin {
                     jobTitle,
                     awayModeEnabled,
                     awayModeReassign,
+                    awayStatusReasonId,
                     hasInboxSeat,
                     teamIds,
                     avatar,
@@ -575,7 +638,7 @@ public final class Admin {
 
         public interface ImageUrlStage {
             /**
-             * URL of the admin's avatar image
+             * <p>URL of the admin's avatar image</p>
              */
             _FinalStage imageUrl(@NotNull String imageUrl);
 
@@ -602,7 +665,8 @@ public final class Admin {
             }
 
             /**
-             * URL of the admin's avatar image<p>URL of the admin's avatar image</p>
+             * <p>URL of the admin's avatar image</p>
+             * <p>URL of the admin's avatar image</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override

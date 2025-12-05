@@ -102,15 +102,15 @@ public final class CreateContactRequest {
             Object value = p.readValueAs(Object.class);
             try {
                 return of(ObjectMappers.JSON_MAPPER.convertValue(value, WithEmail.class));
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
             }
             try {
                 return of(ObjectMappers.JSON_MAPPER.convertValue(value, WithExternalId.class));
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
             }
             try {
                 return of(ObjectMappers.JSON_MAPPER.convertValue(value, WithRole.class));
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
             }
             throw new JsonParseException(p, "Failed to deserialize");
         }
@@ -282,7 +282,7 @@ public final class CreateContactRequest {
 
         public interface EmailStage {
             /**
-             * The contacts email
+             * <p>The contacts email</p>
              */
             _FinalStage email(@NotNull String email);
 
@@ -389,7 +389,8 @@ public final class CreateContactRequest {
             }
 
             /**
-             * The contacts email<p>The contacts email</p>
+             * <p>The contacts email</p>
+             * <p>The contacts email</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -742,7 +743,7 @@ public final class CreateContactRequest {
 
         public interface RoleStage {
             /**
-             * The role of the contact.
+             * <p>The role of the contact.</p>
              */
             _FinalStage role(@NotNull String role);
 
@@ -849,7 +850,8 @@ public final class CreateContactRequest {
             }
 
             /**
-             * The role of the contact.<p>The role of the contact.</p>
+             * <p>The role of the contact.</p>
+             * <p>The role of the contact.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -1202,7 +1204,7 @@ public final class CreateContactRequest {
 
         public interface ExternalIdStage {
             /**
-             * A unique identifier for the contact which is given to Intercom
+             * <p>A unique identifier for the contact which is given to Intercom</p>
              */
             _FinalStage externalId(@NotNull String externalId);
 
@@ -1309,7 +1311,8 @@ public final class CreateContactRequest {
             }
 
             /**
-             * A unique identifier for the contact which is given to Intercom<p>A unique identifier for the contact which is given to Intercom</p>
+             * <p>A unique identifier for the contact which is given to Intercom</p>
+             * <p>A unique identifier for the contact which is given to Intercom</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override

@@ -158,7 +158,7 @@ public final class ContentImportSource {
 
     public interface IdStage {
         /**
-         * The unique identifier for the content import source which is given by Intercom.
+         * <p>The unique identifier for the content import source which is given by Intercom.</p>
          */
         LastSyncedAtStage id(int id);
 
@@ -167,42 +167,42 @@ public final class ContentImportSource {
 
     public interface LastSyncedAtStage {
         /**
-         * The time when the content import source was last synced.
+         * <p>The time when the content import source was last synced.</p>
          */
         SyncBehaviorStage lastSyncedAt(int lastSyncedAt);
     }
 
     public interface SyncBehaviorStage {
         /**
-         * If you intend to create or update External Pages via the API, this should be set to `api`.
+         * <p>If you intend to create or update External Pages via the API, this should be set to <code>api</code>.</p>
          */
         StatusStage syncBehavior(@NotNull SyncBehavior syncBehavior);
     }
 
     public interface StatusStage {
         /**
-         * The status of the content import source.
+         * <p>The status of the content import source.</p>
          */
         UrlStage status(@NotNull Status status);
     }
 
     public interface UrlStage {
         /**
-         * The URL of the root of the external source.
+         * <p>The URL of the root of the external source.</p>
          */
         CreatedAtStage url(@NotNull String url);
     }
 
     public interface CreatedAtStage {
         /**
-         * The time when the content import source was created.
+         * <p>The time when the content import source was created.</p>
          */
         UpdatedAtStage createdAt(int createdAt);
     }
 
     public interface UpdatedAtStage {
         /**
-         * The time when the content import source was last updated.
+         * <p>The time when the content import source was last updated.</p>
          */
         _FinalStage updatedAt(int updatedAt);
     }
@@ -253,7 +253,8 @@ public final class ContentImportSource {
         }
 
         /**
-         * The unique identifier for the content import source which is given by Intercom.<p>The unique identifier for the content import source which is given by Intercom.</p>
+         * <p>The unique identifier for the content import source which is given by Intercom.</p>
+         * <p>The unique identifier for the content import source which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -264,7 +265,8 @@ public final class ContentImportSource {
         }
 
         /**
-         * The time when the content import source was last synced.<p>The time when the content import source was last synced.</p>
+         * <p>The time when the content import source was last synced.</p>
+         * <p>The time when the content import source was last synced.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -275,7 +277,8 @@ public final class ContentImportSource {
         }
 
         /**
-         * If you intend to create or update External Pages via the API, this should be set to `api`.<p>If you intend to create or update External Pages via the API, this should be set to <code>api</code>.</p>
+         * <p>If you intend to create or update External Pages via the API, this should be set to <code>api</code>.</p>
+         * <p>If you intend to create or update External Pages via the API, this should be set to <code>api</code>.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -286,7 +289,8 @@ public final class ContentImportSource {
         }
 
         /**
-         * The status of the content import source.<p>The status of the content import source.</p>
+         * <p>The status of the content import source.</p>
+         * <p>The status of the content import source.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -297,7 +301,8 @@ public final class ContentImportSource {
         }
 
         /**
-         * The URL of the root of the external source.<p>The URL of the root of the external source.</p>
+         * <p>The URL of the root of the external source.</p>
+         * <p>The URL of the root of the external source.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -308,7 +313,8 @@ public final class ContentImportSource {
         }
 
         /**
-         * The time when the content import source was created.<p>The time when the content import source was created.</p>
+         * <p>The time when the content import source was created.</p>
+         * <p>The time when the content import source was created.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -319,7 +325,8 @@ public final class ContentImportSource {
         }
 
         /**
-         * The time when the content import source was last updated.<p>The time when the content import source was last updated.</p>
+         * <p>The time when the content import source was last updated.</p>
+         * <p>The time when the content import source was last updated.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

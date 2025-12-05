@@ -202,12 +202,12 @@ public final class MultipleFilterSearchRequest {
                 try {
                     return ofListOfMultipleFilterSearchRequest(ObjectMappers.JSON_MAPPER.convertValue(
                             value, new TypeReference<List<MultipleFilterSearchRequest>>() {}));
-                } catch (IllegalArgumentException e) {
+                } catch (RuntimeException e) {
                 }
                 try {
                     return ofListOfSingleFilterSearchRequest(ObjectMappers.JSON_MAPPER.convertValue(
                             value, new TypeReference<List<SingleFilterSearchRequest>>() {}));
-                } catch (IllegalArgumentException e) {
+                } catch (RuntimeException e) {
                 }
                 throw new JsonParseException(p, "Failed to deserialize");
             }

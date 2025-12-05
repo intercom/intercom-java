@@ -13,38 +13,44 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.resources.aicontentsource.types.ContentSource;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ContentSourcesList.Builder.class)
 public final class ContentSourcesList {
-    private final int totalCount;
+    private final Optional<String> type;
 
-    private final List<ContentSource> contentSources;
+    private final Optional<Integer> totalCount;
+
+    private final Optional<List<ContentSource>> contentSources;
 
     private final Map<String, Object> additionalProperties;
 
     private ContentSourcesList(
-            int totalCount, List<ContentSource> contentSources, Map<String, Object> additionalProperties) {
+            Optional<String> type,
+            Optional<Integer> totalCount,
+            Optional<List<ContentSource>> contentSources,
+            Map<String, Object> additionalProperties) {
+        this.type = type;
         this.totalCount = totalCount;
         this.contentSources = contentSources;
         this.additionalProperties = additionalProperties;
     }
 
     @JsonProperty("type")
-    public String getType() {
-        return "content_source.list";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The total number of content sources used by AI Agent in the conversation.
      */
     @JsonProperty("total_count")
-    public int getTotalCount() {
+    public Optional<Integer> getTotalCount() {
         return totalCount;
     }
 
@@ -52,7 +58,7 @@ public final class ContentSourcesList {
      * @return The content sources used by AI Agent in the conversation.
      */
     @JsonProperty("content_sources")
-    public List<ContentSource> getContentSources() {
+    public Optional<List<ContentSource>> getContentSources() {
         return contentSources;
     }
 
@@ -68,12 +74,14 @@ public final class ContentSourcesList {
     }
 
     private boolean equalTo(ContentSourcesList other) {
-        return totalCount == other.totalCount && contentSources.equals(other.contentSources);
+        return type.equals(other.type)
+                && totalCount.equals(other.totalCount)
+                && contentSources.equals(other.contentSources);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.totalCount, this.contentSources);
+        return Objects.hash(this.type, this.totalCount, this.contentSources);
     }
 
     @java.lang.Override
@@ -81,95 +89,71 @@ public final class ContentSourcesList {
         return ObjectMappers.stringify(this);
     }
 
-    public static TotalCountStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface TotalCountStage {
-        /**
-         * The total number of content sources used by AI Agent in the conversation.
-         */
-        _FinalStage totalCount(int totalCount);
-
-        Builder from(ContentSourcesList other);
-    }
-
-    public interface _FinalStage {
-        ContentSourcesList build();
-
-        /**
-         * <p>The content sources used by AI Agent in the conversation.</p>
-         */
-        _FinalStage contentSources(List<ContentSource> contentSources);
-
-        _FinalStage addContentSources(ContentSource contentSources);
-
-        _FinalStage addAllContentSources(List<ContentSource> contentSources);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements TotalCountStage, _FinalStage {
-        private int totalCount;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private List<ContentSource> contentSources = new ArrayList<>();
+        private Optional<Integer> totalCount = Optional.empty();
+
+        private Optional<List<ContentSource>> contentSources = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(ContentSourcesList other) {
+            type(other.getType());
             totalCount(other.getTotalCount());
             contentSources(other.getContentSources());
             return this;
         }
 
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
+            return this;
+        }
+
         /**
-         * The total number of content sources used by AI Agent in the conversation.<p>The total number of content sources used by AI Agent in the conversation.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The total number of content sources used by AI Agent in the conversation.</p>
          */
-        @java.lang.Override
-        @JsonSetter("total_count")
-        public _FinalStage totalCount(int totalCount) {
+        @JsonSetter(value = "total_count", nulls = Nulls.SKIP)
+        public Builder totalCount(Optional<Integer> totalCount) {
             this.totalCount = totalCount;
             return this;
         }
 
-        /**
-         * <p>The content sources used by AI Agent in the conversation.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addAllContentSources(List<ContentSource> contentSources) {
-            this.contentSources.addAll(contentSources);
-            return this;
-        }
-
-        /**
-         * <p>The content sources used by AI Agent in the conversation.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addContentSources(ContentSource contentSources) {
-            this.contentSources.add(contentSources);
+        public Builder totalCount(Integer totalCount) {
+            this.totalCount = Optional.ofNullable(totalCount);
             return this;
         }
 
         /**
          * <p>The content sources used by AI Agent in the conversation.</p>
          */
-        @java.lang.Override
         @JsonSetter(value = "content_sources", nulls = Nulls.SKIP)
-        public _FinalStage contentSources(List<ContentSource> contentSources) {
-            this.contentSources.clear();
-            this.contentSources.addAll(contentSources);
+        public Builder contentSources(Optional<List<ContentSource>> contentSources) {
+            this.contentSources = contentSources;
             return this;
         }
 
-        @java.lang.Override
+        public Builder contentSources(List<ContentSource> contentSources) {
+            this.contentSources = Optional.ofNullable(contentSources);
+            return this;
+        }
+
         public ContentSourcesList build() {
-            return new ContentSourcesList(totalCount, contentSources, additionalProperties);
+            return new ContentSourcesList(type, totalCount, contentSources, additionalProperties);
         }
     }
 }

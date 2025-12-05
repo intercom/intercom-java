@@ -101,7 +101,7 @@ public final class ConvertConversationToTicketRequest {
 
     public interface IdStage {
         /**
-         * The id of the conversation to target
+         * <p>The id of the conversation to target</p>
          */
         TicketTypeIdStage id(int id);
 
@@ -110,7 +110,7 @@ public final class ConvertConversationToTicketRequest {
 
     public interface TicketTypeIdStage {
         /**
-         * The ID of the type of ticket you want to convert the conversation to
+         * <p>The ID of the type of ticket you want to convert the conversation to</p>
          */
         _FinalStage ticketTypeId(@NotNull String ticketTypeId);
     }
@@ -145,7 +145,8 @@ public final class ConvertConversationToTicketRequest {
         }
 
         /**
-         * The id of the conversation to target<p>The id of the conversation to target</p>
+         * <p>The id of the conversation to target</p>
+         * <p>The id of the conversation to target</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -156,7 +157,8 @@ public final class ConvertConversationToTicketRequest {
         }
 
         /**
-         * The ID of the type of ticket you want to convert the conversation to<p>The ID of the type of ticket you want to convert the conversation to</p>
+         * <p>The ID of the type of ticket you want to convert the conversation to</p>
+         * <p>The ID of the type of ticket you want to convert the conversation to</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -271,7 +273,7 @@ public final class ConvertConversationToTicketRequest {
                 Object value = p.readValueAs(Object.class);
                 try {
                     return of(ObjectMappers.JSON_MAPPER.convertValue(value, new TypeReference<Optional<String>>() {}));
-                } catch (IllegalArgumentException e) {
+                } catch (RuntimeException e) {
                 }
                 if (value instanceof Double) {
                     return of((Double) value);
@@ -281,7 +283,7 @@ public final class ConvertConversationToTicketRequest {
                 }
                 try {
                     return of(ObjectMappers.JSON_MAPPER.convertValue(value, new TypeReference<List<Object>>() {}));
-                } catch (IllegalArgumentException e) {
+                } catch (RuntimeException e) {
                 }
                 throw new JsonParseException(p, "Failed to deserialize");
             }

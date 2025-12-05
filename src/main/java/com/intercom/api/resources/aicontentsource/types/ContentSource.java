@@ -9,25 +9,34 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ContentSource.Builder.class)
 public final class ContentSource {
-    private final String url;
+    private final Optional<String> contentType;
 
-    private final String title;
+    private final Optional<String> url;
 
-    private final String locale;
+    private final Optional<String> title;
+
+    private final Optional<String> locale;
 
     private final Map<String, Object> additionalProperties;
 
-    private ContentSource(String url, String title, String locale, Map<String, Object> additionalProperties) {
+    private ContentSource(
+            Optional<String> contentType,
+            Optional<String> url,
+            Optional<String> title,
+            Optional<String> locale,
+            Map<String, Object> additionalProperties) {
+        this.contentType = contentType;
         this.url = url;
         this.title = title;
         this.locale = locale;
@@ -38,15 +47,15 @@ public final class ContentSource {
      * @return The type of the content source.
      */
     @JsonProperty("content_type")
-    public String getContentType() {
-        return "custom_answer";
+    public Optional<String> getContentType() {
+        return contentType;
     }
 
     /**
      * @return The internal URL linking to the content source for teammates.
      */
     @JsonProperty("url")
-    public String getUrl() {
+    public Optional<String> getUrl() {
         return url;
     }
 
@@ -54,7 +63,7 @@ public final class ContentSource {
      * @return The title of the content source.
      */
     @JsonProperty("title")
-    public String getTitle() {
+    public Optional<String> getTitle() {
         return title;
     }
 
@@ -62,7 +71,7 @@ public final class ContentSource {
      * @return The ISO 639 language code of the content source.
      */
     @JsonProperty("locale")
-    public String getLocale() {
+    public Optional<String> getLocale() {
         return locale;
     }
 
@@ -78,12 +87,15 @@ public final class ContentSource {
     }
 
     private boolean equalTo(ContentSource other) {
-        return url.equals(other.url) && title.equals(other.title) && locale.equals(other.locale);
+        return contentType.equals(other.contentType)
+                && url.equals(other.url)
+                && title.equals(other.title)
+                && locale.equals(other.locale);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.url, this.title, this.locale);
+        return Objects.hash(this.contentType, this.url, this.title, this.locale);
     }
 
     @java.lang.Override
@@ -91,52 +103,27 @@ public final class ContentSource {
         return ObjectMappers.stringify(this);
     }
 
-    public static UrlStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface UrlStage {
-        /**
-         * The internal URL linking to the content source for teammates.
-         */
-        TitleStage url(@NotNull String url);
-
-        Builder from(ContentSource other);
-    }
-
-    public interface TitleStage {
-        /**
-         * The title of the content source.
-         */
-        LocaleStage title(@NotNull String title);
-    }
-
-    public interface LocaleStage {
-        /**
-         * The ISO 639 language code of the content source.
-         */
-        _FinalStage locale(@NotNull String locale);
-    }
-
-    public interface _FinalStage {
-        ContentSource build();
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements UrlStage, TitleStage, LocaleStage, _FinalStage {
-        private String url;
+    public static final class Builder {
+        private Optional<String> contentType = Optional.empty();
 
-        private String title;
+        private Optional<String> url = Optional.empty();
 
-        private String locale;
+        private Optional<String> title = Optional.empty();
+
+        private Optional<String> locale = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(ContentSource other) {
+            contentType(other.getContentType());
             url(other.getUrl());
             title(other.getTitle());
             locale(other.getLocale());
@@ -144,41 +131,63 @@ public final class ContentSource {
         }
 
         /**
-         * The internal URL linking to the content source for teammates.<p>The internal URL linking to the content source for teammates.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The type of the content source.</p>
          */
-        @java.lang.Override
-        @JsonSetter("url")
-        public TitleStage url(@NotNull String url) {
-            this.url = Objects.requireNonNull(url, "url must not be null");
+        @JsonSetter(value = "content_type", nulls = Nulls.SKIP)
+        public Builder contentType(Optional<String> contentType) {
+            this.contentType = contentType;
+            return this;
+        }
+
+        public Builder contentType(String contentType) {
+            this.contentType = Optional.ofNullable(contentType);
             return this;
         }
 
         /**
-         * The title of the content source.<p>The title of the content source.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The internal URL linking to the content source for teammates.</p>
          */
-        @java.lang.Override
-        @JsonSetter("title")
-        public LocaleStage title(@NotNull String title) {
-            this.title = Objects.requireNonNull(title, "title must not be null");
+        @JsonSetter(value = "url", nulls = Nulls.SKIP)
+        public Builder url(Optional<String> url) {
+            this.url = url;
+            return this;
+        }
+
+        public Builder url(String url) {
+            this.url = Optional.ofNullable(url);
             return this;
         }
 
         /**
-         * The ISO 639 language code of the content source.<p>The ISO 639 language code of the content source.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The title of the content source.</p>
          */
-        @java.lang.Override
-        @JsonSetter("locale")
-        public _FinalStage locale(@NotNull String locale) {
-            this.locale = Objects.requireNonNull(locale, "locale must not be null");
+        @JsonSetter(value = "title", nulls = Nulls.SKIP)
+        public Builder title(Optional<String> title) {
+            this.title = title;
             return this;
         }
 
-        @java.lang.Override
+        public Builder title(String title) {
+            this.title = Optional.ofNullable(title);
+            return this;
+        }
+
+        /**
+         * <p>The ISO 639 language code of the content source.</p>
+         */
+        @JsonSetter(value = "locale", nulls = Nulls.SKIP)
+        public Builder locale(Optional<String> locale) {
+            this.locale = locale;
+            return this;
+        }
+
+        public Builder locale(String locale) {
+            this.locale = Optional.ofNullable(locale);
+            return this;
+        }
+
         public ContentSource build() {
-            return new ContentSource(url, title, locale, additionalProperties);
+            return new ContentSource(contentType, url, title, locale, additionalProperties);
         }
     }
 }

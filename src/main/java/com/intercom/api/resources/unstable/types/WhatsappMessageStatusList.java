@@ -113,7 +113,7 @@ public final class WhatsappMessageStatusList {
 
     public interface RulesetIdStage {
         /**
-         * The provided ruleset ID
+         * <p>The provided ruleset ID</p>
          */
         PagesStage rulesetId(@NotNull String rulesetId);
 
@@ -126,7 +126,7 @@ public final class WhatsappMessageStatusList {
 
     public interface TotalCountStage {
         /**
-         * Total number of events
+         * <p>Total number of events</p>
          */
         _FinalStage totalCount(int totalCount);
     }
@@ -166,7 +166,8 @@ public final class WhatsappMessageStatusList {
         }
 
         /**
-         * The provided ruleset ID<p>The provided ruleset ID</p>
+         * <p>The provided ruleset ID</p>
+         * <p>The provided ruleset ID</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -184,7 +185,8 @@ public final class WhatsappMessageStatusList {
         }
 
         /**
-         * Total number of events<p>Total number of events</p>
+         * <p>Total number of events</p>
+         * <p>Total number of events</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -196,7 +198,9 @@ public final class WhatsappMessageStatusList {
 
         @java.lang.Override
         public _FinalStage addAllEvents(List<EventsItem> events) {
-            this.events.addAll(events);
+            if (events != null) {
+                this.events.addAll(events);
+            }
             return this;
         }
 
@@ -210,7 +214,9 @@ public final class WhatsappMessageStatusList {
         @JsonSetter(value = "events", nulls = Nulls.SKIP)
         public _FinalStage events(List<EventsItem> events) {
             this.events.clear();
-            this.events.addAll(events);
+            if (events != null) {
+                this.events.addAll(events);
+            }
             return this;
         }
 
@@ -298,7 +304,7 @@ public final class WhatsappMessageStatusList {
 
         public interface PerPageStage {
             /**
-             * Number of results per page
+             * <p>Number of results per page</p>
              */
             TotalPagesStage perPage(int perPage);
 
@@ -307,7 +313,7 @@ public final class WhatsappMessageStatusList {
 
         public interface TotalPagesStage {
             /**
-             * Total number of pages
+             * <p>Total number of pages</p>
              */
             _FinalStage totalPages(int totalPages);
         }
@@ -345,7 +351,8 @@ public final class WhatsappMessageStatusList {
             }
 
             /**
-             * Number of results per page<p>Number of results per page</p>
+             * <p>Number of results per page</p>
+             * <p>Number of results per page</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -356,7 +363,8 @@ public final class WhatsappMessageStatusList {
             }
 
             /**
-             * Total number of pages<p>Total number of pages</p>
+             * <p>Total number of pages</p>
+             * <p>Total number of pages</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -622,7 +630,7 @@ public final class WhatsappMessageStatusList {
 
         public interface IdStage {
             /**
-             * Event ID
+             * <p>Event ID</p>
              */
             ConversationIdStage id(@NotNull String id);
 
@@ -631,35 +639,35 @@ public final class WhatsappMessageStatusList {
 
         public interface ConversationIdStage {
             /**
-             * ID of the conversation
+             * <p>ID of the conversation</p>
              */
             StatusStage conversationId(@NotNull String conversationId);
         }
 
         public interface StatusStage {
             /**
-             * Current status of the message
+             * <p>Current status of the message</p>
              */
             CreatedAtStage status(@NotNull Status status);
         }
 
         public interface CreatedAtStage {
             /**
-             * Creation timestamp
+             * <p>Creation timestamp</p>
              */
             UpdatedAtStage createdAt(int createdAt);
         }
 
         public interface UpdatedAtStage {
             /**
-             * Last update timestamp
+             * <p>Last update timestamp</p>
              */
             WhatsappMessageIdStage updatedAt(int updatedAt);
         }
 
         public interface WhatsappMessageIdStage {
             /**
-             * WhatsApp's message identifier
+             * <p>WhatsApp's message identifier</p>
              */
             _FinalStage whatsappMessageId(@NotNull String whatsappMessageId);
         }
@@ -716,7 +724,8 @@ public final class WhatsappMessageStatusList {
             }
 
             /**
-             * Event ID<p>Event ID</p>
+             * <p>Event ID</p>
+             * <p>Event ID</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -727,7 +736,8 @@ public final class WhatsappMessageStatusList {
             }
 
             /**
-             * ID of the conversation<p>ID of the conversation</p>
+             * <p>ID of the conversation</p>
+             * <p>ID of the conversation</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -738,7 +748,8 @@ public final class WhatsappMessageStatusList {
             }
 
             /**
-             * Current status of the message<p>Current status of the message</p>
+             * <p>Current status of the message</p>
+             * <p>Current status of the message</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -749,7 +760,8 @@ public final class WhatsappMessageStatusList {
             }
 
             /**
-             * Creation timestamp<p>Creation timestamp</p>
+             * <p>Creation timestamp</p>
+             * <p>Creation timestamp</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -760,7 +772,8 @@ public final class WhatsappMessageStatusList {
             }
 
             /**
-             * Last update timestamp<p>Last update timestamp</p>
+             * <p>Last update timestamp</p>
+             * <p>Last update timestamp</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -771,7 +784,8 @@ public final class WhatsappMessageStatusList {
             }
 
             /**
-             * WhatsApp's message identifier<p>WhatsApp's message identifier</p>
+             * <p>WhatsApp's message identifier</p>
+             * <p>WhatsApp's message identifier</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override

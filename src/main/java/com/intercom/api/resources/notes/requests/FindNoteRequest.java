@@ -14,16 +14,15 @@ import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = FindNoteRequest.Builder.class)
 public final class FindNoteRequest {
-    private final String noteId;
+    private final int noteId;
 
     private final Map<String, Object> additionalProperties;
 
-    private FindNoteRequest(String noteId, Map<String, Object> additionalProperties) {
+    private FindNoteRequest(int noteId, Map<String, Object> additionalProperties) {
         this.noteId = noteId;
         this.additionalProperties = additionalProperties;
     }
@@ -32,7 +31,7 @@ public final class FindNoteRequest {
      * @return The unique identifier of a given note
      */
     @JsonProperty("note_id")
-    public String getNoteId() {
+    public int getNoteId() {
         return noteId;
     }
 
@@ -48,7 +47,7 @@ public final class FindNoteRequest {
     }
 
     private boolean equalTo(FindNoteRequest other) {
-        return noteId.equals(other.noteId);
+        return noteId == other.noteId;
     }
 
     @java.lang.Override
@@ -67,9 +66,9 @@ public final class FindNoteRequest {
 
     public interface NoteIdStage {
         /**
-         * The unique identifier of a given note
+         * <p>The unique identifier of a given note</p>
          */
-        _FinalStage noteId(@NotNull String noteId);
+        _FinalStage noteId(int noteId);
 
         Builder from(FindNoteRequest other);
     }
@@ -80,7 +79,7 @@ public final class FindNoteRequest {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder implements NoteIdStage, _FinalStage {
-        private String noteId;
+        private int noteId;
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -94,13 +93,14 @@ public final class FindNoteRequest {
         }
 
         /**
-         * The unique identifier of a given note<p>The unique identifier of a given note</p>
+         * <p>The unique identifier of a given note</p>
+         * <p>The unique identifier of a given note</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
         @JsonSetter("note_id")
-        public _FinalStage noteId(@NotNull String noteId) {
-            this.noteId = Objects.requireNonNull(noteId, "noteId must not be null");
+        public _FinalStage noteId(int noteId) {
+            this.noteId = noteId;
             return this;
         }
 

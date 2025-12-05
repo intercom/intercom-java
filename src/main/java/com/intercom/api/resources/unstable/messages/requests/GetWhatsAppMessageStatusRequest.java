@@ -97,7 +97,7 @@ public final class GetWhatsAppMessageStatusRequest {
 
     public interface RulesetIdStage {
         /**
-         * The unique identifier for the set of messages to check status for
+         * <p>The unique identifier for the set of messages to check status for</p>
          */
         _FinalStage rulesetId(@NotNull String rulesetId);
 
@@ -144,7 +144,8 @@ public final class GetWhatsAppMessageStatusRequest {
         }
 
         /**
-         * The unique identifier for the set of messages to check status for<p>The unique identifier for the set of messages to check status for</p>
+         * <p>The unique identifier for the set of messages to check status for</p>
+         * <p>The unique identifier for the set of messages to check status for</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

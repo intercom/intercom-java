@@ -98,7 +98,7 @@ public final class MergeVisitorToContactRequest {
 
     public interface TypeStage {
         /**
-         * Represents the role of the Contact model. Accepts `lead` or `user`.
+         * <p>Represents the role of the Contact model. Accepts <code>lead</code> or <code>user</code>.</p>
          */
         UserStage type(@NotNull String type);
 
@@ -107,14 +107,14 @@ public final class MergeVisitorToContactRequest {
 
     public interface UserStage {
         /**
-         * The unique identifiers retained after converting or merging.
+         * <p>The unique identifiers retained after converting or merging.</p>
          */
         VisitorStage user(@NotNull User user);
     }
 
     public interface VisitorStage {
         /**
-         * The unique identifiers to convert a single Visitor.
+         * <p>The unique identifiers to convert a single Visitor.</p>
          */
         _FinalStage visitor(@NotNull Visitor visitor);
     }
@@ -145,7 +145,8 @@ public final class MergeVisitorToContactRequest {
         }
 
         /**
-         * Represents the role of the Contact model. Accepts `lead` or `user`.<p>Represents the role of the Contact model. Accepts <code>lead</code> or <code>user</code>.</p>
+         * <p>Represents the role of the Contact model. Accepts <code>lead</code> or <code>user</code>.</p>
+         * <p>Represents the role of the Contact model. Accepts <code>lead</code> or <code>user</code>.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -156,7 +157,8 @@ public final class MergeVisitorToContactRequest {
         }
 
         /**
-         * The unique identifiers retained after converting or merging.<p>The unique identifiers retained after converting or merging.</p>
+         * <p>The unique identifiers retained after converting or merging.</p>
+         * <p>The unique identifiers retained after converting or merging.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -167,7 +169,8 @@ public final class MergeVisitorToContactRequest {
         }
 
         /**
-         * The unique identifiers to convert a single Visitor.<p>The unique identifiers to convert a single Visitor.</p>
+         * <p>The unique identifiers to convert a single Visitor.</p>
+         * <p>The unique identifiers to convert a single Visitor.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -253,11 +256,11 @@ public final class MergeVisitorToContactRequest {
                 Object value = p.readValueAs(Object.class);
                 try {
                     return of(ObjectMappers.JSON_MAPPER.convertValue(value, UserWithId.class));
-                } catch (IllegalArgumentException e) {
+                } catch (RuntimeException e) {
                 }
                 try {
                     return of(ObjectMappers.JSON_MAPPER.convertValue(value, UserWithUserId.class));
-                } catch (IllegalArgumentException e) {
+                } catch (RuntimeException e) {
                 }
                 throw new JsonParseException(p, "Failed to deserialize");
             }
@@ -325,7 +328,7 @@ public final class MergeVisitorToContactRequest {
 
             public interface IdStage {
                 /**
-                 * The unique identifier for the contact which is given by Intercom.
+                 * <p>The unique identifier for the contact which is given by Intercom.</p>
                  */
                 _FinalStage id(@NotNull String id);
 
@@ -362,7 +365,8 @@ public final class MergeVisitorToContactRequest {
                 }
 
                 /**
-                 * The unique identifier for the contact which is given by Intercom.<p>The unique identifier for the contact which is given by Intercom.</p>
+                 * <p>The unique identifier for the contact which is given by Intercom.</p>
+                 * <p>The unique identifier for the contact which is given by Intercom.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override
@@ -461,7 +465,7 @@ public final class MergeVisitorToContactRequest {
 
             public interface UserIdStage {
                 /**
-                 * A unique identifier for the contact which is given to Intercom.
+                 * <p>A unique identifier for the contact which is given to Intercom.</p>
                  */
                 _FinalStage userId(@NotNull String userId);
 
@@ -498,7 +502,8 @@ public final class MergeVisitorToContactRequest {
                 }
 
                 /**
-                 * A unique identifier for the contact which is given to Intercom.<p>A unique identifier for the contact which is given to Intercom.</p>
+                 * <p>A unique identifier for the contact which is given to Intercom.</p>
+                 * <p>A unique identifier for the contact which is given to Intercom.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override
@@ -614,15 +619,15 @@ public final class MergeVisitorToContactRequest {
                 Object value = p.readValueAs(Object.class);
                 try {
                     return of(ObjectMappers.JSON_MAPPER.convertValue(value, VisitorWithId.class));
-                } catch (IllegalArgumentException e) {
+                } catch (RuntimeException e) {
                 }
                 try {
                     return of(ObjectMappers.JSON_MAPPER.convertValue(value, VisitorWithUserId.class));
-                } catch (IllegalArgumentException e) {
+                } catch (RuntimeException e) {
                 }
                 try {
                     return of(ObjectMappers.JSON_MAPPER.convertValue(value, VisitorWithEmail.class));
-                } catch (IllegalArgumentException e) {
+                } catch (RuntimeException e) {
                 }
                 throw new JsonParseException(p, "Failed to deserialize");
             }
@@ -679,7 +684,7 @@ public final class MergeVisitorToContactRequest {
 
             public interface EmailStage {
                 /**
-                 * The visitor's email.
+                 * <p>The visitor's email.</p>
                  */
                 _FinalStage email(@NotNull String email);
 
@@ -706,7 +711,8 @@ public final class MergeVisitorToContactRequest {
                 }
 
                 /**
-                 * The visitor's email.<p>The visitor's email.</p>
+                 * <p>The visitor's email.</p>
+                 * <p>The visitor's email.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override
@@ -774,7 +780,7 @@ public final class MergeVisitorToContactRequest {
 
             public interface IdStage {
                 /**
-                 * The unique identifier for the contact which is given by Intercom.
+                 * <p>The unique identifier for the contact which is given by Intercom.</p>
                  */
                 _FinalStage id(@NotNull String id);
 
@@ -801,7 +807,8 @@ public final class MergeVisitorToContactRequest {
                 }
 
                 /**
-                 * The unique identifier for the contact which is given by Intercom.<p>The unique identifier for the contact which is given by Intercom.</p>
+                 * <p>The unique identifier for the contact which is given by Intercom.</p>
+                 * <p>The unique identifier for the contact which is given by Intercom.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override
@@ -869,7 +876,7 @@ public final class MergeVisitorToContactRequest {
 
             public interface UserIdStage {
                 /**
-                 * A unique identifier for the contact which is given to Intercom.
+                 * <p>A unique identifier for the contact which is given to Intercom.</p>
                  */
                 _FinalStage userId(@NotNull String userId);
 
@@ -896,7 +903,8 @@ public final class MergeVisitorToContactRequest {
                 }
 
                 /**
-                 * A unique identifier for the contact which is given to Intercom.<p>A unique identifier for the contact which is given to Intercom.</p>
+                 * <p>A unique identifier for the contact which is given to Intercom.</p>
+                 * <p>A unique identifier for the contact which is given to Intercom.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override

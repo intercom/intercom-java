@@ -22,6 +22,7 @@ import com.intercom.api.resources.unstable.messages.types.Message;
 import com.intercom.api.resources.unstable.types.Error;
 import com.intercom.api.resources.unstable.types.WhatsappMessageStatusList;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -42,7 +43,7 @@ public class AsyncRawMessagesClient {
     }
 
     /**
-     * You can create a message that has been initiated by an admin. The conversation can be either an in-app message, an email or sms.
+     * You can create a message that has been initiated by an admin. The conversation can be either an in-app message, an email, sms or whatsapp.
      * <blockquote>
      * <p>🚧 Sending for visitors</p>
      * <p>There can be a short delay between when a contact is created and when a contact becomes available to be messaged through the API. A 404 Not Found error will be returned in this case.</p>
@@ -53,12 +54,28 @@ public class AsyncRawMessagesClient {
      * <p>As this is a message, there will be no conversation present until the contact responds. Once they do, you will have to search for a contact's conversations with the id of the message.</p>
      * </blockquote>
      */
-    public CompletableFuture<IntercomHttpResponse<Message>> createMessage(Object request) {
+    public CompletableFuture<IntercomHttpResponse<Message>> createMessage() {
+        return createMessage(Optional.empty());
+    }
+
+    /**
+     * You can create a message that has been initiated by an admin. The conversation can be either an in-app message, an email, sms or whatsapp.
+     * <blockquote>
+     * <p>🚧 Sending for visitors</p>
+     * <p>There can be a short delay between when a contact is created and when a contact becomes available to be messaged through the API. A 404 Not Found error will be returned in this case.</p>
+     * </blockquote>
+     * <p>This will return the Message model that has been created.</p>
+     * <blockquote>
+     * <p>🚧 Retrieving Associated Conversations</p>
+     * <p>As this is a message, there will be no conversation present until the contact responds. Once they do, you will have to search for a contact's conversations with the id of the message.</p>
+     * </blockquote>
+     */
+    public CompletableFuture<IntercomHttpResponse<Message>> createMessage(Optional<Object> request) {
         return createMessage(request, null);
     }
 
     /**
-     * You can create a message that has been initiated by an admin. The conversation can be either an in-app message, an email or sms.
+     * You can create a message that has been initiated by an admin. The conversation can be either an in-app message, an email, sms or whatsapp.
      * <blockquote>
      * <p>🚧 Sending for visitors</p>
      * <p>There can be a short delay between when a contact is created and when a contact becomes available to be messaged through the API. A 404 Not Found error will be returned in this case.</p>
@@ -70,15 +87,18 @@ public class AsyncRawMessagesClient {
      * </blockquote>
      */
     public CompletableFuture<IntercomHttpResponse<Message>> createMessage(
-            Object request, RequestOptions requestOptions) {
+            Optional<Object> request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("messages")
                 .build();
         RequestBody body;
         try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+            body = RequestBody.create("", null);
+            if (request.isPresent()) {
+                body = RequestBody.create(
+                        ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+            }
         } catch (JsonProcessingException e) {
             throw new IntercomException("Failed to serialize request", e);
         }
@@ -98,12 +118,12 @@ public class AsyncRawMessagesClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Message.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Message.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -130,11 +150,9 @@ public class AsyncRawMessagesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -172,7 +190,7 @@ public class AsyncRawMessagesClient {
         QueryStringMapper.addQueryParameter(httpUrl, "ruleset_id", request.getRulesetId(), false);
         if (request.getPerPage().isPresent()) {
             QueryStringMapper.addQueryParameter(
-                    httpUrl, "per_page", request.getPerPage().get().toString(), false);
+                    httpUrl, "per_page", request.getPerPage().get(), false);
         }
         if (request.getStartingAfter().isPresent()) {
             QueryStringMapper.addQueryParameter(
@@ -182,7 +200,6 @@ public class AsyncRawMessagesClient {
                 .url(httpUrl.build())
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -194,14 +211,14 @@ public class AsyncRawMessagesClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
                                 ObjectMappers.JSON_MAPPER.readValue(
-                                        responseBody.string(), WhatsappMessageStatusList.class),
+                                        responseBodyString, WhatsappMessageStatusList.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -228,11 +245,9 @@ public class AsyncRawMessagesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));

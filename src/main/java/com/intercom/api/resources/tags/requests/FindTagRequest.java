@@ -67,7 +67,7 @@ public final class FindTagRequest {
 
     public interface TagIdStage {
         /**
-         * The unique identifier of a given tag
+         * <p>The unique identifier of a given tag</p>
          */
         _FinalStage tagId(@NotNull String tagId);
 
@@ -94,7 +94,8 @@ public final class FindTagRequest {
         }
 
         /**
-         * The unique identifier of a given tag<p>The unique identifier of a given tag</p>
+         * <p>The unique identifier of a given tag</p>
+         * <p>The unique identifier of a given tag</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

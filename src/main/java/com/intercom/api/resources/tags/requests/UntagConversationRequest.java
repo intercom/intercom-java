@@ -44,7 +44,7 @@ public final class UntagConversationRequest {
     }
 
     /**
-     * @return id
+     * @return tag_id
      */
     @JsonProperty("tag_id")
     public String getTagId() {
@@ -92,7 +92,7 @@ public final class UntagConversationRequest {
 
     public interface ConversationIdStage {
         /**
-         * conversation_id
+         * <p>conversation_id</p>
          */
         TagIdStage conversationId(@NotNull String conversationId);
 
@@ -101,14 +101,14 @@ public final class UntagConversationRequest {
 
     public interface TagIdStage {
         /**
-         * id
+         * <p>tag_id</p>
          */
         AdminIdStage tagId(@NotNull String tagId);
     }
 
     public interface AdminIdStage {
         /**
-         * The unique identifier for the admin which is given by Intercom.
+         * <p>The unique identifier for the admin which is given by Intercom.</p>
          */
         _FinalStage adminId(@NotNull String adminId);
     }
@@ -139,7 +139,8 @@ public final class UntagConversationRequest {
         }
 
         /**
-         * conversation_id<p>conversation_id</p>
+         * <p>conversation_id</p>
+         * <p>conversation_id</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -150,7 +151,8 @@ public final class UntagConversationRequest {
         }
 
         /**
-         * id<p>id</p>
+         * <p>tag_id</p>
+         * <p>tag_id</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -161,7 +163,8 @@ public final class UntagConversationRequest {
         }
 
         /**
-         * The unique identifier for the admin which is given by Intercom.<p>The unique identifier for the admin which is given by Intercom.</p>
+         * <p>The unique identifier for the admin which is given by Intercom.</p>
+         * <p>The unique identifier for the admin which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

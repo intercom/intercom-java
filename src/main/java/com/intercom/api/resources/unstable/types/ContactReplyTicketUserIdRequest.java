@@ -134,7 +134,7 @@ public final class ContactReplyTicketUserIdRequest implements IContactReplyBaseR
 
     public interface BodyStage {
         /**
-         * The text body of the comment.
+         * <p>The text body of the comment.</p>
          */
         UserIdStage body(@NotNull String body);
 
@@ -143,7 +143,7 @@ public final class ContactReplyTicketUserIdRequest implements IContactReplyBaseR
 
     public interface UserIdStage {
         /**
-         * The external_id you have defined for the contact.
+         * <p>The external_id you have defined for the contact.</p>
          */
         _FinalStage userId(@NotNull String userId);
     }
@@ -201,7 +201,8 @@ public final class ContactReplyTicketUserIdRequest implements IContactReplyBaseR
         }
 
         /**
-         * The text body of the comment.<p>The text body of the comment.</p>
+         * <p>The text body of the comment.</p>
+         * <p>The text body of the comment.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -212,7 +213,8 @@ public final class ContactReplyTicketUserIdRequest implements IContactReplyBaseR
         }
 
         /**
-         * The external_id you have defined for the contact.<p>The external_id you have defined for the contact.</p>
+         * <p>The external_id you have defined for the contact.</p>
+         * <p>The external_id you have defined for the contact.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -351,7 +353,7 @@ public final class ContactReplyTicketUserIdRequest implements IContactReplyBaseR
 
         public interface TextStage {
             /**
-             * The text of the chosen reply option.
+             * <p>The text of the chosen reply option.</p>
              */
             UuidStage text(@NotNull String text);
 
@@ -360,7 +362,7 @@ public final class ContactReplyTicketUserIdRequest implements IContactReplyBaseR
 
         public interface UuidStage {
             /**
-             * The unique identifier for the quick reply option selected.
+             * <p>The unique identifier for the quick reply option selected.</p>
              */
             _FinalStage uuid(@NotNull String uuid);
         }
@@ -388,7 +390,8 @@ public final class ContactReplyTicketUserIdRequest implements IContactReplyBaseR
             }
 
             /**
-             * The text of the chosen reply option.<p>The text of the chosen reply option.</p>
+             * <p>The text of the chosen reply option.</p>
+             * <p>The text of the chosen reply option.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -399,7 +402,8 @@ public final class ContactReplyTicketUserIdRequest implements IContactReplyBaseR
             }
 
             /**
-             * The unique identifier for the quick reply option selected.<p>The unique identifier for the quick reply option selected.</p>
+             * <p>The unique identifier for the quick reply option selected.</p>
+             * <p>The unique identifier for the quick reply option selected.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override

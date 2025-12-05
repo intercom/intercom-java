@@ -97,7 +97,7 @@ public final class NotFoundErrorBody {
 
     public interface TypeStage {
         /**
-         * The type is error.list
+         * <p>The type is error.list</p>
          */
         _FinalStage type(@NotNull String type);
 
@@ -143,7 +143,8 @@ public final class NotFoundErrorBody {
         }
 
         /**
-         * The type is error.list<p>The type is error.list</p>
+         * <p>The type is error.list</p>
+         * <p>The type is error.list</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -159,7 +160,9 @@ public final class NotFoundErrorBody {
          */
         @java.lang.Override
         public _FinalStage addAllErrors(List<ErrorsItem> errors) {
-            this.errors.addAll(errors);
+            if (errors != null) {
+                this.errors.addAll(errors);
+            }
             return this;
         }
 
@@ -180,7 +183,9 @@ public final class NotFoundErrorBody {
         @JsonSetter(value = "errors", nulls = Nulls.SKIP)
         public _FinalStage errors(List<ErrorsItem> errors) {
             this.errors.clear();
-            this.errors.addAll(errors);
+            if (errors != null) {
+                this.errors.addAll(errors);
+            }
             return this;
         }
 
@@ -268,7 +273,7 @@ public final class NotFoundErrorBody {
 
         public interface CodeStage {
             /**
-             * ticket_not_found
+             * <p>ticket_not_found</p>
              */
             _FinalStage code(@NotNull String code);
 
@@ -305,7 +310,8 @@ public final class NotFoundErrorBody {
             }
 
             /**
-             * ticket_not_found<p>ticket_not_found</p>
+             * <p>ticket_not_found</p>
+             * <p>ticket_not_found</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override

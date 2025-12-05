@@ -16,28 +16,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = DataExportCsv.Builder.class)
 public final class DataExportCsv {
-    private final String userId;
+    private final Optional<String> userId;
 
     private final Optional<String> userExternalId;
 
-    private final String companyId;
+    private final Optional<String> companyId;
 
-    private final String email;
+    private final Optional<String> email;
 
-    private final String name;
+    private final Optional<String> name;
 
-    private final String rulesetId;
+    private final Optional<String> rulesetId;
 
-    private final String contentId;
+    private final Optional<String> contentId;
 
-    private final String contentType;
+    private final Optional<String> contentType;
 
-    private final String contentTitle;
+    private final Optional<String> contentTitle;
 
     private final Optional<String> rulesetVersionId;
 
@@ -76,15 +75,15 @@ public final class DataExportCsv {
     private final Map<String, Object> additionalProperties;
 
     private DataExportCsv(
-            String userId,
+            Optional<String> userId,
             Optional<String> userExternalId,
-            String companyId,
-            String email,
-            String name,
-            String rulesetId,
-            String contentId,
-            String contentType,
-            String contentTitle,
+            Optional<String> companyId,
+            Optional<String> email,
+            Optional<String> name,
+            Optional<String> rulesetId,
+            Optional<String> contentId,
+            Optional<String> contentType,
+            Optional<String> contentTitle,
             Optional<String> rulesetVersionId,
             Optional<String> receiptId,
             Optional<Integer> receivedAt,
@@ -136,7 +135,7 @@ public final class DataExportCsv {
      * @return The user_id of the user who was sent the message.
      */
     @JsonProperty("user_id")
-    public String getUserId() {
+    public Optional<String> getUserId() {
         return userId;
     }
 
@@ -152,7 +151,7 @@ public final class DataExportCsv {
      * @return The company ID of the user in relation to the message that was sent. Will return -1 if no company is present.
      */
     @JsonProperty("company_id")
-    public String getCompanyId() {
+    public Optional<String> getCompanyId() {
         return companyId;
     }
 
@@ -160,7 +159,7 @@ public final class DataExportCsv {
      * @return The users email who was sent the message.
      */
     @JsonProperty("email")
-    public String getEmail() {
+    public Optional<String> getEmail() {
         return email;
     }
 
@@ -168,7 +167,7 @@ public final class DataExportCsv {
      * @return The full name of the user receiving the message
      */
     @JsonProperty("name")
-    public String getName() {
+    public Optional<String> getName() {
         return name;
     }
 
@@ -176,7 +175,7 @@ public final class DataExportCsv {
      * @return The id of the message.
      */
     @JsonProperty("ruleset_id")
-    public String getRulesetId() {
+    public Optional<String> getRulesetId() {
         return rulesetId;
     }
 
@@ -184,7 +183,7 @@ public final class DataExportCsv {
      * @return The specific content that was received. In an A/B test each version has its own Content ID.
      */
     @JsonProperty("content_id")
-    public String getContentId() {
+    public Optional<String> getContentId() {
         return contentId;
     }
 
@@ -192,7 +191,7 @@ public final class DataExportCsv {
      * @return Email, Chat, Post etc.
      */
     @JsonProperty("content_type")
-    public String getContentType() {
+    public Optional<String> getContentType() {
         return contentType;
     }
 
@@ -200,7 +199,7 @@ public final class DataExportCsv {
      * @return The title of the content you see in your Intercom workspace.
      */
     @JsonProperty("content_title")
-    public String getContentTitle() {
+    public Optional<String> getContentTitle() {
         return contentTitle;
     }
 
@@ -416,267 +415,69 @@ public final class DataExportCsv {
         return ObjectMappers.stringify(this);
     }
 
-    public static UserIdStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface UserIdStage {
-        /**
-         * The user_id of the user who was sent the message.
-         */
-        CompanyIdStage userId(@NotNull String userId);
-
-        Builder from(DataExportCsv other);
-    }
-
-    public interface CompanyIdStage {
-        /**
-         * The company ID of the user in relation to the message that was sent. Will return -1 if no company is present.
-         */
-        EmailStage companyId(@NotNull String companyId);
-    }
-
-    public interface EmailStage {
-        /**
-         * The users email who was sent the message.
-         */
-        NameStage email(@NotNull String email);
-    }
-
-    public interface NameStage {
-        /**
-         * The full name of the user receiving the message
-         */
-        RulesetIdStage name(@NotNull String name);
-    }
-
-    public interface RulesetIdStage {
-        /**
-         * The id of the message.
-         */
-        ContentIdStage rulesetId(@NotNull String rulesetId);
-    }
-
-    public interface ContentIdStage {
-        /**
-         * The specific content that was received. In an A/B test each version has its own Content ID.
-         */
-        ContentTypeStage contentId(@NotNull String contentId);
-    }
-
-    public interface ContentTypeStage {
-        /**
-         * Email, Chat, Post etc.
-         */
-        ContentTitleStage contentType(@NotNull String contentType);
-    }
-
-    public interface ContentTitleStage {
-        /**
-         * The title of the content you see in your Intercom workspace.
-         */
-        _FinalStage contentTitle(@NotNull String contentTitle);
-    }
-
-    public interface _FinalStage {
-        DataExportCsv build();
-
-        /**
-         * <p>The external_user_id of the user who was sent the message</p>
-         */
-        _FinalStage userExternalId(Optional<String> userExternalId);
-
-        _FinalStage userExternalId(String userExternalId);
-
-        /**
-         * <p>As you edit content we record new versions. This ID can help you determine which version of a piece of content that was received.</p>
-         */
-        _FinalStage rulesetVersionId(Optional<String> rulesetVersionId);
-
-        _FinalStage rulesetVersionId(String rulesetVersionId);
-
-        /**
-         * <p>ID for this receipt. Will be included with any related stats in other files to identify this specific delivery of a message.</p>
-         */
-        _FinalStage receiptId(Optional<String> receiptId);
-
-        _FinalStage receiptId(String receiptId);
-
-        /**
-         * <p>Timestamp for when the receipt was recorded.</p>
-         */
-        _FinalStage receivedAt(Optional<Integer> receivedAt);
-
-        _FinalStage receivedAt(Integer receivedAt);
-
-        /**
-         * <p>The id of the series that this content is part of. Will return -1 if not part of a series.</p>
-         */
-        _FinalStage seriesId(Optional<String> seriesId);
-
-        _FinalStage seriesId(String seriesId);
-
-        /**
-         * <p>The title of the series that this content is part of.</p>
-         */
-        _FinalStage seriesTitle(Optional<String> seriesTitle);
-
-        _FinalStage seriesTitle(String seriesTitle);
-
-        /**
-         * <p>The id of the series node that this ruleset is associated with. Each block in a series has a corresponding node_id.</p>
-         */
-        _FinalStage nodeId(Optional<String> nodeId);
-
-        _FinalStage nodeId(String nodeId);
-
-        /**
-         * <p>The first time a user replied to this message if the content was able to receive replies.</p>
-         */
-        _FinalStage firstReply(Optional<Integer> firstReply);
-
-        _FinalStage firstReply(Integer firstReply);
-
-        /**
-         * <p>The first time a user completed this message if the content was able to be completed e.g. Tours, Surveys.</p>
-         */
-        _FinalStage firstCompletion(Optional<Integer> firstCompletion);
-
-        _FinalStage firstCompletion(Integer firstCompletion);
-
-        /**
-         * <p>The first time the series this message was a part of was completed by the user.</p>
-         */
-        _FinalStage firstSeriesCompletion(Optional<Integer> firstSeriesCompletion);
-
-        _FinalStage firstSeriesCompletion(Integer firstSeriesCompletion);
-
-        /**
-         * <p>The first time the series this message was a part of was disengaged by the user.</p>
-         */
-        _FinalStage firstSeriesDisengagement(Optional<Integer> firstSeriesDisengagement);
-
-        _FinalStage firstSeriesDisengagement(Integer firstSeriesDisengagement);
-
-        /**
-         * <p>The first time the series this message was a part of was exited by the user.</p>
-         */
-        _FinalStage firstSeriesExit(Optional<Integer> firstSeriesExit);
-
-        _FinalStage firstSeriesExit(Integer firstSeriesExit);
-
-        /**
-         * <p>The first time the user met this messages associated goal if one exists.</p>
-         */
-        _FinalStage firstGoalSuccess(Optional<Integer> firstGoalSuccess);
-
-        _FinalStage firstGoalSuccess(Integer firstGoalSuccess);
-
-        /**
-         * <p>The first time the user opened this message.</p>
-         */
-        _FinalStage firstOpen(Optional<Integer> firstOpen);
-
-        _FinalStage firstOpen(Integer firstOpen);
-
-        /**
-         * <p>The first time the series the user clicked on a link within this message.</p>
-         */
-        _FinalStage firstClick(Optional<Integer> firstClick);
-
-        _FinalStage firstClick(Integer firstClick);
-
-        /**
-         * <p>The first time the series the user dismissed this message.</p>
-         */
-        _FinalStage firstDismisall(Optional<Integer> firstDismisall);
-
-        _FinalStage firstDismisall(Integer firstDismisall);
-
-        /**
-         * <p>The first time the user unsubscribed from this message.</p>
-         */
-        _FinalStage firstUnsubscribe(Optional<Integer> firstUnsubscribe);
-
-        _FinalStage firstUnsubscribe(Integer firstUnsubscribe);
-
-        /**
-         * <p>The first time this message hard bounced for this user</p>
-         */
-        _FinalStage firstHardBounce(Optional<Integer> firstHardBounce);
-
-        _FinalStage firstHardBounce(Integer firstHardBounce);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder
-            implements UserIdStage,
-                    CompanyIdStage,
-                    EmailStage,
-                    NameStage,
-                    RulesetIdStage,
-                    ContentIdStage,
-                    ContentTypeStage,
-                    ContentTitleStage,
-                    _FinalStage {
-        private String userId;
+    public static final class Builder {
+        private Optional<String> userId = Optional.empty();
 
-        private String companyId;
+        private Optional<String> userExternalId = Optional.empty();
 
-        private String email;
+        private Optional<String> companyId = Optional.empty();
 
-        private String name;
+        private Optional<String> email = Optional.empty();
 
-        private String rulesetId;
+        private Optional<String> name = Optional.empty();
 
-        private String contentId;
+        private Optional<String> rulesetId = Optional.empty();
 
-        private String contentType;
+        private Optional<String> contentId = Optional.empty();
 
-        private String contentTitle;
+        private Optional<String> contentType = Optional.empty();
 
-        private Optional<Integer> firstHardBounce = Optional.empty();
-
-        private Optional<Integer> firstUnsubscribe = Optional.empty();
-
-        private Optional<Integer> firstDismisall = Optional.empty();
-
-        private Optional<Integer> firstClick = Optional.empty();
-
-        private Optional<Integer> firstOpen = Optional.empty();
-
-        private Optional<Integer> firstGoalSuccess = Optional.empty();
-
-        private Optional<Integer> firstSeriesExit = Optional.empty();
-
-        private Optional<Integer> firstSeriesDisengagement = Optional.empty();
-
-        private Optional<Integer> firstSeriesCompletion = Optional.empty();
-
-        private Optional<Integer> firstCompletion = Optional.empty();
-
-        private Optional<Integer> firstReply = Optional.empty();
-
-        private Optional<String> nodeId = Optional.empty();
-
-        private Optional<String> seriesTitle = Optional.empty();
-
-        private Optional<String> seriesId = Optional.empty();
-
-        private Optional<Integer> receivedAt = Optional.empty();
-
-        private Optional<String> receiptId = Optional.empty();
+        private Optional<String> contentTitle = Optional.empty();
 
         private Optional<String> rulesetVersionId = Optional.empty();
 
-        private Optional<String> userExternalId = Optional.empty();
+        private Optional<String> receiptId = Optional.empty();
+
+        private Optional<Integer> receivedAt = Optional.empty();
+
+        private Optional<String> seriesId = Optional.empty();
+
+        private Optional<String> seriesTitle = Optional.empty();
+
+        private Optional<String> nodeId = Optional.empty();
+
+        private Optional<Integer> firstReply = Optional.empty();
+
+        private Optional<Integer> firstCompletion = Optional.empty();
+
+        private Optional<Integer> firstSeriesCompletion = Optional.empty();
+
+        private Optional<Integer> firstSeriesDisengagement = Optional.empty();
+
+        private Optional<Integer> firstSeriesExit = Optional.empty();
+
+        private Optional<Integer> firstGoalSuccess = Optional.empty();
+
+        private Optional<Integer> firstOpen = Optional.empty();
+
+        private Optional<Integer> firstClick = Optional.empty();
+
+        private Optional<Integer> firstDismisall = Optional.empty();
+
+        private Optional<Integer> firstUnsubscribe = Optional.empty();
+
+        private Optional<Integer> firstHardBounce = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(DataExportCsv other) {
             userId(other.getUserId());
             userExternalId(other.getUserExternalId());
@@ -708,454 +509,369 @@ public final class DataExportCsv {
         }
 
         /**
-         * The user_id of the user who was sent the message.<p>The user_id of the user who was sent the message.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The user_id of the user who was sent the message.</p>
          */
-        @java.lang.Override
-        @JsonSetter("user_id")
-        public CompanyIdStage userId(@NotNull String userId) {
-            this.userId = Objects.requireNonNull(userId, "userId must not be null");
+        @JsonSetter(value = "user_id", nulls = Nulls.SKIP)
+        public Builder userId(Optional<String> userId) {
+            this.userId = userId;
             return this;
         }
 
-        /**
-         * The company ID of the user in relation to the message that was sent. Will return -1 if no company is present.<p>The company ID of the user in relation to the message that was sent. Will return -1 if no company is present.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("company_id")
-        public EmailStage companyId(@NotNull String companyId) {
-            this.companyId = Objects.requireNonNull(companyId, "companyId must not be null");
-            return this;
-        }
-
-        /**
-         * The users email who was sent the message.<p>The users email who was sent the message.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("email")
-        public NameStage email(@NotNull String email) {
-            this.email = Objects.requireNonNull(email, "email must not be null");
-            return this;
-        }
-
-        /**
-         * The full name of the user receiving the message<p>The full name of the user receiving the message</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("name")
-        public RulesetIdStage name(@NotNull String name) {
-            this.name = Objects.requireNonNull(name, "name must not be null");
-            return this;
-        }
-
-        /**
-         * The id of the message.<p>The id of the message.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("ruleset_id")
-        public ContentIdStage rulesetId(@NotNull String rulesetId) {
-            this.rulesetId = Objects.requireNonNull(rulesetId, "rulesetId must not be null");
-            return this;
-        }
-
-        /**
-         * The specific content that was received. In an A/B test each version has its own Content ID.<p>The specific content that was received. In an A/B test each version has its own Content ID.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("content_id")
-        public ContentTypeStage contentId(@NotNull String contentId) {
-            this.contentId = Objects.requireNonNull(contentId, "contentId must not be null");
-            return this;
-        }
-
-        /**
-         * Email, Chat, Post etc.<p>Email, Chat, Post etc.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("content_type")
-        public ContentTitleStage contentType(@NotNull String contentType) {
-            this.contentType = Objects.requireNonNull(contentType, "contentType must not be null");
-            return this;
-        }
-
-        /**
-         * The title of the content you see in your Intercom workspace.<p>The title of the content you see in your Intercom workspace.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("content_title")
-        public _FinalStage contentTitle(@NotNull String contentTitle) {
-            this.contentTitle = Objects.requireNonNull(contentTitle, "contentTitle must not be null");
-            return this;
-        }
-
-        /**
-         * <p>The first time this message hard bounced for this user</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage firstHardBounce(Integer firstHardBounce) {
-            this.firstHardBounce = Optional.ofNullable(firstHardBounce);
-            return this;
-        }
-
-        /**
-         * <p>The first time this message hard bounced for this user</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "first_hard_bounce", nulls = Nulls.SKIP)
-        public _FinalStage firstHardBounce(Optional<Integer> firstHardBounce) {
-            this.firstHardBounce = firstHardBounce;
-            return this;
-        }
-
-        /**
-         * <p>The first time the user unsubscribed from this message.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage firstUnsubscribe(Integer firstUnsubscribe) {
-            this.firstUnsubscribe = Optional.ofNullable(firstUnsubscribe);
-            return this;
-        }
-
-        /**
-         * <p>The first time the user unsubscribed from this message.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "first_unsubscribe", nulls = Nulls.SKIP)
-        public _FinalStage firstUnsubscribe(Optional<Integer> firstUnsubscribe) {
-            this.firstUnsubscribe = firstUnsubscribe;
-            return this;
-        }
-
-        /**
-         * <p>The first time the series the user dismissed this message.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage firstDismisall(Integer firstDismisall) {
-            this.firstDismisall = Optional.ofNullable(firstDismisall);
-            return this;
-        }
-
-        /**
-         * <p>The first time the series the user dismissed this message.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "first_dismisall", nulls = Nulls.SKIP)
-        public _FinalStage firstDismisall(Optional<Integer> firstDismisall) {
-            this.firstDismisall = firstDismisall;
-            return this;
-        }
-
-        /**
-         * <p>The first time the series the user clicked on a link within this message.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage firstClick(Integer firstClick) {
-            this.firstClick = Optional.ofNullable(firstClick);
-            return this;
-        }
-
-        /**
-         * <p>The first time the series the user clicked on a link within this message.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "first_click", nulls = Nulls.SKIP)
-        public _FinalStage firstClick(Optional<Integer> firstClick) {
-            this.firstClick = firstClick;
-            return this;
-        }
-
-        /**
-         * <p>The first time the user opened this message.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage firstOpen(Integer firstOpen) {
-            this.firstOpen = Optional.ofNullable(firstOpen);
-            return this;
-        }
-
-        /**
-         * <p>The first time the user opened this message.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "first_open", nulls = Nulls.SKIP)
-        public _FinalStage firstOpen(Optional<Integer> firstOpen) {
-            this.firstOpen = firstOpen;
-            return this;
-        }
-
-        /**
-         * <p>The first time the user met this messages associated goal if one exists.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage firstGoalSuccess(Integer firstGoalSuccess) {
-            this.firstGoalSuccess = Optional.ofNullable(firstGoalSuccess);
-            return this;
-        }
-
-        /**
-         * <p>The first time the user met this messages associated goal if one exists.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "first_goal_success", nulls = Nulls.SKIP)
-        public _FinalStage firstGoalSuccess(Optional<Integer> firstGoalSuccess) {
-            this.firstGoalSuccess = firstGoalSuccess;
-            return this;
-        }
-
-        /**
-         * <p>The first time the series this message was a part of was exited by the user.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage firstSeriesExit(Integer firstSeriesExit) {
-            this.firstSeriesExit = Optional.ofNullable(firstSeriesExit);
-            return this;
-        }
-
-        /**
-         * <p>The first time the series this message was a part of was exited by the user.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "first_series_exit", nulls = Nulls.SKIP)
-        public _FinalStage firstSeriesExit(Optional<Integer> firstSeriesExit) {
-            this.firstSeriesExit = firstSeriesExit;
-            return this;
-        }
-
-        /**
-         * <p>The first time the series this message was a part of was disengaged by the user.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage firstSeriesDisengagement(Integer firstSeriesDisengagement) {
-            this.firstSeriesDisengagement = Optional.ofNullable(firstSeriesDisengagement);
-            return this;
-        }
-
-        /**
-         * <p>The first time the series this message was a part of was disengaged by the user.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "first_series_disengagement", nulls = Nulls.SKIP)
-        public _FinalStage firstSeriesDisengagement(Optional<Integer> firstSeriesDisengagement) {
-            this.firstSeriesDisengagement = firstSeriesDisengagement;
-            return this;
-        }
-
-        /**
-         * <p>The first time the series this message was a part of was completed by the user.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage firstSeriesCompletion(Integer firstSeriesCompletion) {
-            this.firstSeriesCompletion = Optional.ofNullable(firstSeriesCompletion);
-            return this;
-        }
-
-        /**
-         * <p>The first time the series this message was a part of was completed by the user.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "first_series_completion", nulls = Nulls.SKIP)
-        public _FinalStage firstSeriesCompletion(Optional<Integer> firstSeriesCompletion) {
-            this.firstSeriesCompletion = firstSeriesCompletion;
-            return this;
-        }
-
-        /**
-         * <p>The first time a user completed this message if the content was able to be completed e.g. Tours, Surveys.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage firstCompletion(Integer firstCompletion) {
-            this.firstCompletion = Optional.ofNullable(firstCompletion);
-            return this;
-        }
-
-        /**
-         * <p>The first time a user completed this message if the content was able to be completed e.g. Tours, Surveys.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "first_completion", nulls = Nulls.SKIP)
-        public _FinalStage firstCompletion(Optional<Integer> firstCompletion) {
-            this.firstCompletion = firstCompletion;
-            return this;
-        }
-
-        /**
-         * <p>The first time a user replied to this message if the content was able to receive replies.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage firstReply(Integer firstReply) {
-            this.firstReply = Optional.ofNullable(firstReply);
-            return this;
-        }
-
-        /**
-         * <p>The first time a user replied to this message if the content was able to receive replies.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "first_reply", nulls = Nulls.SKIP)
-        public _FinalStage firstReply(Optional<Integer> firstReply) {
-            this.firstReply = firstReply;
-            return this;
-        }
-
-        /**
-         * <p>The id of the series node that this ruleset is associated with. Each block in a series has a corresponding node_id.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage nodeId(String nodeId) {
-            this.nodeId = Optional.ofNullable(nodeId);
-            return this;
-        }
-
-        /**
-         * <p>The id of the series node that this ruleset is associated with. Each block in a series has a corresponding node_id.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "node_id", nulls = Nulls.SKIP)
-        public _FinalStage nodeId(Optional<String> nodeId) {
-            this.nodeId = nodeId;
-            return this;
-        }
-
-        /**
-         * <p>The title of the series that this content is part of.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage seriesTitle(String seriesTitle) {
-            this.seriesTitle = Optional.ofNullable(seriesTitle);
-            return this;
-        }
-
-        /**
-         * <p>The title of the series that this content is part of.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "series_title", nulls = Nulls.SKIP)
-        public _FinalStage seriesTitle(Optional<String> seriesTitle) {
-            this.seriesTitle = seriesTitle;
-            return this;
-        }
-
-        /**
-         * <p>The id of the series that this content is part of. Will return -1 if not part of a series.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage seriesId(String seriesId) {
-            this.seriesId = Optional.ofNullable(seriesId);
-            return this;
-        }
-
-        /**
-         * <p>The id of the series that this content is part of. Will return -1 if not part of a series.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "series_id", nulls = Nulls.SKIP)
-        public _FinalStage seriesId(Optional<String> seriesId) {
-            this.seriesId = seriesId;
-            return this;
-        }
-
-        /**
-         * <p>Timestamp for when the receipt was recorded.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage receivedAt(Integer receivedAt) {
-            this.receivedAt = Optional.ofNullable(receivedAt);
-            return this;
-        }
-
-        /**
-         * <p>Timestamp for when the receipt was recorded.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "received_at", nulls = Nulls.SKIP)
-        public _FinalStage receivedAt(Optional<Integer> receivedAt) {
-            this.receivedAt = receivedAt;
-            return this;
-        }
-
-        /**
-         * <p>ID for this receipt. Will be included with any related stats in other files to identify this specific delivery of a message.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage receiptId(String receiptId) {
-            this.receiptId = Optional.ofNullable(receiptId);
-            return this;
-        }
-
-        /**
-         * <p>ID for this receipt. Will be included with any related stats in other files to identify this specific delivery of a message.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "receipt_id", nulls = Nulls.SKIP)
-        public _FinalStage receiptId(Optional<String> receiptId) {
-            this.receiptId = receiptId;
-            return this;
-        }
-
-        /**
-         * <p>As you edit content we record new versions. This ID can help you determine which version of a piece of content that was received.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage rulesetVersionId(String rulesetVersionId) {
-            this.rulesetVersionId = Optional.ofNullable(rulesetVersionId);
-            return this;
-        }
-
-        /**
-         * <p>As you edit content we record new versions. This ID can help you determine which version of a piece of content that was received.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "ruleset_version_id", nulls = Nulls.SKIP)
-        public _FinalStage rulesetVersionId(Optional<String> rulesetVersionId) {
-            this.rulesetVersionId = rulesetVersionId;
+        public Builder userId(String userId) {
+            this.userId = Optional.ofNullable(userId);
             return this;
         }
 
         /**
          * <p>The external_user_id of the user who was sent the message</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @java.lang.Override
-        public _FinalStage userExternalId(String userExternalId) {
+        @JsonSetter(value = "user_external_id", nulls = Nulls.SKIP)
+        public Builder userExternalId(Optional<String> userExternalId) {
+            this.userExternalId = userExternalId;
+            return this;
+        }
+
+        public Builder userExternalId(String userExternalId) {
             this.userExternalId = Optional.ofNullable(userExternalId);
             return this;
         }
 
         /**
-         * <p>The external_user_id of the user who was sent the message</p>
+         * <p>The company ID of the user in relation to the message that was sent. Will return -1 if no company is present.</p>
          */
-        @java.lang.Override
-        @JsonSetter(value = "user_external_id", nulls = Nulls.SKIP)
-        public _FinalStage userExternalId(Optional<String> userExternalId) {
-            this.userExternalId = userExternalId;
+        @JsonSetter(value = "company_id", nulls = Nulls.SKIP)
+        public Builder companyId(Optional<String> companyId) {
+            this.companyId = companyId;
             return this;
         }
 
-        @java.lang.Override
+        public Builder companyId(String companyId) {
+            this.companyId = Optional.ofNullable(companyId);
+            return this;
+        }
+
+        /**
+         * <p>The users email who was sent the message.</p>
+         */
+        @JsonSetter(value = "email", nulls = Nulls.SKIP)
+        public Builder email(Optional<String> email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder email(String email) {
+            this.email = Optional.ofNullable(email);
+            return this;
+        }
+
+        /**
+         * <p>The full name of the user receiving the message</p>
+         */
+        @JsonSetter(value = "name", nulls = Nulls.SKIP)
+        public Builder name(Optional<String> name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = Optional.ofNullable(name);
+            return this;
+        }
+
+        /**
+         * <p>The id of the message.</p>
+         */
+        @JsonSetter(value = "ruleset_id", nulls = Nulls.SKIP)
+        public Builder rulesetId(Optional<String> rulesetId) {
+            this.rulesetId = rulesetId;
+            return this;
+        }
+
+        public Builder rulesetId(String rulesetId) {
+            this.rulesetId = Optional.ofNullable(rulesetId);
+            return this;
+        }
+
+        /**
+         * <p>The specific content that was received. In an A/B test each version has its own Content ID.</p>
+         */
+        @JsonSetter(value = "content_id", nulls = Nulls.SKIP)
+        public Builder contentId(Optional<String> contentId) {
+            this.contentId = contentId;
+            return this;
+        }
+
+        public Builder contentId(String contentId) {
+            this.contentId = Optional.ofNullable(contentId);
+            return this;
+        }
+
+        /**
+         * <p>Email, Chat, Post etc.</p>
+         */
+        @JsonSetter(value = "content_type", nulls = Nulls.SKIP)
+        public Builder contentType(Optional<String> contentType) {
+            this.contentType = contentType;
+            return this;
+        }
+
+        public Builder contentType(String contentType) {
+            this.contentType = Optional.ofNullable(contentType);
+            return this;
+        }
+
+        /**
+         * <p>The title of the content you see in your Intercom workspace.</p>
+         */
+        @JsonSetter(value = "content_title", nulls = Nulls.SKIP)
+        public Builder contentTitle(Optional<String> contentTitle) {
+            this.contentTitle = contentTitle;
+            return this;
+        }
+
+        public Builder contentTitle(String contentTitle) {
+            this.contentTitle = Optional.ofNullable(contentTitle);
+            return this;
+        }
+
+        /**
+         * <p>As you edit content we record new versions. This ID can help you determine which version of a piece of content that was received.</p>
+         */
+        @JsonSetter(value = "ruleset_version_id", nulls = Nulls.SKIP)
+        public Builder rulesetVersionId(Optional<String> rulesetVersionId) {
+            this.rulesetVersionId = rulesetVersionId;
+            return this;
+        }
+
+        public Builder rulesetVersionId(String rulesetVersionId) {
+            this.rulesetVersionId = Optional.ofNullable(rulesetVersionId);
+            return this;
+        }
+
+        /**
+         * <p>ID for this receipt. Will be included with any related stats in other files to identify this specific delivery of a message.</p>
+         */
+        @JsonSetter(value = "receipt_id", nulls = Nulls.SKIP)
+        public Builder receiptId(Optional<String> receiptId) {
+            this.receiptId = receiptId;
+            return this;
+        }
+
+        public Builder receiptId(String receiptId) {
+            this.receiptId = Optional.ofNullable(receiptId);
+            return this;
+        }
+
+        /**
+         * <p>Timestamp for when the receipt was recorded.</p>
+         */
+        @JsonSetter(value = "received_at", nulls = Nulls.SKIP)
+        public Builder receivedAt(Optional<Integer> receivedAt) {
+            this.receivedAt = receivedAt;
+            return this;
+        }
+
+        public Builder receivedAt(Integer receivedAt) {
+            this.receivedAt = Optional.ofNullable(receivedAt);
+            return this;
+        }
+
+        /**
+         * <p>The id of the series that this content is part of. Will return -1 if not part of a series.</p>
+         */
+        @JsonSetter(value = "series_id", nulls = Nulls.SKIP)
+        public Builder seriesId(Optional<String> seriesId) {
+            this.seriesId = seriesId;
+            return this;
+        }
+
+        public Builder seriesId(String seriesId) {
+            this.seriesId = Optional.ofNullable(seriesId);
+            return this;
+        }
+
+        /**
+         * <p>The title of the series that this content is part of.</p>
+         */
+        @JsonSetter(value = "series_title", nulls = Nulls.SKIP)
+        public Builder seriesTitle(Optional<String> seriesTitle) {
+            this.seriesTitle = seriesTitle;
+            return this;
+        }
+
+        public Builder seriesTitle(String seriesTitle) {
+            this.seriesTitle = Optional.ofNullable(seriesTitle);
+            return this;
+        }
+
+        /**
+         * <p>The id of the series node that this ruleset is associated with. Each block in a series has a corresponding node_id.</p>
+         */
+        @JsonSetter(value = "node_id", nulls = Nulls.SKIP)
+        public Builder nodeId(Optional<String> nodeId) {
+            this.nodeId = nodeId;
+            return this;
+        }
+
+        public Builder nodeId(String nodeId) {
+            this.nodeId = Optional.ofNullable(nodeId);
+            return this;
+        }
+
+        /**
+         * <p>The first time a user replied to this message if the content was able to receive replies.</p>
+         */
+        @JsonSetter(value = "first_reply", nulls = Nulls.SKIP)
+        public Builder firstReply(Optional<Integer> firstReply) {
+            this.firstReply = firstReply;
+            return this;
+        }
+
+        public Builder firstReply(Integer firstReply) {
+            this.firstReply = Optional.ofNullable(firstReply);
+            return this;
+        }
+
+        /**
+         * <p>The first time a user completed this message if the content was able to be completed e.g. Tours, Surveys.</p>
+         */
+        @JsonSetter(value = "first_completion", nulls = Nulls.SKIP)
+        public Builder firstCompletion(Optional<Integer> firstCompletion) {
+            this.firstCompletion = firstCompletion;
+            return this;
+        }
+
+        public Builder firstCompletion(Integer firstCompletion) {
+            this.firstCompletion = Optional.ofNullable(firstCompletion);
+            return this;
+        }
+
+        /**
+         * <p>The first time the series this message was a part of was completed by the user.</p>
+         */
+        @JsonSetter(value = "first_series_completion", nulls = Nulls.SKIP)
+        public Builder firstSeriesCompletion(Optional<Integer> firstSeriesCompletion) {
+            this.firstSeriesCompletion = firstSeriesCompletion;
+            return this;
+        }
+
+        public Builder firstSeriesCompletion(Integer firstSeriesCompletion) {
+            this.firstSeriesCompletion = Optional.ofNullable(firstSeriesCompletion);
+            return this;
+        }
+
+        /**
+         * <p>The first time the series this message was a part of was disengaged by the user.</p>
+         */
+        @JsonSetter(value = "first_series_disengagement", nulls = Nulls.SKIP)
+        public Builder firstSeriesDisengagement(Optional<Integer> firstSeriesDisengagement) {
+            this.firstSeriesDisengagement = firstSeriesDisengagement;
+            return this;
+        }
+
+        public Builder firstSeriesDisengagement(Integer firstSeriesDisengagement) {
+            this.firstSeriesDisengagement = Optional.ofNullable(firstSeriesDisengagement);
+            return this;
+        }
+
+        /**
+         * <p>The first time the series this message was a part of was exited by the user.</p>
+         */
+        @JsonSetter(value = "first_series_exit", nulls = Nulls.SKIP)
+        public Builder firstSeriesExit(Optional<Integer> firstSeriesExit) {
+            this.firstSeriesExit = firstSeriesExit;
+            return this;
+        }
+
+        public Builder firstSeriesExit(Integer firstSeriesExit) {
+            this.firstSeriesExit = Optional.ofNullable(firstSeriesExit);
+            return this;
+        }
+
+        /**
+         * <p>The first time the user met this messages associated goal if one exists.</p>
+         */
+        @JsonSetter(value = "first_goal_success", nulls = Nulls.SKIP)
+        public Builder firstGoalSuccess(Optional<Integer> firstGoalSuccess) {
+            this.firstGoalSuccess = firstGoalSuccess;
+            return this;
+        }
+
+        public Builder firstGoalSuccess(Integer firstGoalSuccess) {
+            this.firstGoalSuccess = Optional.ofNullable(firstGoalSuccess);
+            return this;
+        }
+
+        /**
+         * <p>The first time the user opened this message.</p>
+         */
+        @JsonSetter(value = "first_open", nulls = Nulls.SKIP)
+        public Builder firstOpen(Optional<Integer> firstOpen) {
+            this.firstOpen = firstOpen;
+            return this;
+        }
+
+        public Builder firstOpen(Integer firstOpen) {
+            this.firstOpen = Optional.ofNullable(firstOpen);
+            return this;
+        }
+
+        /**
+         * <p>The first time the series the user clicked on a link within this message.</p>
+         */
+        @JsonSetter(value = "first_click", nulls = Nulls.SKIP)
+        public Builder firstClick(Optional<Integer> firstClick) {
+            this.firstClick = firstClick;
+            return this;
+        }
+
+        public Builder firstClick(Integer firstClick) {
+            this.firstClick = Optional.ofNullable(firstClick);
+            return this;
+        }
+
+        /**
+         * <p>The first time the series the user dismissed this message.</p>
+         */
+        @JsonSetter(value = "first_dismisall", nulls = Nulls.SKIP)
+        public Builder firstDismisall(Optional<Integer> firstDismisall) {
+            this.firstDismisall = firstDismisall;
+            return this;
+        }
+
+        public Builder firstDismisall(Integer firstDismisall) {
+            this.firstDismisall = Optional.ofNullable(firstDismisall);
+            return this;
+        }
+
+        /**
+         * <p>The first time the user unsubscribed from this message.</p>
+         */
+        @JsonSetter(value = "first_unsubscribe", nulls = Nulls.SKIP)
+        public Builder firstUnsubscribe(Optional<Integer> firstUnsubscribe) {
+            this.firstUnsubscribe = firstUnsubscribe;
+            return this;
+        }
+
+        public Builder firstUnsubscribe(Integer firstUnsubscribe) {
+            this.firstUnsubscribe = Optional.ofNullable(firstUnsubscribe);
+            return this;
+        }
+
+        /**
+         * <p>The first time this message hard bounced for this user</p>
+         */
+        @JsonSetter(value = "first_hard_bounce", nulls = Nulls.SKIP)
+        public Builder firstHardBounce(Optional<Integer> firstHardBounce) {
+            this.firstHardBounce = firstHardBounce;
+            return this;
+        }
+
+        public Builder firstHardBounce(Integer firstHardBounce) {
+            this.firstHardBounce = Optional.ofNullable(firstHardBounce);
+            return this;
+        }
+
         public DataExportCsv build() {
             return new DataExportCsv(
                     userId,

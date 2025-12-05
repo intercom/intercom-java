@@ -80,7 +80,7 @@ public final class Recipient {
 
     public interface TypeStage {
         /**
-         * The role associated to the contact - `user` or `lead`.
+         * <p>The role associated to the contact - <code>user</code> or <code>lead</code>.</p>
          */
         IdStage type(@NotNull Type type);
 
@@ -89,7 +89,7 @@ public final class Recipient {
 
     public interface IdStage {
         /**
-         * The identifier for the contact which is given by Intercom.
+         * <p>The identifier for the contact which is given by Intercom.</p>
          */
         _FinalStage id(@NotNull String id);
     }
@@ -117,7 +117,8 @@ public final class Recipient {
         }
 
         /**
-         * The role associated to the contact - `user` or `lead`.<p>The role associated to the contact - <code>user</code> or <code>lead</code>.</p>
+         * <p>The role associated to the contact - <code>user</code> or <code>lead</code>.</p>
+         * <p>The role associated to the contact - <code>user</code> or <code>lead</code>.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -128,7 +129,8 @@ public final class Recipient {
         }
 
         /**
-         * The identifier for the contact which is given by Intercom.<p>The identifier for the contact which is given by Intercom.</p>
+         * <p>The identifier for the contact which is given by Intercom.</p>
+         * <p>The identifier for the contact which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

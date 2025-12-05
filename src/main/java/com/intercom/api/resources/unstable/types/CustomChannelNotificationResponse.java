@@ -108,7 +108,7 @@ public final class CustomChannelNotificationResponse {
 
     public interface ExternalConversationIdStage {
         /**
-         * The external conversation ID provided in the notification request
+         * <p>The external conversation ID provided in the notification request</p>
          */
         ConversationIdStage externalConversationId(@NotNull String externalConversationId);
 
@@ -117,21 +117,21 @@ public final class CustomChannelNotificationResponse {
 
     public interface ConversationIdStage {
         /**
-         * The Intercom conversation ID mapped to the external conversation ID
+         * <p>The Intercom conversation ID mapped to the external conversation ID</p>
          */
         ExternalContactIdStage conversationId(@NotNull String conversationId);
     }
 
     public interface ExternalContactIdStage {
         /**
-         * The external contact ID provided in the notification request
+         * <p>The external contact ID provided in the notification request</p>
          */
         ContactIdStage externalContactId(@NotNull String externalContactId);
     }
 
     public interface ContactIdStage {
         /**
-         * The Intercom contact ID mapped to the external contact ID
+         * <p>The Intercom contact ID mapped to the external contact ID</p>
          */
         _FinalStage contactId(@NotNull String contactId);
     }
@@ -170,7 +170,8 @@ public final class CustomChannelNotificationResponse {
         }
 
         /**
-         * The external conversation ID provided in the notification request<p>The external conversation ID provided in the notification request</p>
+         * <p>The external conversation ID provided in the notification request</p>
+         * <p>The external conversation ID provided in the notification request</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -182,7 +183,8 @@ public final class CustomChannelNotificationResponse {
         }
 
         /**
-         * The Intercom conversation ID mapped to the external conversation ID<p>The Intercom conversation ID mapped to the external conversation ID</p>
+         * <p>The Intercom conversation ID mapped to the external conversation ID</p>
+         * <p>The Intercom conversation ID mapped to the external conversation ID</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -193,7 +195,8 @@ public final class CustomChannelNotificationResponse {
         }
 
         /**
-         * The external contact ID provided in the notification request<p>The external contact ID provided in the notification request</p>
+         * <p>The external contact ID provided in the notification request</p>
+         * <p>The external contact ID provided in the notification request</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -204,7 +207,8 @@ public final class CustomChannelNotificationResponse {
         }
 
         /**
-         * The Intercom contact ID mapped to the external contact ID<p>The Intercom contact ID mapped to the external contact ID</p>
+         * <p>The Intercom contact ID mapped to the external contact ID</p>
+         * <p>The Intercom contact ID mapped to the external contact ID</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

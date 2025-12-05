@@ -79,7 +79,7 @@ public final class TagMultipleUsersRequest {
 
     public interface NameStage {
         /**
-         * The name of the tag, which will be created if not found.
+         * <p>The name of the tag, which will be created if not found.</p>
          */
         _FinalStage name(@NotNull String name);
 
@@ -115,7 +115,8 @@ public final class TagMultipleUsersRequest {
         }
 
         /**
-         * The name of the tag, which will be created if not found.<p>The name of the tag, which will be created if not found.</p>
+         * <p>The name of the tag, which will be created if not found.</p>
+         * <p>The name of the tag, which will be created if not found.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -127,7 +128,9 @@ public final class TagMultipleUsersRequest {
 
         @java.lang.Override
         public _FinalStage addAllUsers(List<UsersItem> users) {
-            this.users.addAll(users);
+            if (users != null) {
+                this.users.addAll(users);
+            }
             return this;
         }
 
@@ -141,7 +144,9 @@ public final class TagMultipleUsersRequest {
         @JsonSetter(value = "users", nulls = Nulls.SKIP)
         public _FinalStage users(List<UsersItem> users) {
             this.users.clear();
-            this.users.addAll(users);
+            if (users != null) {
+                this.users.addAll(users);
+            }
             return this;
         }
 

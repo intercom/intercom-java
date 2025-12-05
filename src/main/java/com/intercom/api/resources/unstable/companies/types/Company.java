@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
+import com.intercom.api.resources.unstable.notes.types.CompanyNote;
 import com.intercom.api.resources.unstable.segments.types.Segment;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +61,8 @@ public final class Company {
 
     private final Optional<Segments> segments;
 
+    private final Optional<Notes> notes;
+
     private final Map<String, Object> additionalProperties;
 
     private Company(
@@ -82,6 +85,7 @@ public final class Company {
             Optional<Map<String, String>> customAttributes,
             Optional<Tags> tags,
             Optional<Segments> segments,
+            Optional<Notes> notes,
             Map<String, Object> additionalProperties) {
         this.type = type;
         this.id = id;
@@ -102,6 +106,7 @@ public final class Company {
         this.customAttributes = customAttributes;
         this.tags = tags;
         this.segments = segments;
+        this.notes = notes;
         this.additionalProperties = additionalProperties;
     }
 
@@ -254,6 +259,14 @@ public final class Company {
         return segments;
     }
 
+    /**
+     * @return The list of notes associated with the company
+     */
+    @JsonProperty("notes")
+    public Optional<Notes> getNotes() {
+        return notes;
+    }
+
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
@@ -284,7 +297,8 @@ public final class Company {
                 && userCount.equals(other.userCount)
                 && customAttributes.equals(other.customAttributes)
                 && tags.equals(other.tags)
-                && segments.equals(other.segments);
+                && segments.equals(other.segments)
+                && notes.equals(other.notes);
     }
 
     @java.lang.Override
@@ -308,7 +322,8 @@ public final class Company {
                 this.userCount,
                 this.customAttributes,
                 this.tags,
-                this.segments);
+                this.segments,
+                this.notes);
     }
 
     @java.lang.Override
@@ -360,6 +375,8 @@ public final class Company {
 
         private Optional<Segments> segments = Optional.empty();
 
+        private Optional<Notes> notes = Optional.empty();
+
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -385,6 +402,7 @@ public final class Company {
             customAttributes(other.getCustomAttributes());
             tags(other.getTags());
             segments(other.getSegments());
+            notes(other.getNotes());
             return this;
         }
 
@@ -651,6 +669,20 @@ public final class Company {
             return this;
         }
 
+        /**
+         * <p>The list of notes associated with the company</p>
+         */
+        @JsonSetter(value = "notes", nulls = Nulls.SKIP)
+        public Builder notes(Optional<Notes> notes) {
+            this.notes = notes;
+            return this;
+        }
+
+        public Builder notes(Notes notes) {
+            this.notes = Optional.ofNullable(notes);
+            return this;
+        }
+
         public Company build() {
             return new Company(
                     type,
@@ -672,6 +704,7 @@ public final class Company {
                     customAttributes,
                     tags,
                     segments,
+                    notes,
                     additionalProperties);
         }
     }
@@ -1026,6 +1059,112 @@ public final class Company {
 
             public Segments build() {
                 return new Segments(type, segments, additionalProperties);
+            }
+        }
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_ABSENT)
+    @JsonDeserialize(builder = Notes.Builder.class)
+    public static final class Notes {
+        private final Optional<String> type;
+
+        private final Optional<List<CompanyNote>> notes;
+
+        private final Map<String, Object> additionalProperties;
+
+        private Notes(
+                Optional<String> type, Optional<List<CompanyNote>> notes, Map<String, Object> additionalProperties) {
+            this.type = type;
+            this.notes = notes;
+            this.additionalProperties = additionalProperties;
+        }
+
+        /**
+         * @return The type of the object
+         */
+        @JsonProperty("type")
+        public Optional<String> getType() {
+            return type;
+        }
+
+        @JsonProperty("notes")
+        public Optional<List<CompanyNote>> getNotes() {
+            return notes;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            if (this == other) return true;
+            return other instanceof Notes && equalTo((Notes) other);
+        }
+
+        @JsonAnyGetter
+        public Map<String, Object> getAdditionalProperties() {
+            return this.additionalProperties;
+        }
+
+        private boolean equalTo(Notes other) {
+            return type.equals(other.type) && notes.equals(other.notes);
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return Objects.hash(this.type, this.notes);
+        }
+
+        @java.lang.Override
+        public String toString() {
+            return ObjectMappers.stringify(this);
+        }
+
+        public static Builder builder() {
+            return new Builder();
+        }
+
+        @JsonIgnoreProperties(ignoreUnknown = true)
+        public static final class Builder {
+            private Optional<String> type = Optional.empty();
+
+            private Optional<List<CompanyNote>> notes = Optional.empty();
+
+            @JsonAnySetter
+            private Map<String, Object> additionalProperties = new HashMap<>();
+
+            private Builder() {}
+
+            public Builder from(Notes other) {
+                type(other.getType());
+                notes(other.getNotes());
+                return this;
+            }
+
+            /**
+             * <p>The type of the object</p>
+             */
+            @JsonSetter(value = "type", nulls = Nulls.SKIP)
+            public Builder type(Optional<String> type) {
+                this.type = type;
+                return this;
+            }
+
+            public Builder type(String type) {
+                this.type = Optional.ofNullable(type);
+                return this;
+            }
+
+            @JsonSetter(value = "notes", nulls = Nulls.SKIP)
+            public Builder notes(Optional<List<CompanyNote>> notes) {
+                this.notes = notes;
+                return this;
+            }
+
+            public Builder notes(List<CompanyNote> notes) {
+                this.notes = Optional.ofNullable(notes);
+                return this;
+            }
+
+            public Notes build() {
+                return new Notes(type, notes, additionalProperties);
             }
         }
     }

@@ -4,6 +4,7 @@
 package com.intercom.api.resources.phonecallredirects;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.IntercomApiException;
 import com.intercom.api.core.IntercomException;
@@ -14,10 +15,11 @@ import com.intercom.api.core.RequestOptions;
 import com.intercom.api.errors.BadRequestError;
 import com.intercom.api.errors.UnauthorizedError;
 import com.intercom.api.errors.UnprocessableEntityError;
-import com.intercom.api.resources.phonecallredirects.requests.CreatePhoneCallRedirectRequest;
+import com.intercom.api.types.CreatePhoneSwitchRequest;
 import com.intercom.api.types.Error;
 import com.intercom.api.types.PhoneSwitch;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -42,7 +44,17 @@ public class AsyncRawPhoneCallRedirectsClient {
      * Calling this endpoint will send an SMS with a link to the Messenger to the phone number specified.
      * <p>If custom attributes are specified, they will be added to the user or lead's custom data attributes.</p>
      */
-    public CompletableFuture<IntercomHttpResponse<PhoneSwitch>> create(CreatePhoneCallRedirectRequest request) {
+    public CompletableFuture<IntercomHttpResponse<Optional<PhoneSwitch>>> create() {
+        return create(Optional.empty());
+    }
+
+    /**
+     * You can use the API to deflect phone calls to the Intercom Messenger.
+     * Calling this endpoint will send an SMS with a link to the Messenger to the phone number specified.
+     * <p>If custom attributes are specified, they will be added to the user or lead's custom data attributes.</p>
+     */
+    public CompletableFuture<IntercomHttpResponse<Optional<PhoneSwitch>>> create(
+            Optional<CreatePhoneSwitchRequest> request) {
         return create(request, null);
     }
 
@@ -51,16 +63,19 @@ public class AsyncRawPhoneCallRedirectsClient {
      * Calling this endpoint will send an SMS with a link to the Messenger to the phone number specified.
      * <p>If custom attributes are specified, they will be added to the user or lead's custom data attributes.</p>
      */
-    public CompletableFuture<IntercomHttpResponse<PhoneSwitch>> create(
-            CreatePhoneCallRedirectRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<IntercomHttpResponse<Optional<PhoneSwitch>>> create(
+            Optional<CreatePhoneSwitchRequest> request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("phone_call_redirects")
                 .build();
         RequestBody body;
         try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+            body = RequestBody.create("", null);
+            if (request.isPresent()) {
+                body = RequestBody.create(
+                        ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+            }
         } catch (JsonProcessingException e) {
             throw new IntercomException("Failed to serialize request", e);
         }
@@ -75,18 +90,19 @@ public class AsyncRawPhoneCallRedirectsClient {
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<IntercomHttpResponse<PhoneSwitch>> future = new CompletableFuture<>();
+        CompletableFuture<IntercomHttpResponse<Optional<PhoneSwitch>>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), PhoneSwitch.class),
+                                ObjectMappers.JSON_MAPPER.readValue(
+                                        responseBodyString, new TypeReference<Optional<PhoneSwitch>>() {}),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -108,11 +124,9 @@ public class AsyncRawPhoneCallRedirectsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));

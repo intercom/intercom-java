@@ -40,7 +40,7 @@ public final class Collection {
 
     private final int order;
 
-    private final String defaultLocale;
+    private final Optional<String> defaultLocale;
 
     private final Optional<GroupTranslatedContent> translatedContent;
 
@@ -60,7 +60,7 @@ public final class Collection {
             Optional<String> url,
             Optional<String> icon,
             int order,
-            String defaultLocale,
+            Optional<String> defaultLocale,
             Optional<GroupTranslatedContent> translatedContent,
             Optional<String> parentId,
             Optional<Integer> helpCenterId,
@@ -157,7 +157,7 @@ public final class Collection {
      * @return The default locale of the help center. This field is only returned for multilingual help centers.
      */
     @JsonProperty("default_locale")
-    public String getDefaultLocale() {
+    public Optional<String> getDefaultLocale() {
         return defaultLocale;
     }
 
@@ -238,7 +238,7 @@ public final class Collection {
 
     public interface IdStage {
         /**
-         * The unique identifier for the collection which is given by Intercom.
+         * <p>The unique identifier for the collection which is given by Intercom.</p>
          */
         WorkspaceIdStage id(@NotNull String id);
 
@@ -247,37 +247,30 @@ public final class Collection {
 
     public interface WorkspaceIdStage {
         /**
-         * The id of the workspace which the collection belongs to.
+         * <p>The id of the workspace which the collection belongs to.</p>
          */
         NameStage workspaceId(@NotNull String workspaceId);
     }
 
     public interface NameStage {
         /**
-         * The name of the collection. For multilingual collections, this will be the name of the default language's content.
+         * <p>The name of the collection. For multilingual collections, this will be the name of the default language's content.</p>
          */
         CreatedAtStage name(@NotNull String name);
     }
 
     public interface CreatedAtStage {
         /**
-         * The time when the article was created (seconds). For multilingual articles, this will be the timestamp of creation of the default language's content.
+         * <p>The time when the article was created (seconds). For multilingual articles, this will be the timestamp of creation of the default language's content.</p>
          */
         OrderStage createdAt(int createdAt);
     }
 
     public interface OrderStage {
         /**
-         * The order of the section in relation to others sections within a collection. Values go from `0` upwards. `0` is the default if there's no order.
+         * <p>The order of the section in relation to others sections within a collection. Values go from <code>0</code> upwards. <code>0</code> is the default if there's no order.</p>
          */
-        DefaultLocaleStage order(int order);
-    }
-
-    public interface DefaultLocaleStage {
-        /**
-         * The default locale of the help center. This field is only returned for multilingual help centers.
-         */
-        _FinalStage defaultLocale(@NotNull String defaultLocale);
+        _FinalStage order(int order);
     }
 
     public interface _FinalStage {
@@ -311,6 +304,13 @@ public final class Collection {
 
         _FinalStage icon(String icon);
 
+        /**
+         * <p>The default locale of the help center. This field is only returned for multilingual help centers.</p>
+         */
+        _FinalStage defaultLocale(Optional<String> defaultLocale);
+
+        _FinalStage defaultLocale(String defaultLocale);
+
         _FinalStage translatedContent(Optional<GroupTranslatedContent> translatedContent);
 
         _FinalStage translatedContent(GroupTranslatedContent translatedContent);
@@ -332,13 +332,7 @@ public final class Collection {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder
-            implements IdStage,
-                    WorkspaceIdStage,
-                    NameStage,
-                    CreatedAtStage,
-                    OrderStage,
-                    DefaultLocaleStage,
-                    _FinalStage {
+            implements IdStage, WorkspaceIdStage, NameStage, CreatedAtStage, OrderStage, _FinalStage {
         private String id;
 
         private String workspaceId;
@@ -349,13 +343,13 @@ public final class Collection {
 
         private int order;
 
-        private String defaultLocale;
-
         private Optional<Integer> helpCenterId = Optional.empty();
 
         private Optional<String> parentId = Optional.empty();
 
         private Optional<GroupTranslatedContent> translatedContent = Optional.empty();
+
+        private Optional<String> defaultLocale = Optional.empty();
 
         private Optional<String> icon = Optional.empty();
 
@@ -389,7 +383,8 @@ public final class Collection {
         }
 
         /**
-         * The unique identifier for the collection which is given by Intercom.<p>The unique identifier for the collection which is given by Intercom.</p>
+         * <p>The unique identifier for the collection which is given by Intercom.</p>
+         * <p>The unique identifier for the collection which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -400,7 +395,8 @@ public final class Collection {
         }
 
         /**
-         * The id of the workspace which the collection belongs to.<p>The id of the workspace which the collection belongs to.</p>
+         * <p>The id of the workspace which the collection belongs to.</p>
+         * <p>The id of the workspace which the collection belongs to.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -411,7 +407,8 @@ public final class Collection {
         }
 
         /**
-         * The name of the collection. For multilingual collections, this will be the name of the default language's content.<p>The name of the collection. For multilingual collections, this will be the name of the default language's content.</p>
+         * <p>The name of the collection. For multilingual collections, this will be the name of the default language's content.</p>
+         * <p>The name of the collection. For multilingual collections, this will be the name of the default language's content.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -422,7 +419,8 @@ public final class Collection {
         }
 
         /**
-         * The time when the article was created (seconds). For multilingual articles, this will be the timestamp of creation of the default language's content.<p>The time when the article was created (seconds). For multilingual articles, this will be the timestamp of creation of the default language's content.</p>
+         * <p>The time when the article was created (seconds). For multilingual articles, this will be the timestamp of creation of the default language's content.</p>
+         * <p>The time when the article was created (seconds). For multilingual articles, this will be the timestamp of creation of the default language's content.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -433,24 +431,14 @@ public final class Collection {
         }
 
         /**
-         * The order of the section in relation to others sections within a collection. Values go from `0` upwards. `0` is the default if there's no order.<p>The order of the section in relation to others sections within a collection. Values go from <code>0</code> upwards. <code>0</code> is the default if there's no order.</p>
+         * <p>The order of the section in relation to others sections within a collection. Values go from <code>0</code> upwards. <code>0</code> is the default if there's no order.</p>
+         * <p>The order of the section in relation to others sections within a collection. Values go from <code>0</code> upwards. <code>0</code> is the default if there's no order.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
         @JsonSetter("order")
-        public DefaultLocaleStage order(int order) {
+        public _FinalStage order(int order) {
             this.order = order;
-            return this;
-        }
-
-        /**
-         * The default locale of the help center. This field is only returned for multilingual help centers.<p>The default locale of the help center. This field is only returned for multilingual help centers.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("default_locale")
-        public _FinalStage defaultLocale(@NotNull String defaultLocale) {
-            this.defaultLocale = Objects.requireNonNull(defaultLocale, "defaultLocale must not be null");
             return this;
         }
 
@@ -504,6 +492,26 @@ public final class Collection {
         @JsonSetter(value = "translated_content", nulls = Nulls.SKIP)
         public _FinalStage translatedContent(Optional<GroupTranslatedContent> translatedContent) {
             this.translatedContent = translatedContent;
+            return this;
+        }
+
+        /**
+         * <p>The default locale of the help center. This field is only returned for multilingual help centers.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage defaultLocale(String defaultLocale) {
+            this.defaultLocale = Optional.ofNullable(defaultLocale);
+            return this;
+        }
+
+        /**
+         * <p>The default locale of the help center. This field is only returned for multilingual help centers.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "default_locale", nulls = Nulls.SKIP)
+        public _FinalStage defaultLocale(Optional<String> defaultLocale) {
+            this.defaultLocale = defaultLocale;
             return this;
         }
 

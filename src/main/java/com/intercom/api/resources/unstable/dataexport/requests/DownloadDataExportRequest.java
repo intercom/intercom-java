@@ -67,7 +67,7 @@ public final class DownloadDataExportRequest {
 
     public interface JobIdentifierStage {
         /**
-         * job_identifier
+         * <p>job_identifier</p>
          */
         _FinalStage jobIdentifier(@NotNull String jobIdentifier);
 
@@ -94,7 +94,8 @@ public final class DownloadDataExportRequest {
         }
 
         /**
-         * job_identifier<p>job_identifier</p>
+         * <p>job_identifier</p>
+         * <p>job_identifier</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

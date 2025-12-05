@@ -115,14 +115,14 @@ public final class AssignConversationRequest {
 
     public interface AdminIdStage {
         /**
-         * The id of the admin who is performing the action.
+         * <p>The id of the admin who is performing the action.</p>
          */
         AssigneeIdStage adminId(@NotNull String adminId);
     }
 
     public interface AssigneeIdStage {
         /**
-         * The `id` of the `admin` or `team` which will be assigned the conversation. A conversation can be assigned both an admin and a team.\nSet `0` if you want this assign to no admin or team (ie. Unassigned).
+         * <p>The <code>id</code> of the <code>admin</code> or <code>team</code> which will be assigned the conversation. A conversation can be assigned both an admin and a team.\nSet <code>0</code> if you want this assign to no admin or team (ie. Unassigned).</p>
          */
         _FinalStage assigneeId(@NotNull String assigneeId);
     }
@@ -170,7 +170,8 @@ public final class AssignConversationRequest {
         }
 
         /**
-         * The id of the admin who is performing the action.<p>The id of the admin who is performing the action.</p>
+         * <p>The id of the admin who is performing the action.</p>
+         * <p>The id of the admin who is performing the action.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -181,7 +182,8 @@ public final class AssignConversationRequest {
         }
 
         /**
-         * The `id` of the `admin` or `team` which will be assigned the conversation. A conversation can be assigned both an admin and a team.\nSet `0` if you want this assign to no admin or team (ie. Unassigned).<p>The <code>id</code> of the <code>admin</code> or <code>team</code> which will be assigned the conversation. A conversation can be assigned both an admin and a team.\nSet <code>0</code> if you want this assign to no admin or team (ie. Unassigned).</p>
+         * <p>The <code>id</code> of the <code>admin</code> or <code>team</code> which will be assigned the conversation. A conversation can be assigned both an admin and a team.\nSet <code>0</code> if you want this assign to no admin or team (ie. Unassigned).</p>
+         * <p>The <code>id</code> of the <code>admin</code> or <code>team</code> which will be assigned the conversation. A conversation can be assigned both an admin and a team.\nSet <code>0</code> if you want this assign to no admin or team (ie. Unassigned).</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

@@ -16,21 +16,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ContactArchived.Builder.class)
-public final class ContactArchived {
-    private final String id;
+public final class ContactArchived implements IContactReference {
+    private final Optional<String> type;
+
+    private final Optional<String> id;
 
     private final Optional<String> externalId;
 
-    private final boolean archived;
+    private final Optional<Boolean> archived;
 
     private final Map<String, Object> additionalProperties;
 
     private ContactArchived(
-            String id, Optional<String> externalId, boolean archived, Map<String, Object> additionalProperties) {
+            Optional<String> type,
+            Optional<String> id,
+            Optional<String> externalId,
+            Optional<Boolean> archived,
+            Map<String, Object> additionalProperties) {
+        this.type = type;
         this.id = id;
         this.externalId = externalId;
         this.archived = archived;
@@ -41,15 +47,15 @@ public final class ContactArchived {
      * @return always contact
      */
     @JsonProperty("type")
-    public String getType() {
-        return "contact";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The unique identifier for the contact which is given by Intercom.
      */
     @JsonProperty("id")
-    public String getId() {
+    public Optional<String> getId() {
         return id;
     }
 
@@ -65,7 +71,7 @@ public final class ContactArchived {
      * @return Whether the contact is archived or not.
      */
     @JsonProperty("archived")
-    public boolean getArchived() {
+    public Optional<Boolean> getArchived() {
         return archived;
     }
 
@@ -81,12 +87,15 @@ public final class ContactArchived {
     }
 
     private boolean equalTo(ContactArchived other) {
-        return id.equals(other.id) && externalId.equals(other.externalId) && archived == other.archived;
+        return type.equals(other.type)
+                && id.equals(other.id)
+                && externalId.equals(other.externalId)
+                && archived.equals(other.archived);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.id, this.externalId, this.archived);
+        return Objects.hash(this.type, this.id, this.externalId, this.archived);
     }
 
     @java.lang.Override
@@ -94,52 +103,27 @@ public final class ContactArchived {
         return ObjectMappers.stringify(this);
     }
 
-    public static IdStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface IdStage {
-        /**
-         * The unique identifier for the contact which is given by Intercom.
-         */
-        ArchivedStage id(@NotNull String id);
-
-        Builder from(ContactArchived other);
-    }
-
-    public interface ArchivedStage {
-        /**
-         * Whether the contact is archived or not.
-         */
-        _FinalStage archived(boolean archived);
-    }
-
-    public interface _FinalStage {
-        ContactArchived build();
-
-        /**
-         * <p>The unique identifier for the contact which is provided by the Client.</p>
-         */
-        _FinalStage externalId(Optional<String> externalId);
-
-        _FinalStage externalId(String externalId);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements IdStage, ArchivedStage, _FinalStage {
-        private String id;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private boolean archived;
+        private Optional<String> id = Optional.empty();
 
         private Optional<String> externalId = Optional.empty();
+
+        private Optional<Boolean> archived = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(ContactArchived other) {
+            type(other.getType());
             id(other.getId());
             externalId(other.getExternalId());
             archived(other.getArchived());
@@ -147,50 +131,63 @@ public final class ContactArchived {
         }
 
         /**
-         * The unique identifier for the contact which is given by Intercom.<p>The unique identifier for the contact which is given by Intercom.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>always contact</p>
          */
-        @java.lang.Override
-        @JsonSetter("id")
-        public ArchivedStage id(@NotNull String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
-         * Whether the contact is archived or not.<p>Whether the contact is archived or not.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The unique identifier for the contact which is given by Intercom.</p>
          */
-        @java.lang.Override
-        @JsonSetter("archived")
-        public _FinalStage archived(boolean archived) {
-            this.archived = archived;
+        @JsonSetter(value = "id", nulls = Nulls.SKIP)
+        public Builder id(Optional<String> id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder id(String id) {
+            this.id = Optional.ofNullable(id);
             return this;
         }
 
         /**
          * <p>The unique identifier for the contact which is provided by the Client.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @java.lang.Override
-        public _FinalStage externalId(String externalId) {
+        @JsonSetter(value = "external_id", nulls = Nulls.SKIP)
+        public Builder externalId(Optional<String> externalId) {
+            this.externalId = externalId;
+            return this;
+        }
+
+        public Builder externalId(String externalId) {
             this.externalId = Optional.ofNullable(externalId);
             return this;
         }
 
         /**
-         * <p>The unique identifier for the contact which is provided by the Client.</p>
+         * <p>Whether the contact is archived or not.</p>
          */
-        @java.lang.Override
-        @JsonSetter(value = "external_id", nulls = Nulls.SKIP)
-        public _FinalStage externalId(Optional<String> externalId) {
-            this.externalId = externalId;
+        @JsonSetter(value = "archived", nulls = Nulls.SKIP)
+        public Builder archived(Optional<Boolean> archived) {
+            this.archived = archived;
             return this;
         }
 
-        @java.lang.Override
+        public Builder archived(Boolean archived) {
+            this.archived = Optional.ofNullable(archived);
+            return this;
+        }
+
         public ContactArchived build() {
-            return new ContactArchived(id, externalId, archived, additionalProperties);
+            return new ContactArchived(type, id, externalId, archived, additionalProperties);
         }
     }
 }

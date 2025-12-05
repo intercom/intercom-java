@@ -8,6 +8,7 @@ import com.intercom.api.core.RequestOptions;
 import com.intercom.api.resources.tickettypes.attributes.requests.CreateTicketTypeAttributeRequest;
 import com.intercom.api.resources.tickettypes.attributes.requests.UpdateTicketTypeAttributeRequest;
 import com.intercom.api.types.TicketTypeAttribute;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class AsyncAttributesClient {
@@ -30,14 +31,14 @@ public class AsyncAttributesClient {
     /**
      * You can create a new attribute for a ticket type.
      */
-    public CompletableFuture<TicketTypeAttribute> create(CreateTicketTypeAttributeRequest request) {
+    public CompletableFuture<Optional<TicketTypeAttribute>> create(CreateTicketTypeAttributeRequest request) {
         return this.rawClient.create(request).thenApply(response -> response.body());
     }
 
     /**
      * You can create a new attribute for a ticket type.
      */
-    public CompletableFuture<TicketTypeAttribute> create(
+    public CompletableFuture<Optional<TicketTypeAttribute>> create(
             CreateTicketTypeAttributeRequest request, RequestOptions requestOptions) {
         return this.rawClient.create(request, requestOptions).thenApply(response -> response.body());
     }
@@ -45,14 +46,14 @@ public class AsyncAttributesClient {
     /**
      * You can update an existing attribute for a ticket type.
      */
-    public CompletableFuture<TicketTypeAttribute> update(UpdateTicketTypeAttributeRequest request) {
+    public CompletableFuture<Optional<TicketTypeAttribute>> update(UpdateTicketTypeAttributeRequest request) {
         return this.rawClient.update(request).thenApply(response -> response.body());
     }
 
     /**
      * You can update an existing attribute for a ticket type.
      */
-    public CompletableFuture<TicketTypeAttribute> update(
+    public CompletableFuture<Optional<TicketTypeAttribute>> update(
             UpdateTicketTypeAttributeRequest request, RequestOptions requestOptions) {
         return this.rawClient.update(request, requestOptions).thenApply(response -> response.body());
     }

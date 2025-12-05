@@ -16,28 +16,31 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = Newsfeed.Builder.class)
 public final class Newsfeed {
-    private final String id;
+    private final Optional<String> id;
 
-    private final String name;
+    private final Optional<String> type;
 
-    private final int createdAt;
+    private final Optional<String> name;
+
+    private final Optional<Integer> createdAt;
 
     private final Optional<Integer> updatedAt;
 
     private final Map<String, Object> additionalProperties;
 
     private Newsfeed(
-            String id,
-            String name,
-            int createdAt,
+            Optional<String> id,
+            Optional<String> type,
+            Optional<String> name,
+            Optional<Integer> createdAt,
             Optional<Integer> updatedAt,
             Map<String, Object> additionalProperties) {
         this.id = id;
+        this.type = type;
         this.name = name;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -48,7 +51,7 @@ public final class Newsfeed {
      * @return The unique identifier for the newsfeed which is given by Intercom.
      */
     @JsonProperty("id")
-    public String getId() {
+    public Optional<String> getId() {
         return id;
     }
 
@@ -56,15 +59,15 @@ public final class Newsfeed {
      * @return The type of object.
      */
     @JsonProperty("type")
-    public String getType() {
-        return "newsfeed";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The name of the newsfeed. This name will never be visible to your users.
      */
     @JsonProperty("name")
-    public String getName() {
+    public Optional<String> getName() {
         return name;
     }
 
@@ -72,7 +75,7 @@ public final class Newsfeed {
      * @return Timestamp for when the newsfeed was created.
      */
     @JsonProperty("created_at")
-    public int getCreatedAt() {
+    public Optional<Integer> getCreatedAt() {
         return createdAt;
     }
 
@@ -97,14 +100,15 @@ public final class Newsfeed {
 
     private boolean equalTo(Newsfeed other) {
         return id.equals(other.id)
+                && type.equals(other.type)
                 && name.equals(other.name)
-                && createdAt == other.createdAt
+                && createdAt.equals(other.createdAt)
                 && updatedAt.equals(other.updatedAt);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.id, this.name, this.createdAt, this.updatedAt);
+        return Objects.hash(this.id, this.type, this.name, this.createdAt, this.updatedAt);
     }
 
     @java.lang.Override
@@ -112,51 +116,19 @@ public final class Newsfeed {
         return ObjectMappers.stringify(this);
     }
 
-    public static IdStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface IdStage {
-        /**
-         * The unique identifier for the newsfeed which is given by Intercom.
-         */
-        NameStage id(@NotNull String id);
-
-        Builder from(Newsfeed other);
-    }
-
-    public interface NameStage {
-        /**
-         * The name of the newsfeed. This name will never be visible to your users.
-         */
-        CreatedAtStage name(@NotNull String name);
-    }
-
-    public interface CreatedAtStage {
-        /**
-         * Timestamp for when the newsfeed was created.
-         */
-        _FinalStage createdAt(int createdAt);
-    }
-
-    public interface _FinalStage {
-        Newsfeed build();
-
-        /**
-         * <p>Timestamp for when the newsfeed was last updated.</p>
-         */
-        _FinalStage updatedAt(Optional<Integer> updatedAt);
-
-        _FinalStage updatedAt(Integer updatedAt);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements IdStage, NameStage, CreatedAtStage, _FinalStage {
-        private String id;
+    public static final class Builder {
+        private Optional<String> id = Optional.empty();
 
-        private String name;
+        private Optional<String> type = Optional.empty();
 
-        private int createdAt;
+        private Optional<String> name = Optional.empty();
+
+        private Optional<Integer> createdAt = Optional.empty();
 
         private Optional<Integer> updatedAt = Optional.empty();
 
@@ -165,9 +137,9 @@ public final class Newsfeed {
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(Newsfeed other) {
             id(other.getId());
+            type(other.getType());
             name(other.getName());
             createdAt(other.getCreatedAt());
             updatedAt(other.getUpdatedAt());
@@ -175,61 +147,77 @@ public final class Newsfeed {
         }
 
         /**
-         * The unique identifier for the newsfeed which is given by Intercom.<p>The unique identifier for the newsfeed which is given by Intercom.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The unique identifier for the newsfeed which is given by Intercom.</p>
          */
-        @java.lang.Override
-        @JsonSetter("id")
-        public NameStage id(@NotNull String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+        @JsonSetter(value = "id", nulls = Nulls.SKIP)
+        public Builder id(Optional<String> id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder id(String id) {
+            this.id = Optional.ofNullable(id);
             return this;
         }
 
         /**
-         * The name of the newsfeed. This name will never be visible to your users.<p>The name of the newsfeed. This name will never be visible to your users.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The type of object.</p>
          */
-        @java.lang.Override
-        @JsonSetter("name")
-        public CreatedAtStage name(@NotNull String name) {
-            this.name = Objects.requireNonNull(name, "name must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
-         * Timestamp for when the newsfeed was created.<p>Timestamp for when the newsfeed was created.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The name of the newsfeed. This name will never be visible to your users.</p>
          */
-        @java.lang.Override
-        @JsonSetter("created_at")
-        public _FinalStage createdAt(int createdAt) {
+        @JsonSetter(value = "name", nulls = Nulls.SKIP)
+        public Builder name(Optional<String> name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = Optional.ofNullable(name);
+            return this;
+        }
+
+        /**
+         * <p>Timestamp for when the newsfeed was created.</p>
+         */
+        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
+        public Builder createdAt(Optional<Integer> createdAt) {
             this.createdAt = createdAt;
             return this;
         }
 
-        /**
-         * <p>Timestamp for when the newsfeed was last updated.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage updatedAt(Integer updatedAt) {
-            this.updatedAt = Optional.ofNullable(updatedAt);
+        public Builder createdAt(Integer createdAt) {
+            this.createdAt = Optional.ofNullable(createdAt);
             return this;
         }
 
         /**
          * <p>Timestamp for when the newsfeed was last updated.</p>
          */
-        @java.lang.Override
         @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
-        public _FinalStage updatedAt(Optional<Integer> updatedAt) {
+        public Builder updatedAt(Optional<Integer> updatedAt) {
             this.updatedAt = updatedAt;
             return this;
         }
 
-        @java.lang.Override
+        public Builder updatedAt(Integer updatedAt) {
+            this.updatedAt = Optional.ofNullable(updatedAt);
+            return this;
+        }
+
         public Newsfeed build() {
-            return new Newsfeed(id, name, createdAt, updatedAt, additionalProperties);
+            return new Newsfeed(id, type, name, createdAt, updatedAt, additionalProperties);
         }
     }
 }

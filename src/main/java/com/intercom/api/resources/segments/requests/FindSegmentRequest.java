@@ -67,7 +67,7 @@ public final class FindSegmentRequest {
 
     public interface SegmentIdStage {
         /**
-         * The unique identified of a given segment.
+         * <p>The unique identified of a given segment.</p>
          */
         _FinalStage segmentId(@NotNull String segmentId);
 
@@ -94,7 +94,8 @@ public final class FindSegmentRequest {
         }
 
         /**
-         * The unique identified of a given segment.<p>The unique identified of a given segment.</p>
+         * <p>The unique identified of a given segment.</p>
+         * <p>The unique identified of a given segment.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

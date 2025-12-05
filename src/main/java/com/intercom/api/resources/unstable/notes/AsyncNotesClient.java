@@ -6,6 +6,7 @@ package com.intercom.api.resources.unstable.notes;
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.RequestOptions;
 import com.intercom.api.resources.unstable.notes.requests.CreateNoteRequest;
+import com.intercom.api.resources.unstable.notes.requests.ListCompanyNotesRequest;
 import com.intercom.api.resources.unstable.notes.requests.ListNotesRequest;
 import com.intercom.api.resources.unstable.notes.requests.RetrieveNoteRequest;
 import com.intercom.api.resources.unstable.notes.types.Note;
@@ -27,6 +28,21 @@ public class AsyncNotesClient {
      */
     public AsyncRawNotesClient withRawResponse() {
         return this.rawClient;
+    }
+
+    /**
+     * You can fetch a list of notes that are associated to a company.
+     */
+    public CompletableFuture<NoteList> listCompanyNotes(ListCompanyNotesRequest request) {
+        return this.rawClient.listCompanyNotes(request).thenApply(response -> response.body());
+    }
+
+    /**
+     * You can fetch a list of notes that are associated to a company.
+     */
+    public CompletableFuture<NoteList> listCompanyNotes(
+            ListCompanyNotesRequest request, RequestOptions requestOptions) {
+        return this.rawClient.listCompanyNotes(request, requestOptions).thenApply(response -> response.body());
     }
 
     /**

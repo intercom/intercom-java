@@ -78,7 +78,7 @@ public final class CustomChannelAttribute {
 
     public interface IdStage {
         /**
-         * Identifier for the attribute being collected.
+         * <p>Identifier for the attribute being collected.</p>
          */
         ValueStage id(@NotNull String id);
 
@@ -87,7 +87,7 @@ public final class CustomChannelAttribute {
 
     public interface ValueStage {
         /**
-         * Value provided by the user for the attribute.
+         * <p>Value provided by the user for the attribute.</p>
          */
         _FinalStage value(@NotNull String value);
     }
@@ -115,7 +115,8 @@ public final class CustomChannelAttribute {
         }
 
         /**
-         * Identifier for the attribute being collected.<p>Identifier for the attribute being collected.</p>
+         * <p>Identifier for the attribute being collected.</p>
+         * <p>Identifier for the attribute being collected.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -126,7 +127,8 @@ public final class CustomChannelAttribute {
         }
 
         /**
-         * Value provided by the user for the attribute.<p>Value provided by the user for the attribute.</p>
+         * <p>Value provided by the user for the attribute.</p>
+         * <p>Value provided by the user for the attribute.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

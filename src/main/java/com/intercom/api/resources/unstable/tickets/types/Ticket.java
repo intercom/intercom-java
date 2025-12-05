@@ -771,7 +771,7 @@ public final class Ticket {
                 Object value = p.readValueAs(Object.class);
                 try {
                     return of(ObjectMappers.JSON_MAPPER.convertValue(value, new TypeReference<Optional<String>>() {}));
-                } catch (IllegalArgumentException e) {
+                } catch (RuntimeException e) {
                 }
                 if (value instanceof Double) {
                     return of((Double) value);
@@ -781,11 +781,11 @@ public final class Ticket {
                 }
                 try {
                     return of(ObjectMappers.JSON_MAPPER.convertValue(value, new TypeReference<List<Object>>() {}));
-                } catch (IllegalArgumentException e) {
+                } catch (RuntimeException e) {
                 }
                 try {
                     return of(ObjectMappers.JSON_MAPPER.convertValue(value, FileAttribute.class));
-                } catch (IllegalArgumentException e) {
+                } catch (RuntimeException e) {
                 }
                 throw new JsonParseException(p, "Failed to deserialize");
             }

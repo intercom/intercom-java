@@ -81,7 +81,7 @@ public final class ListActivityLogsRequest {
 
     public interface CreatedAtAfterStage {
         /**
-         * The start date that you request data for. It must be formatted as a UNIX timestamp.
+         * <p>The start date that you request data for. It must be formatted as a UNIX timestamp.</p>
          */
         _FinalStage createdAtAfter(@NotNull String createdAtAfter);
 
@@ -118,7 +118,8 @@ public final class ListActivityLogsRequest {
         }
 
         /**
-         * The start date that you request data for. It must be formatted as a UNIX timestamp.<p>The start date that you request data for. It must be formatted as a UNIX timestamp.</p>
+         * <p>The start date that you request data for. It must be formatted as a UNIX timestamp.</p>
+         * <p>The start date that you request data for. It must be formatted as a UNIX timestamp.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

@@ -242,7 +242,7 @@ public final class ExternalPage {
 
     public interface IdStage {
         /**
-         * The unique identifier for the external page which is given by Intercom.
+         * <p>The unique identifier for the external page which is given by Intercom.</p>
          */
         TitleStage id(@NotNull String id);
 
@@ -251,63 +251,63 @@ public final class ExternalPage {
 
     public interface TitleStage {
         /**
-         * The title of the external page.
+         * <p>The title of the external page.</p>
          */
         HtmlStage title(@NotNull String title);
     }
 
     public interface HtmlStage {
         /**
-         * The body of the external page in HTML.
+         * <p>The body of the external page in HTML.</p>
          */
         AiAgentAvailabilityStage html(@NotNull String html);
     }
 
     public interface AiAgentAvailabilityStage {
         /**
-         * Whether the external page should be used to answer questions by AI Agent.
+         * <p>Whether the external page should be used to answer questions by AI Agent.</p>
          */
         AiCopilotAvailabilityStage aiAgentAvailability(boolean aiAgentAvailability);
     }
 
     public interface AiCopilotAvailabilityStage {
         /**
-         * Whether the external page should be used to answer questions by AI Copilot.
+         * <p>Whether the external page should be used to answer questions by AI Copilot.</p>
          */
         SourceIdStage aiCopilotAvailability(boolean aiCopilotAvailability);
     }
 
     public interface SourceIdStage {
         /**
-         * The unique identifier for the source of the external page which was given by Intercom. Every external page must be associated with a Content Import Source which represents the place it comes from and from which it inherits a default audience (configured in the UI). For a new source, make a POST request to the Content Import Source endpoint and an ID for the source will be returned in the response.
+         * <p>The unique identifier for the source of the external page which was given by Intercom. Every external page must be associated with a Content Import Source which represents the place it comes from and from which it inherits a default audience (configured in the UI). For a new source, make a POST request to the Content Import Source endpoint and an ID for the source will be returned in the response.</p>
          */
         ExternalIdStage sourceId(int sourceId);
     }
 
     public interface ExternalIdStage {
         /**
-         * The identifier for the external page which was given by the source. Must be unique for the source.
+         * <p>The identifier for the external page which was given by the source. Must be unique for the source.</p>
          */
         CreatedAtStage externalId(@NotNull String externalId);
     }
 
     public interface CreatedAtStage {
         /**
-         * The time when the external page was created.
+         * <p>The time when the external page was created.</p>
          */
         UpdatedAtStage createdAt(int createdAt);
     }
 
     public interface UpdatedAtStage {
         /**
-         * The time when the external page was last updated.
+         * <p>The time when the external page was last updated.</p>
          */
         LastIngestedAtStage updatedAt(int updatedAt);
     }
 
     public interface LastIngestedAtStage {
         /**
-         * The time when the external page was last ingested.
+         * <p>The time when the external page was last ingested.</p>
          */
         _FinalStage lastIngestedAt(int lastIngestedAt);
     }
@@ -390,7 +390,8 @@ public final class ExternalPage {
         }
 
         /**
-         * The unique identifier for the external page which is given by Intercom.<p>The unique identifier for the external page which is given by Intercom.</p>
+         * <p>The unique identifier for the external page which is given by Intercom.</p>
+         * <p>The unique identifier for the external page which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -401,7 +402,8 @@ public final class ExternalPage {
         }
 
         /**
-         * The title of the external page.<p>The title of the external page.</p>
+         * <p>The title of the external page.</p>
+         * <p>The title of the external page.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -412,7 +414,8 @@ public final class ExternalPage {
         }
 
         /**
-         * The body of the external page in HTML.<p>The body of the external page in HTML.</p>
+         * <p>The body of the external page in HTML.</p>
+         * <p>The body of the external page in HTML.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -423,7 +426,8 @@ public final class ExternalPage {
         }
 
         /**
-         * Whether the external page should be used to answer questions by AI Agent.<p>Whether the external page should be used to answer questions by AI Agent.</p>
+         * <p>Whether the external page should be used to answer questions by AI Agent.</p>
+         * <p>Whether the external page should be used to answer questions by AI Agent.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -434,7 +438,8 @@ public final class ExternalPage {
         }
 
         /**
-         * Whether the external page should be used to answer questions by AI Copilot.<p>Whether the external page should be used to answer questions by AI Copilot.</p>
+         * <p>Whether the external page should be used to answer questions by AI Copilot.</p>
+         * <p>Whether the external page should be used to answer questions by AI Copilot.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -445,7 +450,8 @@ public final class ExternalPage {
         }
 
         /**
-         * The unique identifier for the source of the external page which was given by Intercom. Every external page must be associated with a Content Import Source which represents the place it comes from and from which it inherits a default audience (configured in the UI). For a new source, make a POST request to the Content Import Source endpoint and an ID for the source will be returned in the response.<p>The unique identifier for the source of the external page which was given by Intercom. Every external page must be associated with a Content Import Source which represents the place it comes from and from which it inherits a default audience (configured in the UI). For a new source, make a POST request to the Content Import Source endpoint and an ID for the source will be returned in the response.</p>
+         * <p>The unique identifier for the source of the external page which was given by Intercom. Every external page must be associated with a Content Import Source which represents the place it comes from and from which it inherits a default audience (configured in the UI). For a new source, make a POST request to the Content Import Source endpoint and an ID for the source will be returned in the response.</p>
+         * <p>The unique identifier for the source of the external page which was given by Intercom. Every external page must be associated with a Content Import Source which represents the place it comes from and from which it inherits a default audience (configured in the UI). For a new source, make a POST request to the Content Import Source endpoint and an ID for the source will be returned in the response.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -456,7 +462,8 @@ public final class ExternalPage {
         }
 
         /**
-         * The identifier for the external page which was given by the source. Must be unique for the source.<p>The identifier for the external page which was given by the source. Must be unique for the source.</p>
+         * <p>The identifier for the external page which was given by the source. Must be unique for the source.</p>
+         * <p>The identifier for the external page which was given by the source. Must be unique for the source.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -467,7 +474,8 @@ public final class ExternalPage {
         }
 
         /**
-         * The time when the external page was created.<p>The time when the external page was created.</p>
+         * <p>The time when the external page was created.</p>
+         * <p>The time when the external page was created.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -478,7 +486,8 @@ public final class ExternalPage {
         }
 
         /**
-         * The time when the external page was last updated.<p>The time when the external page was last updated.</p>
+         * <p>The time when the external page was last updated.</p>
+         * <p>The time when the external page was last updated.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -489,7 +498,8 @@ public final class ExternalPage {
         }
 
         /**
-         * The time when the external page was last ingested.<p>The time when the external page was last ingested.</p>
+         * <p>The time when the external page was last ingested.</p>
+         * <p>The time when the external page was last ingested.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
