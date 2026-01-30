@@ -1,10 +1,9 @@
 package com.intercom.api.integration;
 
 import com.intercom.api.Intercom;
-import com.intercom.api.resources.phonecallredirects.requests.CreatePhoneCallRedirectRequest;
+import com.intercom.api.types.CreatePhoneSwitchRequest;
 import com.intercom.api.utils.TestClientFactory;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -21,16 +20,10 @@ public class PhoneCallRedirectTest {
 
     @Test
     public void testCreate() {
-        // arrange
-        Map<String, Object> customAttributes = new HashMap<>();
-        customAttributes.put("issue_type", "Billing");
-        customAttributes.put("priority", "High");
-
-        // assert
+        // act - CreatePhoneSwitchRequest doesn't support customAttributes as Map<String, Object>
         client.phoneCallRedirects()
-                .create(CreatePhoneCallRedirectRequest.builder()
+                .create(Optional.of(CreatePhoneSwitchRequest.builder()
                         .phone("+353832345678")
-                        .customAttributes(customAttributes)
-                        .build());
+                        .build()));
     }
 }

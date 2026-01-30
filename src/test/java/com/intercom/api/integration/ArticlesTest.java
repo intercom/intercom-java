@@ -2,7 +2,7 @@ package com.intercom.api.integration;
 
 import com.intercom.api.Intercom;
 import com.intercom.api.core.pagination.SyncPagingIterable;
-import com.intercom.api.resources.articles.requests.CreateArticleRequest;
+import com.intercom.api.types.CreateArticleRequest;
 import com.intercom.api.resources.articles.requests.DeleteArticleRequest;
 import com.intercom.api.resources.articles.requests.FindArticleRequest;
 import com.intercom.api.resources.articles.requests.ListArticlesRequest;
@@ -26,7 +26,7 @@ public class ArticlesTest {
 
     private Intercom client;
     private Article article;
-    private String articleId;
+    private int articleId;
     private boolean deleteAfter;
 
     @BeforeEach
@@ -39,11 +39,15 @@ public class ArticlesTest {
         AdminList randomAdmins = client.admins().list();
 
         Integer parentId = Integer.parseInt(randomCollections.getItems().get(0).getId());
-        int adminId = Integer.parseInt(randomAdmins.getAdmins().get(0).getId());
+        int adminId = Integer.parseInt(randomAdmins.getAdmins()
+                .orElseThrow(() -> new RuntimeException("Admins list is required"))
+                .get(0)
+                .orElseThrow(() -> new RuntimeException("Admin is required"))
+                .getId());
 
         // act
         article = createArticle(parentId, adminId);
-        articleId = article.getId();
+        articleId = Integer.parseInt(article.getId());
 
         deleteAfter = true;
     }
@@ -108,7 +112,7 @@ public class ArticlesTest {
 
     private Article createArticle(Integer parentId, int adminId) {
         return client.articles()
-                .create(CreateArticleRequest.builder()
+                .create(java.util.Optional.of(CreateArticleRequest.builder()
                         .title(Utils.randomString())
                         .authorId(adminId)
                         .description(Utils.randomString())
@@ -125,10 +129,10 @@ public class ArticlesTest {
                                         .state(ArticleContent.State.DRAFT)
                                         .build())
                                 .build())
-                        .build());
+                        .build()));
     }
 
-    private void tryDeleteArticle(String articleId) {
+    private void tryDeleteArticle(int articleId) {
         try {
             client.articles()
                     .delete(DeleteArticleRequest.builder().articleId(articleId).build());
