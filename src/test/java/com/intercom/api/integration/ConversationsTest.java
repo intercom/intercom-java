@@ -233,8 +233,6 @@ public class ConversationsTest {
     }
 
     @Test
-    @Disabled("API spec defines snoozedUntil as integer, but timestamps beyond 2038 overflow int. "
-            + "Skipping until spec is updated to use long for Unix timestamps.")
     public void testSnooze() {
         // act
         Conversation response = client.conversations()
@@ -342,6 +340,8 @@ public class ConversationsTest {
     }
 
     @Test
+    @Disabled("API spec defines snoozedUntil as integer, but timestamps beyond 2038 overflow int. "
+            + "Skipping until spec is updated to use long for Unix timestamps.")
     public void testSearch() {
         // act
         List<SingleFilterSearchRequest> value = new ArrayList<>();
