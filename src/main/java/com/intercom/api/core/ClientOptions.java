@@ -44,10 +44,10 @@ public final class ClientOptions {
         this.headers.putAll(headers);
         this.headers.putAll(new HashMap<String, String>() {
             {
-                put("User-Agent", "io.intercom:intercom-java/4.0.0");
+                put("User-Agent", "io.intercom:intercom-java/4.0.1");
                 put("X-Fern-Language", "JAVA");
                 put("X-Fern-SDK-Name", "com.intercom.fern:api-sdk");
-                put("X-Fern-SDK-Version", "4.0.0");
+                put("X-Fern-SDK-Version", "4.0.1");
             }
         });
         this.headerSuppliers = headerSuppliers;

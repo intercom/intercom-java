@@ -21,6 +21,7 @@ import com.intercom.api.resources.events.EventsClient;
 import com.intercom.api.resources.export.ExportClient;
 import com.intercom.api.resources.helpcenters.HelpCentersClient;
 import com.intercom.api.resources.internalarticles.InternalArticlesClient;
+import com.intercom.api.resources.ipallowlist.IpAllowlistClient;
 import com.intercom.api.resources.jobs.JobsClient;
 import com.intercom.api.resources.messages.MessagesClient;
 import com.intercom.api.resources.news.NewsClient;
@@ -55,6 +56,8 @@ public class Intercom {
     protected final Supplier<HelpCentersClient> helpCentersClient;
 
     protected final Supplier<InternalArticlesClient> internalArticlesClient;
+
+    protected final Supplier<IpAllowlistClient> ipAllowlistClient;
 
     protected final Supplier<CompaniesClient> companiesClient;
 
@@ -110,6 +113,7 @@ public class Intercom {
         this.dataExportClient = Suppliers.memoize(() -> new DataExportClient(clientOptions));
         this.helpCentersClient = Suppliers.memoize(() -> new HelpCentersClient(clientOptions));
         this.internalArticlesClient = Suppliers.memoize(() -> new InternalArticlesClient(clientOptions));
+        this.ipAllowlistClient = Suppliers.memoize(() -> new IpAllowlistClient(clientOptions));
         this.companiesClient = Suppliers.memoize(() -> new CompaniesClient(clientOptions));
         this.contactsClient = Suppliers.memoize(() -> new ContactsClient(clientOptions));
         this.notesClient = Suppliers.memoize(() -> new NotesClient(clientOptions));
@@ -164,6 +168,10 @@ public class Intercom {
 
     public InternalArticlesClient internalArticles() {
         return this.internalArticlesClient.get();
+    }
+
+    public IpAllowlistClient ipAllowlist() {
+        return this.ipAllowlistClient.get();
     }
 
     public CompaniesClient companies() {

@@ -18,15 +18,15 @@ import java.util.Objects;
 import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
-@JsonDeserialize(builder = ConversationAttributeUpdatedByAdmin.Builder.class)
-public final class ConversationAttributeUpdatedByAdmin {
+@JsonDeserialize(builder = ConversationAttributeUpdatedByUser.Builder.class)
+public final class ConversationAttributeUpdatedByUser {
     private final Optional<Attribute> attribute;
 
     private final Optional<Value> value;
 
     private final Map<String, Object> additionalProperties;
 
-    private ConversationAttributeUpdatedByAdmin(
+    private ConversationAttributeUpdatedByUser(
             Optional<Attribute> attribute, Optional<Value> value, Map<String, Object> additionalProperties) {
         this.attribute = attribute;
         this.value = value;
@@ -46,8 +46,8 @@ public final class ConversationAttributeUpdatedByAdmin {
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
-        return other instanceof ConversationAttributeUpdatedByAdmin
-                && equalTo((ConversationAttributeUpdatedByAdmin) other);
+        return other instanceof ConversationAttributeUpdatedByUser
+                && equalTo((ConversationAttributeUpdatedByUser) other);
     }
 
     @JsonAnyGetter
@@ -55,7 +55,7 @@ public final class ConversationAttributeUpdatedByAdmin {
         return this.additionalProperties;
     }
 
-    private boolean equalTo(ConversationAttributeUpdatedByAdmin other) {
+    private boolean equalTo(ConversationAttributeUpdatedByUser other) {
         return attribute.equals(other.attribute) && value.equals(other.value);
     }
 
@@ -84,7 +84,7 @@ public final class ConversationAttributeUpdatedByAdmin {
 
         private Builder() {}
 
-        public Builder from(ConversationAttributeUpdatedByAdmin other) {
+        public Builder from(ConversationAttributeUpdatedByUser other) {
             attribute(other.getAttribute());
             value(other.getValue());
             return this;
@@ -112,8 +112,119 @@ public final class ConversationAttributeUpdatedByAdmin {
             return this;
         }
 
-        public ConversationAttributeUpdatedByAdmin build() {
-            return new ConversationAttributeUpdatedByAdmin(attribute, value, additionalProperties);
+        public ConversationAttributeUpdatedByUser build() {
+            return new ConversationAttributeUpdatedByUser(attribute, value, additionalProperties);
+        }
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_ABSENT)
+    @JsonDeserialize(builder = Value.Builder.class)
+    public static final class Value {
+        private final Optional<String> name;
+
+        private final Optional<String> previous;
+
+        private final Map<String, Object> additionalProperties;
+
+        private Value(Optional<String> name, Optional<String> previous, Map<String, Object> additionalProperties) {
+            this.name = name;
+            this.previous = previous;
+            this.additionalProperties = additionalProperties;
+        }
+
+        /**
+         * @return Current value of the CDA updated
+         */
+        @JsonProperty("name")
+        public Optional<String> getName() {
+            return name;
+        }
+
+        /**
+         * @return Previous value of the CDA (null for older events)
+         */
+        @JsonProperty("previous")
+        public Optional<String> getPrevious() {
+            return previous;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            if (this == other) return true;
+            return other instanceof Value && equalTo((Value) other);
+        }
+
+        @JsonAnyGetter
+        public Map<String, Object> getAdditionalProperties() {
+            return this.additionalProperties;
+        }
+
+        private boolean equalTo(Value other) {
+            return name.equals(other.name) && previous.equals(other.previous);
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return Objects.hash(this.name, this.previous);
+        }
+
+        @java.lang.Override
+        public String toString() {
+            return ObjectMappers.stringify(this);
+        }
+
+        public static Builder builder() {
+            return new Builder();
+        }
+
+        @JsonIgnoreProperties(ignoreUnknown = true)
+        public static final class Builder {
+            private Optional<String> name = Optional.empty();
+
+            private Optional<String> previous = Optional.empty();
+
+            @JsonAnySetter
+            private Map<String, Object> additionalProperties = new HashMap<>();
+
+            private Builder() {}
+
+            public Builder from(Value other) {
+                name(other.getName());
+                previous(other.getPrevious());
+                return this;
+            }
+
+            /**
+             * <p>Current value of the CDA updated</p>
+             */
+            @JsonSetter(value = "name", nulls = Nulls.SKIP)
+            public Builder name(Optional<String> name) {
+                this.name = name;
+                return this;
+            }
+
+            public Builder name(String name) {
+                this.name = Optional.ofNullable(name);
+                return this;
+            }
+
+            /**
+             * <p>Previous value of the CDA (null for older events)</p>
+             */
+            @JsonSetter(value = "previous", nulls = Nulls.SKIP)
+            public Builder previous(Optional<String> previous) {
+                this.previous = previous;
+                return this;
+            }
+
+            public Builder previous(String previous) {
+                this.previous = Optional.ofNullable(previous);
+                return this;
+            }
+
+            public Value build() {
+                return new Value(name, previous, additionalProperties);
+            }
         }
     }
 
@@ -196,117 +307,6 @@ public final class ConversationAttributeUpdatedByAdmin {
 
             public Attribute build() {
                 return new Attribute(name, additionalProperties);
-            }
-        }
-    }
-
-    @JsonInclude(JsonInclude.Include.NON_ABSENT)
-    @JsonDeserialize(builder = Value.Builder.class)
-    public static final class Value {
-        private final Optional<String> name;
-
-        private final Optional<String> previous;
-
-        private final Map<String, Object> additionalProperties;
-
-        private Value(Optional<String> name, Optional<String> previous, Map<String, Object> additionalProperties) {
-            this.name = name;
-            this.previous = previous;
-            this.additionalProperties = additionalProperties;
-        }
-
-        /**
-         * @return Current value of the CDA updated
-         */
-        @JsonProperty("name")
-        public Optional<String> getName() {
-            return name;
-        }
-
-        /**
-         * @return Previous value of the CDA
-         */
-        @JsonProperty("previous")
-        public Optional<String> getPrevious() {
-            return previous;
-        }
-
-        @java.lang.Override
-        public boolean equals(Object other) {
-            if (this == other) return true;
-            return other instanceof Value && equalTo((Value) other);
-        }
-
-        @JsonAnyGetter
-        public Map<String, Object> getAdditionalProperties() {
-            return this.additionalProperties;
-        }
-
-        private boolean equalTo(Value other) {
-            return name.equals(other.name) && previous.equals(other.previous);
-        }
-
-        @java.lang.Override
-        public int hashCode() {
-            return Objects.hash(this.name, this.previous);
-        }
-
-        @java.lang.Override
-        public String toString() {
-            return ObjectMappers.stringify(this);
-        }
-
-        public static Builder builder() {
-            return new Builder();
-        }
-
-        @JsonIgnoreProperties(ignoreUnknown = true)
-        public static final class Builder {
-            private Optional<String> name = Optional.empty();
-
-            private Optional<String> previous = Optional.empty();
-
-            @JsonAnySetter
-            private Map<String, Object> additionalProperties = new HashMap<>();
-
-            private Builder() {}
-
-            public Builder from(Value other) {
-                name(other.getName());
-                previous(other.getPrevious());
-                return this;
-            }
-
-            /**
-             * <p>Current value of the CDA updated</p>
-             */
-            @JsonSetter(value = "name", nulls = Nulls.SKIP)
-            public Builder name(Optional<String> name) {
-                this.name = name;
-                return this;
-            }
-
-            public Builder name(String name) {
-                this.name = Optional.ofNullable(name);
-                return this;
-            }
-
-            /**
-             * <p>Previous value of the CDA</p>
-             */
-            @JsonSetter(value = "previous", nulls = Nulls.SKIP)
-            public Builder previous(Optional<String> previous) {
-                this.previous = previous;
-                return this;
-            }
-
-            public Builder previous(String previous) {
-                this.previous = Optional.ofNullable(previous);
-                return this;
-            }
-
-            public Value build() {
-                return new Value(name, previous, additionalProperties);
             }
         }
     }

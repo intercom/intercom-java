@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.resources.unstable.aiagent.types.AiAgent;
+import com.intercom.api.resources.unstable.companies.types.Company;
 import com.intercom.api.resources.unstable.types.ConversationContacts;
 import com.intercom.api.resources.unstable.types.ConversationFirstContactReply;
 import com.intercom.api.resources.unstable.types.ConversationParts;
@@ -68,6 +69,8 @@ public final class Conversation {
 
     private final Optional<String> companyId;
 
+    private final Optional<Company> company;
+
     private final Optional<Tags> tags;
 
     private final Optional<ConversationRating> conversationRating;
@@ -111,6 +114,7 @@ public final class Conversation {
             Optional<Integer> adminAssigneeId,
             Optional<String> teamAssigneeId,
             Optional<String> companyId,
+            Optional<Company> company,
             Optional<Tags> tags,
             Optional<ConversationRating> conversationRating,
             Optional<ConversationSource> source,
@@ -139,6 +143,7 @@ public final class Conversation {
         this.adminAssigneeId = adminAssigneeId;
         this.teamAssigneeId = teamAssigneeId;
         this.companyId = companyId;
+        this.company = company;
         this.tags = tags;
         this.conversationRating = conversationRating;
         this.source = source;
@@ -267,6 +272,14 @@ public final class Conversation {
         return companyId;
     }
 
+    /**
+     * @return The company associated with the conversation.
+     */
+    @JsonProperty("company")
+    public Optional<Company> getCompany() {
+        return company;
+    }
+
     @JsonProperty("tags")
     public Optional<Tags> getTags() {
         return tags;
@@ -361,6 +374,7 @@ public final class Conversation {
                 && adminAssigneeId.equals(other.adminAssigneeId)
                 && teamAssigneeId.equals(other.teamAssigneeId)
                 && companyId.equals(other.companyId)
+                && company.equals(other.company)
                 && tags.equals(other.tags)
                 && conversationRating.equals(other.conversationRating)
                 && source.equals(other.source)
@@ -393,6 +407,7 @@ public final class Conversation {
                 this.adminAssigneeId,
                 this.teamAssigneeId,
                 this.companyId,
+                this.company,
                 this.tags,
                 this.conversationRating,
                 this.source,
@@ -447,6 +462,8 @@ public final class Conversation {
 
         private Optional<String> companyId = Optional.empty();
 
+        private Optional<Company> company = Optional.empty();
+
         private Optional<Tags> tags = Optional.empty();
 
         private Optional<ConversationRating> conversationRating = Optional.empty();
@@ -493,6 +510,7 @@ public final class Conversation {
             adminAssigneeId(other.getAdminAssigneeId());
             teamAssigneeId(other.getTeamAssigneeId());
             companyId(other.getCompanyId());
+            company(other.getCompany());
             tags(other.getTags());
             conversationRating(other.getConversationRating());
             source(other.getSource());
@@ -705,6 +723,20 @@ public final class Conversation {
             return this;
         }
 
+        /**
+         * <p>The company associated with the conversation.</p>
+         */
+        @JsonSetter(value = "company", nulls = Nulls.SKIP)
+        public Builder company(Optional<Company> company) {
+            this.company = company;
+            return this;
+        }
+
+        public Builder company(Company company) {
+            this.company = Optional.ofNullable(company);
+            return this;
+        }
+
         @JsonSetter(value = "tags", nulls = Nulls.SKIP)
         public Builder tags(Optional<Tags> tags) {
             this.tags = tags;
@@ -867,6 +899,7 @@ public final class Conversation {
                     adminAssigneeId,
                     teamAssigneeId,
                     companyId,
+                    company,
                     tags,
                     conversationRating,
                     source,

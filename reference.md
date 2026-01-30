@@ -1,6 +1,6 @@
 # Reference
 ## Admins
-<details><summary><code>client.admins.identify() -> Optional&lt;AdminWithApp&gt;</code></summary>
+<details><summary><code>client.admins.identify() -> Optional&amp;lt;AdminWithApp&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -44,7 +44,7 @@ client.admins().identify();
 </dl>
 </details>
 
-<details><summary><code>client.admins.away(adminId, request) -> Optional&lt;Admin&gt;</code></summary>
+<details><summary><code>client.admins.away(adminId, request) -> Optional&amp;lt;Admin&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -237,7 +237,7 @@ client.admins().list();
 </dl>
 </details>
 
-<details><summary><code>client.admins.find(adminId) -> Optional&lt;Admin&gt;</code></summary>
+<details><summary><code>client.admins.find(adminId) -> Optional&amp;lt;Admin&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -997,7 +997,7 @@ client.aiContent().deleteExternalPage(
 </details>
 
 ## Articles
-<details><summary><code>client.articles.list() -> SyncPagingIterable&lt;ArticleListItem&gt;</code></summary>
+<details><summary><code>client.articles.list() -> SyncPagingIterable&amp;lt;ArticleListItem&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -1479,7 +1479,7 @@ client.articles().search(
 </details>
 
 ## Away Status Reasons
-<details><summary><code>client.awayStatusReasons.listAwayStatusReasons() -> List&lt;AwayStatusReason&gt;</code></summary>
+<details><summary><code>client.awayStatusReasons.listAwayStatusReasons() -> List&amp;lt;AwayStatusReason&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -2091,7 +2091,7 @@ client.helpCenters().find(
 </dl>
 </details>
 
-<details><summary><code>client.helpCenters.list() -> SyncPagingIterable&lt;HelpCenter&gt;</code></summary>
+<details><summary><code>client.helpCenters.list() -> SyncPagingIterable&amp;lt;HelpCenter&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -2520,6 +2520,114 @@ client.internalArticles().searchInternalArticles(
 <dd>
 
 **folderId:** `Optional<String>` — The ID of the folder to search in.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## IP Allowlist
+<details><summary><code>client.ipAllowlist.getIpAllowlist() -> IpAllowlist</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Retrieve the current IP allowlist configuration for the workspace.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```java
+client.ipAllowlist().getIpAllowlist();
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.ipAllowlist.updateIpAllowlist(request) -> IpAllowlist</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update the IP allowlist configuration for the workspace.
+
+{% admonition type="warning" name="Lockout Protection" %}
+  The API will reject updates that would lock out the caller's IP address. Ensure your current IP is included in the allowlist when enabling the feature.
+{% /admonition %}
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```java
+client.ipAllowlist().updateIpAllowlist(
+    IpAllowlist
+        .builder()
+        .enabled(true)
+        .ipAllowlist(
+            Optional.of(
+                Arrays.asList("192.168.1.0/24", "10.0.0.1")
+            )
+        )
+        .build()
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `IpAllowlist` 
     
 </dd>
 </dl>
@@ -3031,7 +3139,7 @@ client.companies().listAttachedSegments(
 </dl>
 </details>
 
-<details><summary><code>client.companies.list() -> SyncPagingIterable&lt;Company&gt;</code></summary>
+<details><summary><code>client.companies.list() -> SyncPagingIterable&amp;lt;Company&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -3116,7 +3224,7 @@ client.companies().list(
 </dl>
 </details>
 
-<details><summary><code>client.companies.scroll() -> SyncPagingIterable&lt;Company&gt;</code></summary>
+<details><summary><code>client.companies.scroll() -> SyncPagingIterable&amp;lt;Company&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -3326,7 +3434,7 @@ client.companies().detachContact(
 </details>
 
 ## Contacts
-<details><summary><code>client.contacts.listAttachedCompanies(contactId) -> SyncPagingIterable&lt;Company&gt;</code></summary>
+<details><summary><code>client.contacts.listAttachedCompanies(contactId) -> SyncPagingIterable&amp;lt;Company&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -4078,7 +4186,7 @@ client.contacts().mergeLeadInUser(
 </dl>
 </details>
 
-<details><summary><code>client.contacts.search(request) -> SyncPagingIterable&lt;Contact&gt;</code></summary>
+<details><summary><code>client.contacts.search(request) -> SyncPagingIterable&amp;lt;Contact&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -4250,7 +4358,7 @@ client.unstable().contacts().searchContacts(
 </dl>
 </details>
 
-<details><summary><code>client.contacts.list() -> SyncPagingIterable&lt;Contact&gt;</code></summary>
+<details><summary><code>client.contacts.list() -> SyncPagingIterable&amp;lt;Contact&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -4626,7 +4734,7 @@ client.contacts().blockContact(
 </details>
 
 ## Notes
-<details><summary><code>client.notes.list(contactId) -> SyncPagingIterable&lt;Note&gt;</code></summary>
+<details><summary><code>client.notes.list(contactId) -> SyncPagingIterable&amp;lt;Note&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -5515,7 +5623,7 @@ client.tags().untagTicket(
 </details>
 
 ## Conversations
-<details><summary><code>client.conversations.list() -> SyncPagingIterable&lt;Conversation&gt;</code></summary>
+<details><summary><code>client.conversations.list() -> SyncPagingIterable&amp;lt;Conversation&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -5945,7 +6053,7 @@ client.conversations().deleteConversation(
 </dl>
 </details>
 
-<details><summary><code>client.conversations.search(request) -> SyncPagingIterable&lt;Conversation&gt;</code></summary>
+<details><summary><code>client.conversations.search(request) -> SyncPagingIterable&amp;lt;Conversation&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -6517,7 +6625,7 @@ client.conversations().redactConversationPart(
 </dl>
 </details>
 
-<details><summary><code>client.conversations.convertToTicket(conversationId, request) -> Optional&lt;Ticket&gt;</code></summary>
+<details><summary><code>client.conversations.convertToTicket(conversationId, request) -> Optional&amp;lt;Ticket&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -6943,7 +7051,7 @@ client.customChannelEvents().notifyAttributeCollected(
 </details>
 
 ## Custom Object Instances
-<details><summary><code>client.customObjectInstances.getCustomObjectInstancesByExternalId(customObjectTypeIdentifier) -> Optional&lt;CustomObjectInstance&gt;</code></summary>
+<details><summary><code>client.customObjectInstances.getCustomObjectInstancesByExternalId(customObjectTypeIdentifier) -> Optional&amp;lt;CustomObjectInstance&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -7011,7 +7119,7 @@ client.customObjectInstances().getCustomObjectInstancesByExternalId(
 </dl>
 </details>
 
-<details><summary><code>client.customObjectInstances.createCustomObjectInstances(customObjectTypeIdentifier, request) -> Optional&lt;CustomObjectInstance&gt;</code></summary>
+<details><summary><code>client.customObjectInstances.createCustomObjectInstances(customObjectTypeIdentifier, request) -> Optional&amp;lt;CustomObjectInstance&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -7179,7 +7287,7 @@ client.customObjectInstances().deleteCustomObjectInstancesById(
 </dl>
 </details>
 
-<details><summary><code>client.customObjectInstances.getCustomObjectInstancesById(customObjectTypeIdentifier, customObjectInstanceId) -> Optional&lt;CustomObjectInstance&gt;</code></summary>
+<details><summary><code>client.customObjectInstances.getCustomObjectInstancesById(customObjectTypeIdentifier, customObjectInstanceId) -> Optional&amp;lt;CustomObjectInstance&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -8135,7 +8243,7 @@ client.subscriptionTypes().list();
 </details>
 
 ## PhoneCallRedirects
-<details><summary><code>client.phoneCallRedirects.create(request) -> Optional&lt;PhoneSwitch&gt;</code></summary>
+<details><summary><code>client.phoneCallRedirects.create(request) -> Optional&amp;lt;PhoneSwitch&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -8692,7 +8800,7 @@ client.ticketTypes().list();
 </dl>
 </details>
 
-<details><summary><code>client.ticketTypes.create(request) -> Optional&lt;TicketType&gt;</code></summary>
+<details><summary><code>client.ticketTypes.create(request) -> Optional&amp;lt;TicketType&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -8760,7 +8868,7 @@ client.ticketTypes().create(
 </dl>
 </details>
 
-<details><summary><code>client.ticketTypes.get(ticketTypeId) -> Optional&lt;TicketType&gt;</code></summary>
+<details><summary><code>client.ticketTypes.get(ticketTypeId) -> Optional&amp;lt;TicketType&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -8819,7 +8927,7 @@ client.ticketTypes().get(
 </dl>
 </details>
 
-<details><summary><code>client.ticketTypes.update(ticketTypeId, request) -> Optional&lt;TicketType&gt;</code></summary>
+<details><summary><code>client.ticketTypes.update(ticketTypeId, request) -> Optional&amp;lt;TicketType&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -9015,7 +9123,7 @@ client.tickets().reply(
 </dl>
 </details>
 
-<details><summary><code>client.tickets.create(request) -> Optional&lt;Ticket&gt;</code></summary>
+<details><summary><code>client.tickets.create(request) -> Optional&amp;lt;Ticket&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -9153,7 +9261,7 @@ client.tickets().enqueueCreateTicket(
 </dl>
 </details>
 
-<details><summary><code>client.tickets.get(ticketId) -> Optional&lt;Ticket&gt;</code></summary>
+<details><summary><code>client.tickets.get(ticketId) -> Optional&amp;lt;Ticket&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -9212,7 +9320,7 @@ client.tickets().get(
 </dl>
 </details>
 
-<details><summary><code>client.tickets.update(ticketId, request) -> Optional&lt;Ticket&gt;</code></summary>
+<details><summary><code>client.tickets.update(ticketId, request) -> Optional&amp;lt;Ticket&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -9405,7 +9513,7 @@ client.tickets().deleteTicket(
 </dl>
 </details>
 
-<details><summary><code>client.tickets.search(request) -> SyncPagingIterable&lt;Optional&lt;Ticket&gt;&gt;</code></summary>
+<details><summary><code>client.tickets.search(request) -> SyncPagingIterable&amp;lt;Optional&amp;lt;Ticket&amp;gt;&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -9548,7 +9656,7 @@ client.unstable().tickets().searchTickets(
 </details>
 
 ## Visitors
-<details><summary><code>client.visitors.find() -> Optional&lt;Visitor&gt;</code></summary>
+<details><summary><code>client.visitors.find() -> Optional&amp;lt;Visitor&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -9607,7 +9715,7 @@ client.visitors().find(
 </dl>
 </details>
 
-<details><summary><code>client.visitors.update(request) -> Optional&lt;Visitor&gt;</code></summary>
+<details><summary><code>client.visitors.update(request) -> Optional&amp;lt;Visitor&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -9760,7 +9868,7 @@ client.unstable().visitors().convertVisitor(
 </details>
 
 ## HelpCenters Collections
-<details><summary><code>client.helpCenters.collections.list() -> SyncPagingIterable&lt;Collection&gt;</code></summary>
+<details><summary><code>client.helpCenters.collections.list() -> SyncPagingIterable&amp;lt;Collection&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -10596,7 +10704,7 @@ client.news().feeds().find(
 </details>
 
 ## TicketTypes Attributes
-<details><summary><code>client.ticketTypes.attributes.create(ticketTypeId, request) -> Optional&lt;TicketTypeAttribute&gt;</code></summary>
+<details><summary><code>client.ticketTypes.attributes.create(ticketTypeId, request) -> Optional&amp;lt;TicketTypeAttribute&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -10739,7 +10847,7 @@ client.ticketTypes().attributes().create(
 </dl>
 </details>
 
-<details><summary><code>client.ticketTypes.attributes.update(ticketTypeId, attributeId, request) -> Optional&lt;TicketTypeAttribute&gt;</code></summary>
+<details><summary><code>client.ticketTypes.attributes.update(ticketTypeId, attributeId, request) -> Optional&amp;lt;TicketTypeAttribute&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -10889,7 +10997,7 @@ client.ticketTypes().attributes().update(
 </details>
 
 ## Admins
-<details><summary><code>client.unstable.admins.identifyAdmin() -> Optional&lt;AdminWithApp&gt;</code></summary>
+<details><summary><code>client.unstable.admins.identifyAdmin() -> Optional&amp;lt;AdminWithApp&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -10933,7 +11041,7 @@ client.admins().identify();
 </dl>
 </details>
 
-<details><summary><code>client.unstable.admins.setAwayAdmin(id, request) -> Optional&lt;Admin&gt;</code></summary>
+<details><summary><code>client.unstable.admins.setAwayAdmin(id, request) -> Optional&amp;lt;Admin&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -11126,7 +11234,7 @@ client.admins().list();
 </dl>
 </details>
 
-<details><summary><code>client.unstable.admins.retrieveAdmin(id) -> Optional&lt;Admin&gt;</code></summary>
+<details><summary><code>client.unstable.admins.retrieveAdmin(id) -> Optional&amp;lt;Admin&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -12194,7 +12302,7 @@ client.articles().search(
 </details>
 
 ## Away Status Reasons
-<details><summary><code>client.unstable.awayStatusReasons.listAwayStatusReasons() -> List&lt;AwayStatusReason&gt;</code></summary>
+<details><summary><code>client.unstable.awayStatusReasons.listAwayStatusReasons() -> List&amp;lt;AwayStatusReason&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -13719,7 +13827,7 @@ client.companies().list(
 </dl>
 </details>
 
-<details><summary><code>client.unstable.companies.scrollOverAllCompanies() -> Optional&lt;CompanyScroll&gt;</code></summary>
+<details><summary><code>client.unstable.companies.scrollOverAllCompanies() -> Optional&amp;lt;CompanyScroll&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -14630,6 +14738,14 @@ client.unstable().contacts().updateContact(
 <dd>
 
 **unsubscribedFromEmails:** `Optional<Boolean>` — Whether the contact is unsubscribed from emails
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**languageOverride:** `Optional<String>` — A preferred language setting for the contact, used by Intercom as the language of Fin and the Messenger even if their browser has a different setting. Supports ISO 639-1 two-letter language codes. If an unsupported code is supplied, the field will be set to null.
     
 </dd>
 </dl>
@@ -17097,6 +17213,67 @@ client.conversations().detachContactAsAdmin(
 </dl>
 </details>
 
+<details><summary><code>client.unstable.conversations.listHandlingEvents(id) -> HandlingEventList</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List all pause/resume events for a conversation. These events track when teammates paused or resumed handling a conversation.
+
+Requires the `read_conversations` OAuth scope.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```java
+client.unstable().conversations().listHandlingEvents(
+    ListHandlingEventsRequest
+        .builder()
+        .id("123")
+        .build()
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**id:** `String` — The identifier for the conversation as given by Intercom.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.unstable.conversations.redactConversation(request) -> Conversation</code></summary>
 <dl>
 <dd>
@@ -17164,7 +17341,7 @@ client.conversations().redactConversationPart(
 </dl>
 </details>
 
-<details><summary><code>client.unstable.conversations.convertConversationToTicket(id, request) -> Optional&lt;Ticket&gt;</code></summary>
+<details><summary><code>client.unstable.conversations.convertConversationToTicket(id, request) -> Optional&amp;lt;Ticket&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -17531,7 +17708,7 @@ client.customChannelEvents().notifyAttributeCollected(
 </details>
 
 ## Custom Object Instances
-<details><summary><code>client.unstable.customObjectInstances.getCustomObjectInstancesByExternalId(customObjectTypeIdentifier) -> Optional&lt;CustomObjectInstance&gt;</code></summary>
+<details><summary><code>client.unstable.customObjectInstances.getCustomObjectInstancesByExternalId(customObjectTypeIdentifier) -> Optional&amp;lt;CustomObjectInstance&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -17599,7 +17776,7 @@ client.customObjectInstances().getCustomObjectInstancesByExternalId(
 </dl>
 </details>
 
-<details><summary><code>client.unstable.customObjectInstances.createCustomObjectInstances(customObjectTypeIdentifier, request) -> Optional&lt;CustomObjectInstance&gt;</code></summary>
+<details><summary><code>client.unstable.customObjectInstances.createCustomObjectInstances(customObjectTypeIdentifier, request) -> Optional&amp;lt;CustomObjectInstance&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -17767,7 +17944,7 @@ client.customObjectInstances().deleteCustomObjectInstancesById(
 </dl>
 </details>
 
-<details><summary><code>client.unstable.customObjectInstances.getCustomObjectInstancesById(customObjectTypeIdentifier, id) -> Optional&lt;CustomObjectInstance&gt;</code></summary>
+<details><summary><code>client.unstable.customObjectInstances.getCustomObjectInstancesById(customObjectTypeIdentifier, id) -> Optional&amp;lt;CustomObjectInstance&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -18634,6 +18811,72 @@ client.dataExport().download(
 </dl>
 </details>
 
+## Workflows
+<details><summary><code>client.unstable.workflows.exportWorkflow(id) -> WorkflowExport</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Export a workflow configuration by its ID. This endpoint returns the complete workflow definition including its steps, targeting rules, and attributes.
+
+This endpoint is designed for EU Data Act compliance, allowing customers to export their workflow configurations.
+
+{% admonition type="warning" name="Unstable API" %}
+  This API is currently in the Unstable version. Its behavior may change in future releases.
+{% /admonition %}
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```java
+client.unstable().workflows().exportWorkflow(
+    ExportWorkflowRequest
+        .builder()
+        .id("12345")
+        .build()
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**id:** `String` — The unique identifier for the workflow
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Jobs
 <details><summary><code>client.unstable.jobs.status(id) -> Jobs</code></summary>
 <dl>
@@ -18784,7 +19027,7 @@ client.unstable().macros().listMacros(
 </dl>
 </details>
 
-<details><summary><code>client.unstable.macros.getMacro(id) -> Optional&lt;Macro&gt;</code></summary>
+<details><summary><code>client.unstable.macros.getMacro(id) -> Optional&amp;lt;Macro&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -19597,7 +19840,7 @@ client.unstable().segments().retrieveSegment(
 </details>
 
 ## Switch
-<details><summary><code>client.unstable.switch_.createPhoneSwitch(request) -> Optional&lt;PhoneSwitch&gt;</code></summary>
+<details><summary><code>client.unstable.switch_.createPhoneSwitch(request) -> Optional&amp;lt;PhoneSwitch&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -20351,7 +20594,7 @@ client.ticketStates().listTicketStates();
 </details>
 
 ## Ticket Type Attributes
-<details><summary><code>client.unstable.ticketTypeAttributes.createTicketTypeAttribute(ticketTypeId, request) -> Optional&lt;TicketTypeAttribute&gt;</code></summary>
+<details><summary><code>client.unstable.ticketTypeAttributes.createTicketTypeAttribute(ticketTypeId, request) -> Optional&amp;lt;TicketTypeAttribute&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -20494,7 +20737,7 @@ client.ticketTypes().attributes().create(
 </dl>
 </details>
 
-<details><summary><code>client.unstable.ticketTypeAttributes.updateTicketTypeAttribute(ticketTypeId, id, request) -> Optional&lt;TicketTypeAttribute&gt;</code></summary>
+<details><summary><code>client.unstable.ticketTypeAttributes.updateTicketTypeAttribute(ticketTypeId, id, request) -> Optional&amp;lt;TicketTypeAttribute&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -20683,7 +20926,7 @@ client.ticketTypes().list();
 </dl>
 </details>
 
-<details><summary><code>client.unstable.ticketTypes.createTicketType(request) -> Optional&lt;TicketType&gt;</code></summary>
+<details><summary><code>client.unstable.ticketTypes.createTicketType(request) -> Optional&amp;lt;TicketType&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -20743,7 +20986,7 @@ HashMap<String, Object>() {{put("key", "value");
 </dl>
 </details>
 
-<details><summary><code>client.unstable.ticketTypes.getTicketType(id) -> Optional&lt;TicketType&gt;</code></summary>
+<details><summary><code>client.unstable.ticketTypes.getTicketType(id) -> Optional&amp;lt;TicketType&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -20954,7 +21197,7 @@ client.tickets().enqueueCreateTicket(
 </dl>
 </details>
 
-<details><summary><code>client.unstable.tickets.getTicket(id) -> Optional&lt;Ticket&gt;</code></summary>
+<details><summary><code>client.unstable.tickets.getTicket(id) -> Optional&amp;lt;Ticket&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -21013,7 +21256,7 @@ client.unstable().tickets().getTicket(
 </dl>
 </details>
 
-<details><summary><code>client.unstable.tickets.updateTicket(id, request) -> Optional&lt;Ticket&gt;</code></summary>
+<details><summary><code>client.unstable.tickets.updateTicket(id, request) -> Optional&amp;lt;Ticket&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -21349,7 +21592,7 @@ client.unstable().tickets().searchTickets(
 </details>
 
 ## Visitors
-<details><summary><code>client.unstable.visitors.retrieveVisitorWithUserId() -> Optional&lt;Visitor&gt;</code></summary>
+<details><summary><code>client.unstable.visitors.retrieveVisitorWithUserId() -> Optional&amp;lt;Visitor&amp;gt;</code></summary>
 <dl>
 <dd>
 
@@ -21408,7 +21651,7 @@ client.visitors().find(
 </dl>
 </details>
 
-<details><summary><code>client.unstable.visitors.updateVisitor(request) -> Optional&lt;Visitor&gt;</code></summary>
+<details><summary><code>client.unstable.visitors.updateVisitor(request) -> Optional&amp;lt;Visitor&amp;gt;</code></summary>
 <dl>
 <dd>
 

@@ -21,6 +21,7 @@ import com.intercom.api.resources.events.AsyncEventsClient;
 import com.intercom.api.resources.export.AsyncExportClient;
 import com.intercom.api.resources.helpcenters.AsyncHelpCentersClient;
 import com.intercom.api.resources.internalarticles.AsyncInternalArticlesClient;
+import com.intercom.api.resources.ipallowlist.AsyncIpAllowlistClient;
 import com.intercom.api.resources.jobs.AsyncJobsClient;
 import com.intercom.api.resources.messages.AsyncMessagesClient;
 import com.intercom.api.resources.news.AsyncNewsClient;
@@ -55,6 +56,8 @@ public class AsyncIntercom {
     protected final Supplier<AsyncHelpCentersClient> helpCentersClient;
 
     protected final Supplier<AsyncInternalArticlesClient> internalArticlesClient;
+
+    protected final Supplier<AsyncIpAllowlistClient> ipAllowlistClient;
 
     protected final Supplier<AsyncCompaniesClient> companiesClient;
 
@@ -110,6 +113,7 @@ public class AsyncIntercom {
         this.dataExportClient = Suppliers.memoize(() -> new AsyncDataExportClient(clientOptions));
         this.helpCentersClient = Suppliers.memoize(() -> new AsyncHelpCentersClient(clientOptions));
         this.internalArticlesClient = Suppliers.memoize(() -> new AsyncInternalArticlesClient(clientOptions));
+        this.ipAllowlistClient = Suppliers.memoize(() -> new AsyncIpAllowlistClient(clientOptions));
         this.companiesClient = Suppliers.memoize(() -> new AsyncCompaniesClient(clientOptions));
         this.contactsClient = Suppliers.memoize(() -> new AsyncContactsClient(clientOptions));
         this.notesClient = Suppliers.memoize(() -> new AsyncNotesClient(clientOptions));
@@ -164,6 +168,10 @@ public class AsyncIntercom {
 
     public AsyncInternalArticlesClient internalArticles() {
         return this.internalArticlesClient.get();
+    }
+
+    public AsyncIpAllowlistClient ipAllowlist() {
+        return this.ipAllowlistClient.get();
     }
 
     public AsyncCompaniesClient companies() {

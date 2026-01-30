@@ -19,6 +19,7 @@ import com.intercom.api.resources.unstable.conversations.requests.CreateConversa
 import com.intercom.api.resources.unstable.conversations.requests.DeleteConversationRequest;
 import com.intercom.api.resources.unstable.conversations.requests.DetachContactFromConversationRequest;
 import com.intercom.api.resources.unstable.conversations.requests.ListConversationsRequest;
+import com.intercom.api.resources.unstable.conversations.requests.ListHandlingEventsRequest;
 import com.intercom.api.resources.unstable.conversations.requests.ManageConversationRequest;
 import com.intercom.api.resources.unstable.conversations.requests.ReplyConversationRequest;
 import com.intercom.api.resources.unstable.conversations.requests.RetrieveConversationRequest;
@@ -34,6 +35,7 @@ import com.intercom.api.resources.unstable.tickets.types.Ticket;
 import com.intercom.api.resources.unstable.types.ConversationDeleted;
 import com.intercom.api.resources.unstable.types.ConversationList;
 import com.intercom.api.resources.unstable.types.Error;
+import com.intercom.api.resources.unstable.types.HandlingEventList;
 import com.intercom.api.resources.unstable.types.RedactConversationRequest;
 import com.intercom.api.resources.unstable.types.SearchRequest;
 import java.io.IOException;
@@ -933,6 +935,63 @@ public class RawConversationsClient {
                                 ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
                     case 422:
                         throw new UnprocessableEntityError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+                }
+            } catch (JsonProcessingException ignored) {
+                // unable to map error response, throwing generic error
+            }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
+            throw new IntercomApiException(
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
+        } catch (IOException e) {
+            throw new IntercomException("Network error executing HTTP request", e);
+        }
+    }
+
+    /**
+     * List all pause/resume events for a conversation. These events track when teammates paused or resumed handling a conversation.
+     * <p>Requires the <code>read_conversations</code> OAuth scope.</p>
+     */
+    public IntercomHttpResponse<HandlingEventList> listHandlingEvents(ListHandlingEventsRequest request) {
+        return listHandlingEvents(request, null);
+    }
+
+    /**
+     * List all pause/resume events for a conversation. These events track when teammates paused or resumed handling a conversation.
+     * <p>Requires the <code>read_conversations</code> OAuth scope.</p>
+     */
+    public IntercomHttpResponse<HandlingEventList> listHandlingEvents(
+            ListHandlingEventsRequest request, RequestOptions requestOptions) {
+        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+                .newBuilder()
+                .addPathSegments("conversations")
+                .addPathSegment(request.getId())
+                .addPathSegments("handling_events")
+                .build();
+        Request.Builder _requestBuilder = new Request.Builder()
+                .url(httpUrl)
+                .method("GET", null)
+                .headers(Headers.of(clientOptions.headers(requestOptions)))
+                .addHeader("Accept", "application/json");
+        Request okhttpRequest = _requestBuilder.build();
+        OkHttpClient client = clientOptions.httpClient();
+        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+            client = clientOptions.httpClientWithTimeout(requestOptions);
+        }
+        try (Response response = client.newCall(okhttpRequest).execute()) {
+            ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+            if (response.isSuccessful()) {
+                return new IntercomHttpResponse<>(
+                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, HandlingEventList.class), response);
+            }
+            try {
+                switch (response.code()) {
+                    case 401:
+                        throw new UnauthorizedError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class), response);
+                    case 404:
+                        throw new NotFoundError(
                                 ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
                 }
             } catch (JsonProcessingException ignored) {

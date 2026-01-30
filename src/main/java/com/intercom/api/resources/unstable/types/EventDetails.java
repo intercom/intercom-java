@@ -36,11 +36,31 @@ public final class EventDetails {
         } else if (this.type == 1) {
             return visitor.visit((ConversationAttributeUpdatedByAdmin) this.value);
         } else if (this.type == 2) {
-            return visitor.visit((CustomActionStarted) this.value);
+            return visitor.visit((ConversationAttributeUpdatedByUser) this.value);
         } else if (this.type == 3) {
-            return visitor.visit((CustomActionFinished) this.value);
+            return visitor.visit((CustomActionStarted) this.value);
         } else if (this.type == 4) {
+            return visitor.visit((CustomActionFinished) this.value);
+        } else if (this.type == 5) {
             return visitor.visit((OperatorWorkflowEvent) this.value);
+        } else if (this.type == 6) {
+            return visitor.visit((ConversationTagsUpdated) this.value);
+        } else if (this.type == 7) {
+            return visitor.visit((Snoozed) this.value);
+        } else if (this.type == 8) {
+            return visitor.visit((PriorityChanged) this.value);
+        } else if (this.type == 9) {
+            return visitor.visit((ConversationSlaAppliedByRule) this.value);
+        } else if (this.type == 10) {
+            return visitor.visit((ConversationSlaAppliedByWorkflow) this.value);
+        } else if (this.type == 11) {
+            return visitor.visit((ConversationSlaTargetMissed) this.value);
+        } else if (this.type == 12) {
+            return visitor.visit((ConversationSlaPaused) this.value);
+        } else if (this.type == 13) {
+            return visitor.visit((ConversationSlaUnpaused) this.value);
+        } else if (this.type == 14) {
+            return visitor.visit((ConversationSlaRemoved) this.value);
         }
         throw new IllegalStateException("Failed to visit value. This should never happen.");
     }
@@ -73,16 +93,56 @@ public final class EventDetails {
         return new EventDetails(value, 1);
     }
 
-    public static EventDetails of(CustomActionStarted value) {
+    public static EventDetails of(ConversationAttributeUpdatedByUser value) {
         return new EventDetails(value, 2);
     }
 
-    public static EventDetails of(CustomActionFinished value) {
+    public static EventDetails of(CustomActionStarted value) {
         return new EventDetails(value, 3);
     }
 
-    public static EventDetails of(OperatorWorkflowEvent value) {
+    public static EventDetails of(CustomActionFinished value) {
         return new EventDetails(value, 4);
+    }
+
+    public static EventDetails of(OperatorWorkflowEvent value) {
+        return new EventDetails(value, 5);
+    }
+
+    public static EventDetails of(ConversationTagsUpdated value) {
+        return new EventDetails(value, 6);
+    }
+
+    public static EventDetails of(Snoozed value) {
+        return new EventDetails(value, 7);
+    }
+
+    public static EventDetails of(PriorityChanged value) {
+        return new EventDetails(value, 8);
+    }
+
+    public static EventDetails of(ConversationSlaAppliedByRule value) {
+        return new EventDetails(value, 9);
+    }
+
+    public static EventDetails of(ConversationSlaAppliedByWorkflow value) {
+        return new EventDetails(value, 10);
+    }
+
+    public static EventDetails of(ConversationSlaTargetMissed value) {
+        return new EventDetails(value, 11);
+    }
+
+    public static EventDetails of(ConversationSlaPaused value) {
+        return new EventDetails(value, 12);
+    }
+
+    public static EventDetails of(ConversationSlaUnpaused value) {
+        return new EventDetails(value, 13);
+    }
+
+    public static EventDetails of(ConversationSlaRemoved value) {
+        return new EventDetails(value, 14);
     }
 
     public interface Visitor<T> {
@@ -90,11 +150,31 @@ public final class EventDetails {
 
         T visit(ConversationAttributeUpdatedByAdmin value);
 
+        T visit(ConversationAttributeUpdatedByUser value);
+
         T visit(CustomActionStarted value);
 
         T visit(CustomActionFinished value);
 
         T visit(OperatorWorkflowEvent value);
+
+        T visit(ConversationTagsUpdated value);
+
+        T visit(Snoozed value);
+
+        T visit(PriorityChanged value);
+
+        T visit(ConversationSlaAppliedByRule value);
+
+        T visit(ConversationSlaAppliedByWorkflow value);
+
+        T visit(ConversationSlaTargetMissed value);
+
+        T visit(ConversationSlaPaused value);
+
+        T visit(ConversationSlaUnpaused value);
+
+        T visit(ConversationSlaRemoved value);
     }
 
     static final class Deserializer extends StdDeserializer<EventDetails> {
@@ -114,6 +194,10 @@ public final class EventDetails {
             } catch (RuntimeException e) {
             }
             try {
+                return of(ObjectMappers.JSON_MAPPER.convertValue(value, ConversationAttributeUpdatedByUser.class));
+            } catch (RuntimeException e) {
+            }
+            try {
                 return of(ObjectMappers.JSON_MAPPER.convertValue(value, CustomActionStarted.class));
             } catch (RuntimeException e) {
             }
@@ -123,6 +207,42 @@ public final class EventDetails {
             }
             try {
                 return of(ObjectMappers.JSON_MAPPER.convertValue(value, OperatorWorkflowEvent.class));
+            } catch (RuntimeException e) {
+            }
+            try {
+                return of(ObjectMappers.JSON_MAPPER.convertValue(value, ConversationTagsUpdated.class));
+            } catch (RuntimeException e) {
+            }
+            try {
+                return of(ObjectMappers.JSON_MAPPER.convertValue(value, Snoozed.class));
+            } catch (RuntimeException e) {
+            }
+            try {
+                return of(ObjectMappers.JSON_MAPPER.convertValue(value, PriorityChanged.class));
+            } catch (RuntimeException e) {
+            }
+            try {
+                return of(ObjectMappers.JSON_MAPPER.convertValue(value, ConversationSlaAppliedByRule.class));
+            } catch (RuntimeException e) {
+            }
+            try {
+                return of(ObjectMappers.JSON_MAPPER.convertValue(value, ConversationSlaAppliedByWorkflow.class));
+            } catch (RuntimeException e) {
+            }
+            try {
+                return of(ObjectMappers.JSON_MAPPER.convertValue(value, ConversationSlaTargetMissed.class));
+            } catch (RuntimeException e) {
+            }
+            try {
+                return of(ObjectMappers.JSON_MAPPER.convertValue(value, ConversationSlaPaused.class));
+            } catch (RuntimeException e) {
+            }
+            try {
+                return of(ObjectMappers.JSON_MAPPER.convertValue(value, ConversationSlaUnpaused.class));
+            } catch (RuntimeException e) {
+            }
+            try {
+                return of(ObjectMappers.JSON_MAPPER.convertValue(value, ConversationSlaRemoved.class));
             } catch (RuntimeException e) {
             }
             throw new JsonParseException(p, "Failed to deserialize");

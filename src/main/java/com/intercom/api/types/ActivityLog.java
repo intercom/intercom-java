@@ -416,44 +416,20 @@ public final class ActivityLog {
     }
 
     public static final class ActivityType {
-        public static final ActivityType CAMPAIGN_DELETION =
-                new ActivityType(Value.CAMPAIGN_DELETION, "campaign_deletion");
-
-        public static final ActivityType ADMIN_LOGOUT = new ActivityType(Value.ADMIN_LOGOUT, "admin_logout");
-
         public static final ActivityType MACRO_DELETION = new ActivityType(Value.MACRO_DELETION, "macro_deletion");
-
-        public static final ActivityType CUSTOM_AUTHENTICATION_TOKEN_CREATION =
-                new ActivityType(Value.CUSTOM_AUTHENTICATION_TOKEN_CREATION, "custom_authentication_token_creation");
-
-        public static final ActivityType TEMPORARY_EXPECTATION_CHANGE =
-                new ActivityType(Value.TEMPORARY_EXPECTATION_CHANGE, "temporary_expectation_change");
-
-        public static final ActivityType ADMIN_IMPERSONATION_END =
-                new ActivityType(Value.ADMIN_IMPERSONATION_END, "admin_impersonation_end");
 
         public static final ActivityType ADMIN_IMPERSONATION_CONSENT_APPROVED =
                 new ActivityType(Value.ADMIN_IMPERSONATION_CONSENT_APPROVED, "admin_impersonation_consent_approved");
-
-        public static final ActivityType APP_OUTBOUND_ADDRESS_CHANGE =
-                new ActivityType(Value.APP_OUTBOUND_ADDRESS_CHANGE, "app_outbound_address_change");
 
         public static final ActivityType MESSENGER_API_SECRET_DELETION =
                 new ActivityType(Value.MESSENGER_API_SECRET_DELETION, "messenger_api_secret_deletion");
 
         public static final ActivityType SEAT_CHANGE = new ActivityType(Value.SEAT_CHANGE, "seat_change");
 
-        public static final ActivityType USER_CAMERA_ATTACHMENTS_SETTING_CHANGE = new ActivityType(
-                Value.USER_CAMERA_ATTACHMENTS_SETTING_CHANGE, "user_camera_attachments_setting_change");
-
-        public static final ActivityType SEARCH_BROWSE_REQUIRED_CHANGE =
-                new ActivityType(Value.SEARCH_BROWSE_REQUIRED_CHANGE, "search_browse_required_change");
-
-        public static final ActivityType SECURITY_SETTINGS_CHANGE =
-                new ActivityType(Value.SECURITY_SETTINGS_CHANGE, "security_settings_change");
-
         public static final ActivityType APP_TEAM_CREATION =
                 new ActivityType(Value.APP_TEAM_CREATION, "app_team_creation");
+
+        public static final ActivityType SERIES_UPDATE = new ActivityType(Value.SERIES_UPDATE, "series_update");
 
         public static final ActivityType APP_PACKAGE_UNINSTALLATION =
                 new ActivityType(Value.APP_PACKAGE_UNINSTALLATION, "app_package_uninstallation");
@@ -463,9 +439,6 @@ public final class ActivityLog {
 
         public static final ActivityType CAMPAIGN_STATE_CHANGE =
                 new ActivityType(Value.CAMPAIGN_STATE_CHANGE, "campaign_state_change");
-
-        public static final ActivityType UNASSIGN_UNSNOOZED_AT_CAPACITY_SETTING_CHANGE = new ActivityType(
-                Value.UNASSIGN_UNSNOOZED_AT_CAPACITY_SETTING_CHANGE, "unassign_unsnoozed_at_capacity_setting_change");
 
         public static final ActivityType ADMIN_AWAY_MODE_CHANGE =
                 new ActivityType(Value.ADMIN_AWAY_MODE_CHANGE, "admin_away_mode_change");
@@ -482,17 +455,123 @@ public final class ActivityLog {
         public static final ActivityType MESSENGER_SEARCH_REQUIRED_CHANGE =
                 new ActivityType(Value.MESSENGER_SEARCH_REQUIRED_CHANGE, "messenger_search_required_change");
 
-        public static final ActivityType STRIP_INBOUND_EMAIL_LINKS_CHANGE =
-                new ActivityType(Value.STRIP_INBOUND_EMAIL_LINKS_CHANGE, "strip_inbound_email_links_change");
-
         public static final ActivityType USER_GIFS_SETTING_CHANGE =
                 new ActivityType(Value.USER_GIFS_SETTING_CHANGE, "user_gifs_setting_change");
 
-        public static final ActivityType ADMIN_DEPROVISIONED =
-                new ActivityType(Value.ADMIN_DEPROVISIONED, "admin_deprovisioned");
-
         public static final ActivityType APP_AUTHENTICATION_METHOD_CHANGE =
                 new ActivityType(Value.APP_AUTHENTICATION_METHOD_CHANGE, "app_authentication_method_change");
+
+        public static final ActivityType SERIES_STATUS_CHANGE =
+                new ActivityType(Value.SERIES_STATUS_CHANGE, "series_status_change");
+
+        public static final ActivityType ADMIN_CONVERSATION_ASSIGNMENT_LIMIT_CHANGE = new ActivityType(
+                Value.ADMIN_CONVERSATION_ASSIGNMENT_LIMIT_CHANGE, "admin_conversation_assignment_limit_change");
+
+        public static final ActivityType APP_ADMIN_JOIN = new ActivityType(Value.APP_ADMIN_JOIN, "app_admin_join");
+
+        public static final ActivityType APP_DATA_EXPORT = new ActivityType(Value.APP_DATA_EXPORT, "app_data_export");
+
+        public static final ActivityType USER_FILE_ATTACHMENTS_SETTING_CHANGE =
+                new ActivityType(Value.USER_FILE_ATTACHMENTS_SETTING_CHANGE, "user_file_attachments_setting_change");
+
+        public static final ActivityType SEAT_REVOKE = new ActivityType(Value.SEAT_REVOKE, "seat_revoke");
+
+        public static final ActivityType TRUSTED_DOMAINS_SETTING_CHANGE =
+                new ActivityType(Value.TRUSTED_DOMAINS_SETTING_CHANGE, "trusted_domains_setting_change");
+
+        public static final ActivityType MESSENGER_SPACES_CHANGE =
+                new ActivityType(Value.MESSENGER_SPACES_CHANGE, "messenger_spaces_change");
+
+        public static final ActivityType ROLE_DELETION = new ActivityType(Value.ROLE_DELETION, "role_deletion");
+
+        public static final ActivityType APP_PACKAGE_TOKEN_REGENERATION =
+                new ActivityType(Value.APP_PACKAGE_TOKEN_REGENERATION, "app_package_token_regeneration");
+
+        public static final ActivityType APP_TIMEZONE_CHANGE =
+                new ActivityType(Value.APP_TIMEZONE_CHANGE, "app_timezone_change");
+
+        public static final ActivityType ROLE_CHANGE = new ActivityType(Value.ROLE_CHANGE, "role_change");
+
+        public static final ActivityType USER_VOICE_NOTES_SETTING_CHANGE =
+                new ActivityType(Value.USER_VOICE_NOTES_SETTING_CHANGE, "user_voice_notes_setting_change");
+
+        public static final ActivityType USER_MEDIA_ATTACHMENTS_SETTING_CHANGE =
+                new ActivityType(Value.USER_MEDIA_ATTACHMENTS_SETTING_CHANGE, "user_media_attachments_setting_change");
+
+        public static final ActivityType ADMIN_INVITE_DELETION =
+                new ActivityType(Value.ADMIN_INVITE_DELETION, "admin_invite_deletion");
+
+        public static final ActivityType USER_CONVERSATION_ATTACHMENTS_SETTING_CHANGE = new ActivityType(
+                Value.USER_CONVERSATION_ATTACHMENTS_SETTING_CHANGE, "user_conversation_attachments_setting_change");
+
+        public static final ActivityType TEAMMATE_GIFS_SETTING_CHANGE =
+                new ActivityType(Value.TEAMMATE_GIFS_SETTING_CHANGE, "teammate_gifs_setting_change");
+
+        public static final ActivityType APP_IDENTITY_VERIFICATION_CHANGE =
+                new ActivityType(Value.APP_IDENTITY_VERIFICATION_CHANGE, "app_identity_verification_change");
+
+        public static final ActivityType AUTOMATIC_AWAY_MODE_SETTING_CHANGE =
+                new ActivityType(Value.AUTOMATIC_AWAY_MODE_SETTING_CHANGE, "automatic_away_mode_setting_change");
+
+        public static final ActivityType OFFICE_HOURS_CHANGE =
+                new ActivityType(Value.OFFICE_HOURS_CHANGE, "office_hours_change");
+
+        public static final ActivityType ADMIN_UNAUTHORIZED_SIGN_IN_METHOD =
+                new ActivityType(Value.ADMIN_UNAUTHORIZED_SIGN_IN_METHOD, "admin_unauthorized_sign_in_method");
+
+        public static final ActivityType BULK_EXPORT = new ActivityType(Value.BULK_EXPORT, "bulk_export");
+
+        public static final ActivityType SERIES_CREATION = new ActivityType(Value.SERIES_CREATION, "series_creation");
+
+        public static final ActivityType UPFRONT_EMAIL_COLLECTION_CHANGE =
+                new ActivityType(Value.UPFRONT_EMAIL_COLLECTION_CHANGE, "upfront_email_collection_change");
+
+        public static final ActivityType ADMIN_INVITE_CREATION =
+                new ActivityType(Value.ADMIN_INVITE_CREATION, "admin_invite_creation");
+
+        public static final ActivityType ADMIN_INVITE_CHANGE =
+                new ActivityType(Value.ADMIN_INVITE_CHANGE, "admin_invite_change");
+
+        public static final ActivityType RULESET_DELETION =
+                new ActivityType(Value.RULESET_DELETION, "ruleset_deletion");
+
+        public static final ActivityType WORKSPACE_DELETION_REQUEST =
+                new ActivityType(Value.WORKSPACE_DELETION_REQUEST, "workspace_deletion_request");
+
+        public static final ActivityType CAMPAIGN_DELETION =
+                new ActivityType(Value.CAMPAIGN_DELETION, "campaign_deletion");
+
+        public static final ActivityType ADMIN_LOGOUT = new ActivityType(Value.ADMIN_LOGOUT, "admin_logout");
+
+        public static final ActivityType CUSTOM_AUTHENTICATION_TOKEN_CREATION =
+                new ActivityType(Value.CUSTOM_AUTHENTICATION_TOKEN_CREATION, "custom_authentication_token_creation");
+
+        public static final ActivityType TEMPORARY_EXPECTATION_CHANGE =
+                new ActivityType(Value.TEMPORARY_EXPECTATION_CHANGE, "temporary_expectation_change");
+
+        public static final ActivityType ADMIN_IMPERSONATION_END =
+                new ActivityType(Value.ADMIN_IMPERSONATION_END, "admin_impersonation_end");
+
+        public static final ActivityType APP_OUTBOUND_ADDRESS_CHANGE =
+                new ActivityType(Value.APP_OUTBOUND_ADDRESS_CHANGE, "app_outbound_address_change");
+
+        public static final ActivityType USER_CAMERA_ATTACHMENTS_SETTING_CHANGE = new ActivityType(
+                Value.USER_CAMERA_ATTACHMENTS_SETTING_CHANGE, "user_camera_attachments_setting_change");
+
+        public static final ActivityType SEARCH_BROWSE_REQUIRED_CHANGE =
+                new ActivityType(Value.SEARCH_BROWSE_REQUIRED_CHANGE, "search_browse_required_change");
+
+        public static final ActivityType SECURITY_SETTINGS_CHANGE =
+                new ActivityType(Value.SECURITY_SETTINGS_CHANGE, "security_settings_change");
+
+        public static final ActivityType UNASSIGN_UNSNOOZED_AT_CAPACITY_SETTING_CHANGE = new ActivityType(
+                Value.UNASSIGN_UNSNOOZED_AT_CAPACITY_SETTING_CHANGE, "unassign_unsnoozed_at_capacity_setting_change");
+
+        public static final ActivityType STRIP_INBOUND_EMAIL_LINKS_CHANGE =
+                new ActivityType(Value.STRIP_INBOUND_EMAIL_LINKS_CHANGE, "strip_inbound_email_links_change");
+
+        public static final ActivityType ADMIN_DEPROVISIONED =
+                new ActivityType(Value.ADMIN_DEPROVISIONED, "admin_deprovisioned");
 
         public static final ActivityType RULESET_CREATION =
                 new ActivityType(Value.RULESET_CREATION, "ruleset_creation");
@@ -502,17 +581,7 @@ public final class ActivityLog {
         public static final ActivityType APP_PACKAGE_INSTALLATION =
                 new ActivityType(Value.APP_PACKAGE_INSTALLATION, "app_package_installation");
 
-        public static final ActivityType ADMIN_CONVERSATION_ASSIGNMENT_LIMIT_CHANGE = new ActivityType(
-                Value.ADMIN_CONVERSATION_ASSIGNMENT_LIMIT_CHANGE, "admin_conversation_assignment_limit_change");
-
         public static final ActivityType ROLE_CREATION = new ActivityType(Value.ROLE_CREATION, "role_creation");
-
-        public static final ActivityType APP_ADMIN_JOIN = new ActivityType(Value.APP_ADMIN_JOIN, "app_admin_join");
-
-        public static final ActivityType APP_DATA_EXPORT = new ActivityType(Value.APP_DATA_EXPORT, "app_data_export");
-
-        public static final ActivityType USER_FILE_ATTACHMENTS_SETTING_CHANGE =
-                new ActivityType(Value.USER_FILE_ATTACHMENTS_SETTING_CHANGE, "user_file_attachments_setting_change");
 
         public static final ActivityType ADMIN_LOGIN_FAILURE =
                 new ActivityType(Value.ADMIN_LOGIN_FAILURE, "admin_login_failure");
@@ -526,21 +595,13 @@ public final class ActivityLog {
         public static final ActivityType MESSENGER_LOOK_AND_FEEL_CHANGE =
                 new ActivityType(Value.MESSENGER_LOOK_AND_FEEL_CHANGE, "messenger_look_and_feel_change");
 
-        public static final ActivityType SEAT_REVOKE = new ActivityType(Value.SEAT_REVOKE, "seat_revoke");
-
-        public static final ActivityType TRUSTED_DOMAINS_SETTING_CHANGE =
-                new ActivityType(Value.TRUSTED_DOMAINS_SETTING_CHANGE, "trusted_domains_setting_change");
-
-        public static final ActivityType MACRO_UPDATED = new ActivityType(Value.MACRO_UPDATED, "macro_updated");
-
         public static final ActivityType RULESET_ACTIVATION_TITLE_PREVIEW =
                 new ActivityType(Value.RULESET_ACTIVATION_TITLE_PREVIEW, "ruleset_activation_title_preview");
 
         public static final ActivityType MESSAGE_DELETION =
                 new ActivityType(Value.MESSAGE_DELETION, "message_deletion");
 
-        public static final ActivityType MESSENGER_SPACES_CHANGE =
-                new ActivityType(Value.MESSENGER_SPACES_CHANGE, "messenger_spaces_change");
+        public static final ActivityType SERIES_DELETION = new ActivityType(Value.SERIES_DELETION, "series_deletion");
 
         public static final ActivityType APP_NAME_CHANGE = new ActivityType(Value.APP_NAME_CHANGE, "app_name_change");
 
@@ -549,6 +610,9 @@ public final class ActivityLog {
 
         public static final ActivityType APP_GOOGLE_SSO_DOMAIN_CHANGE =
                 new ActivityType(Value.APP_GOOGLE_SSO_DOMAIN_CHANGE, "app_google_sso_domain_change");
+
+        public static final ActivityType SERIES_SETTINGS_UPDATE =
+                new ActivityType(Value.SERIES_SETTINGS_UPDATE, "series_settings_update");
 
         public static final ActivityType CONVERSATION_TOPIC_CREATION =
                 new ActivityType(Value.CONVERSATION_TOPIC_CREATION, "conversation_topic_creation");
@@ -559,35 +623,16 @@ public final class ActivityLog {
         public static final ActivityType HELP_CENTER_SETTINGS_CHANGE =
                 new ActivityType(Value.HELP_CENTER_SETTINGS_CHANGE, "help_center_settings_change");
 
-        public static final ActivityType ROLE_DELETION = new ActivityType(Value.ROLE_DELETION, "role_deletion");
-
         public static final ActivityType ATTACH_UPLOADS_INLINE_SETTING_CHANGE =
                 new ActivityType(Value.ATTACH_UPLOADS_INLINE_SETTING_CHANGE, "attach_uploads_inline_setting_change");
 
-        public static final ActivityType APP_PACKAGE_TOKEN_REGENERATION =
-                new ActivityType(Value.APP_PACKAGE_TOKEN_REGENERATION, "app_package_token_regeneration");
-
-        public static final ActivityType APP_TIMEZONE_CHANGE =
-                new ActivityType(Value.APP_TIMEZONE_CHANGE, "app_timezone_change");
-
-        public static final ActivityType ROLE_CHANGE = new ActivityType(Value.ROLE_CHANGE, "role_change");
-
-        public static final ActivityType USER_VOICE_NOTES_SETTING_CHANGE =
-                new ActivityType(Value.USER_VOICE_NOTES_SETTING_CHANGE, "user_voice_notes_setting_change");
-
         public static final ActivityType ADMIN_IMPERSONATION_START =
                 new ActivityType(Value.ADMIN_IMPERSONATION_START, "admin_impersonation_start");
-
-        public static final ActivityType USER_MEDIA_ATTACHMENTS_SETTING_CHANGE =
-                new ActivityType(Value.USER_MEDIA_ATTACHMENTS_SETTING_CHANGE, "user_media_attachments_setting_change");
 
         public static final ActivityType OAUTH_TOKEN_REVOCATION =
                 new ActivityType(Value.OAUTH_TOKEN_REVOCATION, "oauth_token_revocation");
 
         public static final ActivityType BULK_DELETE = new ActivityType(Value.BULK_DELETE, "bulk_delete");
-
-        public static final ActivityType ADMIN_INVITE_DELETION =
-                new ActivityType(Value.ADMIN_INVITE_DELETION, "admin_invite_deletion");
 
         public static final ActivityType ADMIN_PASSWORD_RESET_REQUEST =
                 new ActivityType(Value.ADMIN_PASSWORD_RESET_REQUEST, "admin_password_reset_request");
@@ -595,20 +640,8 @@ public final class ActivityLog {
         public static final ActivityType MALICIOUS_DOMAINS_SETTING_CHANGE =
                 new ActivityType(Value.MALICIOUS_DOMAINS_SETTING_CHANGE, "malicious_domains_setting_change");
 
-        public static final ActivityType USER_CONVERSATION_ATTACHMENTS_SETTING_CHANGE = new ActivityType(
-                Value.USER_CONVERSATION_ATTACHMENTS_SETTING_CHANGE, "user_conversation_attachments_setting_change");
-
         public static final ActivityType APP_DATA_DELETION =
                 new ActivityType(Value.APP_DATA_DELETION, "app_data_deletion");
-
-        public static final ActivityType TEAMMATE_GIFS_SETTING_CHANGE =
-                new ActivityType(Value.TEAMMATE_GIFS_SETTING_CHANGE, "teammate_gifs_setting_change");
-
-        public static final ActivityType APP_IDENTITY_VERIFICATION_CHANGE =
-                new ActivityType(Value.APP_IDENTITY_VERIFICATION_CHANGE, "app_identity_verification_change");
-
-        public static final ActivityType AUTOMATIC_AWAY_MODE_SETTING_CHANGE =
-                new ActivityType(Value.AUTOMATIC_AWAY_MODE_SETTING_CHANGE, "automatic_away_mode_setting_change");
 
         public static final ActivityType CONVERSATION_TOPIC_DELETION =
                 new ActivityType(Value.CONVERSATION_TOPIC_DELETION, "conversation_topic_deletion");
@@ -619,22 +652,11 @@ public final class ActivityLog {
         public static final ActivityType TEAM_ASSIGNMENT_LIMIT_CHANGE =
                 new ActivityType(Value.TEAM_ASSIGNMENT_LIMIT_CHANGE, "team_assignment_limit_change");
 
-        public static final ActivityType OFFICE_HOURS_CHANGE =
-                new ActivityType(Value.OFFICE_HOURS_CHANGE, "office_hours_change");
-
-        public static final ActivityType ADMIN_UNAUTHORIZED_SIGN_IN_METHOD =
-                new ActivityType(Value.ADMIN_UNAUTHORIZED_SIGN_IN_METHOD, "admin_unauthorized_sign_in_method");
-
-        public static final ActivityType BULK_EXPORT = new ActivityType(Value.BULK_EXPORT, "bulk_export");
-
         public static final ActivityType WELCOME_MESSAGE_CHANGE =
                 new ActivityType(Value.WELCOME_MESSAGE_CHANGE, "welcome_message_change");
 
         public static final ActivityType ADMIN_PROVISIONED =
                 new ActivityType(Value.ADMIN_PROVISIONED, "admin_provisioned");
-
-        public static final ActivityType UPFRONT_EMAIL_COLLECTION_CHANGE =
-                new ActivityType(Value.UPFRONT_EMAIL_COLLECTION_CHANGE, "upfront_email_collection_change");
 
         public static final ActivityType ADMIN_IMPERSONATION_CONSENT_REVOKED =
                 new ActivityType(Value.ADMIN_IMPERSONATION_CONSENT_REVOKED, "admin_impersonation_consent_revoked");
@@ -656,6 +678,8 @@ public final class ActivityLog {
         public static final ActivityType ADMIN_PERMISSION_CHANGE =
                 new ActivityType(Value.ADMIN_PERMISSION_CHANGE, "admin_permission_change");
 
+        public static final ActivityType MACRO_UPDATE = new ActivityType(Value.MACRO_UPDATE, "macro_update");
+
         public static final ActivityType ADMIN_TICKET_ASSIGNMENT_LIMIT_CHANGE =
                 new ActivityType(Value.ADMIN_TICKET_ASSIGNMENT_LIMIT_CHANGE, "admin_ticket_assignment_limit_change");
 
@@ -665,20 +689,8 @@ public final class ActivityLog {
         public static final ActivityType MESSAGE_STATE_CHANGE =
                 new ActivityType(Value.MESSAGE_STATE_CHANGE, "message_state_change");
 
-        public static final ActivityType ADMIN_INVITE_CREATION =
-                new ActivityType(Value.ADMIN_INVITE_CREATION, "admin_invite_creation");
-
         public static final ActivityType INBOX_ACCESS_CHANGE =
                 new ActivityType(Value.INBOX_ACCESS_CHANGE, "inbox_access_change");
-
-        public static final ActivityType ADMIN_INVITE_CHANGE =
-                new ActivityType(Value.ADMIN_INVITE_CHANGE, "admin_invite_change");
-
-        public static final ActivityType RULESET_DELETION =
-                new ActivityType(Value.RULESET_DELETION, "ruleset_deletion");
-
-        public static final ActivityType WORKSPACE_DELETION_REQUEST =
-                new ActivityType(Value.WORKSPACE_DELETION_REQUEST, "workspace_deletion_request");
 
         private final Value value;
 
@@ -712,42 +724,24 @@ public final class ActivityLog {
 
         public <T> T visit(Visitor<T> visitor) {
             switch (value) {
-                case CAMPAIGN_DELETION:
-                    return visitor.visitCampaignDeletion();
-                case ADMIN_LOGOUT:
-                    return visitor.visitAdminLogout();
                 case MACRO_DELETION:
                     return visitor.visitMacroDeletion();
-                case CUSTOM_AUTHENTICATION_TOKEN_CREATION:
-                    return visitor.visitCustomAuthenticationTokenCreation();
-                case TEMPORARY_EXPECTATION_CHANGE:
-                    return visitor.visitTemporaryExpectationChange();
-                case ADMIN_IMPERSONATION_END:
-                    return visitor.visitAdminImpersonationEnd();
                 case ADMIN_IMPERSONATION_CONSENT_APPROVED:
                     return visitor.visitAdminImpersonationConsentApproved();
-                case APP_OUTBOUND_ADDRESS_CHANGE:
-                    return visitor.visitAppOutboundAddressChange();
                 case MESSENGER_API_SECRET_DELETION:
                     return visitor.visitMessengerApiSecretDeletion();
                 case SEAT_CHANGE:
                     return visitor.visitSeatChange();
-                case USER_CAMERA_ATTACHMENTS_SETTING_CHANGE:
-                    return visitor.visitUserCameraAttachmentsSettingChange();
-                case SEARCH_BROWSE_REQUIRED_CHANGE:
-                    return visitor.visitSearchBrowseRequiredChange();
-                case SECURITY_SETTINGS_CHANGE:
-                    return visitor.visitSecuritySettingsChange();
                 case APP_TEAM_CREATION:
                     return visitor.visitAppTeamCreation();
+                case SERIES_UPDATE:
+                    return visitor.visitSeriesUpdate();
                 case APP_PACKAGE_UNINSTALLATION:
                     return visitor.visitAppPackageUninstallation();
                 case CONVERSATION_TOPIC_CHANGE:
                     return visitor.visitConversationTopicChange();
                 case CAMPAIGN_STATE_CHANGE:
                     return visitor.visitCampaignStateChange();
-                case UNASSIGN_UNSNOOZED_AT_CAPACITY_SETTING_CHANGE:
-                    return visitor.visitUnassignUnsnoozedAtCapacitySettingChange();
                 case ADMIN_AWAY_MODE_CHANGE:
                     return visitor.visitAdminAwayModeChange();
                 case CONVERSATION_PART_DELETION:
@@ -758,66 +752,28 @@ public final class ActivityLog {
                     return visitor.visitSearchBrowseEnabledChange();
                 case MESSENGER_SEARCH_REQUIRED_CHANGE:
                     return visitor.visitMessengerSearchRequiredChange();
-                case STRIP_INBOUND_EMAIL_LINKS_CHANGE:
-                    return visitor.visitStripInboundEmailLinksChange();
                 case USER_GIFS_SETTING_CHANGE:
                     return visitor.visitUserGifsSettingChange();
-                case ADMIN_DEPROVISIONED:
-                    return visitor.visitAdminDeprovisioned();
                 case APP_AUTHENTICATION_METHOD_CHANGE:
                     return visitor.visitAppAuthenticationMethodChange();
-                case RULESET_CREATION:
-                    return visitor.visitRulesetCreation();
-                case ADMIN_DELETION:
-                    return visitor.visitAdminDeletion();
-                case APP_PACKAGE_INSTALLATION:
-                    return visitor.visitAppPackageInstallation();
+                case SERIES_STATUS_CHANGE:
+                    return visitor.visitSeriesStatusChange();
                 case ADMIN_CONVERSATION_ASSIGNMENT_LIMIT_CHANGE:
                     return visitor.visitAdminConversationAssignmentLimitChange();
-                case ROLE_CREATION:
-                    return visitor.visitRoleCreation();
                 case APP_ADMIN_JOIN:
                     return visitor.visitAppAdminJoin();
                 case APP_DATA_EXPORT:
                     return visitor.visitAppDataExport();
                 case USER_FILE_ATTACHMENTS_SETTING_CHANGE:
                     return visitor.visitUserFileAttachmentsSettingChange();
-                case ADMIN_LOGIN_FAILURE:
-                    return visitor.visitAdminLoginFailure();
-                case APP_TEAM_DELETION:
-                    return visitor.visitAppTeamDeletion();
-                case MESSENGER_API_SECRET_CREATION:
-                    return visitor.visitMessengerApiSecretCreation();
-                case MESSENGER_LOOK_AND_FEEL_CHANGE:
-                    return visitor.visitMessengerLookAndFeelChange();
                 case SEAT_REVOKE:
                     return visitor.visitSeatRevoke();
                 case TRUSTED_DOMAINS_SETTING_CHANGE:
                     return visitor.visitTrustedDomainsSettingChange();
-                case MACRO_UPDATED:
-                    return visitor.visitMacroUpdated();
-                case RULESET_ACTIVATION_TITLE_PREVIEW:
-                    return visitor.visitRulesetActivationTitlePreview();
-                case MESSAGE_DELETION:
-                    return visitor.visitMessageDeletion();
                 case MESSENGER_SPACES_CHANGE:
                     return visitor.visitMessengerSpacesChange();
-                case APP_NAME_CHANGE:
-                    return visitor.visitAppNameChange();
-                case APP_WEBHOOK_CREATION:
-                    return visitor.visitAppWebhookCreation();
-                case APP_GOOGLE_SSO_DOMAIN_CHANGE:
-                    return visitor.visitAppGoogleSsoDomainChange();
-                case CONVERSATION_TOPIC_CREATION:
-                    return visitor.visitConversationTopicCreation();
-                case ALLOWED_ATTACHMENT_FILETYPES_SETTING_CHANGE:
-                    return visitor.visitAllowedAttachmentFiletypesSettingChange();
-                case HELP_CENTER_SETTINGS_CHANGE:
-                    return visitor.visitHelpCenterSettingsChange();
                 case ROLE_DELETION:
                     return visitor.visitRoleDeletion();
-                case ATTACH_UPLOADS_INLINE_SETTING_CHANGE:
-                    return visitor.visitAttachUploadsInlineSettingChange();
                 case APP_PACKAGE_TOKEN_REGENERATION:
                     return visitor.visitAppPackageTokenRegeneration();
                 case APP_TIMEZONE_CHANGE:
@@ -826,48 +782,120 @@ public final class ActivityLog {
                     return visitor.visitRoleChange();
                 case USER_VOICE_NOTES_SETTING_CHANGE:
                     return visitor.visitUserVoiceNotesSettingChange();
-                case ADMIN_IMPERSONATION_START:
-                    return visitor.visitAdminImpersonationStart();
                 case USER_MEDIA_ATTACHMENTS_SETTING_CHANGE:
                     return visitor.visitUserMediaAttachmentsSettingChange();
-                case OAUTH_TOKEN_REVOCATION:
-                    return visitor.visitOauthTokenRevocation();
-                case BULK_DELETE:
-                    return visitor.visitBulkDelete();
                 case ADMIN_INVITE_DELETION:
                     return visitor.visitAdminInviteDeletion();
-                case ADMIN_PASSWORD_RESET_REQUEST:
-                    return visitor.visitAdminPasswordResetRequest();
-                case MALICIOUS_DOMAINS_SETTING_CHANGE:
-                    return visitor.visitMaliciousDomainsSettingChange();
                 case USER_CONVERSATION_ATTACHMENTS_SETTING_CHANGE:
                     return visitor.visitUserConversationAttachmentsSettingChange();
-                case APP_DATA_DELETION:
-                    return visitor.visitAppDataDeletion();
                 case TEAMMATE_GIFS_SETTING_CHANGE:
                     return visitor.visitTeammateGifsSettingChange();
                 case APP_IDENTITY_VERIFICATION_CHANGE:
                     return visitor.visitAppIdentityVerificationChange();
                 case AUTOMATIC_AWAY_MODE_SETTING_CHANGE:
                     return visitor.visitAutomaticAwayModeSettingChange();
-                case CONVERSATION_TOPIC_DELETION:
-                    return visitor.visitConversationTopicDeletion();
-                case ADMIN_PASSWORD_RESET_SUCCESS:
-                    return visitor.visitAdminPasswordResetSuccess();
-                case TEAM_ASSIGNMENT_LIMIT_CHANGE:
-                    return visitor.visitTeamAssignmentLimitChange();
                 case OFFICE_HOURS_CHANGE:
                     return visitor.visitOfficeHoursChange();
                 case ADMIN_UNAUTHORIZED_SIGN_IN_METHOD:
                     return visitor.visitAdminUnauthorizedSignInMethod();
                 case BULK_EXPORT:
                     return visitor.visitBulkExport();
+                case SERIES_CREATION:
+                    return visitor.visitSeriesCreation();
+                case UPFRONT_EMAIL_COLLECTION_CHANGE:
+                    return visitor.visitUpfrontEmailCollectionChange();
+                case ADMIN_INVITE_CREATION:
+                    return visitor.visitAdminInviteCreation();
+                case ADMIN_INVITE_CHANGE:
+                    return visitor.visitAdminInviteChange();
+                case RULESET_DELETION:
+                    return visitor.visitRulesetDeletion();
+                case WORKSPACE_DELETION_REQUEST:
+                    return visitor.visitWorkspaceDeletionRequest();
+                case CAMPAIGN_DELETION:
+                    return visitor.visitCampaignDeletion();
+                case ADMIN_LOGOUT:
+                    return visitor.visitAdminLogout();
+                case CUSTOM_AUTHENTICATION_TOKEN_CREATION:
+                    return visitor.visitCustomAuthenticationTokenCreation();
+                case TEMPORARY_EXPECTATION_CHANGE:
+                    return visitor.visitTemporaryExpectationChange();
+                case ADMIN_IMPERSONATION_END:
+                    return visitor.visitAdminImpersonationEnd();
+                case APP_OUTBOUND_ADDRESS_CHANGE:
+                    return visitor.visitAppOutboundAddressChange();
+                case USER_CAMERA_ATTACHMENTS_SETTING_CHANGE:
+                    return visitor.visitUserCameraAttachmentsSettingChange();
+                case SEARCH_BROWSE_REQUIRED_CHANGE:
+                    return visitor.visitSearchBrowseRequiredChange();
+                case SECURITY_SETTINGS_CHANGE:
+                    return visitor.visitSecuritySettingsChange();
+                case UNASSIGN_UNSNOOZED_AT_CAPACITY_SETTING_CHANGE:
+                    return visitor.visitUnassignUnsnoozedAtCapacitySettingChange();
+                case STRIP_INBOUND_EMAIL_LINKS_CHANGE:
+                    return visitor.visitStripInboundEmailLinksChange();
+                case ADMIN_DEPROVISIONED:
+                    return visitor.visitAdminDeprovisioned();
+                case RULESET_CREATION:
+                    return visitor.visitRulesetCreation();
+                case ADMIN_DELETION:
+                    return visitor.visitAdminDeletion();
+                case APP_PACKAGE_INSTALLATION:
+                    return visitor.visitAppPackageInstallation();
+                case ROLE_CREATION:
+                    return visitor.visitRoleCreation();
+                case ADMIN_LOGIN_FAILURE:
+                    return visitor.visitAdminLoginFailure();
+                case APP_TEAM_DELETION:
+                    return visitor.visitAppTeamDeletion();
+                case MESSENGER_API_SECRET_CREATION:
+                    return visitor.visitMessengerApiSecretCreation();
+                case MESSENGER_LOOK_AND_FEEL_CHANGE:
+                    return visitor.visitMessengerLookAndFeelChange();
+                case RULESET_ACTIVATION_TITLE_PREVIEW:
+                    return visitor.visitRulesetActivationTitlePreview();
+                case MESSAGE_DELETION:
+                    return visitor.visitMessageDeletion();
+                case SERIES_DELETION:
+                    return visitor.visitSeriesDeletion();
+                case APP_NAME_CHANGE:
+                    return visitor.visitAppNameChange();
+                case APP_WEBHOOK_CREATION:
+                    return visitor.visitAppWebhookCreation();
+                case APP_GOOGLE_SSO_DOMAIN_CHANGE:
+                    return visitor.visitAppGoogleSsoDomainChange();
+                case SERIES_SETTINGS_UPDATE:
+                    return visitor.visitSeriesSettingsUpdate();
+                case CONVERSATION_TOPIC_CREATION:
+                    return visitor.visitConversationTopicCreation();
+                case ALLOWED_ATTACHMENT_FILETYPES_SETTING_CHANGE:
+                    return visitor.visitAllowedAttachmentFiletypesSettingChange();
+                case HELP_CENTER_SETTINGS_CHANGE:
+                    return visitor.visitHelpCenterSettingsChange();
+                case ATTACH_UPLOADS_INLINE_SETTING_CHANGE:
+                    return visitor.visitAttachUploadsInlineSettingChange();
+                case ADMIN_IMPERSONATION_START:
+                    return visitor.visitAdminImpersonationStart();
+                case OAUTH_TOKEN_REVOCATION:
+                    return visitor.visitOauthTokenRevocation();
+                case BULK_DELETE:
+                    return visitor.visitBulkDelete();
+                case ADMIN_PASSWORD_RESET_REQUEST:
+                    return visitor.visitAdminPasswordResetRequest();
+                case MALICIOUS_DOMAINS_SETTING_CHANGE:
+                    return visitor.visitMaliciousDomainsSettingChange();
+                case APP_DATA_DELETION:
+                    return visitor.visitAppDataDeletion();
+                case CONVERSATION_TOPIC_DELETION:
+                    return visitor.visitConversationTopicDeletion();
+                case ADMIN_PASSWORD_RESET_SUCCESS:
+                    return visitor.visitAdminPasswordResetSuccess();
+                case TEAM_ASSIGNMENT_LIMIT_CHANGE:
+                    return visitor.visitTeamAssignmentLimitChange();
                 case WELCOME_MESSAGE_CHANGE:
                     return visitor.visitWelcomeMessageChange();
                 case ADMIN_PROVISIONED:
                     return visitor.visitAdminProvisioned();
-                case UPFRONT_EMAIL_COLLECTION_CHANGE:
-                    return visitor.visitUpfrontEmailCollectionChange();
                 case ADMIN_IMPERSONATION_CONSENT_REVOKED:
                     return visitor.visitAdminImpersonationConsentRevoked();
                 case MACRO_CREATION:
@@ -882,22 +910,16 @@ public final class ActivityLog {
                     return visitor.visitAppTeamMembershipModification();
                 case ADMIN_PERMISSION_CHANGE:
                     return visitor.visitAdminPermissionChange();
+                case MACRO_UPDATE:
+                    return visitor.visitMacroUpdate();
                 case ADMIN_TICKET_ASSIGNMENT_LIMIT_CHANGE:
                     return visitor.visitAdminTicketAssignmentLimitChange();
                 case INBOUND_CONVERSATIONS_CHANGE:
                     return visitor.visitInboundConversationsChange();
                 case MESSAGE_STATE_CHANGE:
                     return visitor.visitMessageStateChange();
-                case ADMIN_INVITE_CREATION:
-                    return visitor.visitAdminInviteCreation();
                 case INBOX_ACCESS_CHANGE:
                     return visitor.visitInboxAccessChange();
-                case ADMIN_INVITE_CHANGE:
-                    return visitor.visitAdminInviteChange();
-                case RULESET_DELETION:
-                    return visitor.visitRulesetDeletion();
-                case WORKSPACE_DELETION_REQUEST:
-                    return visitor.visitWorkspaceDeletionRequest();
                 case UNKNOWN:
                 default:
                     return visitor.visitUnknown(string);
@@ -907,42 +929,24 @@ public final class ActivityLog {
         @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
         public static ActivityType valueOf(String value) {
             switch (value) {
-                case "campaign_deletion":
-                    return CAMPAIGN_DELETION;
-                case "admin_logout":
-                    return ADMIN_LOGOUT;
                 case "macro_deletion":
                     return MACRO_DELETION;
-                case "custom_authentication_token_creation":
-                    return CUSTOM_AUTHENTICATION_TOKEN_CREATION;
-                case "temporary_expectation_change":
-                    return TEMPORARY_EXPECTATION_CHANGE;
-                case "admin_impersonation_end":
-                    return ADMIN_IMPERSONATION_END;
                 case "admin_impersonation_consent_approved":
                     return ADMIN_IMPERSONATION_CONSENT_APPROVED;
-                case "app_outbound_address_change":
-                    return APP_OUTBOUND_ADDRESS_CHANGE;
                 case "messenger_api_secret_deletion":
                     return MESSENGER_API_SECRET_DELETION;
                 case "seat_change":
                     return SEAT_CHANGE;
-                case "user_camera_attachments_setting_change":
-                    return USER_CAMERA_ATTACHMENTS_SETTING_CHANGE;
-                case "search_browse_required_change":
-                    return SEARCH_BROWSE_REQUIRED_CHANGE;
-                case "security_settings_change":
-                    return SECURITY_SETTINGS_CHANGE;
                 case "app_team_creation":
                     return APP_TEAM_CREATION;
+                case "series_update":
+                    return SERIES_UPDATE;
                 case "app_package_uninstallation":
                     return APP_PACKAGE_UNINSTALLATION;
                 case "conversation_topic_change":
                     return CONVERSATION_TOPIC_CHANGE;
                 case "campaign_state_change":
                     return CAMPAIGN_STATE_CHANGE;
-                case "unassign_unsnoozed_at_capacity_setting_change":
-                    return UNASSIGN_UNSNOOZED_AT_CAPACITY_SETTING_CHANGE;
                 case "admin_away_mode_change":
                     return ADMIN_AWAY_MODE_CHANGE;
                 case "conversation_part_deletion":
@@ -953,66 +957,28 @@ public final class ActivityLog {
                     return SEARCH_BROWSE_ENABLED_CHANGE;
                 case "messenger_search_required_change":
                     return MESSENGER_SEARCH_REQUIRED_CHANGE;
-                case "strip_inbound_email_links_change":
-                    return STRIP_INBOUND_EMAIL_LINKS_CHANGE;
                 case "user_gifs_setting_change":
                     return USER_GIFS_SETTING_CHANGE;
-                case "admin_deprovisioned":
-                    return ADMIN_DEPROVISIONED;
                 case "app_authentication_method_change":
                     return APP_AUTHENTICATION_METHOD_CHANGE;
-                case "ruleset_creation":
-                    return RULESET_CREATION;
-                case "admin_deletion":
-                    return ADMIN_DELETION;
-                case "app_package_installation":
-                    return APP_PACKAGE_INSTALLATION;
+                case "series_status_change":
+                    return SERIES_STATUS_CHANGE;
                 case "admin_conversation_assignment_limit_change":
                     return ADMIN_CONVERSATION_ASSIGNMENT_LIMIT_CHANGE;
-                case "role_creation":
-                    return ROLE_CREATION;
                 case "app_admin_join":
                     return APP_ADMIN_JOIN;
                 case "app_data_export":
                     return APP_DATA_EXPORT;
                 case "user_file_attachments_setting_change":
                     return USER_FILE_ATTACHMENTS_SETTING_CHANGE;
-                case "admin_login_failure":
-                    return ADMIN_LOGIN_FAILURE;
-                case "app_team_deletion":
-                    return APP_TEAM_DELETION;
-                case "messenger_api_secret_creation":
-                    return MESSENGER_API_SECRET_CREATION;
-                case "messenger_look_and_feel_change":
-                    return MESSENGER_LOOK_AND_FEEL_CHANGE;
                 case "seat_revoke":
                     return SEAT_REVOKE;
                 case "trusted_domains_setting_change":
                     return TRUSTED_DOMAINS_SETTING_CHANGE;
-                case "macro_updated":
-                    return MACRO_UPDATED;
-                case "ruleset_activation_title_preview":
-                    return RULESET_ACTIVATION_TITLE_PREVIEW;
-                case "message_deletion":
-                    return MESSAGE_DELETION;
                 case "messenger_spaces_change":
                     return MESSENGER_SPACES_CHANGE;
-                case "app_name_change":
-                    return APP_NAME_CHANGE;
-                case "app_webhook_creation":
-                    return APP_WEBHOOK_CREATION;
-                case "app_google_sso_domain_change":
-                    return APP_GOOGLE_SSO_DOMAIN_CHANGE;
-                case "conversation_topic_creation":
-                    return CONVERSATION_TOPIC_CREATION;
-                case "allowed_attachment_filetypes_setting_change":
-                    return ALLOWED_ATTACHMENT_FILETYPES_SETTING_CHANGE;
-                case "help_center_settings_change":
-                    return HELP_CENTER_SETTINGS_CHANGE;
                 case "role_deletion":
                     return ROLE_DELETION;
-                case "attach_uploads_inline_setting_change":
-                    return ATTACH_UPLOADS_INLINE_SETTING_CHANGE;
                 case "app_package_token_regeneration":
                     return APP_PACKAGE_TOKEN_REGENERATION;
                 case "app_timezone_change":
@@ -1021,48 +987,120 @@ public final class ActivityLog {
                     return ROLE_CHANGE;
                 case "user_voice_notes_setting_change":
                     return USER_VOICE_NOTES_SETTING_CHANGE;
-                case "admin_impersonation_start":
-                    return ADMIN_IMPERSONATION_START;
                 case "user_media_attachments_setting_change":
                     return USER_MEDIA_ATTACHMENTS_SETTING_CHANGE;
-                case "oauth_token_revocation":
-                    return OAUTH_TOKEN_REVOCATION;
-                case "bulk_delete":
-                    return BULK_DELETE;
                 case "admin_invite_deletion":
                     return ADMIN_INVITE_DELETION;
-                case "admin_password_reset_request":
-                    return ADMIN_PASSWORD_RESET_REQUEST;
-                case "malicious_domains_setting_change":
-                    return MALICIOUS_DOMAINS_SETTING_CHANGE;
                 case "user_conversation_attachments_setting_change":
                     return USER_CONVERSATION_ATTACHMENTS_SETTING_CHANGE;
-                case "app_data_deletion":
-                    return APP_DATA_DELETION;
                 case "teammate_gifs_setting_change":
                     return TEAMMATE_GIFS_SETTING_CHANGE;
                 case "app_identity_verification_change":
                     return APP_IDENTITY_VERIFICATION_CHANGE;
                 case "automatic_away_mode_setting_change":
                     return AUTOMATIC_AWAY_MODE_SETTING_CHANGE;
-                case "conversation_topic_deletion":
-                    return CONVERSATION_TOPIC_DELETION;
-                case "admin_password_reset_success":
-                    return ADMIN_PASSWORD_RESET_SUCCESS;
-                case "team_assignment_limit_change":
-                    return TEAM_ASSIGNMENT_LIMIT_CHANGE;
                 case "office_hours_change":
                     return OFFICE_HOURS_CHANGE;
                 case "admin_unauthorized_sign_in_method":
                     return ADMIN_UNAUTHORIZED_SIGN_IN_METHOD;
                 case "bulk_export":
                     return BULK_EXPORT;
+                case "series_creation":
+                    return SERIES_CREATION;
+                case "upfront_email_collection_change":
+                    return UPFRONT_EMAIL_COLLECTION_CHANGE;
+                case "admin_invite_creation":
+                    return ADMIN_INVITE_CREATION;
+                case "admin_invite_change":
+                    return ADMIN_INVITE_CHANGE;
+                case "ruleset_deletion":
+                    return RULESET_DELETION;
+                case "workspace_deletion_request":
+                    return WORKSPACE_DELETION_REQUEST;
+                case "campaign_deletion":
+                    return CAMPAIGN_DELETION;
+                case "admin_logout":
+                    return ADMIN_LOGOUT;
+                case "custom_authentication_token_creation":
+                    return CUSTOM_AUTHENTICATION_TOKEN_CREATION;
+                case "temporary_expectation_change":
+                    return TEMPORARY_EXPECTATION_CHANGE;
+                case "admin_impersonation_end":
+                    return ADMIN_IMPERSONATION_END;
+                case "app_outbound_address_change":
+                    return APP_OUTBOUND_ADDRESS_CHANGE;
+                case "user_camera_attachments_setting_change":
+                    return USER_CAMERA_ATTACHMENTS_SETTING_CHANGE;
+                case "search_browse_required_change":
+                    return SEARCH_BROWSE_REQUIRED_CHANGE;
+                case "security_settings_change":
+                    return SECURITY_SETTINGS_CHANGE;
+                case "unassign_unsnoozed_at_capacity_setting_change":
+                    return UNASSIGN_UNSNOOZED_AT_CAPACITY_SETTING_CHANGE;
+                case "strip_inbound_email_links_change":
+                    return STRIP_INBOUND_EMAIL_LINKS_CHANGE;
+                case "admin_deprovisioned":
+                    return ADMIN_DEPROVISIONED;
+                case "ruleset_creation":
+                    return RULESET_CREATION;
+                case "admin_deletion":
+                    return ADMIN_DELETION;
+                case "app_package_installation":
+                    return APP_PACKAGE_INSTALLATION;
+                case "role_creation":
+                    return ROLE_CREATION;
+                case "admin_login_failure":
+                    return ADMIN_LOGIN_FAILURE;
+                case "app_team_deletion":
+                    return APP_TEAM_DELETION;
+                case "messenger_api_secret_creation":
+                    return MESSENGER_API_SECRET_CREATION;
+                case "messenger_look_and_feel_change":
+                    return MESSENGER_LOOK_AND_FEEL_CHANGE;
+                case "ruleset_activation_title_preview":
+                    return RULESET_ACTIVATION_TITLE_PREVIEW;
+                case "message_deletion":
+                    return MESSAGE_DELETION;
+                case "series_deletion":
+                    return SERIES_DELETION;
+                case "app_name_change":
+                    return APP_NAME_CHANGE;
+                case "app_webhook_creation":
+                    return APP_WEBHOOK_CREATION;
+                case "app_google_sso_domain_change":
+                    return APP_GOOGLE_SSO_DOMAIN_CHANGE;
+                case "series_settings_update":
+                    return SERIES_SETTINGS_UPDATE;
+                case "conversation_topic_creation":
+                    return CONVERSATION_TOPIC_CREATION;
+                case "allowed_attachment_filetypes_setting_change":
+                    return ALLOWED_ATTACHMENT_FILETYPES_SETTING_CHANGE;
+                case "help_center_settings_change":
+                    return HELP_CENTER_SETTINGS_CHANGE;
+                case "attach_uploads_inline_setting_change":
+                    return ATTACH_UPLOADS_INLINE_SETTING_CHANGE;
+                case "admin_impersonation_start":
+                    return ADMIN_IMPERSONATION_START;
+                case "oauth_token_revocation":
+                    return OAUTH_TOKEN_REVOCATION;
+                case "bulk_delete":
+                    return BULK_DELETE;
+                case "admin_password_reset_request":
+                    return ADMIN_PASSWORD_RESET_REQUEST;
+                case "malicious_domains_setting_change":
+                    return MALICIOUS_DOMAINS_SETTING_CHANGE;
+                case "app_data_deletion":
+                    return APP_DATA_DELETION;
+                case "conversation_topic_deletion":
+                    return CONVERSATION_TOPIC_DELETION;
+                case "admin_password_reset_success":
+                    return ADMIN_PASSWORD_RESET_SUCCESS;
+                case "team_assignment_limit_change":
+                    return TEAM_ASSIGNMENT_LIMIT_CHANGE;
                 case "welcome_message_change":
                     return WELCOME_MESSAGE_CHANGE;
                 case "admin_provisioned":
                     return ADMIN_PROVISIONED;
-                case "upfront_email_collection_change":
-                    return UPFRONT_EMAIL_COLLECTION_CHANGE;
                 case "admin_impersonation_consent_revoked":
                     return ADMIN_IMPERSONATION_CONSENT_REVOKED;
                 case "macro_creation":
@@ -1077,22 +1115,16 @@ public final class ActivityLog {
                     return APP_TEAM_MEMBERSHIP_MODIFICATION;
                 case "admin_permission_change":
                     return ADMIN_PERMISSION_CHANGE;
+                case "macro_update":
+                    return MACRO_UPDATE;
                 case "admin_ticket_assignment_limit_change":
                     return ADMIN_TICKET_ASSIGNMENT_LIMIT_CHANGE;
                 case "inbound_conversations_change":
                     return INBOUND_CONVERSATIONS_CHANGE;
                 case "message_state_change":
                     return MESSAGE_STATE_CHANGE;
-                case "admin_invite_creation":
-                    return ADMIN_INVITE_CREATION;
                 case "inbox_access_change":
                     return INBOX_ACCESS_CHANGE;
-                case "admin_invite_change":
-                    return ADMIN_INVITE_CHANGE;
-                case "ruleset_deletion":
-                    return RULESET_DELETION;
-                case "workspace_deletion_request":
-                    return WORKSPACE_DELETION_REQUEST;
                 default:
                     return new ActivityType(Value.UNKNOWN, value);
             }
@@ -1207,7 +1239,7 @@ public final class ActivityLog {
 
             MACRO_DELETION,
 
-            MACRO_UPDATED,
+            MACRO_UPDATE,
 
             MALICIOUS_DOMAINS_SETTING_CHANGE,
 
@@ -1250,6 +1282,16 @@ public final class ActivityLog {
             SEAT_REVOKE,
 
             SECURITY_SETTINGS_CHANGE,
+
+            SERIES_CREATION,
+
+            SERIES_DELETION,
+
+            SERIES_SETTINGS_UPDATE,
+
+            SERIES_STATUS_CHANGE,
+
+            SERIES_UPDATE,
 
             STRIP_INBOUND_EMAIL_LINKS_CHANGE,
 
@@ -1397,7 +1439,7 @@ public final class ActivityLog {
 
             T visitMacroDeletion();
 
-            T visitMacroUpdated();
+            T visitMacroUpdate();
 
             T visitMaliciousDomainsSettingChange();
 
@@ -1440,6 +1482,16 @@ public final class ActivityLog {
             T visitSeatRevoke();
 
             T visitSecuritySettingsChange();
+
+            T visitSeriesCreation();
+
+            T visitSeriesDeletion();
+
+            T visitSeriesSettingsUpdate();
+
+            T visitSeriesStatusChange();
+
+            T visitSeriesUpdate();
 
             T visitStripInboundEmailLinksChange();
 

@@ -38,6 +38,7 @@ import com.intercom.api.resources.unstable.ticketstates.AsyncTicketStatesClient;
 import com.intercom.api.resources.unstable.tickettypeattributes.AsyncTicketTypeAttributesClient;
 import com.intercom.api.resources.unstable.tickettypes.AsyncTicketTypesClient;
 import com.intercom.api.resources.unstable.visitors.AsyncVisitorsClient;
+import com.intercom.api.resources.unstable.workflows.AsyncWorkflowsClient;
 import java.util.function.Supplier;
 
 public class AsyncUnstableClient {
@@ -78,6 +79,8 @@ public class AsyncUnstableClient {
     protected final Supplier<AsyncDataEventsClient> dataEventsClient;
 
     protected final Supplier<AsyncDataExportClient> dataExportClient;
+
+    protected final Supplier<AsyncWorkflowsClient> workflowsClient;
 
     protected final Supplier<AsyncJobsClient> jobsClient;
 
@@ -129,6 +132,7 @@ public class AsyncUnstableClient {
         this.dataAttributesClient = Suppliers.memoize(() -> new AsyncDataAttributesClient(clientOptions));
         this.dataEventsClient = Suppliers.memoize(() -> new AsyncDataEventsClient(clientOptions));
         this.dataExportClient = Suppliers.memoize(() -> new AsyncDataExportClient(clientOptions));
+        this.workflowsClient = Suppliers.memoize(() -> new AsyncWorkflowsClient(clientOptions));
         this.jobsClient = Suppliers.memoize(() -> new AsyncJobsClient(clientOptions));
         this.macrosClient = Suppliers.memoize(() -> new AsyncMacrosClient(clientOptions));
         this.messagesClient = Suppliers.memoize(() -> new AsyncMessagesClient(clientOptions));
@@ -216,6 +220,10 @@ public class AsyncUnstableClient {
 
     public AsyncDataExportClient dataExport() {
         return this.dataExportClient.get();
+    }
+
+    public AsyncWorkflowsClient workflows() {
+        return this.workflowsClient.get();
     }
 
     public AsyncJobsClient jobs() {
