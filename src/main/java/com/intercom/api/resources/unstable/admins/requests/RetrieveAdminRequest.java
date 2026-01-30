@@ -66,7 +66,7 @@ public final class RetrieveAdminRequest {
 
     public interface IdStage {
         /**
-         * The unique identifier of a given admin
+         * <p>The unique identifier of a given admin</p>
          */
         _FinalStage id(int id);
 
@@ -93,7 +93,8 @@ public final class RetrieveAdminRequest {
         }
 
         /**
-         * The unique identifier of a given admin<p>The unique identifier of a given admin</p>
+         * <p>The unique identifier of a given admin</p>
+         * <p>The unique identifier of a given admin</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

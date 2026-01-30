@@ -9,12 +9,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.types.Reference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
@@ -24,13 +26,18 @@ public final class Tag {
 
     private final String name;
 
-    private final int appliedAt;
+    private final Optional<Integer> appliedAt;
 
-    private final Reference appliedBy;
+    private final Optional<Reference> appliedBy;
 
     private final Map<String, Object> additionalProperties;
 
-    private Tag(String id, String name, int appliedAt, Reference appliedBy, Map<String, Object> additionalProperties) {
+    private Tag(
+            String id,
+            String name,
+            Optional<Integer> appliedAt,
+            Optional<Reference> appliedBy,
+            Map<String, Object> additionalProperties) {
         this.id = id;
         this.name = name;
         this.appliedAt = appliedAt;
@@ -66,12 +73,12 @@ public final class Tag {
      * @return The time when the tag was applied to the object
      */
     @JsonProperty("applied_at")
-    public int getAppliedAt() {
+    public Optional<Integer> getAppliedAt() {
         return appliedAt;
     }
 
     @JsonProperty("applied_by")
-    public Reference getAppliedBy() {
+    public Optional<Reference> getAppliedBy() {
         return appliedBy;
     }
 
@@ -89,7 +96,7 @@ public final class Tag {
     private boolean equalTo(Tag other) {
         return id.equals(other.id)
                 && name.equals(other.name)
-                && appliedAt == other.appliedAt
+                && appliedAt.equals(other.appliedAt)
                 && appliedBy.equals(other.appliedBy);
     }
 
@@ -109,7 +116,7 @@ public final class Tag {
 
     public interface IdStage {
         /**
-         * The id of the tag
+         * <p>The id of the tag</p>
          */
         NameStage id(@NotNull String id);
 
@@ -118,35 +125,35 @@ public final class Tag {
 
     public interface NameStage {
         /**
-         * The name of the tag
+         * <p>The name of the tag</p>
          */
-        AppliedAtStage name(@NotNull String name);
-    }
-
-    public interface AppliedAtStage {
-        /**
-         * The time when the tag was applied to the object
-         */
-        AppliedByStage appliedAt(int appliedAt);
-    }
-
-    public interface AppliedByStage {
-        _FinalStage appliedBy(@NotNull Reference appliedBy);
+        _FinalStage name(@NotNull String name);
     }
 
     public interface _FinalStage {
         Tag build();
+
+        /**
+         * <p>The time when the tag was applied to the object</p>
+         */
+        _FinalStage appliedAt(Optional<Integer> appliedAt);
+
+        _FinalStage appliedAt(Integer appliedAt);
+
+        _FinalStage appliedBy(Optional<Reference> appliedBy);
+
+        _FinalStage appliedBy(Reference appliedBy);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements IdStage, NameStage, AppliedAtStage, AppliedByStage, _FinalStage {
+    public static final class Builder implements IdStage, NameStage, _FinalStage {
         private String id;
 
         private String name;
 
-        private int appliedAt;
+        private Optional<Reference> appliedBy = Optional.empty();
 
-        private Reference appliedBy;
+        private Optional<Integer> appliedAt = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -163,7 +170,8 @@ public final class Tag {
         }
 
         /**
-         * The id of the tag<p>The id of the tag</p>
+         * <p>The id of the tag</p>
+         * <p>The id of the tag</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -174,31 +182,47 @@ public final class Tag {
         }
 
         /**
-         * The name of the tag<p>The name of the tag</p>
+         * <p>The name of the tag</p>
+         * <p>The name of the tag</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
         @JsonSetter("name")
-        public AppliedAtStage name(@NotNull String name) {
+        public _FinalStage name(@NotNull String name) {
             this.name = Objects.requireNonNull(name, "name must not be null");
             return this;
         }
 
-        /**
-         * The time when the tag was applied to the object<p>The time when the tag was applied to the object</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
-        @JsonSetter("applied_at")
-        public AppliedByStage appliedAt(int appliedAt) {
-            this.appliedAt = appliedAt;
+        public _FinalStage appliedBy(Reference appliedBy) {
+            this.appliedBy = Optional.ofNullable(appliedBy);
             return this;
         }
 
         @java.lang.Override
-        @JsonSetter("applied_by")
-        public _FinalStage appliedBy(@NotNull Reference appliedBy) {
-            this.appliedBy = Objects.requireNonNull(appliedBy, "appliedBy must not be null");
+        @JsonSetter(value = "applied_by", nulls = Nulls.SKIP)
+        public _FinalStage appliedBy(Optional<Reference> appliedBy) {
+            this.appliedBy = appliedBy;
+            return this;
+        }
+
+        /**
+         * <p>The time when the tag was applied to the object</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage appliedAt(Integer appliedAt) {
+            this.appliedAt = Optional.ofNullable(appliedAt);
+            return this;
+        }
+
+        /**
+         * <p>The time when the tag was applied to the object</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "applied_at", nulls = Nulls.SKIP)
+        public _FinalStage appliedAt(Optional<Integer> appliedAt) {
+            this.appliedAt = appliedAt;
             return this;
         }
 

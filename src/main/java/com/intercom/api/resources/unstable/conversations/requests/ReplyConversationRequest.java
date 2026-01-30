@@ -77,7 +77,7 @@ public final class ReplyConversationRequest {
 
     public interface IdStage {
         /**
-         * The Intercom provisioned identifier for the conversation or the string "last" to reply to the last part of the conversation
+         * <p>The Intercom provisioned identifier for the conversation or the string &quot;last&quot; to reply to the last part of the conversation</p>
          */
         BodyStage id(@NotNull String id);
 
@@ -111,7 +111,8 @@ public final class ReplyConversationRequest {
         }
 
         /**
-         * The Intercom provisioned identifier for the conversation or the string "last" to reply to the last part of the conversation<p>The Intercom provisioned identifier for the conversation or the string &quot;last&quot; to reply to the last part of the conversation</p>
+         * <p>The Intercom provisioned identifier for the conversation or the string &quot;last&quot; to reply to the last part of the conversation</p>
+         * <p>The Intercom provisioned identifier for the conversation or the string &quot;last&quot; to reply to the last part of the conversation</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.resources.segments.types.Segment;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,14 +22,20 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = SegmentList.Builder.class)
 public final class SegmentList {
-    private final List<Segment> segments;
+    private final Optional<String> type;
+
+    private final Optional<List<Segment>> segments;
 
     private final Optional<Map<String, Object>> pages;
 
     private final Map<String, Object> additionalProperties;
 
     private SegmentList(
-            List<Segment> segments, Optional<Map<String, Object>> pages, Map<String, Object> additionalProperties) {
+            Optional<String> type,
+            Optional<List<Segment>> segments,
+            Optional<Map<String, Object>> pages,
+            Map<String, Object> additionalProperties) {
+        this.type = type;
         this.segments = segments;
         this.pages = pages;
         this.additionalProperties = additionalProperties;
@@ -40,15 +45,15 @@ public final class SegmentList {
      * @return The type of the object
      */
     @JsonProperty("type")
-    public String getType() {
-        return "segment.list";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return A list of Segment objects
      */
     @JsonProperty("segments")
-    public List<Segment> getSegments() {
+    public Optional<List<Segment>> getSegments() {
         return segments;
     }
 
@@ -72,12 +77,12 @@ public final class SegmentList {
     }
 
     private boolean equalTo(SegmentList other) {
-        return segments.equals(other.segments) && pages.equals(other.pages);
+        return type.equals(other.type) && segments.equals(other.segments) && pages.equals(other.pages);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.segments, this.pages);
+        return Objects.hash(this.type, this.segments, this.pages);
     }
 
     @java.lang.Override
@@ -91,7 +96,9 @@ public final class SegmentList {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
-        private List<Segment> segments = new ArrayList<>();
+        private Optional<String> type = Optional.empty();
+
+        private Optional<List<Segment>> segments = Optional.empty();
 
         private Optional<Map<String, Object>> pages = Optional.empty();
 
@@ -101,8 +108,23 @@ public final class SegmentList {
         private Builder() {}
 
         public Builder from(SegmentList other) {
+            type(other.getType());
             segments(other.getSegments());
             pages(other.getPages());
+            return this;
+        }
+
+        /**
+         * <p>The type of the object</p>
+         */
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
@@ -110,19 +132,13 @@ public final class SegmentList {
          * <p>A list of Segment objects</p>
          */
         @JsonSetter(value = "segments", nulls = Nulls.SKIP)
+        public Builder segments(Optional<List<Segment>> segments) {
+            this.segments = segments;
+            return this;
+        }
+
         public Builder segments(List<Segment> segments) {
-            this.segments.clear();
-            this.segments.addAll(segments);
-            return this;
-        }
-
-        public Builder addSegments(Segment segments) {
-            this.segments.add(segments);
-            return this;
-        }
-
-        public Builder addAllSegments(List<Segment> segments) {
-            this.segments.addAll(segments);
+            this.segments = Optional.ofNullable(segments);
             return this;
         }
 
@@ -141,7 +157,7 @@ public final class SegmentList {
         }
 
         public SegmentList build() {
-            return new SegmentList(segments, pages, additionalProperties);
+            return new SegmentList(type, segments, pages, additionalProperties);
         }
     }
 }

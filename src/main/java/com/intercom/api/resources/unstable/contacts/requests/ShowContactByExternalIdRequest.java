@@ -67,7 +67,7 @@ public final class ShowContactByExternalIdRequest {
 
     public interface ExternalIdStage {
         /**
-         * The external ID of the user that you want to retrieve
+         * <p>The external ID of the user that you want to retrieve</p>
          */
         _FinalStage externalId(@NotNull String externalId);
 
@@ -94,7 +94,8 @@ public final class ShowContactByExternalIdRequest {
         }
 
         /**
-         * The external ID of the user that you want to retrieve<p>The external ID of the user that you want to retrieve</p>
+         * <p>The external ID of the user that you want to retrieve</p>
+         * <p>The external ID of the user that you want to retrieve</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

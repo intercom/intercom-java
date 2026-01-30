@@ -99,7 +99,7 @@ public final class Message {
     }
 
     /**
-     * @return The type of message that was sent. Can be email, inapp, facebook ,twitter or sms.
+     * @return The type of message that was sent. Can be email, inapp, facebook, twitter, sms or whatsapp.
      */
     @JsonProperty("message_type")
     public MessageType getMessageType() {
@@ -152,7 +152,7 @@ public final class Message {
 
     public interface TypeStage {
         /**
-         * The type of the message
+         * <p>The type of the message</p>
          */
         IdStage type(@NotNull String type);
 
@@ -161,28 +161,28 @@ public final class Message {
 
     public interface IdStage {
         /**
-         * The id representing the message.
+         * <p>The id representing the message.</p>
          */
         CreatedAtStage id(@NotNull String id);
     }
 
     public interface CreatedAtStage {
         /**
-         * The time the conversation was created.
+         * <p>The time the conversation was created.</p>
          */
         BodyStage createdAt(int createdAt);
     }
 
     public interface BodyStage {
         /**
-         * The message body, which may contain HTML.
+         * <p>The message body, which may contain HTML.</p>
          */
         MessageTypeStage body(@NotNull String body);
     }
 
     public interface MessageTypeStage {
         /**
-         * The type of message that was sent. Can be email, inapp, facebook ,twitter or sms.
+         * <p>The type of message that was sent. Can be email, inapp, facebook, twitter, sms or whatsapp.</p>
          */
         _FinalStage messageType(@NotNull MessageType messageType);
     }
@@ -240,7 +240,8 @@ public final class Message {
         }
 
         /**
-         * The type of the message<p>The type of the message</p>
+         * <p>The type of the message</p>
+         * <p>The type of the message</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -251,7 +252,8 @@ public final class Message {
         }
 
         /**
-         * The id representing the message.<p>The id representing the message.</p>
+         * <p>The id representing the message.</p>
+         * <p>The id representing the message.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -262,7 +264,8 @@ public final class Message {
         }
 
         /**
-         * The time the conversation was created.<p>The time the conversation was created.</p>
+         * <p>The time the conversation was created.</p>
+         * <p>The time the conversation was created.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -273,7 +276,8 @@ public final class Message {
         }
 
         /**
-         * The message body, which may contain HTML.<p>The message body, which may contain HTML.</p>
+         * <p>The message body, which may contain HTML.</p>
+         * <p>The message body, which may contain HTML.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -284,7 +288,8 @@ public final class Message {
         }
 
         /**
-         * The type of message that was sent. Can be email, inapp, facebook ,twitter or sms.<p>The type of message that was sent. Can be email, inapp, facebook ,twitter or sms.</p>
+         * <p>The type of message that was sent. Can be email, inapp, facebook, twitter, sms or whatsapp.</p>
+         * <p>The type of message that was sent. Can be email, inapp, facebook, twitter, sms or whatsapp.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -347,6 +352,8 @@ public final class Message {
 
         public static final MessageType INAPP = new MessageType(Value.INAPP, "inapp");
 
+        public static final MessageType WHATSAPP = new MessageType(Value.WHATSAPP, "whatsapp");
+
         public static final MessageType SMS = new MessageType(Value.SMS, "sms");
 
         public static final MessageType TWITTER = new MessageType(Value.TWITTER, "twitter");
@@ -389,6 +396,8 @@ public final class Message {
                     return visitor.visitFacebook();
                 case INAPP:
                     return visitor.visitInapp();
+                case WHATSAPP:
+                    return visitor.visitWhatsapp();
                 case SMS:
                     return visitor.visitSms();
                 case TWITTER:
@@ -408,6 +417,8 @@ public final class Message {
                     return FACEBOOK;
                 case "inapp":
                     return INAPP;
+                case "whatsapp":
+                    return WHATSAPP;
                 case "sms":
                     return SMS;
                 case "twitter":
@@ -428,6 +439,8 @@ public final class Message {
 
             SMS,
 
+            WHATSAPP,
+
             UNKNOWN
         }
 
@@ -441,6 +454,8 @@ public final class Message {
             T visitTwitter();
 
             T visitSms();
+
+            T visitWhatsapp();
 
             T visitUnknown(String unknownType);
         }

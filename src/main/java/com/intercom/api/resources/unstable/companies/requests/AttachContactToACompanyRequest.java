@@ -78,7 +78,7 @@ public final class AttachContactToACompanyRequest {
 
     public interface IdStage {
         /**
-         * The unique identifier for the contact which is given by Intercom
+         * <p>The unique identifier for the contact which is given by Intercom</p>
          */
         CompanyIdStage id(@NotNull String id);
 
@@ -87,7 +87,7 @@ public final class AttachContactToACompanyRequest {
 
     public interface CompanyIdStage {
         /**
-         * The unique identifier for the company which is given by Intercom
+         * <p>The unique identifier for the company which is given by Intercom</p>
          */
         _FinalStage companyId(@NotNull String companyId);
     }
@@ -115,7 +115,8 @@ public final class AttachContactToACompanyRequest {
         }
 
         /**
-         * The unique identifier for the contact which is given by Intercom<p>The unique identifier for the contact which is given by Intercom</p>
+         * <p>The unique identifier for the contact which is given by Intercom</p>
+         * <p>The unique identifier for the contact which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -126,7 +127,8 @@ public final class AttachContactToACompanyRequest {
         }
 
         /**
-         * The unique identifier for the company which is given by Intercom<p>The unique identifier for the company which is given by Intercom</p>
+         * <p>The unique identifier for the company which is given by Intercom</p>
+         * <p>The unique identifier for the company which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

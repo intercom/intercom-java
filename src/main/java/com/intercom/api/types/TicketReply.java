@@ -19,18 +19,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = TicketReply.Builder.class)
 public final class TicketReply {
-    private final String id;
+    private final Optional<String> type;
 
-    private final PartType partType;
+    private final Optional<String> id;
+
+    private final Optional<PartType> partType;
 
     private final Optional<String> body;
 
-    private final int createdAt;
+    private final Optional<Integer> createdAt;
 
     private final Optional<Integer> updatedAt;
 
@@ -43,15 +44,17 @@ public final class TicketReply {
     private final Map<String, Object> additionalProperties;
 
     private TicketReply(
-            String id,
-            PartType partType,
+            Optional<String> type,
+            Optional<String> id,
+            Optional<PartType> partType,
             Optional<String> body,
-            int createdAt,
+            Optional<Integer> createdAt,
             Optional<Integer> updatedAt,
             Optional<TicketPartAuthor> author,
             Optional<List<PartAttachment>> attachments,
             Optional<Boolean> redacted,
             Map<String, Object> additionalProperties) {
+        this.type = type;
         this.id = id;
         this.partType = partType;
         this.body = body;
@@ -67,15 +70,15 @@ public final class TicketReply {
      * @return Always ticket_part
      */
     @JsonProperty("type")
-    public String getType() {
-        return "ticket_part";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The id representing the part.
      */
     @JsonProperty("id")
-    public String getId() {
+    public Optional<String> getId() {
         return id;
     }
 
@@ -83,7 +86,7 @@ public final class TicketReply {
      * @return Type of the part
      */
     @JsonProperty("part_type")
-    public PartType getPartType() {
+    public Optional<PartType> getPartType() {
         return partType;
     }
 
@@ -99,7 +102,7 @@ public final class TicketReply {
      * @return The time the note was created.
      */
     @JsonProperty("created_at")
-    public int getCreatedAt() {
+    public Optional<Integer> getCreatedAt() {
         return createdAt;
     }
 
@@ -144,10 +147,11 @@ public final class TicketReply {
     }
 
     private boolean equalTo(TicketReply other) {
-        return id.equals(other.id)
+        return type.equals(other.type)
+                && id.equals(other.id)
                 && partType.equals(other.partType)
                 && body.equals(other.body)
-                && createdAt == other.createdAt
+                && createdAt.equals(other.createdAt)
                 && updatedAt.equals(other.updatedAt)
                 && author.equals(other.author)
                 && attachments.equals(other.attachments)
@@ -157,6 +161,7 @@ public final class TicketReply {
     @java.lang.Override
     public int hashCode() {
         return Objects.hash(
+                this.type,
                 this.id,
                 this.partType,
                 this.body,
@@ -172,94 +177,37 @@ public final class TicketReply {
         return ObjectMappers.stringify(this);
     }
 
-    public static IdStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface IdStage {
-        /**
-         * The id representing the part.
-         */
-        PartTypeStage id(@NotNull String id);
-
-        Builder from(TicketReply other);
-    }
-
-    public interface PartTypeStage {
-        /**
-         * Type of the part
-         */
-        CreatedAtStage partType(@NotNull PartType partType);
-    }
-
-    public interface CreatedAtStage {
-        /**
-         * The time the note was created.
-         */
-        _FinalStage createdAt(int createdAt);
-    }
-
-    public interface _FinalStage {
-        TicketReply build();
-
-        /**
-         * <p>The message body, which may contain HTML.</p>
-         */
-        _FinalStage body(Optional<String> body);
-
-        _FinalStage body(String body);
-
-        /**
-         * <p>The last time the note was updated.</p>
-         */
-        _FinalStage updatedAt(Optional<Integer> updatedAt);
-
-        _FinalStage updatedAt(Integer updatedAt);
-
-        _FinalStage author(Optional<TicketPartAuthor> author);
-
-        _FinalStage author(TicketPartAuthor author);
-
-        /**
-         * <p>A list of attachments for the part.</p>
-         */
-        _FinalStage attachments(Optional<List<PartAttachment>> attachments);
-
-        _FinalStage attachments(List<PartAttachment> attachments);
-
-        /**
-         * <p>Whether or not the ticket part has been redacted.</p>
-         */
-        _FinalStage redacted(Optional<Boolean> redacted);
-
-        _FinalStage redacted(Boolean redacted);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements IdStage, PartTypeStage, CreatedAtStage, _FinalStage {
-        private String id;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private PartType partType;
+        private Optional<String> id = Optional.empty();
 
-        private int createdAt;
+        private Optional<PartType> partType = Optional.empty();
 
-        private Optional<Boolean> redacted = Optional.empty();
+        private Optional<String> body = Optional.empty();
 
-        private Optional<List<PartAttachment>> attachments = Optional.empty();
-
-        private Optional<TicketPartAuthor> author = Optional.empty();
+        private Optional<Integer> createdAt = Optional.empty();
 
         private Optional<Integer> updatedAt = Optional.empty();
 
-        private Optional<String> body = Optional.empty();
+        private Optional<TicketPartAuthor> author = Optional.empty();
+
+        private Optional<List<PartAttachment>> attachments = Optional.empty();
+
+        private Optional<Boolean> redacted = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(TicketReply other) {
+            type(other.getType());
             id(other.getId());
             partType(other.getPartType());
             body(other.getBody());
@@ -272,135 +220,140 @@ public final class TicketReply {
         }
 
         /**
-         * The id representing the part.<p>The id representing the part.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Always ticket_part</p>
          */
-        @java.lang.Override
-        @JsonSetter("id")
-        public PartTypeStage id(@NotNull String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
-         * Type of the part<p>Type of the part</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The id representing the part.</p>
          */
-        @java.lang.Override
-        @JsonSetter("part_type")
-        public CreatedAtStage partType(@NotNull PartType partType) {
-            this.partType = Objects.requireNonNull(partType, "partType must not be null");
+        @JsonSetter(value = "id", nulls = Nulls.SKIP)
+        public Builder id(Optional<String> id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder id(String id) {
+            this.id = Optional.ofNullable(id);
             return this;
         }
 
         /**
-         * The time the note was created.<p>The time the note was created.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Type of the part</p>
          */
-        @java.lang.Override
-        @JsonSetter("created_at")
-        public _FinalStage createdAt(int createdAt) {
-            this.createdAt = createdAt;
+        @JsonSetter(value = "part_type", nulls = Nulls.SKIP)
+        public Builder partType(Optional<PartType> partType) {
+            this.partType = partType;
             return this;
         }
 
-        /**
-         * <p>Whether or not the ticket part has been redacted.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage redacted(Boolean redacted) {
-            this.redacted = Optional.ofNullable(redacted);
-            return this;
-        }
-
-        /**
-         * <p>Whether or not the ticket part has been redacted.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "redacted", nulls = Nulls.SKIP)
-        public _FinalStage redacted(Optional<Boolean> redacted) {
-            this.redacted = redacted;
-            return this;
-        }
-
-        /**
-         * <p>A list of attachments for the part.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage attachments(List<PartAttachment> attachments) {
-            this.attachments = Optional.ofNullable(attachments);
-            return this;
-        }
-
-        /**
-         * <p>A list of attachments for the part.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "attachments", nulls = Nulls.SKIP)
-        public _FinalStage attachments(Optional<List<PartAttachment>> attachments) {
-            this.attachments = attachments;
-            return this;
-        }
-
-        @java.lang.Override
-        public _FinalStage author(TicketPartAuthor author) {
-            this.author = Optional.ofNullable(author);
-            return this;
-        }
-
-        @java.lang.Override
-        @JsonSetter(value = "author", nulls = Nulls.SKIP)
-        public _FinalStage author(Optional<TicketPartAuthor> author) {
-            this.author = author;
-            return this;
-        }
-
-        /**
-         * <p>The last time the note was updated.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage updatedAt(Integer updatedAt) {
-            this.updatedAt = Optional.ofNullable(updatedAt);
-            return this;
-        }
-
-        /**
-         * <p>The last time the note was updated.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
-        public _FinalStage updatedAt(Optional<Integer> updatedAt) {
-            this.updatedAt = updatedAt;
+        public Builder partType(PartType partType) {
+            this.partType = Optional.ofNullable(partType);
             return this;
         }
 
         /**
          * <p>The message body, which may contain HTML.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @java.lang.Override
-        public _FinalStage body(String body) {
+        @JsonSetter(value = "body", nulls = Nulls.SKIP)
+        public Builder body(Optional<String> body) {
+            this.body = body;
+            return this;
+        }
+
+        public Builder body(String body) {
             this.body = Optional.ofNullable(body);
             return this;
         }
 
         /**
-         * <p>The message body, which may contain HTML.</p>
+         * <p>The time the note was created.</p>
          */
-        @java.lang.Override
-        @JsonSetter(value = "body", nulls = Nulls.SKIP)
-        public _FinalStage body(Optional<String> body) {
-            this.body = body;
+        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
+        public Builder createdAt(Optional<Integer> createdAt) {
+            this.createdAt = createdAt;
             return this;
         }
 
-        @java.lang.Override
+        public Builder createdAt(Integer createdAt) {
+            this.createdAt = Optional.ofNullable(createdAt);
+            return this;
+        }
+
+        /**
+         * <p>The last time the note was updated.</p>
+         */
+        @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
+        public Builder updatedAt(Optional<Integer> updatedAt) {
+            this.updatedAt = updatedAt;
+            return this;
+        }
+
+        public Builder updatedAt(Integer updatedAt) {
+            this.updatedAt = Optional.ofNullable(updatedAt);
+            return this;
+        }
+
+        @JsonSetter(value = "author", nulls = Nulls.SKIP)
+        public Builder author(Optional<TicketPartAuthor> author) {
+            this.author = author;
+            return this;
+        }
+
+        public Builder author(TicketPartAuthor author) {
+            this.author = Optional.ofNullable(author);
+            return this;
+        }
+
+        /**
+         * <p>A list of attachments for the part.</p>
+         */
+        @JsonSetter(value = "attachments", nulls = Nulls.SKIP)
+        public Builder attachments(Optional<List<PartAttachment>> attachments) {
+            this.attachments = attachments;
+            return this;
+        }
+
+        public Builder attachments(List<PartAttachment> attachments) {
+            this.attachments = Optional.ofNullable(attachments);
+            return this;
+        }
+
+        /**
+         * <p>Whether or not the ticket part has been redacted.</p>
+         */
+        @JsonSetter(value = "redacted", nulls = Nulls.SKIP)
+        public Builder redacted(Optional<Boolean> redacted) {
+            this.redacted = redacted;
+            return this;
+        }
+
+        public Builder redacted(Boolean redacted) {
+            this.redacted = Optional.ofNullable(redacted);
+            return this;
+        }
+
         public TicketReply build() {
             return new TicketReply(
-                    id, partType, body, createdAt, updatedAt, author, attachments, redacted, additionalProperties);
+                    type,
+                    id,
+                    partType,
+                    body,
+                    createdAt,
+                    updatedAt,
+                    author,
+                    attachments,
+                    redacted,
+                    additionalProperties);
         }
     }
 

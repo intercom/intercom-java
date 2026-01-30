@@ -66,7 +66,7 @@ public final class RetrieveNoteRequest {
 
     public interface IdStage {
         /**
-         * The unique identifier of a given note
+         * <p>The unique identifier of a given note</p>
          */
         _FinalStage id(int id);
 
@@ -93,7 +93,8 @@ public final class RetrieveNoteRequest {
         }
 
         /**
-         * The unique identifier of a given note<p>The unique identifier of a given note</p>
+         * <p>The unique identifier of a given note</p>
+         * <p>The unique identifier of a given note</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

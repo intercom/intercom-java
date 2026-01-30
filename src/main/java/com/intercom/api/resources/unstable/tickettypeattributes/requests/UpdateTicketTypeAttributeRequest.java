@@ -226,7 +226,7 @@ public final class UpdateTicketTypeAttributeRequest {
 
     public interface TicketTypeIdStage {
         /**
-         * The unique identifier for the ticket type which is given by Intercom.
+         * <p>The unique identifier for the ticket type which is given by Intercom.</p>
          */
         IdStage ticketTypeId(@NotNull String ticketTypeId);
 
@@ -235,7 +235,7 @@ public final class UpdateTicketTypeAttributeRequest {
 
     public interface IdStage {
         /**
-         * The unique identifier for the ticket type attribute which is given by Intercom.
+         * <p>The unique identifier for the ticket type attribute which is given by Intercom.</p>
          */
         _FinalStage id(@NotNull String id);
     }
@@ -363,7 +363,8 @@ public final class UpdateTicketTypeAttributeRequest {
         }
 
         /**
-         * The unique identifier for the ticket type which is given by Intercom.<p>The unique identifier for the ticket type which is given by Intercom.</p>
+         * <p>The unique identifier for the ticket type which is given by Intercom.</p>
+         * <p>The unique identifier for the ticket type which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -374,7 +375,8 @@ public final class UpdateTicketTypeAttributeRequest {
         }
 
         /**
-         * The unique identifier for the ticket type attribute which is given by Intercom.<p>The unique identifier for the ticket type attribute which is given by Intercom.</p>
+         * <p>The unique identifier for the ticket type attribute which is given by Intercom.</p>
+         * <p>The unique identifier for the ticket type attribute which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

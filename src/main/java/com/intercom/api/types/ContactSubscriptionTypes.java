@@ -12,31 +12,30 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ContactSubscriptionTypes.Builder.class)
 public final class ContactSubscriptionTypes {
-    private final List<AddressableList> data;
+    private final Optional<List<AddressableList>> data;
 
-    private final String url;
+    private final Optional<String> url;
 
-    private final int totalCount;
+    private final Optional<Integer> totalCount;
 
-    private final boolean hasMore;
+    private final Optional<Boolean> hasMore;
 
     private final Map<String, Object> additionalProperties;
 
     private ContactSubscriptionTypes(
-            List<AddressableList> data,
-            String url,
-            int totalCount,
-            boolean hasMore,
+            Optional<List<AddressableList>> data,
+            Optional<String> url,
+            Optional<Integer> totalCount,
+            Optional<Boolean> hasMore,
             Map<String, Object> additionalProperties) {
         this.data = data;
         this.url = url;
@@ -49,7 +48,7 @@ public final class ContactSubscriptionTypes {
      * @return This object represents the subscriptions attached to a contact.
      */
     @JsonProperty("data")
-    public List<AddressableList> getData() {
+    public Optional<List<AddressableList>> getData() {
         return data;
     }
 
@@ -57,7 +56,7 @@ public final class ContactSubscriptionTypes {
      * @return Url to get more subscription type resources for this contact
      */
     @JsonProperty("url")
-    public String getUrl() {
+    public Optional<String> getUrl() {
         return url;
     }
 
@@ -65,7 +64,7 @@ public final class ContactSubscriptionTypes {
      * @return Int representing the total number of subscription types attached to this contact
      */
     @JsonProperty("total_count")
-    public int getTotalCount() {
+    public Optional<Integer> getTotalCount() {
         return totalCount;
     }
 
@@ -73,7 +72,7 @@ public final class ContactSubscriptionTypes {
      * @return Whether there's more Addressable Objects to be viewed. If true, use the url to view all
      */
     @JsonProperty("has_more")
-    public boolean getHasMore() {
+    public Optional<Boolean> getHasMore() {
         return hasMore;
     }
 
@@ -91,8 +90,8 @@ public final class ContactSubscriptionTypes {
     private boolean equalTo(ContactSubscriptionTypes other) {
         return data.equals(other.data)
                 && url.equals(other.url)
-                && totalCount == other.totalCount
-                && hasMore == other.hasMore;
+                && totalCount.equals(other.totalCount)
+                && hasMore.equals(other.hasMore);
     }
 
     @java.lang.Override
@@ -105,62 +104,25 @@ public final class ContactSubscriptionTypes {
         return ObjectMappers.stringify(this);
     }
 
-    public static UrlStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface UrlStage {
-        /**
-         * Url to get more subscription type resources for this contact
-         */
-        TotalCountStage url(@NotNull String url);
-
-        Builder from(ContactSubscriptionTypes other);
-    }
-
-    public interface TotalCountStage {
-        /**
-         * Int representing the total number of subscription types attached to this contact
-         */
-        HasMoreStage totalCount(int totalCount);
-    }
-
-    public interface HasMoreStage {
-        /**
-         * Whether there's more Addressable Objects to be viewed. If true, use the url to view all
-         */
-        _FinalStage hasMore(boolean hasMore);
-    }
-
-    public interface _FinalStage {
-        ContactSubscriptionTypes build();
-
-        /**
-         * <p>This object represents the subscriptions attached to a contact.</p>
-         */
-        _FinalStage data(List<AddressableList> data);
-
-        _FinalStage addData(AddressableList data);
-
-        _FinalStage addAllData(List<AddressableList> data);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements UrlStage, TotalCountStage, HasMoreStage, _FinalStage {
-        private String url;
+    public static final class Builder {
+        private Optional<List<AddressableList>> data = Optional.empty();
 
-        private int totalCount;
+        private Optional<String> url = Optional.empty();
 
-        private boolean hasMore;
+        private Optional<Integer> totalCount = Optional.empty();
 
-        private List<AddressableList> data = new ArrayList<>();
+        private Optional<Boolean> hasMore = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(ContactSubscriptionTypes other) {
             data(other.getData());
             url(other.getUrl());
@@ -170,70 +132,61 @@ public final class ContactSubscriptionTypes {
         }
 
         /**
-         * Url to get more subscription type resources for this contact<p>Url to get more subscription type resources for this contact</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>This object represents the subscriptions attached to a contact.</p>
          */
-        @java.lang.Override
-        @JsonSetter("url")
-        public TotalCountStage url(@NotNull String url) {
-            this.url = Objects.requireNonNull(url, "url must not be null");
+        @JsonSetter(value = "data", nulls = Nulls.SKIP)
+        public Builder data(Optional<List<AddressableList>> data) {
+            this.data = data;
+            return this;
+        }
+
+        public Builder data(List<AddressableList> data) {
+            this.data = Optional.ofNullable(data);
             return this;
         }
 
         /**
-         * Int representing the total number of subscription types attached to this contact<p>Int representing the total number of subscription types attached to this contact</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Url to get more subscription type resources for this contact</p>
          */
-        @java.lang.Override
-        @JsonSetter("total_count")
-        public HasMoreStage totalCount(int totalCount) {
+        @JsonSetter(value = "url", nulls = Nulls.SKIP)
+        public Builder url(Optional<String> url) {
+            this.url = url;
+            return this;
+        }
+
+        public Builder url(String url) {
+            this.url = Optional.ofNullable(url);
+            return this;
+        }
+
+        /**
+         * <p>Int representing the total number of subscription types attached to this contact</p>
+         */
+        @JsonSetter(value = "total_count", nulls = Nulls.SKIP)
+        public Builder totalCount(Optional<Integer> totalCount) {
             this.totalCount = totalCount;
             return this;
         }
 
+        public Builder totalCount(Integer totalCount) {
+            this.totalCount = Optional.ofNullable(totalCount);
+            return this;
+        }
+
         /**
-         * Whether there's more Addressable Objects to be viewed. If true, use the url to view all<p>Whether there's more Addressable Objects to be viewed. If true, use the url to view all</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Whether there's more Addressable Objects to be viewed. If true, use the url to view all</p>
          */
-        @java.lang.Override
-        @JsonSetter("has_more")
-        public _FinalStage hasMore(boolean hasMore) {
+        @JsonSetter(value = "has_more", nulls = Nulls.SKIP)
+        public Builder hasMore(Optional<Boolean> hasMore) {
             this.hasMore = hasMore;
             return this;
         }
 
-        /**
-         * <p>This object represents the subscriptions attached to a contact.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addAllData(List<AddressableList> data) {
-            this.data.addAll(data);
+        public Builder hasMore(Boolean hasMore) {
+            this.hasMore = Optional.ofNullable(hasMore);
             return this;
         }
 
-        /**
-         * <p>This object represents the subscriptions attached to a contact.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addData(AddressableList data) {
-            this.data.add(data);
-            return this;
-        }
-
-        /**
-         * <p>This object represents the subscriptions attached to a contact.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "data", nulls = Nulls.SKIP)
-        public _FinalStage data(List<AddressableList> data) {
-            this.data.clear();
-            this.data.addAll(data);
-            return this;
-        }
-
-        @java.lang.Override
         public ContactSubscriptionTypes build() {
             return new ContactSubscriptionTypes(data, url, totalCount, hasMore, additionalProperties);
         }

@@ -95,7 +95,7 @@ public final class ListContactNotesRequest {
 
     public interface ContactIdStage {
         /**
-         * The unique identifier of a contact.
+         * <p>The unique identifier of a contact.</p>
          */
         _FinalStage contactId(@NotNull String contactId);
 
@@ -142,7 +142,8 @@ public final class ListContactNotesRequest {
         }
 
         /**
-         * The unique identifier of a contact.<p>The unique identifier of a contact.</p>
+         * <p>The unique identifier of a contact.</p>
+         * <p>The unique identifier of a contact.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

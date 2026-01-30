@@ -447,9 +447,6 @@ public final class ActivityLog {
         public static final ActivityType CONVERSATION_TOPIC_CHANGE =
                 new ActivityType(Value.CONVERSATION_TOPIC_CHANGE, "conversation_topic_change");
 
-        public static final ActivityType ADMIN_ASSIGNMENT_LIMIT_CHANGE =
-                new ActivityType(Value.ADMIN_ASSIGNMENT_LIMIT_CHANGE, "admin_assignment_limit_change");
-
         public static final ActivityType CAMPAIGN_STATE_CHANGE =
                 new ActivityType(Value.CAMPAIGN_STATE_CHANGE, "campaign_state_change");
 
@@ -481,6 +478,9 @@ public final class ActivityLog {
 
         public static final ActivityType APP_PACKAGE_INSTALLATION =
                 new ActivityType(Value.APP_PACKAGE_INSTALLATION, "app_package_installation");
+
+        public static final ActivityType ADMIN_CONVERSATION_ASSIGNMENT_LIMIT_CHANGE = new ActivityType(
+                Value.ADMIN_CONVERSATION_ASSIGNMENT_LIMIT_CHANGE, "admin_conversation_assignment_limit_change");
 
         public static final ActivityType ROLE_CREATION = new ActivityType(Value.ROLE_CREATION, "role_creation");
 
@@ -587,6 +587,9 @@ public final class ActivityLog {
         public static final ActivityType ADMIN_PERMISSION_CHANGE =
                 new ActivityType(Value.ADMIN_PERMISSION_CHANGE, "admin_permission_change");
 
+        public static final ActivityType ADMIN_TICKET_ASSIGNMENT_LIMIT_CHANGE =
+                new ActivityType(Value.ADMIN_TICKET_ASSIGNMENT_LIMIT_CHANGE, "admin_ticket_assignment_limit_change");
+
         public static final ActivityType INBOUND_CONVERSATIONS_CHANGE =
                 new ActivityType(Value.INBOUND_CONVERSATIONS_CHANGE, "inbound_conversations_change");
 
@@ -659,8 +662,6 @@ public final class ActivityLog {
                     return visitor.visitAppPackageUninstallation();
                 case CONVERSATION_TOPIC_CHANGE:
                     return visitor.visitConversationTopicChange();
-                case ADMIN_ASSIGNMENT_LIMIT_CHANGE:
-                    return visitor.visitAdminAssignmentLimitChange();
                 case CAMPAIGN_STATE_CHANGE:
                     return visitor.visitCampaignStateChange();
                 case ADMIN_AWAY_MODE_CHANGE:
@@ -683,6 +684,8 @@ public final class ActivityLog {
                     return visitor.visitAdminDeletion();
                 case APP_PACKAGE_INSTALLATION:
                     return visitor.visitAppPackageInstallation();
+                case ADMIN_CONVERSATION_ASSIGNMENT_LIMIT_CHANGE:
+                    return visitor.visitAdminConversationAssignmentLimitChange();
                 case ROLE_CREATION:
                     return visitor.visitRoleCreation();
                 case APP_ADMIN_JOIN:
@@ -759,6 +762,8 @@ public final class ActivityLog {
                     return visitor.visitAppTeamMembershipModification();
                 case ADMIN_PERMISSION_CHANGE:
                     return visitor.visitAdminPermissionChange();
+                case ADMIN_TICKET_ASSIGNMENT_LIMIT_CHANGE:
+                    return visitor.visitAdminTicketAssignmentLimitChange();
                 case INBOUND_CONVERSATIONS_CHANGE:
                     return visitor.visitInboundConversationsChange();
                 case MESSAGE_STATE_CHANGE:
@@ -802,8 +807,6 @@ public final class ActivityLog {
                     return APP_PACKAGE_UNINSTALLATION;
                 case "conversation_topic_change":
                     return CONVERSATION_TOPIC_CHANGE;
-                case "admin_assignment_limit_change":
-                    return ADMIN_ASSIGNMENT_LIMIT_CHANGE;
                 case "campaign_state_change":
                     return CAMPAIGN_STATE_CHANGE;
                 case "admin_away_mode_change":
@@ -826,6 +829,8 @@ public final class ActivityLog {
                     return ADMIN_DELETION;
                 case "app_package_installation":
                     return APP_PACKAGE_INSTALLATION;
+                case "admin_conversation_assignment_limit_change":
+                    return ADMIN_CONVERSATION_ASSIGNMENT_LIMIT_CHANGE;
                 case "role_creation":
                     return ROLE_CREATION;
                 case "app_admin_join":
@@ -902,6 +907,8 @@ public final class ActivityLog {
                     return APP_TEAM_MEMBERSHIP_MODIFICATION;
                 case "admin_permission_change":
                     return ADMIN_PERMISSION_CHANGE;
+                case "admin_ticket_assignment_limit_change":
+                    return ADMIN_TICKET_ASSIGNMENT_LIMIT_CHANGE;
                 case "inbound_conversations_change":
                     return INBOUND_CONVERSATIONS_CHANGE;
                 case "message_state_change":
@@ -920,7 +927,9 @@ public final class ActivityLog {
         }
 
         public enum Value {
-            ADMIN_ASSIGNMENT_LIMIT_CHANGE,
+            ADMIN_CONVERSATION_ASSIGNMENT_LIMIT_CHANGE,
+
+            ADMIN_TICKET_ASSIGNMENT_LIMIT_CHANGE,
 
             ADMIN_AWAY_MODE_CHANGE,
 
@@ -1058,7 +1067,9 @@ public final class ActivityLog {
         }
 
         public interface Visitor<T> {
-            T visitAdminAssignmentLimitChange();
+            T visitAdminConversationAssignmentLimitChange();
+
+            T visitAdminTicketAssignmentLimitChange();
 
             T visitAdminAwayModeChange();
 

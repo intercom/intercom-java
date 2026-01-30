@@ -2,11 +2,11 @@ package com.intercom.api.integration;
 
 import com.intercom.api.Intercom;
 import com.intercom.api.resources.companies.requests.AttachContactToCompanyRequest;
-import com.intercom.api.resources.companies.requests.CreateOrUpdateCompanyRequest;
+import com.intercom.api.resources.contacts.types.ContactsCreateResponse;
+import com.intercom.api.types.CreateOrUpdateCompanyRequest;
 import com.intercom.api.resources.companies.requests.DeleteCompanyRequest;
 import com.intercom.api.resources.companies.types.Company;
 import com.intercom.api.resources.contacts.requests.DeleteContactRequest;
-import com.intercom.api.resources.contacts.types.Contact;
 import com.intercom.api.resources.conversations.requests.CreateConversationRequest;
 import com.intercom.api.resources.messages.types.Message;
 import com.intercom.api.resources.tags.requests.DeleteTagRequest;
@@ -28,18 +28,24 @@ public class IntegrationTest {
     private Intercom client;
     private String adminId;
     private Company company;
-    private Contact user;
-    private Contact lead;
+    private ContactsCreateResponse user;
+    private ContactsCreateResponse lead;
+    private String userId;
+    private String leadId;
     private Tag tag;
 
     @BeforeEach
     public void before() {
         // arrange
         client = TestClientFactory.create();
-        adminId = client.admins().list().getAdmins().get(0).getId();
+        adminId = client.admins().list().getAdmins()
+                .orElseThrow(() -> new RuntimeException("Admins list is required"))
+                .get(0)
+                .orElseThrow(() -> new RuntimeException("Admin is required"))
+                .getId();
 
         company = client.companies()
-                .createOrUpdate(CreateOrUpdateCompanyRequest.builder()
+                .createOrUpdate(java.util.Optional.of(CreateOrUpdateCompanyRequest.builder()
                         .name(Utils.randomString())
                         .companyId(Utils.randomString())
                         .plan("1. Get pizzaid")
@@ -48,16 +54,18 @@ public class IntegrationTest {
                         .industry("The Best One")
                         .remoteCreatedAt((int) (new Date().toInstant().toEpochMilli() / 1000L))
                         .monthlySpend(9001)
-                        .build());
+                        .build()));
         user = client.contacts()
                 .create(CreateContactRequest.of(CreateContactRequest.WithExternalId.builder()
                         .externalId(Utils.randomString())
                         .build()));
+        userId = user.getId().orElseThrow(() -> new RuntimeException("User ID is required"));
         lead = client.contacts()
                 .create(CreateContactRequest.of(CreateContactRequest.WithRole.builder()
                         .role("lead")
                         .name("Marek Barek")
                         .build()));
+        leadId = lead.getId().orElseThrow(() -> new RuntimeException("Lead ID is required"));
         tag = client.tags()
                 .create(TagsCreateRequestBody.of(CreateOrUpdateTagRequest.builder()
                         .name(Utils.randomString())
@@ -77,7 +85,7 @@ public class IntegrationTest {
         // act
         Company response = client.companies()
                 .attachContact(AttachContactToCompanyRequest.builder()
-                        .contactId(user.getId())
+                        .contactId(userId)
                         .companyId(company.getId())
                         .build());
 
@@ -92,7 +100,7 @@ public class IntegrationTest {
                 .create(CreateConversationRequest.builder()
                         .from(CreateConversationRequest.From.builder()
                                 .type(CreateConversationRequest.From.Type.USER)
-                                .id(user.getId())
+                                .id(userId)
                                 .build())
                         .body("Welcome to the club, buddy!")
                         .build());
@@ -108,7 +116,7 @@ public class IntegrationTest {
                 .create(CreateConversationRequest.builder()
                         .from(CreateConversationRequest.From.builder()
                                 .type(CreateConversationRequest.From.Type.USER)
-                                .id(user.getId())
+                                .id(userId)
                                 .build())
                         .body("Welcome to the club, buddy!")
                         .build());
@@ -116,7 +124,8 @@ public class IntegrationTest {
         // act
         Tag response = client.tags()
                 .tagConversation(TagConversationRequest.builder()
-                        .conversationId(message.getConversationId())
+                        .conversationId(message.getConversationId()
+                                .orElseThrow(() -> new RuntimeException("Conversation ID is required")))
                         .tagId(tag.getId())
                         .adminId(adminId)
                         .build());
@@ -129,11 +138,11 @@ public class IntegrationTest {
         try {
             client.contacts()
                     .delete(DeleteContactRequest.builder()
-                            .contactId(user.getId())
+                            .contactId(userId)
                             .build());
             client.contacts()
                     .delete(DeleteContactRequest.builder()
-                            .contactId(lead.getId())
+                            .contactId(leadId)
                             .build());
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete contacts.", e);

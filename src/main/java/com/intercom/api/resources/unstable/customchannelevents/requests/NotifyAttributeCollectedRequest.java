@@ -105,7 +105,7 @@ public final class NotifyAttributeCollectedRequest implements ICustomChannelBase
 
     public interface EventIdStage {
         /**
-         * Unique identifier for the event.
+         * <p>Unique identifier for the event.</p>
          */
         ExternalConversationIdStage eventId(@NotNull String eventId);
 
@@ -114,7 +114,7 @@ public final class NotifyAttributeCollectedRequest implements ICustomChannelBase
 
     public interface ExternalConversationIdStage {
         /**
-         * Identifier for the conversation in your application.
+         * <p>Identifier for the conversation in your application.</p>
          */
         ContactStage externalConversationId(@NotNull String externalConversationId);
     }
@@ -157,7 +157,8 @@ public final class NotifyAttributeCollectedRequest implements ICustomChannelBase
         }
 
         /**
-         * Unique identifier for the event.<p>Unique identifier for the event.</p>
+         * <p>Unique identifier for the event.</p>
+         * <p>Unique identifier for the event.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -168,7 +169,8 @@ public final class NotifyAttributeCollectedRequest implements ICustomChannelBase
         }
 
         /**
-         * Identifier for the conversation in your application.<p>Identifier for the conversation in your application.</p>
+         * <p>Identifier for the conversation in your application.</p>
+         * <p>Identifier for the conversation in your application.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

@@ -34,6 +34,10 @@ public final class HelpCenter {
 
     private final Optional<String> displayName;
 
+    private final Optional<String> url;
+
+    private final Optional<String> customDomain;
+
     private final Map<String, Object> additionalProperties;
 
     private HelpCenter(
@@ -44,6 +48,8 @@ public final class HelpCenter {
             Optional<String> identifier,
             Optional<Boolean> websiteTurnedOn,
             Optional<String> displayName,
+            Optional<String> url,
+            Optional<String> customDomain,
             Map<String, Object> additionalProperties) {
         this.id = id;
         this.workspaceId = workspaceId;
@@ -52,6 +58,8 @@ public final class HelpCenter {
         this.identifier = identifier;
         this.websiteTurnedOn = websiteTurnedOn;
         this.displayName = displayName;
+        this.url = url;
+        this.customDomain = customDomain;
         this.additionalProperties = additionalProperties;
     }
 
@@ -111,6 +119,22 @@ public final class HelpCenter {
         return displayName;
     }
 
+    /**
+     * @return The URL for the help center, if you have a custom domain then this will show the URL using the custom domain.
+     */
+    @JsonProperty("url")
+    public Optional<String> getUrl() {
+        return url;
+    }
+
+    /**
+     * @return Custom domain configured for the help center
+     */
+    @JsonProperty("custom_domain")
+    public Optional<String> getCustomDomain() {
+        return customDomain;
+    }
+
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
@@ -129,7 +153,9 @@ public final class HelpCenter {
                 && updatedAt.equals(other.updatedAt)
                 && identifier.equals(other.identifier)
                 && websiteTurnedOn.equals(other.websiteTurnedOn)
-                && displayName.equals(other.displayName);
+                && displayName.equals(other.displayName)
+                && url.equals(other.url)
+                && customDomain.equals(other.customDomain);
     }
 
     @java.lang.Override
@@ -141,7 +167,9 @@ public final class HelpCenter {
                 this.updatedAt,
                 this.identifier,
                 this.websiteTurnedOn,
-                this.displayName);
+                this.displayName,
+                this.url,
+                this.customDomain);
     }
 
     @java.lang.Override
@@ -169,6 +197,10 @@ public final class HelpCenter {
 
         private Optional<String> displayName = Optional.empty();
 
+        private Optional<String> url = Optional.empty();
+
+        private Optional<String> customDomain = Optional.empty();
+
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -182,6 +214,8 @@ public final class HelpCenter {
             identifier(other.getIdentifier());
             websiteTurnedOn(other.getWebsiteTurnedOn());
             displayName(other.getDisplayName());
+            url(other.getUrl());
+            customDomain(other.getCustomDomain());
             return this;
         }
 
@@ -283,6 +317,34 @@ public final class HelpCenter {
             return this;
         }
 
+        /**
+         * <p>The URL for the help center, if you have a custom domain then this will show the URL using the custom domain.</p>
+         */
+        @JsonSetter(value = "url", nulls = Nulls.SKIP)
+        public Builder url(Optional<String> url) {
+            this.url = url;
+            return this;
+        }
+
+        public Builder url(String url) {
+            this.url = Optional.ofNullable(url);
+            return this;
+        }
+
+        /**
+         * <p>Custom domain configured for the help center</p>
+         */
+        @JsonSetter(value = "custom_domain", nulls = Nulls.SKIP)
+        public Builder customDomain(Optional<String> customDomain) {
+            this.customDomain = customDomain;
+            return this;
+        }
+
+        public Builder customDomain(String customDomain) {
+            this.customDomain = Optional.ofNullable(customDomain);
+            return this;
+        }
+
         public HelpCenter build() {
             return new HelpCenter(
                     id,
@@ -292,6 +354,8 @@ public final class HelpCenter {
                     identifier,
                     websiteTurnedOn,
                     displayName,
+                    url,
+                    customDomain,
                     additionalProperties);
         }
     }

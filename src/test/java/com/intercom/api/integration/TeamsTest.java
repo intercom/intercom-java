@@ -18,7 +18,11 @@ public class TeamsTest {
     public void before() {
         // arrange
         client = TestClientFactory.create();
-        teamId = client.teams().list().getTeams().get(0).getId();
+        teamId = client.teams().list().getTeams()
+                .orElseThrow(() -> new RuntimeException("Teams list is required"))
+                .get(0)
+                .getId()
+                .orElseThrow(() -> new RuntimeException("Team ID is required"));
     }
 
     @Test

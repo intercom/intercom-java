@@ -174,7 +174,7 @@ public final class NewsItemRequest {
 
     public interface TitleStage {
         /**
-         * The title of the news item.
+         * <p>The title of the news item.</p>
          */
         SenderIdStage title(@NotNull String title);
 
@@ -183,7 +183,7 @@ public final class NewsItemRequest {
 
     public interface SenderIdStage {
         /**
-         * The id of the sender of the news item. Must be a teammate on the workspace.
+         * <p>The id of the sender of the news item. Must be a teammate on the workspace.</p>
          */
         _FinalStage senderId(int senderId);
     }
@@ -271,7 +271,8 @@ public final class NewsItemRequest {
         }
 
         /**
-         * The title of the news item.<p>The title of the news item.</p>
+         * <p>The title of the news item.</p>
+         * <p>The title of the news item.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -282,7 +283,8 @@ public final class NewsItemRequest {
         }
 
         /**
-         * The id of the sender of the news item. Must be a teammate on the workspace.<p>The id of the sender of the news item. Must be a teammate on the workspace.</p>
+         * <p>The id of the sender of the news item. Must be a teammate on the workspace.</p>
+         * <p>The id of the sender of the news item. Must be a teammate on the workspace.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

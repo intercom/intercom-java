@@ -14,16 +14,15 @@ import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = DeleteCollectionRequest.Builder.class)
 public final class DeleteCollectionRequest {
-    private final String collectionId;
+    private final int collectionId;
 
     private final Map<String, Object> additionalProperties;
 
-    private DeleteCollectionRequest(String collectionId, Map<String, Object> additionalProperties) {
+    private DeleteCollectionRequest(int collectionId, Map<String, Object> additionalProperties) {
         this.collectionId = collectionId;
         this.additionalProperties = additionalProperties;
     }
@@ -32,7 +31,7 @@ public final class DeleteCollectionRequest {
      * @return The unique identifier for the collection which is given by Intercom.
      */
     @JsonProperty("collection_id")
-    public String getCollectionId() {
+    public int getCollectionId() {
         return collectionId;
     }
 
@@ -48,7 +47,7 @@ public final class DeleteCollectionRequest {
     }
 
     private boolean equalTo(DeleteCollectionRequest other) {
-        return collectionId.equals(other.collectionId);
+        return collectionId == other.collectionId;
     }
 
     @java.lang.Override
@@ -67,9 +66,9 @@ public final class DeleteCollectionRequest {
 
     public interface CollectionIdStage {
         /**
-         * The unique identifier for the collection which is given by Intercom.
+         * <p>The unique identifier for the collection which is given by Intercom.</p>
          */
-        _FinalStage collectionId(@NotNull String collectionId);
+        _FinalStage collectionId(int collectionId);
 
         Builder from(DeleteCollectionRequest other);
     }
@@ -80,7 +79,7 @@ public final class DeleteCollectionRequest {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder implements CollectionIdStage, _FinalStage {
-        private String collectionId;
+        private int collectionId;
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -94,13 +93,14 @@ public final class DeleteCollectionRequest {
         }
 
         /**
-         * The unique identifier for the collection which is given by Intercom.<p>The unique identifier for the collection which is given by Intercom.</p>
+         * <p>The unique identifier for the collection which is given by Intercom.</p>
+         * <p>The unique identifier for the collection which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
         @JsonSetter("collection_id")
-        public _FinalStage collectionId(@NotNull String collectionId) {
-            this.collectionId = Objects.requireNonNull(collectionId, "collectionId must not be null");
+        public _FinalStage collectionId(int collectionId) {
+            this.collectionId = collectionId;
             return this;
         }
 

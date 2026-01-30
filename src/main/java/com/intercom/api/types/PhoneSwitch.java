@@ -9,21 +9,25 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = PhoneSwitch.Builder.class)
 public final class PhoneSwitch {
-    private final String phone;
+    private final Optional<String> type;
+
+    private final Optional<String> phone;
 
     private final Map<String, Object> additionalProperties;
 
-    private PhoneSwitch(String phone, Map<String, Object> additionalProperties) {
+    private PhoneSwitch(Optional<String> type, Optional<String> phone, Map<String, Object> additionalProperties) {
+        this.type = type;
         this.phone = phone;
         this.additionalProperties = additionalProperties;
     }
@@ -32,15 +36,15 @@ public final class PhoneSwitch {
      * @return
      */
     @JsonProperty("type")
-    public String getType() {
-        return "phone_call_redirect";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return Phone number in E.164 format, that has received the SMS to continue the conversation in the Messenger.
      */
     @JsonProperty("phone")
-    public String getPhone() {
+    public Optional<String> getPhone() {
         return phone;
     }
 
@@ -56,12 +60,12 @@ public final class PhoneSwitch {
     }
 
     private boolean equalTo(PhoneSwitch other) {
-        return phone.equals(other.phone);
+        return type.equals(other.type) && phone.equals(other.phone);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.phone);
+        return Objects.hash(this.type, this.phone);
     }
 
     @java.lang.Override
@@ -69,52 +73,54 @@ public final class PhoneSwitch {
         return ObjectMappers.stringify(this);
     }
 
-    public static PhoneStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface PhoneStage {
-        /**
-         * Phone number in E.164 format, that has received the SMS to continue the conversation in the Messenger.
-         */
-        _FinalStage phone(@NotNull String phone);
-
-        Builder from(PhoneSwitch other);
-    }
-
-    public interface _FinalStage {
-        PhoneSwitch build();
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements PhoneStage, _FinalStage {
-        private String phone;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
+
+        private Optional<String> phone = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(PhoneSwitch other) {
+            type(other.getType());
             phone(other.getPhone());
             return this;
         }
 
-        /**
-         * Phone number in E.164 format, that has received the SMS to continue the conversation in the Messenger.<p>Phone number in E.164 format, that has received the SMS to continue the conversation in the Messenger.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("phone")
-        public _FinalStage phone(@NotNull String phone) {
-            this.phone = Objects.requireNonNull(phone, "phone must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
             return this;
         }
 
-        @java.lang.Override
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
+            return this;
+        }
+
+        /**
+         * <p>Phone number in E.164 format, that has received the SMS to continue the conversation in the Messenger.</p>
+         */
+        @JsonSetter(value = "phone", nulls = Nulls.SKIP)
+        public Builder phone(Optional<String> phone) {
+            this.phone = phone;
+            return this;
+        }
+
+        public Builder phone(String phone) {
+            this.phone = Optional.ofNullable(phone);
+            return this;
+        }
+
         public PhoneSwitch build() {
-            return new PhoneSwitch(phone, additionalProperties);
+            return new PhoneSwitch(type, phone, additionalProperties);
         }
     }
 }

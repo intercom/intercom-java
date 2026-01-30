@@ -9,13 +9,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
@@ -23,20 +21,10 @@ import org.jetbrains.annotations.NotNull;
 public final class ListAttachedContactsRequest {
     private final String companyId;
 
-    private final Optional<Integer> page;
-
-    private final Optional<Integer> perPage;
-
     private final Map<String, Object> additionalProperties;
 
-    private ListAttachedContactsRequest(
-            String companyId,
-            Optional<Integer> page,
-            Optional<Integer> perPage,
-            Map<String, Object> additionalProperties) {
+    private ListAttachedContactsRequest(String companyId, Map<String, Object> additionalProperties) {
         this.companyId = companyId;
-        this.page = page;
-        this.perPage = perPage;
         this.additionalProperties = additionalProperties;
     }
 
@@ -46,22 +34,6 @@ public final class ListAttachedContactsRequest {
     @JsonProperty("company_id")
     public String getCompanyId() {
         return companyId;
-    }
-
-    /**
-     * @return The page of results to fetch. Defaults to first page
-     */
-    @JsonProperty("page")
-    public Optional<Integer> getPage() {
-        return page;
-    }
-
-    /**
-     * @return How many results to return per page. Defaults to 15
-     */
-    @JsonProperty("per_page")
-    public Optional<Integer> getPerPage() {
-        return perPage;
     }
 
     @java.lang.Override
@@ -76,12 +48,12 @@ public final class ListAttachedContactsRequest {
     }
 
     private boolean equalTo(ListAttachedContactsRequest other) {
-        return companyId.equals(other.companyId) && page.equals(other.page) && perPage.equals(other.perPage);
+        return companyId.equals(other.companyId);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.companyId, this.page, this.perPage);
+        return Objects.hash(this.companyId);
     }
 
     @java.lang.Override
@@ -95,7 +67,7 @@ public final class ListAttachedContactsRequest {
 
     public interface CompanyIdStage {
         /**
-         * The unique identifier for the company which is given by Intercom
+         * <p>The unique identifier for the company which is given by Intercom</p>
          */
         _FinalStage companyId(@NotNull String companyId);
 
@@ -104,29 +76,11 @@ public final class ListAttachedContactsRequest {
 
     public interface _FinalStage {
         ListAttachedContactsRequest build();
-
-        /**
-         * <p>The page of results to fetch. Defaults to first page</p>
-         */
-        _FinalStage page(Optional<Integer> page);
-
-        _FinalStage page(Integer page);
-
-        /**
-         * <p>How many results to return per page. Defaults to 15</p>
-         */
-        _FinalStage perPage(Optional<Integer> perPage);
-
-        _FinalStage perPage(Integer perPage);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder implements CompanyIdStage, _FinalStage {
         private String companyId;
-
-        private Optional<Integer> perPage = Optional.empty();
-
-        private Optional<Integer> page = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -136,13 +90,12 @@ public final class ListAttachedContactsRequest {
         @java.lang.Override
         public Builder from(ListAttachedContactsRequest other) {
             companyId(other.getCompanyId());
-            page(other.getPage());
-            perPage(other.getPerPage());
             return this;
         }
 
         /**
-         * The unique identifier for the company which is given by Intercom<p>The unique identifier for the company which is given by Intercom</p>
+         * <p>The unique identifier for the company which is given by Intercom</p>
+         * <p>The unique identifier for the company which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -152,49 +105,9 @@ public final class ListAttachedContactsRequest {
             return this;
         }
 
-        /**
-         * <p>How many results to return per page. Defaults to 15</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage perPage(Integer perPage) {
-            this.perPage = Optional.ofNullable(perPage);
-            return this;
-        }
-
-        /**
-         * <p>How many results to return per page. Defaults to 15</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "per_page", nulls = Nulls.SKIP)
-        public _FinalStage perPage(Optional<Integer> perPage) {
-            this.perPage = perPage;
-            return this;
-        }
-
-        /**
-         * <p>The page of results to fetch. Defaults to first page</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage page(Integer page) {
-            this.page = Optional.ofNullable(page);
-            return this;
-        }
-
-        /**
-         * <p>The page of results to fetch. Defaults to first page</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "page", nulls = Nulls.SKIP)
-        public _FinalStage page(Optional<Integer> page) {
-            this.page = page;
-            return this;
-        }
-
         @java.lang.Override
         public ListAttachedContactsRequest build() {
-            return new ListAttachedContactsRequest(companyId, page, perPage, additionalProperties);
+            return new ListAttachedContactsRequest(companyId, additionalProperties);
         }
     }
 }

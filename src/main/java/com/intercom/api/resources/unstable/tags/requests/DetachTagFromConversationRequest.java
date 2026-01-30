@@ -90,7 +90,7 @@ public final class DetachTagFromConversationRequest {
 
     public interface ConversationIdStage {
         /**
-         * conversation_id
+         * <p>conversation_id</p>
          */
         IdStage conversationId(@NotNull String conversationId);
 
@@ -99,14 +99,14 @@ public final class DetachTagFromConversationRequest {
 
     public interface IdStage {
         /**
-         * id
+         * <p>id</p>
          */
         AdminIdStage id(@NotNull String id);
     }
 
     public interface AdminIdStage {
         /**
-         * The unique identifier for the admin which is given by Intercom.
+         * <p>The unique identifier for the admin which is given by Intercom.</p>
          */
         _FinalStage adminId(@NotNull String adminId);
     }
@@ -137,7 +137,8 @@ public final class DetachTagFromConversationRequest {
         }
 
         /**
-         * conversation_id<p>conversation_id</p>
+         * <p>conversation_id</p>
+         * <p>conversation_id</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -148,7 +149,8 @@ public final class DetachTagFromConversationRequest {
         }
 
         /**
-         * id<p>id</p>
+         * <p>id</p>
+         * <p>id</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -159,7 +161,8 @@ public final class DetachTagFromConversationRequest {
         }
 
         /**
-         * The unique identifier for the admin which is given by Intercom.<p>The unique identifier for the admin which is given by Intercom.</p>
+         * <p>The unique identifier for the admin which is given by Intercom.</p>
+         * <p>The unique identifier for the admin which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

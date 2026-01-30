@@ -12,32 +12,32 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = AdminWithApp.Builder.class)
 public final class AdminWithApp {
-    private final String id;
+    private final Optional<String> type;
 
-    private final String name;
+    private final Optional<String> id;
 
-    private final String email;
+    private final Optional<String> name;
 
-    private final String jobTitle;
+    private final Optional<String> email;
 
-    private final boolean awayModeEnabled;
+    private final Optional<String> jobTitle;
 
-    private final boolean awayModeReassign;
+    private final Optional<Boolean> awayModeEnabled;
 
-    private final boolean hasInboxSeat;
+    private final Optional<Boolean> awayModeReassign;
 
-    private final List<Integer> teamIds;
+    private final Optional<Boolean> hasInboxSeat;
+
+    private final Optional<List<Integer>> teamIds;
 
     private final Optional<Avatar> avatar;
 
@@ -48,18 +48,20 @@ public final class AdminWithApp {
     private final Map<String, Object> additionalProperties;
 
     private AdminWithApp(
-            String id,
-            String name,
-            String email,
-            String jobTitle,
-            boolean awayModeEnabled,
-            boolean awayModeReassign,
-            boolean hasInboxSeat,
-            List<Integer> teamIds,
+            Optional<String> type,
+            Optional<String> id,
+            Optional<String> name,
+            Optional<String> email,
+            Optional<String> jobTitle,
+            Optional<Boolean> awayModeEnabled,
+            Optional<Boolean> awayModeReassign,
+            Optional<Boolean> hasInboxSeat,
+            Optional<List<Integer>> teamIds,
             Optional<Avatar> avatar,
             Optional<Boolean> emailVerified,
             Optional<App> app,
             Map<String, Object> additionalProperties) {
+        this.type = type;
         this.id = id;
         this.name = name;
         this.email = email;
@@ -78,15 +80,15 @@ public final class AdminWithApp {
      * @return String representing the object's type. Always has the value <code>admin</code>.
      */
     @JsonProperty("type")
-    public String getType() {
-        return "admin";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return The id representing the admin.
      */
     @JsonProperty("id")
-    public String getId() {
+    public Optional<String> getId() {
         return id;
     }
 
@@ -94,7 +96,7 @@ public final class AdminWithApp {
      * @return The name of the admin.
      */
     @JsonProperty("name")
-    public String getName() {
+    public Optional<String> getName() {
         return name;
     }
 
@@ -102,7 +104,7 @@ public final class AdminWithApp {
      * @return The email of the admin.
      */
     @JsonProperty("email")
-    public String getEmail() {
+    public Optional<String> getEmail() {
         return email;
     }
 
@@ -110,7 +112,7 @@ public final class AdminWithApp {
      * @return The job title of the admin.
      */
     @JsonProperty("job_title")
-    public String getJobTitle() {
+    public Optional<String> getJobTitle() {
         return jobTitle;
     }
 
@@ -118,7 +120,7 @@ public final class AdminWithApp {
      * @return Identifies if this admin is currently set in away mode.
      */
     @JsonProperty("away_mode_enabled")
-    public boolean getAwayModeEnabled() {
+    public Optional<Boolean> getAwayModeEnabled() {
         return awayModeEnabled;
     }
 
@@ -126,7 +128,7 @@ public final class AdminWithApp {
      * @return Identifies if this admin is set to automatically reassign new conversations to the apps default inbox.
      */
     @JsonProperty("away_mode_reassign")
-    public boolean getAwayModeReassign() {
+    public Optional<Boolean> getAwayModeReassign() {
         return awayModeReassign;
     }
 
@@ -134,7 +136,7 @@ public final class AdminWithApp {
      * @return Identifies if this admin has a paid inbox seat to restrict/allow features that require them.
      */
     @JsonProperty("has_inbox_seat")
-    public boolean getHasInboxSeat() {
+    public Optional<Boolean> getHasInboxSeat() {
         return hasInboxSeat;
     }
 
@@ -142,7 +144,7 @@ public final class AdminWithApp {
      * @return This is a list of ids of the teams that this admin is part of.
      */
     @JsonProperty("team_ids")
-    public List<Integer> getTeamIds() {
+    public Optional<List<Integer>> getTeamIds() {
         return teamIds;
     }
 
@@ -182,13 +184,14 @@ public final class AdminWithApp {
     }
 
     private boolean equalTo(AdminWithApp other) {
-        return id.equals(other.id)
+        return type.equals(other.type)
+                && id.equals(other.id)
                 && name.equals(other.name)
                 && email.equals(other.email)
                 && jobTitle.equals(other.jobTitle)
-                && awayModeEnabled == other.awayModeEnabled
-                && awayModeReassign == other.awayModeReassign
-                && hasInboxSeat == other.hasInboxSeat
+                && awayModeEnabled.equals(other.awayModeEnabled)
+                && awayModeReassign.equals(other.awayModeReassign)
+                && hasInboxSeat.equals(other.hasInboxSeat)
                 && teamIds.equals(other.teamIds)
                 && avatar.equals(other.avatar)
                 && emailVerified.equals(other.emailVerified)
@@ -198,6 +201,7 @@ public final class AdminWithApp {
     @java.lang.Override
     public int hashCode() {
         return Objects.hash(
+                this.type,
                 this.id,
                 this.name,
                 this.email,
@@ -216,134 +220,43 @@ public final class AdminWithApp {
         return ObjectMappers.stringify(this);
     }
 
-    public static IdStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface IdStage {
-        /**
-         * The id representing the admin.
-         */
-        NameStage id(@NotNull String id);
-
-        Builder from(AdminWithApp other);
-    }
-
-    public interface NameStage {
-        /**
-         * The name of the admin.
-         */
-        EmailStage name(@NotNull String name);
-    }
-
-    public interface EmailStage {
-        /**
-         * The email of the admin.
-         */
-        JobTitleStage email(@NotNull String email);
-    }
-
-    public interface JobTitleStage {
-        /**
-         * The job title of the admin.
-         */
-        AwayModeEnabledStage jobTitle(@NotNull String jobTitle);
-    }
-
-    public interface AwayModeEnabledStage {
-        /**
-         * Identifies if this admin is currently set in away mode.
-         */
-        AwayModeReassignStage awayModeEnabled(boolean awayModeEnabled);
-    }
-
-    public interface AwayModeReassignStage {
-        /**
-         * Identifies if this admin is set to automatically reassign new conversations to the apps default inbox.
-         */
-        HasInboxSeatStage awayModeReassign(boolean awayModeReassign);
-    }
-
-    public interface HasInboxSeatStage {
-        /**
-         * Identifies if this admin has a paid inbox seat to restrict/allow features that require them.
-         */
-        _FinalStage hasInboxSeat(boolean hasInboxSeat);
-    }
-
-    public interface _FinalStage {
-        AdminWithApp build();
-
-        /**
-         * <p>This is a list of ids of the teams that this admin is part of.</p>
-         */
-        _FinalStage teamIds(List<Integer> teamIds);
-
-        _FinalStage addTeamIds(Integer teamIds);
-
-        _FinalStage addAllTeamIds(List<Integer> teamIds);
-
-        /**
-         * <p>This object represents the avatar associated with the admin.</p>
-         */
-        _FinalStage avatar(Optional<Avatar> avatar);
-
-        _FinalStage avatar(Avatar avatar);
-
-        /**
-         * <p>Identifies if this admin's email is verified.</p>
-         */
-        _FinalStage emailVerified(Optional<Boolean> emailVerified);
-
-        _FinalStage emailVerified(Boolean emailVerified);
-
-        /**
-         * <p>App that the admin belongs to.</p>
-         */
-        _FinalStage app(Optional<App> app);
-
-        _FinalStage app(App app);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder
-            implements IdStage,
-                    NameStage,
-                    EmailStage,
-                    JobTitleStage,
-                    AwayModeEnabledStage,
-                    AwayModeReassignStage,
-                    HasInboxSeatStage,
-                    _FinalStage {
-        private String id;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private String name;
+        private Optional<String> id = Optional.empty();
 
-        private String email;
+        private Optional<String> name = Optional.empty();
 
-        private String jobTitle;
+        private Optional<String> email = Optional.empty();
 
-        private boolean awayModeEnabled;
+        private Optional<String> jobTitle = Optional.empty();
 
-        private boolean awayModeReassign;
+        private Optional<Boolean> awayModeEnabled = Optional.empty();
 
-        private boolean hasInboxSeat;
+        private Optional<Boolean> awayModeReassign = Optional.empty();
 
-        private Optional<App> app = Optional.empty();
+        private Optional<Boolean> hasInboxSeat = Optional.empty();
 
-        private Optional<Boolean> emailVerified = Optional.empty();
+        private Optional<List<Integer>> teamIds = Optional.empty();
 
         private Optional<Avatar> avatar = Optional.empty();
 
-        private List<Integer> teamIds = new ArrayList<>();
+        private Optional<Boolean> emailVerified = Optional.empty();
+
+        private Optional<App> app = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(AdminWithApp other) {
+            type(other.getType());
             id(other.getId());
             name(other.getName());
             email(other.getEmail());
@@ -359,176 +272,176 @@ public final class AdminWithApp {
         }
 
         /**
-         * The id representing the admin.<p>The id representing the admin.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>String representing the object's type. Always has the value <code>admin</code>.</p>
          */
-        @java.lang.Override
-        @JsonSetter("id")
-        public NameStage id(@NotNull String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
-         * The name of the admin.<p>The name of the admin.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The id representing the admin.</p>
          */
-        @java.lang.Override
-        @JsonSetter("name")
-        public EmailStage name(@NotNull String name) {
-            this.name = Objects.requireNonNull(name, "name must not be null");
+        @JsonSetter(value = "id", nulls = Nulls.SKIP)
+        public Builder id(Optional<String> id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder id(String id) {
+            this.id = Optional.ofNullable(id);
             return this;
         }
 
         /**
-         * The email of the admin.<p>The email of the admin.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The name of the admin.</p>
          */
-        @java.lang.Override
-        @JsonSetter("email")
-        public JobTitleStage email(@NotNull String email) {
-            this.email = Objects.requireNonNull(email, "email must not be null");
+        @JsonSetter(value = "name", nulls = Nulls.SKIP)
+        public Builder name(Optional<String> name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = Optional.ofNullable(name);
             return this;
         }
 
         /**
-         * The job title of the admin.<p>The job title of the admin.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The email of the admin.</p>
          */
-        @java.lang.Override
-        @JsonSetter("job_title")
-        public AwayModeEnabledStage jobTitle(@NotNull String jobTitle) {
-            this.jobTitle = Objects.requireNonNull(jobTitle, "jobTitle must not be null");
+        @JsonSetter(value = "email", nulls = Nulls.SKIP)
+        public Builder email(Optional<String> email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder email(String email) {
+            this.email = Optional.ofNullable(email);
             return this;
         }
 
         /**
-         * Identifies if this admin is currently set in away mode.<p>Identifies if this admin is currently set in away mode.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The job title of the admin.</p>
          */
-        @java.lang.Override
-        @JsonSetter("away_mode_enabled")
-        public AwayModeReassignStage awayModeEnabled(boolean awayModeEnabled) {
+        @JsonSetter(value = "job_title", nulls = Nulls.SKIP)
+        public Builder jobTitle(Optional<String> jobTitle) {
+            this.jobTitle = jobTitle;
+            return this;
+        }
+
+        public Builder jobTitle(String jobTitle) {
+            this.jobTitle = Optional.ofNullable(jobTitle);
+            return this;
+        }
+
+        /**
+         * <p>Identifies if this admin is currently set in away mode.</p>
+         */
+        @JsonSetter(value = "away_mode_enabled", nulls = Nulls.SKIP)
+        public Builder awayModeEnabled(Optional<Boolean> awayModeEnabled) {
             this.awayModeEnabled = awayModeEnabled;
             return this;
         }
 
+        public Builder awayModeEnabled(Boolean awayModeEnabled) {
+            this.awayModeEnabled = Optional.ofNullable(awayModeEnabled);
+            return this;
+        }
+
         /**
-         * Identifies if this admin is set to automatically reassign new conversations to the apps default inbox.<p>Identifies if this admin is set to automatically reassign new conversations to the apps default inbox.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Identifies if this admin is set to automatically reassign new conversations to the apps default inbox.</p>
          */
-        @java.lang.Override
-        @JsonSetter("away_mode_reassign")
-        public HasInboxSeatStage awayModeReassign(boolean awayModeReassign) {
+        @JsonSetter(value = "away_mode_reassign", nulls = Nulls.SKIP)
+        public Builder awayModeReassign(Optional<Boolean> awayModeReassign) {
             this.awayModeReassign = awayModeReassign;
             return this;
         }
 
+        public Builder awayModeReassign(Boolean awayModeReassign) {
+            this.awayModeReassign = Optional.ofNullable(awayModeReassign);
+            return this;
+        }
+
         /**
-         * Identifies if this admin has a paid inbox seat to restrict/allow features that require them.<p>Identifies if this admin has a paid inbox seat to restrict/allow features that require them.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Identifies if this admin has a paid inbox seat to restrict/allow features that require them.</p>
          */
-        @java.lang.Override
-        @JsonSetter("has_inbox_seat")
-        public _FinalStage hasInboxSeat(boolean hasInboxSeat) {
+        @JsonSetter(value = "has_inbox_seat", nulls = Nulls.SKIP)
+        public Builder hasInboxSeat(Optional<Boolean> hasInboxSeat) {
             this.hasInboxSeat = hasInboxSeat;
             return this;
         }
 
-        /**
-         * <p>App that the admin belongs to.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage app(App app) {
-            this.app = Optional.ofNullable(app);
+        public Builder hasInboxSeat(Boolean hasInboxSeat) {
+            this.hasInboxSeat = Optional.ofNullable(hasInboxSeat);
             return this;
         }
 
         /**
-         * <p>App that the admin belongs to.</p>
+         * <p>This is a list of ids of the teams that this admin is part of.</p>
          */
-        @java.lang.Override
-        @JsonSetter(value = "app", nulls = Nulls.SKIP)
-        public _FinalStage app(Optional<App> app) {
-            this.app = app;
+        @JsonSetter(value = "team_ids", nulls = Nulls.SKIP)
+        public Builder teamIds(Optional<List<Integer>> teamIds) {
+            this.teamIds = teamIds;
             return this;
         }
 
-        /**
-         * <p>Identifies if this admin's email is verified.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage emailVerified(Boolean emailVerified) {
-            this.emailVerified = Optional.ofNullable(emailVerified);
-            return this;
-        }
-
-        /**
-         * <p>Identifies if this admin's email is verified.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "email_verified", nulls = Nulls.SKIP)
-        public _FinalStage emailVerified(Optional<Boolean> emailVerified) {
-            this.emailVerified = emailVerified;
+        public Builder teamIds(List<Integer> teamIds) {
+            this.teamIds = Optional.ofNullable(teamIds);
             return this;
         }
 
         /**
          * <p>This object represents the avatar associated with the admin.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @java.lang.Override
-        public _FinalStage avatar(Avatar avatar) {
+        @JsonSetter(value = "avatar", nulls = Nulls.SKIP)
+        public Builder avatar(Optional<Avatar> avatar) {
+            this.avatar = avatar;
+            return this;
+        }
+
+        public Builder avatar(Avatar avatar) {
             this.avatar = Optional.ofNullable(avatar);
             return this;
         }
 
         /**
-         * <p>This object represents the avatar associated with the admin.</p>
+         * <p>Identifies if this admin's email is verified.</p>
          */
-        @java.lang.Override
-        @JsonSetter(value = "avatar", nulls = Nulls.SKIP)
-        public _FinalStage avatar(Optional<Avatar> avatar) {
-            this.avatar = avatar;
+        @JsonSetter(value = "email_verified", nulls = Nulls.SKIP)
+        public Builder emailVerified(Optional<Boolean> emailVerified) {
+            this.emailVerified = emailVerified;
+            return this;
+        }
+
+        public Builder emailVerified(Boolean emailVerified) {
+            this.emailVerified = Optional.ofNullable(emailVerified);
             return this;
         }
 
         /**
-         * <p>This is a list of ids of the teams that this admin is part of.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>App that the admin belongs to.</p>
          */
-        @java.lang.Override
-        public _FinalStage addAllTeamIds(List<Integer> teamIds) {
-            this.teamIds.addAll(teamIds);
+        @JsonSetter(value = "app", nulls = Nulls.SKIP)
+        public Builder app(Optional<App> app) {
+            this.app = app;
             return this;
         }
 
-        /**
-         * <p>This is a list of ids of the teams that this admin is part of.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addTeamIds(Integer teamIds) {
-            this.teamIds.add(teamIds);
+        public Builder app(App app) {
+            this.app = Optional.ofNullable(app);
             return this;
         }
 
-        /**
-         * <p>This is a list of ids of the teams that this admin is part of.</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "team_ids", nulls = Nulls.SKIP)
-        public _FinalStage teamIds(List<Integer> teamIds) {
-            this.teamIds.clear();
-            this.teamIds.addAll(teamIds);
-            return this;
-        }
-
-        @java.lang.Override
         public AdminWithApp build() {
             return new AdminWithApp(
+                    type,
                     id,
                     name,
                     email,

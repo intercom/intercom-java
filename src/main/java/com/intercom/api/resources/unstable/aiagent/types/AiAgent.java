@@ -27,13 +27,17 @@ public final class AiAgent {
 
     private final Optional<String> sourceTitle;
 
-    private final Optional<String> lastAnswerType;
+    private final Optional<LastAnswerType> lastAnswerType;
 
-    private final Optional<String> resolutionState;
+    private final Optional<ResolutionState> resolutionState;
 
     private final Optional<Integer> rating;
 
     private final Optional<String> ratingRemark;
+
+    private final Optional<Integer> createdAt;
+
+    private final Optional<Integer> updatedAt;
 
     private final Optional<ContentSourcesList> contentSources;
 
@@ -42,10 +46,12 @@ public final class AiAgent {
     private AiAgent(
             Optional<SourceType> sourceType,
             Optional<String> sourceTitle,
-            Optional<String> lastAnswerType,
-            Optional<String> resolutionState,
+            Optional<LastAnswerType> lastAnswerType,
+            Optional<ResolutionState> resolutionState,
             Optional<Integer> rating,
             Optional<String> ratingRemark,
+            Optional<Integer> createdAt,
+            Optional<Integer> updatedAt,
             Optional<ContentSourcesList> contentSources,
             Map<String, Object> additionalProperties) {
         this.sourceType = sourceType;
@@ -54,6 +60,8 @@ public final class AiAgent {
         this.resolutionState = resolutionState;
         this.rating = rating;
         this.ratingRemark = ratingRemark;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
         this.contentSources = contentSources;
         this.additionalProperties = additionalProperties;
     }
@@ -78,7 +86,7 @@ public final class AiAgent {
      * @return The type of the last answer delivered by AI Agent. If no answer was delivered then this will return <code>null</code>
      */
     @JsonProperty("last_answer_type")
-    public Optional<String> getLastAnswerType() {
+    public Optional<LastAnswerType> getLastAnswerType() {
         return lastAnswerType;
     }
 
@@ -86,7 +94,7 @@ public final class AiAgent {
      * @return The resolution state of AI Agent. If no AI or custom answer has been delivered then this will return <code>null</code>.
      */
     @JsonProperty("resolution_state")
-    public Optional<String> getResolutionState() {
+    public Optional<ResolutionState> getResolutionState() {
         return resolutionState;
     }
 
@@ -104,6 +112,22 @@ public final class AiAgent {
     @JsonProperty("rating_remark")
     public Optional<String> getRatingRemark() {
         return ratingRemark;
+    }
+
+    /**
+     * @return The time when the AI agent rating was created.
+     */
+    @JsonProperty("created_at")
+    public Optional<Integer> getCreatedAt() {
+        return createdAt;
+    }
+
+    /**
+     * @return The time when the AI agent rating was last updated.
+     */
+    @JsonProperty("updated_at")
+    public Optional<Integer> getUpdatedAt() {
+        return updatedAt;
     }
 
     @JsonProperty("content_sources")
@@ -129,6 +153,8 @@ public final class AiAgent {
                 && resolutionState.equals(other.resolutionState)
                 && rating.equals(other.rating)
                 && ratingRemark.equals(other.ratingRemark)
+                && createdAt.equals(other.createdAt)
+                && updatedAt.equals(other.updatedAt)
                 && contentSources.equals(other.contentSources);
     }
 
@@ -141,6 +167,8 @@ public final class AiAgent {
                 this.resolutionState,
                 this.rating,
                 this.ratingRemark,
+                this.createdAt,
+                this.updatedAt,
                 this.contentSources);
     }
 
@@ -159,13 +187,17 @@ public final class AiAgent {
 
         private Optional<String> sourceTitle = Optional.empty();
 
-        private Optional<String> lastAnswerType = Optional.empty();
+        private Optional<LastAnswerType> lastAnswerType = Optional.empty();
 
-        private Optional<String> resolutionState = Optional.empty();
+        private Optional<ResolutionState> resolutionState = Optional.empty();
 
         private Optional<Integer> rating = Optional.empty();
 
         private Optional<String> ratingRemark = Optional.empty();
+
+        private Optional<Integer> createdAt = Optional.empty();
+
+        private Optional<Integer> updatedAt = Optional.empty();
 
         private Optional<ContentSourcesList> contentSources = Optional.empty();
 
@@ -181,6 +213,8 @@ public final class AiAgent {
             resolutionState(other.getResolutionState());
             rating(other.getRating());
             ratingRemark(other.getRatingRemark());
+            createdAt(other.getCreatedAt());
+            updatedAt(other.getUpdatedAt());
             contentSources(other.getContentSources());
             return this;
         }
@@ -217,12 +251,12 @@ public final class AiAgent {
          * <p>The type of the last answer delivered by AI Agent. If no answer was delivered then this will return <code>null</code></p>
          */
         @JsonSetter(value = "last_answer_type", nulls = Nulls.SKIP)
-        public Builder lastAnswerType(Optional<String> lastAnswerType) {
+        public Builder lastAnswerType(Optional<LastAnswerType> lastAnswerType) {
             this.lastAnswerType = lastAnswerType;
             return this;
         }
 
-        public Builder lastAnswerType(String lastAnswerType) {
+        public Builder lastAnswerType(LastAnswerType lastAnswerType) {
             this.lastAnswerType = Optional.ofNullable(lastAnswerType);
             return this;
         }
@@ -231,12 +265,12 @@ public final class AiAgent {
          * <p>The resolution state of AI Agent. If no AI or custom answer has been delivered then this will return <code>null</code>.</p>
          */
         @JsonSetter(value = "resolution_state", nulls = Nulls.SKIP)
-        public Builder resolutionState(Optional<String> resolutionState) {
+        public Builder resolutionState(Optional<ResolutionState> resolutionState) {
             this.resolutionState = resolutionState;
             return this;
         }
 
-        public Builder resolutionState(String resolutionState) {
+        public Builder resolutionState(ResolutionState resolutionState) {
             this.resolutionState = Optional.ofNullable(resolutionState);
             return this;
         }
@@ -269,6 +303,34 @@ public final class AiAgent {
             return this;
         }
 
+        /**
+         * <p>The time when the AI agent rating was created.</p>
+         */
+        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
+        public Builder createdAt(Optional<Integer> createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public Builder createdAt(Integer createdAt) {
+            this.createdAt = Optional.ofNullable(createdAt);
+            return this;
+        }
+
+        /**
+         * <p>The time when the AI agent rating was last updated.</p>
+         */
+        @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
+        public Builder updatedAt(Optional<Integer> updatedAt) {
+            this.updatedAt = updatedAt;
+            return this;
+        }
+
+        public Builder updatedAt(Integer updatedAt) {
+            this.updatedAt = Optional.ofNullable(updatedAt);
+            return this;
+        }
+
         @JsonSetter(value = "content_sources", nulls = Nulls.SKIP)
         public Builder contentSources(Optional<ContentSourcesList> contentSources) {
             this.contentSources = contentSources;
@@ -288,8 +350,86 @@ public final class AiAgent {
                     resolutionState,
                     rating,
                     ratingRemark,
+                    createdAt,
+                    updatedAt,
                     contentSources,
                     additionalProperties);
+        }
+    }
+
+    public static final class LastAnswerType {
+        public static final LastAnswerType AI_ANSWER = new LastAnswerType(Value.AI_ANSWER, "ai_answer");
+
+        public static final LastAnswerType CUSTOM_ANSWER = new LastAnswerType(Value.CUSTOM_ANSWER, "custom_answer");
+
+        private final Value value;
+
+        private final String string;
+
+        LastAnswerType(Value value, String string) {
+            this.value = value;
+            this.string = string;
+        }
+
+        public Value getEnumValue() {
+            return value;
+        }
+
+        @java.lang.Override
+        @JsonValue
+        public String toString() {
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other)
+                    || (other instanceof LastAnswerType && this.string.equals(((LastAnswerType) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case AI_ANSWER:
+                    return visitor.visitAiAnswer();
+                case CUSTOM_ANSWER:
+                    return visitor.visitCustomAnswer();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static LastAnswerType valueOf(String value) {
+            switch (value) {
+                case "ai_answer":
+                    return AI_ANSWER;
+                case "custom_answer":
+                    return CUSTOM_ANSWER;
+                default:
+                    return new LastAnswerType(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            AI_ANSWER,
+
+            CUSTOM_ANSWER,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitAiAnswer();
+
+            T visitCustomAnswer();
+
+            T visitUnknown(String unknownType);
         }
     }
 
@@ -394,6 +534,105 @@ public final class AiAgent {
             T visitWorkflowPreview();
 
             T visitFinPreview();
+
+            T visitUnknown(String unknownType);
+        }
+    }
+
+    public static final class ResolutionState {
+        public static final ResolutionState NEGATIVE_FEEDBACK =
+                new ResolutionState(Value.NEGATIVE_FEEDBACK, "negative_feedback");
+
+        public static final ResolutionState ASSUMED_RESOLUTION =
+                new ResolutionState(Value.ASSUMED_RESOLUTION, "assumed_resolution");
+
+        public static final ResolutionState ESCALATED = new ResolutionState(Value.ESCALATED, "escalated");
+
+        public static final ResolutionState CONFIRMED_RESOLUTION =
+                new ResolutionState(Value.CONFIRMED_RESOLUTION, "confirmed_resolution");
+
+        private final Value value;
+
+        private final String string;
+
+        ResolutionState(Value value, String string) {
+            this.value = value;
+            this.string = string;
+        }
+
+        public Value getEnumValue() {
+            return value;
+        }
+
+        @java.lang.Override
+        @JsonValue
+        public String toString() {
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other)
+                    || (other instanceof ResolutionState && this.string.equals(((ResolutionState) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case NEGATIVE_FEEDBACK:
+                    return visitor.visitNegativeFeedback();
+                case ASSUMED_RESOLUTION:
+                    return visitor.visitAssumedResolution();
+                case ESCALATED:
+                    return visitor.visitEscalated();
+                case CONFIRMED_RESOLUTION:
+                    return visitor.visitConfirmedResolution();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static ResolutionState valueOf(String value) {
+            switch (value) {
+                case "negative_feedback":
+                    return NEGATIVE_FEEDBACK;
+                case "assumed_resolution":
+                    return ASSUMED_RESOLUTION;
+                case "escalated":
+                    return ESCALATED;
+                case "confirmed_resolution":
+                    return CONFIRMED_RESOLUTION;
+                default:
+                    return new ResolutionState(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            ASSUMED_RESOLUTION,
+
+            CONFIRMED_RESOLUTION,
+
+            ESCALATED,
+
+            NEGATIVE_FEEDBACK,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitAssumedResolution();
+
+            T visitConfirmedResolution();
+
+            T visitEscalated();
+
+            T visitNegativeFeedback();
 
             T visitUnknown(String unknownType);
         }

@@ -209,7 +209,7 @@ public final class ConversationPartMetadata {
 
         public interface TextStage {
             /**
-             * The text to display in this quick reply option.
+             * <p>The text to display in this quick reply option.</p>
              */
             UuidStage text(@NotNull String text);
 
@@ -218,7 +218,7 @@ public final class ConversationPartMetadata {
 
         public interface UuidStage {
             /**
-             * A unique identifier for this quick reply option. This value will be available within the metadata of the comment conversation part that is created when a user clicks on this reply option.
+             * <p>A unique identifier for this quick reply option. This value will be available within the metadata of the comment conversation part that is created when a user clicks on this reply option.</p>
              */
             _FinalStage uuid(@NotNull String uuid);
         }
@@ -256,7 +256,8 @@ public final class ConversationPartMetadata {
             }
 
             /**
-             * The text to display in this quick reply option.<p>The text to display in this quick reply option.</p>
+             * <p>The text to display in this quick reply option.</p>
+             * <p>The text to display in this quick reply option.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -267,7 +268,8 @@ public final class ConversationPartMetadata {
             }
 
             /**
-             * A unique identifier for this quick reply option. This value will be available within the metadata of the comment conversation part that is created when a user clicks on this reply option.<p>A unique identifier for this quick reply option. This value will be available within the metadata of the comment conversation part that is created when a user clicks on this reply option.</p>
+             * <p>A unique identifier for this quick reply option. This value will be available within the metadata of the comment conversation part that is created when a user clicks on this reply option.</p>
+             * <p>A unique identifier for this quick reply option. This value will be available within the metadata of the comment conversation part that is created when a user clicks on this reply option.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override

@@ -66,7 +66,7 @@ public final class ListNotesRequest {
 
     public interface IdStage {
         /**
-         * The unique identifier of a contact.
+         * <p>The unique identifier of a contact.</p>
          */
         _FinalStage id(int id);
 
@@ -93,7 +93,8 @@ public final class ListNotesRequest {
         }
 
         /**
-         * The unique identifier of a contact.<p>The unique identifier of a contact.</p>
+         * <p>The unique identifier of a contact.</p>
+         * <p>The unique identifier of a contact.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

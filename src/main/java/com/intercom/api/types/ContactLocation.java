@@ -20,6 +20,8 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ContactLocation.Builder.class)
 public final class ContactLocation {
+    private final Optional<String> type;
+
     private final Optional<String> country;
 
     private final Optional<String> region;
@@ -29,10 +31,12 @@ public final class ContactLocation {
     private final Map<String, Object> additionalProperties;
 
     private ContactLocation(
+            Optional<String> type,
             Optional<String> country,
             Optional<String> region,
             Optional<String> city,
             Map<String, Object> additionalProperties) {
+        this.type = type;
         this.country = country;
         this.region = region;
         this.city = city;
@@ -43,8 +47,8 @@ public final class ContactLocation {
      * @return Always location
      */
     @JsonProperty("type")
-    public String getType() {
-        return "location";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
@@ -83,12 +87,15 @@ public final class ContactLocation {
     }
 
     private boolean equalTo(ContactLocation other) {
-        return country.equals(other.country) && region.equals(other.region) && city.equals(other.city);
+        return type.equals(other.type)
+                && country.equals(other.country)
+                && region.equals(other.region)
+                && city.equals(other.city);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.country, this.region, this.city);
+        return Objects.hash(this.type, this.country, this.region, this.city);
     }
 
     @java.lang.Override
@@ -102,6 +109,8 @@ public final class ContactLocation {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
+        private Optional<String> type = Optional.empty();
+
         private Optional<String> country = Optional.empty();
 
         private Optional<String> region = Optional.empty();
@@ -114,9 +123,24 @@ public final class ContactLocation {
         private Builder() {}
 
         public Builder from(ContactLocation other) {
+            type(other.getType());
             country(other.getCountry());
             region(other.getRegion());
             city(other.getCity());
+            return this;
+        }
+
+        /**
+         * <p>Always location</p>
+         */
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
@@ -163,7 +187,7 @@ public final class ContactLocation {
         }
 
         public ContactLocation build() {
-            return new ContactLocation(country, region, city, additionalProperties);
+            return new ContactLocation(type, country, region, city, additionalProperties);
         }
     }
 }

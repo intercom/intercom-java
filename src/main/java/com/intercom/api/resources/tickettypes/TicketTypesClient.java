@@ -8,10 +8,11 @@ import com.intercom.api.core.RequestOptions;
 import com.intercom.api.core.Suppliers;
 import com.intercom.api.resources.tickets.types.TicketType;
 import com.intercom.api.resources.tickettypes.attributes.AttributesClient;
-import com.intercom.api.resources.tickettypes.requests.CreateTicketTypeRequest;
 import com.intercom.api.resources.tickettypes.requests.FindTicketTypeRequest;
 import com.intercom.api.resources.tickettypes.requests.UpdateTicketTypeRequest;
+import com.intercom.api.types.CreateTicketTypeRequest;
 import com.intercom.api.types.TicketTypeList;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class TicketTypesClient {
@@ -56,7 +57,19 @@ public class TicketTypesClient {
      * For the <code>icon</code> propery, use an emoji from <a href="https://twemoji-cheatsheet.vercel.app/">Twemoji Cheatsheet</a></p>
      * </blockquote>
      */
-    public TicketType create(CreateTicketTypeRequest request) {
+    public Optional<TicketType> create() {
+        return this.rawClient.create().body();
+    }
+
+    /**
+     * You can create a new ticket type.
+     * <blockquote>
+     * <p>📘 Creating ticket types.</p>
+     * <p>Every ticket type will be created with two default attributes: <em>default_title</em> and <em>default_description</em>.
+     * For the <code>icon</code> propery, use an emoji from <a href="https://twemoji-cheatsheet.vercel.app/">Twemoji Cheatsheet</a></p>
+     * </blockquote>
+     */
+    public Optional<TicketType> create(Optional<CreateTicketTypeRequest> request) {
         return this.rawClient.create(request).body();
     }
 
@@ -68,21 +81,21 @@ public class TicketTypesClient {
      * For the <code>icon</code> propery, use an emoji from <a href="https://twemoji-cheatsheet.vercel.app/">Twemoji Cheatsheet</a></p>
      * </blockquote>
      */
-    public TicketType create(CreateTicketTypeRequest request, RequestOptions requestOptions) {
+    public Optional<TicketType> create(Optional<CreateTicketTypeRequest> request, RequestOptions requestOptions) {
         return this.rawClient.create(request, requestOptions).body();
     }
 
     /**
      * You can fetch the details of a single ticket type.
      */
-    public TicketType get(FindTicketTypeRequest request) {
+    public Optional<TicketType> get(FindTicketTypeRequest request) {
         return this.rawClient.get(request).body();
     }
 
     /**
      * You can fetch the details of a single ticket type.
      */
-    public TicketType get(FindTicketTypeRequest request, RequestOptions requestOptions) {
+    public Optional<TicketType> get(FindTicketTypeRequest request, RequestOptions requestOptions) {
         return this.rawClient.get(request, requestOptions).body();
     }
 
@@ -93,7 +106,7 @@ public class TicketTypesClient {
      * <p>For the <code>icon</code> propery, use an emoji from <a href="https://twemoji-cheatsheet.vercel.app/">Twemoji Cheatsheet</a></p>
      * </blockquote>
      */
-    public TicketType update(UpdateTicketTypeRequest request) {
+    public Optional<TicketType> update(UpdateTicketTypeRequest request) {
         return this.rawClient.update(request).body();
     }
 
@@ -104,7 +117,7 @@ public class TicketTypesClient {
      * <p>For the <code>icon</code> propery, use an emoji from <a href="https://twemoji-cheatsheet.vercel.app/">Twemoji Cheatsheet</a></p>
      * </blockquote>
      */
-    public TicketType update(UpdateTicketTypeRequest request, RequestOptions requestOptions) {
+    public Optional<TicketType> update(UpdateTicketTypeRequest request, RequestOptions requestOptions) {
         return this.rawClient.update(request, requestOptions).body();
     }
 

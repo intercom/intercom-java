@@ -25,14 +25,18 @@ public final class EmailMessageMetadata {
 
     private final Optional<List<EmailAddressHeader>> emailAddressHeaders;
 
+    private final Optional<String> messageId;
+
     private final Map<String, Object> additionalProperties;
 
     private EmailMessageMetadata(
             Optional<String> subject,
             Optional<List<EmailAddressHeader>> emailAddressHeaders,
+            Optional<String> messageId,
             Map<String, Object> additionalProperties) {
         this.subject = subject;
         this.emailAddressHeaders = emailAddressHeaders;
+        this.messageId = messageId;
         this.additionalProperties = additionalProperties;
     }
 
@@ -52,6 +56,14 @@ public final class EmailMessageMetadata {
         return emailAddressHeaders;
     }
 
+    /**
+     * @return The unique identifier for the email message as specified in the Message-ID header
+     */
+    @JsonProperty("message_id")
+    public Optional<String> getMessageId() {
+        return messageId;
+    }
+
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
@@ -64,12 +76,14 @@ public final class EmailMessageMetadata {
     }
 
     private boolean equalTo(EmailMessageMetadata other) {
-        return subject.equals(other.subject) && emailAddressHeaders.equals(other.emailAddressHeaders);
+        return subject.equals(other.subject)
+                && emailAddressHeaders.equals(other.emailAddressHeaders)
+                && messageId.equals(other.messageId);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.subject, this.emailAddressHeaders);
+        return Objects.hash(this.subject, this.emailAddressHeaders, this.messageId);
     }
 
     @java.lang.Override
@@ -87,6 +101,8 @@ public final class EmailMessageMetadata {
 
         private Optional<List<EmailAddressHeader>> emailAddressHeaders = Optional.empty();
 
+        private Optional<String> messageId = Optional.empty();
+
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -95,6 +111,7 @@ public final class EmailMessageMetadata {
         public Builder from(EmailMessageMetadata other) {
             subject(other.getSubject());
             emailAddressHeaders(other.getEmailAddressHeaders());
+            messageId(other.getMessageId());
             return this;
         }
 
@@ -126,8 +143,22 @@ public final class EmailMessageMetadata {
             return this;
         }
 
+        /**
+         * <p>The unique identifier for the email message as specified in the Message-ID header</p>
+         */
+        @JsonSetter(value = "message_id", nulls = Nulls.SKIP)
+        public Builder messageId(Optional<String> messageId) {
+            this.messageId = messageId;
+            return this;
+        }
+
+        public Builder messageId(String messageId) {
+            this.messageId = Optional.ofNullable(messageId);
+            return this;
+        }
+
         public EmailMessageMetadata build() {
-            return new EmailMessageMetadata(subject, emailAddressHeaders, additionalProperties);
+            return new EmailMessageMetadata(subject, emailAddressHeaders, messageId, additionalProperties);
         }
     }
 }

@@ -13,38 +13,44 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.resources.tickets.types.TicketType;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = TicketTypeList.Builder.class)
 public final class TicketTypeList {
-    private final List<TicketType> ticketTypes;
+    private final Optional<String> type;
+
+    private final Optional<List<Optional<TicketType>>> data;
 
     private final Map<String, Object> additionalProperties;
 
-    private TicketTypeList(List<TicketType> ticketTypes, Map<String, Object> additionalProperties) {
-        this.ticketTypes = ticketTypes;
+    private TicketTypeList(
+            Optional<String> type,
+            Optional<List<Optional<TicketType>>> data,
+            Map<String, Object> additionalProperties) {
+        this.type = type;
+        this.data = data;
         this.additionalProperties = additionalProperties;
     }
 
     /**
-     * @return String representing the object's type. Always has the value <code>ticket_type.list</code>.
+     * @return String representing the object's type. Always has the value <code>list</code>.
      */
     @JsonProperty("type")
-    public String getType() {
-        return "ticket_type_attributes.list";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return A list of ticket_types associated with a given workspace.
      */
-    @JsonProperty("ticket_types")
-    public List<TicketType> getTicketTypes() {
-        return ticketTypes;
+    @JsonProperty("data")
+    public Optional<List<Optional<TicketType>>> getData() {
+        return data;
     }
 
     @java.lang.Override
@@ -59,12 +65,12 @@ public final class TicketTypeList {
     }
 
     private boolean equalTo(TicketTypeList other) {
-        return ticketTypes.equals(other.ticketTypes);
+        return type.equals(other.type) && data.equals(other.data);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.ticketTypes);
+        return Objects.hash(this.type, this.data);
     }
 
     @java.lang.Override
@@ -78,7 +84,9 @@ public final class TicketTypeList {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
-        private List<TicketType> ticketTypes = new ArrayList<>();
+        private Optional<String> type = Optional.empty();
+
+        private Optional<List<Optional<TicketType>>> data = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -86,32 +94,41 @@ public final class TicketTypeList {
         private Builder() {}
 
         public Builder from(TicketTypeList other) {
-            ticketTypes(other.getTicketTypes());
+            type(other.getType());
+            data(other.getData());
+            return this;
+        }
+
+        /**
+         * <p>String representing the object's type. Always has the value <code>list</code>.</p>
+         */
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
          * <p>A list of ticket_types associated with a given workspace.</p>
          */
-        @JsonSetter(value = "ticket_types", nulls = Nulls.SKIP)
-        public Builder ticketTypes(List<TicketType> ticketTypes) {
-            this.ticketTypes.clear();
-            this.ticketTypes.addAll(ticketTypes);
+        @JsonSetter(value = "data", nulls = Nulls.SKIP)
+        public Builder data(Optional<List<Optional<TicketType>>> data) {
+            this.data = data;
             return this;
         }
 
-        public Builder addTicketTypes(TicketType ticketTypes) {
-            this.ticketTypes.add(ticketTypes);
-            return this;
-        }
-
-        public Builder addAllTicketTypes(List<TicketType> ticketTypes) {
-            this.ticketTypes.addAll(ticketTypes);
+        public Builder data(List<Optional<TicketType>> data) {
+            this.data = Optional.ofNullable(data);
             return this;
         }
 
         public TicketTypeList build() {
-            return new TicketTypeList(ticketTypes, additionalProperties);
+            return new TicketTypeList(type, data, additionalProperties);
         }
     }
 }

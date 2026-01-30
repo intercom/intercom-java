@@ -77,7 +77,7 @@ public final class CreateDataExportRequest {
 
     public interface CreatedAtAfterStage {
         /**
-         * The start date that you request data for. It must be formatted as a unix timestamp.
+         * <p>The start date that you request data for. It must be formatted as a unix timestamp.</p>
          */
         CreatedAtBeforeStage createdAtAfter(int createdAtAfter);
 
@@ -86,7 +86,7 @@ public final class CreateDataExportRequest {
 
     public interface CreatedAtBeforeStage {
         /**
-         * The end date that you request data for. It must be formatted as a unix timestamp.
+         * <p>The end date that you request data for. It must be formatted as a unix timestamp.</p>
          */
         _FinalStage createdAtBefore(int createdAtBefore);
     }
@@ -114,7 +114,8 @@ public final class CreateDataExportRequest {
         }
 
         /**
-         * The start date that you request data for. It must be formatted as a unix timestamp.<p>The start date that you request data for. It must be formatted as a unix timestamp.</p>
+         * <p>The start date that you request data for. It must be formatted as a unix timestamp.</p>
+         * <p>The start date that you request data for. It must be formatted as a unix timestamp.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -125,7 +126,8 @@ public final class CreateDataExportRequest {
         }
 
         /**
-         * The end date that you request data for. It must be formatted as a unix timestamp.<p>The end date that you request data for. It must be formatted as a unix timestamp.</p>
+         * <p>The end date that you request data for. It must be formatted as a unix timestamp.</p>
+         * <p>The end date that you request data for. It must be formatted as a unix timestamp.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

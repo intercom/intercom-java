@@ -158,7 +158,7 @@ public final class UpdateExternalPageRequest {
 
     public interface IdStage {
         /**
-         * The unique identifier for the external page which is given by Intercom.
+         * <p>The unique identifier for the external page which is given by Intercom.</p>
          */
         TitleStage id(@NotNull String id);
 
@@ -167,28 +167,28 @@ public final class UpdateExternalPageRequest {
 
     public interface TitleStage {
         /**
-         * The title of the external page.
+         * <p>The title of the external page.</p>
          */
         HtmlStage title(@NotNull String title);
     }
 
     public interface HtmlStage {
         /**
-         * The body of the external page in HTML.
+         * <p>The body of the external page in HTML.</p>
          */
         UrlStage html(@NotNull String html);
     }
 
     public interface UrlStage {
         /**
-         * The URL of the external page. This will be used by Fin to link end users to the page it based its answer on.
+         * <p>The URL of the external page. This will be used by Fin to link end users to the page it based its answer on.</p>
          */
         SourceIdStage url(@NotNull String url);
     }
 
     public interface SourceIdStage {
         /**
-         * The unique identifier for the source of the external page which was given by Intercom. Every external page must be associated with a Content Import Source which represents the place it comes from and from which it inherits a default audience (configured in the UI). For a new source, make a POST request to the Content Import Source endpoint and an ID for the source will be returned in the response.
+         * <p>The unique identifier for the source of the external page which was given by Intercom. Every external page must be associated with a Content Import Source which represents the place it comes from and from which it inherits a default audience (configured in the UI). For a new source, make a POST request to the Content Import Source endpoint and an ID for the source will be returned in the response.</p>
          */
         _FinalStage sourceId(int sourceId);
     }
@@ -245,7 +245,8 @@ public final class UpdateExternalPageRequest {
         }
 
         /**
-         * The unique identifier for the external page which is given by Intercom.<p>The unique identifier for the external page which is given by Intercom.</p>
+         * <p>The unique identifier for the external page which is given by Intercom.</p>
+         * <p>The unique identifier for the external page which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -256,7 +257,8 @@ public final class UpdateExternalPageRequest {
         }
 
         /**
-         * The title of the external page.<p>The title of the external page.</p>
+         * <p>The title of the external page.</p>
+         * <p>The title of the external page.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -267,7 +269,8 @@ public final class UpdateExternalPageRequest {
         }
 
         /**
-         * The body of the external page in HTML.<p>The body of the external page in HTML.</p>
+         * <p>The body of the external page in HTML.</p>
+         * <p>The body of the external page in HTML.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -278,7 +281,8 @@ public final class UpdateExternalPageRequest {
         }
 
         /**
-         * The URL of the external page. This will be used by Fin to link end users to the page it based its answer on.<p>The URL of the external page. This will be used by Fin to link end users to the page it based its answer on.</p>
+         * <p>The URL of the external page. This will be used by Fin to link end users to the page it based its answer on.</p>
+         * <p>The URL of the external page. This will be used by Fin to link end users to the page it based its answer on.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -289,7 +293,8 @@ public final class UpdateExternalPageRequest {
         }
 
         /**
-         * The unique identifier for the source of the external page which was given by Intercom. Every external page must be associated with a Content Import Source which represents the place it comes from and from which it inherits a default audience (configured in the UI). For a new source, make a POST request to the Content Import Source endpoint and an ID for the source will be returned in the response.<p>The unique identifier for the source of the external page which was given by Intercom. Every external page must be associated with a Content Import Source which represents the place it comes from and from which it inherits a default audience (configured in the UI). For a new source, make a POST request to the Content Import Source endpoint and an ID for the source will be returned in the response.</p>
+         * <p>The unique identifier for the source of the external page which was given by Intercom. Every external page must be associated with a Content Import Source which represents the place it comes from and from which it inherits a default audience (configured in the UI). For a new source, make a POST request to the Content Import Source endpoint and an ID for the source will be returned in the response.</p>
+         * <p>The unique identifier for the source of the external page which was given by Intercom. Every external page must be associated with a Content Import Source which represents the place it comes from and from which it inherits a default audience (configured in the UI). For a new source, make a POST request to the Content Import Source endpoint and an ID for the source will be returned in the response.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

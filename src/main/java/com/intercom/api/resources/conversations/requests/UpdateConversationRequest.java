@@ -9,9 +9,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.Nulls;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.intercom.api.core.ObjectMappers;
+import com.intercom.api.types.CustomObjectInstanceList;
+import com.intercom.api.types.Datetime;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -27,7 +35,11 @@ public final class UpdateConversationRequest {
 
     private final Optional<Boolean> read;
 
-    private final Optional<Map<String, Object>> customAttributes;
+    private final Optional<String> title;
+
+    private final Optional<Map<String, CustomAttributesValue>> customAttributes;
+
+    private final Optional<String> companyId;
 
     private final Map<String, Object> additionalProperties;
 
@@ -35,12 +47,16 @@ public final class UpdateConversationRequest {
             String conversationId,
             Optional<String> displayAs,
             Optional<Boolean> read,
-            Optional<Map<String, Object>> customAttributes,
+            Optional<String> title,
+            Optional<Map<String, CustomAttributesValue>> customAttributes,
+            Optional<String> companyId,
             Map<String, Object> additionalProperties) {
         this.conversationId = conversationId;
         this.displayAs = displayAs;
         this.read = read;
+        this.title = title;
         this.customAttributes = customAttributes;
+        this.companyId = companyId;
         this.additionalProperties = additionalProperties;
     }
 
@@ -68,9 +84,25 @@ public final class UpdateConversationRequest {
         return read;
     }
 
+    /**
+     * @return The title given to the conversation
+     */
+    @JsonProperty("title")
+    public Optional<String> getTitle() {
+        return title;
+    }
+
     @JsonProperty("custom_attributes")
-    public Optional<Map<String, Object>> getCustomAttributes() {
+    public Optional<Map<String, CustomAttributesValue>> getCustomAttributes() {
         return customAttributes;
+    }
+
+    /**
+     * @return The ID of the company that the conversation is associated with. The unique identifier for the company which is given by Intercom. Set to nil to remove company.
+     */
+    @JsonProperty("company_id")
+    public Optional<String> getCompanyId() {
+        return companyId;
     }
 
     @java.lang.Override
@@ -88,12 +120,15 @@ public final class UpdateConversationRequest {
         return conversationId.equals(other.conversationId)
                 && displayAs.equals(other.displayAs)
                 && read.equals(other.read)
-                && customAttributes.equals(other.customAttributes);
+                && title.equals(other.title)
+                && customAttributes.equals(other.customAttributes)
+                && companyId.equals(other.companyId);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.conversationId, this.displayAs, this.read, this.customAttributes);
+        return Objects.hash(
+                this.conversationId, this.displayAs, this.read, this.title, this.customAttributes, this.companyId);
     }
 
     @java.lang.Override
@@ -107,7 +142,7 @@ public final class UpdateConversationRequest {
 
     public interface ConversationIdStage {
         /**
-         * The id of the conversation to target
+         * <p>The id of the conversation to target</p>
          */
         _FinalStage conversationId(@NotNull String conversationId);
 
@@ -131,16 +166,34 @@ public final class UpdateConversationRequest {
 
         _FinalStage read(Boolean read);
 
-        _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes);
+        /**
+         * <p>The title given to the conversation</p>
+         */
+        _FinalStage title(Optional<String> title);
 
-        _FinalStage customAttributes(Map<String, Object> customAttributes);
+        _FinalStage title(String title);
+
+        _FinalStage customAttributes(Optional<Map<String, CustomAttributesValue>> customAttributes);
+
+        _FinalStage customAttributes(Map<String, CustomAttributesValue> customAttributes);
+
+        /**
+         * <p>The ID of the company that the conversation is associated with. The unique identifier for the company which is given by Intercom. Set to nil to remove company.</p>
+         */
+        _FinalStage companyId(Optional<String> companyId);
+
+        _FinalStage companyId(String companyId);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder implements ConversationIdStage, _FinalStage {
         private String conversationId;
 
-        private Optional<Map<String, Object>> customAttributes = Optional.empty();
+        private Optional<String> companyId = Optional.empty();
+
+        private Optional<Map<String, CustomAttributesValue>> customAttributes = Optional.empty();
+
+        private Optional<String> title = Optional.empty();
 
         private Optional<Boolean> read = Optional.empty();
 
@@ -156,12 +209,15 @@ public final class UpdateConversationRequest {
             conversationId(other.getConversationId());
             displayAs(other.getDisplayAs());
             read(other.getRead());
+            title(other.getTitle());
             customAttributes(other.getCustomAttributes());
+            companyId(other.getCompanyId());
             return this;
         }
 
         /**
-         * The id of the conversation to target<p>The id of the conversation to target</p>
+         * <p>The id of the conversation to target</p>
+         * <p>The id of the conversation to target</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -171,16 +227,56 @@ public final class UpdateConversationRequest {
             return this;
         }
 
+        /**
+         * <p>The ID of the company that the conversation is associated with. The unique identifier for the company which is given by Intercom. Set to nil to remove company.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage customAttributes(Map<String, Object> customAttributes) {
+        public _FinalStage companyId(String companyId) {
+            this.companyId = Optional.ofNullable(companyId);
+            return this;
+        }
+
+        /**
+         * <p>The ID of the company that the conversation is associated with. The unique identifier for the company which is given by Intercom. Set to nil to remove company.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "company_id", nulls = Nulls.SKIP)
+        public _FinalStage companyId(Optional<String> companyId) {
+            this.companyId = companyId;
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage customAttributes(Map<String, CustomAttributesValue> customAttributes) {
             this.customAttributes = Optional.ofNullable(customAttributes);
             return this;
         }
 
         @java.lang.Override
         @JsonSetter(value = "custom_attributes", nulls = Nulls.SKIP)
-        public _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes) {
+        public _FinalStage customAttributes(Optional<Map<String, CustomAttributesValue>> customAttributes) {
             this.customAttributes = customAttributes;
+            return this;
+        }
+
+        /**
+         * <p>The title given to the conversation</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage title(String title) {
+            this.title = Optional.ofNullable(title);
+            return this;
+        }
+
+        /**
+         * <p>The title given to the conversation</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "title", nulls = Nulls.SKIP)
+        public _FinalStage title(Optional<String> title) {
+            this.title = title;
             return this;
         }
 
@@ -227,7 +323,111 @@ public final class UpdateConversationRequest {
         @java.lang.Override
         public UpdateConversationRequest build() {
             return new UpdateConversationRequest(
-                    conversationId, displayAs, read, customAttributes, additionalProperties);
+                    conversationId, displayAs, read, title, customAttributes, companyId, additionalProperties);
+        }
+    }
+
+    @JsonDeserialize(using = CustomAttributesValue.Deserializer.class)
+    public static final class CustomAttributesValue {
+        private final Object value;
+
+        private final int type;
+
+        private CustomAttributesValue(Object value, int type) {
+            this.value = value;
+            this.type = type;
+        }
+
+        @JsonValue
+        public Object get() {
+            return this.value;
+        }
+
+        @SuppressWarnings("unchecked")
+        public <T> T visit(Visitor<T> visitor) {
+            if (this.type == 0) {
+                return visitor.visit((String) this.value);
+            } else if (this.type == 1) {
+                return visitor.visit((int) this.value);
+            } else if (this.type == 2) {
+                return visitor.visit((Datetime) this.value);
+            } else if (this.type == 3) {
+                return visitor.visit((CustomObjectInstanceList) this.value);
+            }
+            throw new IllegalStateException("Failed to visit value. This should never happen.");
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            if (this == other) return true;
+            return other instanceof CustomAttributesValue && equalTo((CustomAttributesValue) other);
+        }
+
+        private boolean equalTo(CustomAttributesValue other) {
+            return value.equals(other.value);
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return Objects.hash(this.value);
+        }
+
+        @java.lang.Override
+        public String toString() {
+            return this.value.toString();
+        }
+
+        public static CustomAttributesValue of(String value) {
+            return new CustomAttributesValue(value, 0);
+        }
+
+        public static CustomAttributesValue of(int value) {
+            return new CustomAttributesValue(value, 1);
+        }
+
+        public static CustomAttributesValue of(Datetime value) {
+            return new CustomAttributesValue(value, 2);
+        }
+
+        public static CustomAttributesValue of(CustomObjectInstanceList value) {
+            return new CustomAttributesValue(value, 3);
+        }
+
+        public interface Visitor<T> {
+            T visit(String value);
+
+            T visit(int value);
+
+            T visit(Datetime value);
+
+            T visit(CustomObjectInstanceList value);
+        }
+
+        static final class Deserializer extends StdDeserializer<CustomAttributesValue> {
+            Deserializer() {
+                super(CustomAttributesValue.class);
+            }
+
+            @java.lang.Override
+            public CustomAttributesValue deserialize(JsonParser p, DeserializationContext context) throws IOException {
+                Object value = p.readValueAs(Object.class);
+                try {
+                    return of(ObjectMappers.JSON_MAPPER.convertValue(value, String.class));
+                } catch (RuntimeException e) {
+                }
+                if (value instanceof Integer) {
+                    return of((Integer) value);
+                }
+                try {
+                    return of(ObjectMappers.JSON_MAPPER.convertValue(value, Datetime.class));
+                } catch (RuntimeException e) {
+                }
+                try {
+                    return of(ObjectMappers.JSON_MAPPER.convertValue(value, CustomObjectInstanceList.class));
+                } catch (RuntimeException e) {
+                }
+                throw new JsonParseException(p, "Failed to deserialize");
+            }
         }
     }
 }

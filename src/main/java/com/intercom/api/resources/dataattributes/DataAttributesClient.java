@@ -5,10 +5,10 @@ package com.intercom.api.resources.dataattributes;
 
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.RequestOptions;
-import com.intercom.api.resources.dataattributes.requests.CreateDataAttributeRequest;
 import com.intercom.api.resources.dataattributes.requests.ListDataAttributesRequest;
 import com.intercom.api.resources.dataattributes.requests.UpdateDataAttributeRequest;
 import com.intercom.api.resources.dataattributes.types.DataAttribute;
+import com.intercom.api.types.CreateDataAttributeRequest;
 import com.intercom.api.types.DataAttributeList;
 
 public class DataAttributesClient {

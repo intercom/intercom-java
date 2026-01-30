@@ -3,7 +3,7 @@ package com.intercom.api.integration;
 import com.intercom.api.Intercom;
 import com.intercom.api.core.pagination.SyncPagingIterable;
 import com.intercom.api.resources.contacts.requests.DeleteContactRequest;
-import com.intercom.api.resources.contacts.types.Contact;
+import com.intercom.api.resources.contacts.types.ContactsCreateResponse;
 import com.intercom.api.resources.conversations.types.Conversation;
 import com.intercom.api.resources.messages.types.Message;
 import com.intercom.api.types.CreateContactRequest;
@@ -22,19 +22,26 @@ public class MessagesTest {
 
     private Intercom client;
     private String adminId;
-    private Contact user;
+    private ContactsCreateResponse user;
+    private String userId;
 
     @BeforeEach
     public void before() {
         // arrange
         client = TestClientFactory.create();
 
-        adminId = client.admins().list().getAdmins().get(0).getId();
+        adminId = client.admins().list().getAdmins()
+                .orElseThrow(() -> new RuntimeException("Admins list is required"))
+                .get(0)
+                .orElseThrow(() -> new RuntimeException("Admin is required"))
+                .getId();
         user = client.contacts()
                 .create(CreateContactRequest.of(CreateContactRequest.WithExternalId.builder()
                         .externalId(Utils.randomString())
                         .name("Message Test User")
                         .build()));
+        userId = user.getId()
+                .orElseThrow(() -> new RuntimeException("User ID is required"));
     }
 
     @AfterEach
@@ -48,17 +55,17 @@ public class MessagesTest {
     public void testMessageThatCreatesAConversation() {
         // act
         Message message = client.messages()
-                .create(CreateMessageRequest.inapp(CreateMessageRequest.Inapp.builder()
+                .create(java.util.Optional.of(CreateMessageRequest.inapp(CreateMessageRequest.Inapp.builder()
                         .body("Hey, look at me! I am the conversations creator now!")
                         .from(CreateMessageRequest.Inapp.From.builder()
                                 .id(Integer.parseInt(adminId))
                                 .build())
                         .to(CreateMessageRequest.Inapp.To.builder()
                                 .type(CreateMessageRequest.Inapp.To.Type.USER)
-                                .id(user.getId())
+                                .id(userId)
                                 .build())
                         .createConversationWithoutContactReply(true)
-                        .build()));
+                        .build())));
 
         // Allow for some time to index the conversation
         try {
@@ -86,16 +93,16 @@ public class MessagesTest {
     public void testCreateMessageNoConversation() {
         // act
         Message response = client.messages()
-                .create(CreateMessageRequest.inapp(CreateMessageRequest.Inapp.builder()
+                .create(java.util.Optional.of(CreateMessageRequest.inapp(CreateMessageRequest.Inapp.builder()
                         .body("Message without creating conversation")
                         .from(CreateMessageRequest.Inapp.From.builder()
                                 .id(Integer.parseInt(adminId))
                                 .build())
                         .to(CreateMessageRequest.Inapp.To.builder()
                                 .type(CreateMessageRequest.Inapp.To.Type.USER)
-                                .id(user.getId())
+                                .id(userId)
                                 .build())
-                        .build()));
+                        .build())));
 
         // assert
         Assertions.assertNotNull(response);
@@ -105,7 +112,7 @@ public class MessagesTest {
         try {
             client.contacts()
                     .delete(DeleteContactRequest.builder()
-                            .contactId(user.getId())
+                            .contactId(userId)
                             .build());
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete contact.", e);

@@ -4,6 +4,7 @@
 package com.intercom.api.resources.tickettypes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.IntercomApiException;
 import com.intercom.api.core.IntercomException;
@@ -13,12 +14,13 @@ import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.core.RequestOptions;
 import com.intercom.api.errors.UnauthorizedError;
 import com.intercom.api.resources.tickets.types.TicketType;
-import com.intercom.api.resources.tickettypes.requests.CreateTicketTypeRequest;
 import com.intercom.api.resources.tickettypes.requests.FindTicketTypeRequest;
 import com.intercom.api.resources.tickettypes.requests.UpdateTicketTypeRequest;
+import com.intercom.api.types.CreateTicketTypeRequest;
 import com.intercom.api.types.Error;
 import com.intercom.api.types.TicketTypeList;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -57,7 +59,6 @@ public class AsyncRawTicketTypesClient {
                 .url(httpUrl)
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json")
                 .build();
         OkHttpClient client = clientOptions.httpClient();
@@ -69,13 +70,13 @@ public class AsyncRawTicketTypesClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), TicketTypeList.class),
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, TicketTypeList.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         if (response.code() == 401) {
                             future.completeExceptionally(new UnauthorizedError(
@@ -85,11 +86,9 @@ public class AsyncRawTicketTypesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -112,7 +111,20 @@ public class AsyncRawTicketTypesClient {
      * For the <code>icon</code> propery, use an emoji from <a href="https://twemoji-cheatsheet.vercel.app/">Twemoji Cheatsheet</a></p>
      * </blockquote>
      */
-    public CompletableFuture<IntercomHttpResponse<TicketType>> create(CreateTicketTypeRequest request) {
+    public CompletableFuture<IntercomHttpResponse<Optional<TicketType>>> create() {
+        return create(Optional.empty());
+    }
+
+    /**
+     * You can create a new ticket type.
+     * <blockquote>
+     * <p>📘 Creating ticket types.</p>
+     * <p>Every ticket type will be created with two default attributes: <em>default_title</em> and <em>default_description</em>.
+     * For the <code>icon</code> propery, use an emoji from <a href="https://twemoji-cheatsheet.vercel.app/">Twemoji Cheatsheet</a></p>
+     * </blockquote>
+     */
+    public CompletableFuture<IntercomHttpResponse<Optional<TicketType>>> create(
+            Optional<CreateTicketTypeRequest> request) {
         return create(request, null);
     }
 
@@ -124,16 +136,19 @@ public class AsyncRawTicketTypesClient {
      * For the <code>icon</code> propery, use an emoji from <a href="https://twemoji-cheatsheet.vercel.app/">Twemoji Cheatsheet</a></p>
      * </blockquote>
      */
-    public CompletableFuture<IntercomHttpResponse<TicketType>> create(
-            CreateTicketTypeRequest request, RequestOptions requestOptions) {
+    public CompletableFuture<IntercomHttpResponse<Optional<TicketType>>> create(
+            Optional<CreateTicketTypeRequest> request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("ticket_types")
                 .build();
         RequestBody body;
         try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+            body = RequestBody.create("", null);
+            if (request.isPresent()) {
+                body = RequestBody.create(
+                        ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+            }
         } catch (JsonProcessingException e) {
             throw new IntercomException("Failed to serialize request", e);
         }
@@ -148,18 +163,19 @@ public class AsyncRawTicketTypesClient {
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<IntercomHttpResponse<TicketType>> future = new CompletableFuture<>();
+        CompletableFuture<IntercomHttpResponse<Optional<TicketType>>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), TicketType.class),
+                                ObjectMappers.JSON_MAPPER.readValue(
+                                        responseBodyString, new TypeReference<Optional<TicketType>>() {}),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         if (response.code() == 401) {
                             future.completeExceptionally(new UnauthorizedError(
@@ -169,11 +185,9 @@ public class AsyncRawTicketTypesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -191,14 +205,14 @@ public class AsyncRawTicketTypesClient {
     /**
      * You can fetch the details of a single ticket type.
      */
-    public CompletableFuture<IntercomHttpResponse<TicketType>> get(FindTicketTypeRequest request) {
+    public CompletableFuture<IntercomHttpResponse<Optional<TicketType>>> get(FindTicketTypeRequest request) {
         return get(request, null);
     }
 
     /**
      * You can fetch the details of a single ticket type.
      */
-    public CompletableFuture<IntercomHttpResponse<TicketType>> get(
+    public CompletableFuture<IntercomHttpResponse<Optional<TicketType>>> get(
             FindTicketTypeRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
@@ -209,25 +223,25 @@ public class AsyncRawTicketTypesClient {
                 .url(httpUrl)
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<IntercomHttpResponse<TicketType>> future = new CompletableFuture<>();
+        CompletableFuture<IntercomHttpResponse<Optional<TicketType>>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), TicketType.class),
+                                ObjectMappers.JSON_MAPPER.readValue(
+                                        responseBodyString, new TypeReference<Optional<TicketType>>() {}),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         if (response.code() == 401) {
                             future.completeExceptionally(new UnauthorizedError(
@@ -237,11 +251,9 @@ public class AsyncRawTicketTypesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -263,7 +275,7 @@ public class AsyncRawTicketTypesClient {
      * <p>For the <code>icon</code> propery, use an emoji from <a href="https://twemoji-cheatsheet.vercel.app/">Twemoji Cheatsheet</a></p>
      * </blockquote>
      */
-    public CompletableFuture<IntercomHttpResponse<TicketType>> update(UpdateTicketTypeRequest request) {
+    public CompletableFuture<IntercomHttpResponse<Optional<TicketType>>> update(UpdateTicketTypeRequest request) {
         return update(request, null);
     }
 
@@ -274,7 +286,7 @@ public class AsyncRawTicketTypesClient {
      * <p>For the <code>icon</code> propery, use an emoji from <a href="https://twemoji-cheatsheet.vercel.app/">Twemoji Cheatsheet</a></p>
      * </blockquote>
      */
-    public CompletableFuture<IntercomHttpResponse<TicketType>> update(
+    public CompletableFuture<IntercomHttpResponse<Optional<TicketType>>> update(
             UpdateTicketTypeRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
@@ -299,18 +311,19 @@ public class AsyncRawTicketTypesClient {
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<IntercomHttpResponse<TicketType>> future = new CompletableFuture<>();
+        CompletableFuture<IntercomHttpResponse<Optional<TicketType>>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), TicketType.class),
+                                ObjectMappers.JSON_MAPPER.readValue(
+                                        responseBodyString, new TypeReference<Optional<TicketType>>() {}),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         if (response.code() == 401) {
                             future.completeExceptionally(new UnauthorizedError(
@@ -320,11 +333,9 @@ public class AsyncRawTicketTypesClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));

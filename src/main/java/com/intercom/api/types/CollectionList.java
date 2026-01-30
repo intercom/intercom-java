@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.resources.helpcenter.types.Collection;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,19 +22,23 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = CollectionList.Builder.class)
 public final class CollectionList {
+    private final Optional<String> type;
+
     private final Optional<OffsetPages> pages;
 
-    private final int totalCount;
+    private final Optional<Integer> totalCount;
 
-    private final List<Collection> data;
+    private final Optional<List<Collection>> data;
 
     private final Map<String, Object> additionalProperties;
 
     private CollectionList(
+            Optional<String> type,
             Optional<OffsetPages> pages,
-            int totalCount,
-            List<Collection> data,
+            Optional<Integer> totalCount,
+            Optional<List<Collection>> data,
             Map<String, Object> additionalProperties) {
+        this.type = type;
         this.pages = pages;
         this.totalCount = totalCount;
         this.data = data;
@@ -46,8 +49,8 @@ public final class CollectionList {
      * @return The type of the object - <code>list</code>.
      */
     @JsonProperty("type")
-    public String getType() {
-        return "list";
+    public Optional<String> getType() {
+        return type;
     }
 
     @JsonProperty("pages")
@@ -59,7 +62,7 @@ public final class CollectionList {
      * @return A count of the total number of collections.
      */
     @JsonProperty("total_count")
-    public int getTotalCount() {
+    public Optional<Integer> getTotalCount() {
         return totalCount;
     }
 
@@ -67,7 +70,7 @@ public final class CollectionList {
      * @return An array of collection objects
      */
     @JsonProperty("data")
-    public List<Collection> getData() {
+    public Optional<List<Collection>> getData() {
         return data;
     }
 
@@ -83,12 +86,15 @@ public final class CollectionList {
     }
 
     private boolean equalTo(CollectionList other) {
-        return pages.equals(other.pages) && totalCount == other.totalCount && data.equals(other.data);
+        return type.equals(other.type)
+                && pages.equals(other.pages)
+                && totalCount.equals(other.totalCount)
+                && data.equals(other.data);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.pages, this.totalCount, this.data);
+        return Objects.hash(this.type, this.pages, this.totalCount, this.data);
     }
 
     @java.lang.Override
@@ -96,51 +102,27 @@ public final class CollectionList {
         return ObjectMappers.stringify(this);
     }
 
-    public static TotalCountStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface TotalCountStage {
-        /**
-         * A count of the total number of collections.
-         */
-        _FinalStage totalCount(int totalCount);
-
-        Builder from(CollectionList other);
-    }
-
-    public interface _FinalStage {
-        CollectionList build();
-
-        _FinalStage pages(Optional<OffsetPages> pages);
-
-        _FinalStage pages(OffsetPages pages);
-
-        /**
-         * <p>An array of collection objects</p>
-         */
-        _FinalStage data(List<Collection> data);
-
-        _FinalStage addData(Collection data);
-
-        _FinalStage addAllData(List<Collection> data);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements TotalCountStage, _FinalStage {
-        private int totalCount;
-
-        private List<Collection> data = new ArrayList<>();
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
         private Optional<OffsetPages> pages = Optional.empty();
+
+        private Optional<Integer> totalCount = Optional.empty();
+
+        private Optional<List<Collection>> data = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(CollectionList other) {
+            type(other.getType());
             pages(other.getPages());
             totalCount(other.getTotalCount());
             data(other.getData());
@@ -148,63 +130,60 @@ public final class CollectionList {
         }
 
         /**
-         * A count of the total number of collections.<p>A count of the total number of collections.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The type of the object - <code>list</code>.</p>
          */
-        @java.lang.Override
-        @JsonSetter("total_count")
-        public _FinalStage totalCount(int totalCount) {
-            this.totalCount = totalCount;
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
             return this;
         }
 
-        /**
-         * <p>An array of collection objects</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addAllData(List<Collection> data) {
-            this.data.addAll(data);
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
-        /**
-         * <p>An array of collection objects</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addData(Collection data) {
-            this.data.add(data);
-            return this;
-        }
-
-        /**
-         * <p>An array of collection objects</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "data", nulls = Nulls.SKIP)
-        public _FinalStage data(List<Collection> data) {
-            this.data.clear();
-            this.data.addAll(data);
-            return this;
-        }
-
-        @java.lang.Override
-        public _FinalStage pages(OffsetPages pages) {
-            this.pages = Optional.ofNullable(pages);
-            return this;
-        }
-
-        @java.lang.Override
         @JsonSetter(value = "pages", nulls = Nulls.SKIP)
-        public _FinalStage pages(Optional<OffsetPages> pages) {
+        public Builder pages(Optional<OffsetPages> pages) {
             this.pages = pages;
             return this;
         }
 
-        @java.lang.Override
+        public Builder pages(OffsetPages pages) {
+            this.pages = Optional.ofNullable(pages);
+            return this;
+        }
+
+        /**
+         * <p>A count of the total number of collections.</p>
+         */
+        @JsonSetter(value = "total_count", nulls = Nulls.SKIP)
+        public Builder totalCount(Optional<Integer> totalCount) {
+            this.totalCount = totalCount;
+            return this;
+        }
+
+        public Builder totalCount(Integer totalCount) {
+            this.totalCount = Optional.ofNullable(totalCount);
+            return this;
+        }
+
+        /**
+         * <p>An array of collection objects</p>
+         */
+        @JsonSetter(value = "data", nulls = Nulls.SKIP)
+        public Builder data(Optional<List<Collection>> data) {
+            this.data = data;
+            return this;
+        }
+
+        public Builder data(List<Collection> data) {
+            this.data = Optional.ofNullable(data);
+            return this;
+        }
+
         public CollectionList build() {
-            return new CollectionList(pages, totalCount, data, additionalProperties);
+            return new CollectionList(type, pages, totalCount, data, additionalProperties);
         }
     }
 }

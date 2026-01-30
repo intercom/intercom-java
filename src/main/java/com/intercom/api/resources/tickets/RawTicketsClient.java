@@ -4,6 +4,7 @@
 package com.intercom.api.resources.tickets;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.IntercomApiException;
 import com.intercom.api.core.IntercomException;
@@ -15,11 +16,15 @@ import com.intercom.api.core.pagination.SyncPagingIterable;
 import com.intercom.api.errors.BadRequestError;
 import com.intercom.api.errors.NotFoundError;
 import com.intercom.api.errors.UnauthorizedError;
+import com.intercom.api.resources.jobs.types.Jobs;
+import com.intercom.api.resources.tickets.requests.CreateTicketRequest;
+import com.intercom.api.resources.tickets.requests.DeleteTicketRequest;
+import com.intercom.api.resources.tickets.requests.EnqueueCreateTicketRequest;
 import com.intercom.api.resources.tickets.requests.FindTicketRequest;
 import com.intercom.api.resources.tickets.requests.ReplyToTicketRequest;
 import com.intercom.api.resources.tickets.requests.UpdateTicketRequest;
+import com.intercom.api.resources.tickets.types.DeleteTicketResponse;
 import com.intercom.api.resources.tickets.types.Ticket;
-import com.intercom.api.types.CreateTicketRequest;
 import com.intercom.api.types.CursorPages;
 import com.intercom.api.types.Error;
 import com.intercom.api.types.SearchRequest;
@@ -27,6 +32,7 @@ import com.intercom.api.types.StartingAfterPaging;
 import com.intercom.api.types.TicketList;
 import com.intercom.api.types.TicketReply;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import okhttp3.Headers;
@@ -81,11 +87,11 @@ public class RawTicketsClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), TicketReply.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, TicketReply.class), response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 switch (response.code()) {
                     case 400:
@@ -101,11 +107,9 @@ public class RawTicketsClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }
@@ -114,14 +118,14 @@ public class RawTicketsClient {
     /**
      * You can create a new ticket.
      */
-    public IntercomHttpResponse<Ticket> create(CreateTicketRequest request) {
+    public IntercomHttpResponse<Optional<Ticket>> create(CreateTicketRequest request) {
         return create(request, null);
     }
 
     /**
      * You can create a new ticket.
      */
-    public IntercomHttpResponse<Ticket> create(CreateTicketRequest request, RequestOptions requestOptions) {
+    public IntercomHttpResponse<Optional<Ticket>> create(CreateTicketRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("tickets")
@@ -146,11 +150,13 @@ public class RawTicketsClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Ticket.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(
+                                responseBodyString, new TypeReference<Optional<Ticket>>() {}),
+                        response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 if (response.code() == 401) {
                     throw new UnauthorizedError(
@@ -159,11 +165,70 @@ public class RawTicketsClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
+        } catch (IOException e) {
+            throw new IntercomException("Network error executing HTTP request", e);
+        }
+    }
+
+    /**
+     * Enqueues ticket creation for asynchronous processing, returning if the job was enqueued successfully to be processed. We attempt to perform a best-effort validation on inputs before tasks are enqueued. If the given parameters are incorrect, we won't enqueue the job.
+     */
+    public IntercomHttpResponse<Jobs> enqueueCreateTicket(EnqueueCreateTicketRequest request) {
+        return enqueueCreateTicket(request, null);
+    }
+
+    /**
+     * Enqueues ticket creation for asynchronous processing, returning if the job was enqueued successfully to be processed. We attempt to perform a best-effort validation on inputs before tasks are enqueued. If the given parameters are incorrect, we won't enqueue the job.
+     */
+    public IntercomHttpResponse<Jobs> enqueueCreateTicket(
+            EnqueueCreateTicketRequest request, RequestOptions requestOptions) {
+        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+                .newBuilder()
+                .addPathSegments("tickets/enqueue")
+                .build();
+        RequestBody body;
+        try {
+            body = RequestBody.create(
+                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+        } catch (JsonProcessingException e) {
+            throw new IntercomException("Failed to serialize request", e);
+        }
+        Request okhttpRequest = new Request.Builder()
+                .url(httpUrl)
+                .method("POST", body)
+                .headers(Headers.of(clientOptions.headers(requestOptions)))
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept", "application/json")
+                .build();
+        OkHttpClient client = clientOptions.httpClient();
+        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+            client = clientOptions.httpClientWithTimeout(requestOptions);
+        }
+        try (Response response = client.newCall(okhttpRequest).execute()) {
+            ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+            if (response.isSuccessful()) {
+                return new IntercomHttpResponse<>(
+                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Jobs.class), response);
+            }
+            try {
+                switch (response.code()) {
+                    case 400:
+                        throw new BadRequestError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+                    case 401:
+                        throw new UnauthorizedError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class), response);
+                }
+            } catch (JsonProcessingException ignored) {
+                // unable to map error response, throwing generic error
+            }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
+            throw new IntercomApiException(
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }
@@ -172,14 +237,14 @@ public class RawTicketsClient {
     /**
      * You can fetch the details of a single ticket.
      */
-    public IntercomHttpResponse<Ticket> get(FindTicketRequest request) {
+    public IntercomHttpResponse<Optional<Ticket>> get(FindTicketRequest request) {
         return get(request, null);
     }
 
     /**
      * You can fetch the details of a single ticket.
      */
-    public IntercomHttpResponse<Ticket> get(FindTicketRequest request, RequestOptions requestOptions) {
+    public IntercomHttpResponse<Optional<Ticket>> get(FindTicketRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("tickets")
@@ -189,7 +254,6 @@ public class RawTicketsClient {
                 .url(httpUrl)
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -198,11 +262,13 @@ public class RawTicketsClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Ticket.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(
+                                responseBodyString, new TypeReference<Optional<Ticket>>() {}),
+                        response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 if (response.code() == 401) {
                     throw new UnauthorizedError(
@@ -211,11 +277,9 @@ public class RawTicketsClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }
@@ -224,14 +288,14 @@ public class RawTicketsClient {
     /**
      * You can update a ticket.
      */
-    public IntercomHttpResponse<Ticket> update(UpdateTicketRequest request) {
+    public IntercomHttpResponse<Optional<Ticket>> update(UpdateTicketRequest request) {
         return update(request, null);
     }
 
     /**
      * You can update a ticket.
      */
-    public IntercomHttpResponse<Ticket> update(UpdateTicketRequest request, RequestOptions requestOptions) {
+    public IntercomHttpResponse<Optional<Ticket>> update(UpdateTicketRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("tickets")
@@ -257,11 +321,70 @@ public class RawTicketsClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Ticket.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(
+                                responseBodyString, new TypeReference<Optional<Ticket>>() {}),
+                        response);
             }
+            try {
+                switch (response.code()) {
+                    case 400:
+                        throw new BadRequestError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+                    case 401:
+                        throw new UnauthorizedError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Error.class), response);
+                    case 404:
+                        throw new NotFoundError(
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class), response);
+                }
+            } catch (JsonProcessingException ignored) {
+                // unable to map error response, throwing generic error
+            }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
+            throw new IntercomApiException(
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
+        } catch (IOException e) {
+            throw new IntercomException("Network error executing HTTP request", e);
+        }
+    }
+
+    /**
+     * You can delete a ticket using the Intercom provided ID.
+     */
+    public IntercomHttpResponse<DeleteTicketResponse> deleteTicket(DeleteTicketRequest request) {
+        return deleteTicket(request, null);
+    }
+
+    /**
+     * You can delete a ticket using the Intercom provided ID.
+     */
+    public IntercomHttpResponse<DeleteTicketResponse> deleteTicket(
+            DeleteTicketRequest request, RequestOptions requestOptions) {
+        HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
+                .newBuilder()
+                .addPathSegments("tickets")
+                .addPathSegment(request.getTicketId())
+                .build();
+        Request.Builder _requestBuilder = new Request.Builder()
+                .url(httpUrl)
+                .method("DELETE", null)
+                .headers(Headers.of(clientOptions.headers(requestOptions)))
+                .addHeader("Accept", "application/json");
+        Request okhttpRequest = _requestBuilder.build();
+        OkHttpClient client = clientOptions.httpClient();
+        if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
+            client = clientOptions.httpClientWithTimeout(requestOptions);
+        }
+        try (Response response = client.newCall(okhttpRequest).execute()) {
+            ResponseBody responseBody = response.body();
             String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+            if (response.isSuccessful()) {
+                return new IntercomHttpResponse<>(
+                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, DeleteTicketResponse.class), response);
+            }
             try {
                 switch (response.code()) {
                     case 401:
@@ -274,11 +397,9 @@ public class RawTicketsClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }
@@ -302,14 +423,15 @@ public class RawTicketsClient {
      * <li>There's a limit of max 15 filters for each AND or OR group</li>
      * </ul>
      * <h3>Accepted Fields</h3>
-     * <p>Most keys listed as part of the Ticket model are searchable, whether writeable or not. The value you search for has to match the accepted type, otherwise the query will fail (ie. as <code>created_at</code> accepts a date, the <code>value</code> cannot be a string such as <code>&quot;foobar&quot;</code>).</p>
+     * <p>Most keys listed as part of the Ticket model are searchable, whether writeable or not. The value you search for has to match the accepted type, otherwise the query will fail (ie. as <code>created_at</code> accepts a date, the <code>value</code> cannot be a string such as <code>&quot;foobar&quot;</code>).
+     * The <code>source.body</code> field is unique as the search will not be performed against the entire value, but instead against every element of the value separately. For example, when searching for a conversation with a <code>&quot;I need support&quot;</code> body - the query should contain a <code>=</code> operator with the value <code>&quot;support&quot;</code> for such conversation to be returned. A query with a <code>=</code> operator and a <code>&quot;need support&quot;</code> value will not yield a result.</p>
      * <p>| Field                                     | Type                                                                                     |
      * | :---------------------------------------- | :--------------------------------------------------------------------------------------- |
      * | id                                        | String                                                                                   |
      * | created_at                                | Date (UNIX timestamp)                                                                    |
      * | updated_at                                | Date (UNIX timestamp)                                                                    |
-     * | <em>default_title</em>                           | String                                                                                   |
-     * | <em>default_description</em>                     | String                                                                                   |
+     * | title                           | String                                                                                   |
+     * | description                     | String                                                                                   |
      * | category                                  | String                                                                                   |
      * | ticket_type_id                            | String                                                                                   |
      * | contact_ids                               | String                                                                                   |
@@ -320,6 +442,14 @@ public class RawTicketsClient {
      * | state                                     | String                                                                                   |
      * | snoozed_until                             | Date (UNIX timestamp)                                                                    |
      * | ticket_attribute.{id}                     | String or Boolean or Date (UNIX timestamp) or Float or Integer                           |</p>
+     * <p>{% admonition type=&quot;info&quot; name=&quot;Searching by Category&quot; %}
+     * When searching for tickets by the <strong><code>category</code></strong> field, specific terms must be used instead of the category names:</p>
+     * <ul>
+     * <li>For <strong>Customer</strong> category tickets, use the term <code>request</code>.</li>
+     * <li>For <strong>Back-office</strong> category tickets, use the term <code>task</code>.</li>
+     * <li>For <strong>Tracker</strong> category tickets, use the term <code>tracker</code>.
+     * {% /admonition %}</li>
+     * </ul>
      * <h3>Accepted Operators</h3>
      * <p>{% admonition type=&quot;info&quot; name=&quot;Searching based on <code>created_at</code>&quot; %}
      * You may use the <code>&lt;=</code> or <code>&gt;=</code> operators to search by <code>created_at</code>.
@@ -338,7 +468,7 @@ public class RawTicketsClient {
      * | ^        | String                         | Starts With                                                  |
      * | $        | String                         | Ends With                                                    |</p>
      */
-    public IntercomHttpResponse<SyncPagingIterable<Ticket>> search(SearchRequest request) {
+    public IntercomHttpResponse<SyncPagingIterable<Optional<Ticket>>> search(SearchRequest request) {
         return search(request, null);
     }
 
@@ -360,14 +490,15 @@ public class RawTicketsClient {
      * <li>There's a limit of max 15 filters for each AND or OR group</li>
      * </ul>
      * <h3>Accepted Fields</h3>
-     * <p>Most keys listed as part of the Ticket model are searchable, whether writeable or not. The value you search for has to match the accepted type, otherwise the query will fail (ie. as <code>created_at</code> accepts a date, the <code>value</code> cannot be a string such as <code>&quot;foobar&quot;</code>).</p>
+     * <p>Most keys listed as part of the Ticket model are searchable, whether writeable or not. The value you search for has to match the accepted type, otherwise the query will fail (ie. as <code>created_at</code> accepts a date, the <code>value</code> cannot be a string such as <code>&quot;foobar&quot;</code>).
+     * The <code>source.body</code> field is unique as the search will not be performed against the entire value, but instead against every element of the value separately. For example, when searching for a conversation with a <code>&quot;I need support&quot;</code> body - the query should contain a <code>=</code> operator with the value <code>&quot;support&quot;</code> for such conversation to be returned. A query with a <code>=</code> operator and a <code>&quot;need support&quot;</code> value will not yield a result.</p>
      * <p>| Field                                     | Type                                                                                     |
      * | :---------------------------------------- | :--------------------------------------------------------------------------------------- |
      * | id                                        | String                                                                                   |
      * | created_at                                | Date (UNIX timestamp)                                                                    |
      * | updated_at                                | Date (UNIX timestamp)                                                                    |
-     * | <em>default_title</em>                           | String                                                                                   |
-     * | <em>default_description</em>                     | String                                                                                   |
+     * | title                           | String                                                                                   |
+     * | description                     | String                                                                                   |
      * | category                                  | String                                                                                   |
      * | ticket_type_id                            | String                                                                                   |
      * | contact_ids                               | String                                                                                   |
@@ -378,6 +509,14 @@ public class RawTicketsClient {
      * | state                                     | String                                                                                   |
      * | snoozed_until                             | Date (UNIX timestamp)                                                                    |
      * | ticket_attribute.{id}                     | String or Boolean or Date (UNIX timestamp) or Float or Integer                           |</p>
+     * <p>{% admonition type=&quot;info&quot; name=&quot;Searching by Category&quot; %}
+     * When searching for tickets by the <strong><code>category</code></strong> field, specific terms must be used instead of the category names:</p>
+     * <ul>
+     * <li>For <strong>Customer</strong> category tickets, use the term <code>request</code>.</li>
+     * <li>For <strong>Back-office</strong> category tickets, use the term <code>task</code>.</li>
+     * <li>For <strong>Tracker</strong> category tickets, use the term <code>tracker</code>.
+     * {% /admonition %}</li>
+     * </ul>
      * <h3>Accepted Operators</h3>
      * <p>{% admonition type=&quot;info&quot; name=&quot;Searching based on <code>created_at</code>&quot; %}
      * You may use the <code>&lt;=</code> or <code>&gt;=</code> operators to search by <code>created_at</code>.
@@ -396,7 +535,7 @@ public class RawTicketsClient {
      * | ^        | String                         | Starts With                                                  |
      * | $        | String                         | Ends With                                                    |</p>
      */
-    public IntercomHttpResponse<SyncPagingIterable<Ticket>> search(
+    public IntercomHttpResponse<SyncPagingIterable<Optional<Ticket>>> search(
             SearchRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
@@ -422,15 +561,15 @@ public class RawTicketsClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
-                TicketList parsedResponse =
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), TicketList.class);
+                TicketList parsedResponse = ObjectMappers.JSON_MAPPER.readValue(responseBodyString, TicketList.class);
                 Optional<String> startingAfter = parsedResponse
                         .getPages()
                         .flatMap(CursorPages::getNext)
                         .flatMap(StartingAfterPaging::getStartingAfter);
                 Optional<StartingAfterPaging> pagination = request.getPagination()
-                        .map(pagination_ -> StartingAfterPaging.builder()
+                        .map((StartingAfterPaging pagination_) -> StartingAfterPaging.builder()
                                 .from(pagination_)
                                 .startingAfter(startingAfter)
                                 .build());
@@ -438,19 +577,17 @@ public class RawTicketsClient {
                         .from(request)
                         .pagination(pagination)
                         .build();
-                List<Ticket> result = parsedResponse.getTickets();
+                List<Optional<Ticket>> result = parsedResponse.getTickets().orElse(Collections.emptyList());
                 return new IntercomHttpResponse<>(
-                        new SyncPagingIterable<Ticket>(
-                                startingAfter.isPresent(), result, () -> search(nextRequest, requestOptions)
+                        new SyncPagingIterable<Optional<Ticket>>(
+                                startingAfter.isPresent(), result, parsedResponse, () -> search(
+                                                nextRequest, requestOptions)
                                         .body()),
                         response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }

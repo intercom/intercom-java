@@ -121,7 +121,7 @@ public final class ContactReplyBaseRequest implements IContactReplyBaseRequest {
 
     public interface BodyStage {
         /**
-         * The text body of the comment.
+         * <p>The text body of the comment.</p>
          */
         _FinalStage body(@NotNull String body);
 
@@ -178,7 +178,8 @@ public final class ContactReplyBaseRequest implements IContactReplyBaseRequest {
         }
 
         /**
-         * The text body of the comment.<p>The text body of the comment.</p>
+         * <p>The text body of the comment.</p>
+         * <p>The text body of the comment.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -316,7 +317,7 @@ public final class ContactReplyBaseRequest implements IContactReplyBaseRequest {
 
         public interface TextStage {
             /**
-             * The text of the chosen reply option.
+             * <p>The text of the chosen reply option.</p>
              */
             UuidStage text(@NotNull String text);
 
@@ -325,7 +326,7 @@ public final class ContactReplyBaseRequest implements IContactReplyBaseRequest {
 
         public interface UuidStage {
             /**
-             * The unique identifier for the quick reply option selected.
+             * <p>The unique identifier for the quick reply option selected.</p>
              */
             _FinalStage uuid(@NotNull String uuid);
         }
@@ -353,7 +354,8 @@ public final class ContactReplyBaseRequest implements IContactReplyBaseRequest {
             }
 
             /**
-             * The text of the chosen reply option.<p>The text of the chosen reply option.</p>
+             * <p>The text of the chosen reply option.</p>
+             * <p>The text of the chosen reply option.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -364,7 +366,8 @@ public final class ContactReplyBaseRequest implements IContactReplyBaseRequest {
             }
 
             /**
-             * The unique identifier for the quick reply option selected.<p>The unique identifier for the quick reply option selected.</p>
+             * <p>The unique identifier for the quick reply option selected.</p>
+             * <p>The unique identifier for the quick reply option selected.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override

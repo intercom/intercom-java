@@ -80,7 +80,7 @@ public final class DeleteCustomObjectInstancesByExternalIdRequest {
 
     public interface CustomObjectTypeIdentifierStage {
         /**
-         * The unique identifier of the custom object type that defines the structure of the custom object instance.
+         * <p>The unique identifier of the custom object type that defines the structure of the custom object instance.</p>
          */
         IdStage customObjectTypeIdentifier(@NotNull String customObjectTypeIdentifier);
 
@@ -89,7 +89,7 @@ public final class DeleteCustomObjectInstancesByExternalIdRequest {
 
     public interface IdStage {
         /**
-         * The Intercom defined id of the custom object instance
+         * <p>The Intercom defined id of the custom object instance</p>
          */
         _FinalStage id(@NotNull String id);
     }
@@ -117,7 +117,8 @@ public final class DeleteCustomObjectInstancesByExternalIdRequest {
         }
 
         /**
-         * The unique identifier of the custom object type that defines the structure of the custom object instance.<p>The unique identifier of the custom object type that defines the structure of the custom object instance.</p>
+         * <p>The unique identifier of the custom object type that defines the structure of the custom object instance.</p>
+         * <p>The unique identifier of the custom object type that defines the structure of the custom object instance.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -129,7 +130,8 @@ public final class DeleteCustomObjectInstancesByExternalIdRequest {
         }
 
         /**
-         * The Intercom defined id of the custom object instance<p>The Intercom defined id of the custom object instance</p>
+         * <p>The Intercom defined id of the custom object instance</p>
+         * <p>The Intercom defined id of the custom object instance</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

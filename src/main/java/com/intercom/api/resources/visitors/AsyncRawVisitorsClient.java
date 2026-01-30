@@ -4,6 +4,7 @@
 package com.intercom.api.resources.visitors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.IntercomApiException;
 import com.intercom.api.core.IntercomException;
@@ -21,6 +22,7 @@ import com.intercom.api.types.Error;
 import com.intercom.api.types.UpdateVisitorRequest;
 import com.intercom.api.types.Visitor;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -43,14 +45,14 @@ public class AsyncRawVisitorsClient {
     /**
      * You can fetch the details of a single visitor.
      */
-    public CompletableFuture<IntercomHttpResponse<Visitor>> find(FindVisitorRequest request) {
+    public CompletableFuture<IntercomHttpResponse<Optional<Visitor>>> find(FindVisitorRequest request) {
         return find(request, null);
     }
 
     /**
      * You can fetch the details of a single visitor.
      */
-    public CompletableFuture<IntercomHttpResponse<Visitor>> find(
+    public CompletableFuture<IntercomHttpResponse<Optional<Visitor>>> find(
             FindVisitorRequest request, RequestOptions requestOptions) {
         HttpUrl.Builder httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
@@ -60,24 +62,25 @@ public class AsyncRawVisitorsClient {
                 .url(httpUrl.build())
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<IntercomHttpResponse<Visitor>> future = new CompletableFuture<>();
+        CompletableFuture<IntercomHttpResponse<Optional<Visitor>>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Visitor.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(
+                                        responseBodyString, new TypeReference<Optional<Visitor>>() {}),
+                                response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -94,11 +97,9 @@ public class AsyncRawVisitorsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -118,7 +119,7 @@ public class AsyncRawVisitorsClient {
      * <p><strong>Option 1.</strong> You can update a visitor by passing in the <code>user_id</code> of the visitor in the Request body.</p>
      * <p><strong>Option 2.</strong> You can update a visitor by passing in the <code>id</code> of the visitor in the Request body.</p>
      */
-    public CompletableFuture<IntercomHttpResponse<Visitor>> update(UpdateVisitorRequest request) {
+    public CompletableFuture<IntercomHttpResponse<Optional<Visitor>>> update(UpdateVisitorRequest request) {
         return update(request, null);
     }
 
@@ -127,7 +128,7 @@ public class AsyncRawVisitorsClient {
      * <p><strong>Option 1.</strong> You can update a visitor by passing in the <code>user_id</code> of the visitor in the Request body.</p>
      * <p><strong>Option 2.</strong> You can update a visitor by passing in the <code>id</code> of the visitor in the Request body.</p>
      */
-    public CompletableFuture<IntercomHttpResponse<Visitor>> update(
+    public CompletableFuture<IntercomHttpResponse<Optional<Visitor>>> update(
             UpdateVisitorRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
@@ -151,17 +152,19 @@ public class AsyncRawVisitorsClient {
         if (requestOptions != null && requestOptions.getTimeout().isPresent()) {
             client = clientOptions.httpClientWithTimeout(requestOptions);
         }
-        CompletableFuture<IntercomHttpResponse<Visitor>> future = new CompletableFuture<>();
+        CompletableFuture<IntercomHttpResponse<Optional<Visitor>>> future = new CompletableFuture<>();
         client.newCall(okhttpRequest).enqueue(new Callback() {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Visitor.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(
+                                        responseBodyString, new TypeReference<Optional<Visitor>>() {}),
+                                response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 401:
@@ -178,11 +181,9 @@ public class AsyncRawVisitorsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -244,12 +245,12 @@ public class AsyncRawVisitorsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
-                                ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Contact.class), response));
+                                ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Contact.class), response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         if (response.code() == 401) {
                             future.completeExceptionally(new UnauthorizedError(
@@ -259,11 +260,9 @@ public class AsyncRawVisitorsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));

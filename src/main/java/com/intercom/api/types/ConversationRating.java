@@ -9,38 +9,43 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ConversationRating.Builder.class)
 public final class ConversationRating {
-    private final int rating;
+    private final Optional<Integer> rating;
 
-    private final String remark;
+    private final Optional<String> remark;
 
-    private final int createdAt;
+    private final Optional<Integer> createdAt;
 
-    private final ContactReference contact;
+    private final Optional<Integer> updatedAt;
 
-    private final Reference teammate;
+    private final Optional<ContactReference> contact;
+
+    private final Optional<Reference> teammate;
 
     private final Map<String, Object> additionalProperties;
 
     private ConversationRating(
-            int rating,
-            String remark,
-            int createdAt,
-            ContactReference contact,
-            Reference teammate,
+            Optional<Integer> rating,
+            Optional<String> remark,
+            Optional<Integer> createdAt,
+            Optional<Integer> updatedAt,
+            Optional<ContactReference> contact,
+            Optional<Reference> teammate,
             Map<String, Object> additionalProperties) {
         this.rating = rating;
         this.remark = remark;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
         this.contact = contact;
         this.teammate = teammate;
         this.additionalProperties = additionalProperties;
@@ -50,7 +55,7 @@ public final class ConversationRating {
      * @return The rating, between 1 and 5, for the conversation.
      */
     @JsonProperty("rating")
-    public int getRating() {
+    public Optional<Integer> getRating() {
         return rating;
     }
 
@@ -58,7 +63,7 @@ public final class ConversationRating {
      * @return An optional field to add a remark to correspond to the number rating
      */
     @JsonProperty("remark")
-    public String getRemark() {
+    public Optional<String> getRemark() {
         return remark;
     }
 
@@ -66,17 +71,25 @@ public final class ConversationRating {
      * @return The time the rating was requested in the conversation being rated.
      */
     @JsonProperty("created_at")
-    public int getCreatedAt() {
+    public Optional<Integer> getCreatedAt() {
         return createdAt;
     }
 
+    /**
+     * @return The time the rating was last updated.
+     */
+    @JsonProperty("updated_at")
+    public Optional<Integer> getUpdatedAt() {
+        return updatedAt;
+    }
+
     @JsonProperty("contact")
-    public ContactReference getContact() {
+    public Optional<ContactReference> getContact() {
         return contact;
     }
 
     @JsonProperty("teammate")
-    public Reference getTeammate() {
+    public Optional<Reference> getTeammate() {
         return teammate;
     }
 
@@ -92,16 +105,17 @@ public final class ConversationRating {
     }
 
     private boolean equalTo(ConversationRating other) {
-        return rating == other.rating
+        return rating.equals(other.rating)
                 && remark.equals(other.remark)
-                && createdAt == other.createdAt
+                && createdAt.equals(other.createdAt)
+                && updatedAt.equals(other.updatedAt)
                 && contact.equals(other.contact)
                 && teammate.equals(other.teammate);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.rating, this.remark, this.createdAt, this.contact, this.teammate);
+        return Objects.hash(this.rating, this.remark, this.createdAt, this.updatedAt, this.contact, this.teammate);
     }
 
     @java.lang.Override
@@ -109,123 +123,120 @@ public final class ConversationRating {
         return ObjectMappers.stringify(this);
     }
 
-    public static RatingStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface RatingStage {
-        /**
-         * The rating, between 1 and 5, for the conversation.
-         */
-        RemarkStage rating(int rating);
-
-        Builder from(ConversationRating other);
-    }
-
-    public interface RemarkStage {
-        /**
-         * An optional field to add a remark to correspond to the number rating
-         */
-        CreatedAtStage remark(@NotNull String remark);
-    }
-
-    public interface CreatedAtStage {
-        /**
-         * The time the rating was requested in the conversation being rated.
-         */
-        ContactStage createdAt(int createdAt);
-    }
-
-    public interface ContactStage {
-        TeammateStage contact(@NotNull ContactReference contact);
-    }
-
-    public interface TeammateStage {
-        _FinalStage teammate(@NotNull Reference teammate);
-    }
-
-    public interface _FinalStage {
-        ConversationRating build();
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder
-            implements RatingStage, RemarkStage, CreatedAtStage, ContactStage, TeammateStage, _FinalStage {
-        private int rating;
+    public static final class Builder {
+        private Optional<Integer> rating = Optional.empty();
 
-        private String remark;
+        private Optional<String> remark = Optional.empty();
 
-        private int createdAt;
+        private Optional<Integer> createdAt = Optional.empty();
 
-        private ContactReference contact;
+        private Optional<Integer> updatedAt = Optional.empty();
 
-        private Reference teammate;
+        private Optional<ContactReference> contact = Optional.empty();
+
+        private Optional<Reference> teammate = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(ConversationRating other) {
             rating(other.getRating());
             remark(other.getRemark());
             createdAt(other.getCreatedAt());
+            updatedAt(other.getUpdatedAt());
             contact(other.getContact());
             teammate(other.getTeammate());
             return this;
         }
 
         /**
-         * The rating, between 1 and 5, for the conversation.<p>The rating, between 1 and 5, for the conversation.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The rating, between 1 and 5, for the conversation.</p>
          */
-        @java.lang.Override
-        @JsonSetter("rating")
-        public RemarkStage rating(int rating) {
+        @JsonSetter(value = "rating", nulls = Nulls.SKIP)
+        public Builder rating(Optional<Integer> rating) {
             this.rating = rating;
             return this;
         }
 
-        /**
-         * An optional field to add a remark to correspond to the number rating<p>An optional field to add a remark to correspond to the number rating</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("remark")
-        public CreatedAtStage remark(@NotNull String remark) {
-            this.remark = Objects.requireNonNull(remark, "remark must not be null");
+        public Builder rating(Integer rating) {
+            this.rating = Optional.ofNullable(rating);
             return this;
         }
 
         /**
-         * The time the rating was requested in the conversation being rated.<p>The time the rating was requested in the conversation being rated.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>An optional field to add a remark to correspond to the number rating</p>
          */
-        @java.lang.Override
-        @JsonSetter("created_at")
-        public ContactStage createdAt(int createdAt) {
+        @JsonSetter(value = "remark", nulls = Nulls.SKIP)
+        public Builder remark(Optional<String> remark) {
+            this.remark = remark;
+            return this;
+        }
+
+        public Builder remark(String remark) {
+            this.remark = Optional.ofNullable(remark);
+            return this;
+        }
+
+        /**
+         * <p>The time the rating was requested in the conversation being rated.</p>
+         */
+        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
+        public Builder createdAt(Optional<Integer> createdAt) {
             this.createdAt = createdAt;
             return this;
         }
 
-        @java.lang.Override
-        @JsonSetter("contact")
-        public TeammateStage contact(@NotNull ContactReference contact) {
-            this.contact = Objects.requireNonNull(contact, "contact must not be null");
+        public Builder createdAt(Integer createdAt) {
+            this.createdAt = Optional.ofNullable(createdAt);
             return this;
         }
 
-        @java.lang.Override
-        @JsonSetter("teammate")
-        public _FinalStage teammate(@NotNull Reference teammate) {
-            this.teammate = Objects.requireNonNull(teammate, "teammate must not be null");
+        /**
+         * <p>The time the rating was last updated.</p>
+         */
+        @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
+        public Builder updatedAt(Optional<Integer> updatedAt) {
+            this.updatedAt = updatedAt;
             return this;
         }
 
-        @java.lang.Override
+        public Builder updatedAt(Integer updatedAt) {
+            this.updatedAt = Optional.ofNullable(updatedAt);
+            return this;
+        }
+
+        @JsonSetter(value = "contact", nulls = Nulls.SKIP)
+        public Builder contact(Optional<ContactReference> contact) {
+            this.contact = contact;
+            return this;
+        }
+
+        public Builder contact(ContactReference contact) {
+            this.contact = Optional.ofNullable(contact);
+            return this;
+        }
+
+        @JsonSetter(value = "teammate", nulls = Nulls.SKIP)
+        public Builder teammate(Optional<Reference> teammate) {
+            this.teammate = teammate;
+            return this;
+        }
+
+        public Builder teammate(Reference teammate) {
+            this.teammate = Optional.ofNullable(teammate);
+            return this;
+        }
+
         public ConversationRating build() {
-            return new ConversationRating(rating, remark, createdAt, contact, teammate, additionalProperties);
+            return new ConversationRating(
+                    rating, remark, createdAt, updatedAt, contact, teammate, additionalProperties);
         }
     }
 }

@@ -164,7 +164,7 @@ public final class CreateExternalPageRequest {
 
     public interface TitleStage {
         /**
-         * The title of the external page.
+         * <p>The title of the external page.</p>
          */
         HtmlStage title(@NotNull String title);
 
@@ -173,21 +173,21 @@ public final class CreateExternalPageRequest {
 
     public interface HtmlStage {
         /**
-         * The body of the external page in HTML.
+         * <p>The body of the external page in HTML.</p>
          */
         SourceIdStage html(@NotNull String html);
     }
 
     public interface SourceIdStage {
         /**
-         * The unique identifier for the source of the external page which was given by Intercom. Every external page must be associated with a Content Import Source which represents the place it comes from and from which it inherits a default audience (configured in the UI). For a new source, make a POST request to the Content Import Source endpoint and an ID for the source will be returned in the response.
+         * <p>The unique identifier for the source of the external page which was given by Intercom. Every external page must be associated with a Content Import Source which represents the place it comes from and from which it inherits a default audience (configured in the UI). For a new source, make a POST request to the Content Import Source endpoint and an ID for the source will be returned in the response.</p>
          */
         ExternalIdStage sourceId(int sourceId);
     }
 
     public interface ExternalIdStage {
         /**
-         * The identifier for the external page which was given by the source. Must be unique for the source.
+         * <p>The identifier for the external page which was given by the source. Must be unique for the source.</p>
          */
         _FinalStage externalId(@NotNull String externalId);
     }
@@ -251,7 +251,8 @@ public final class CreateExternalPageRequest {
         }
 
         /**
-         * The title of the external page.<p>The title of the external page.</p>
+         * <p>The title of the external page.</p>
+         * <p>The title of the external page.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -262,7 +263,8 @@ public final class CreateExternalPageRequest {
         }
 
         /**
-         * The body of the external page in HTML.<p>The body of the external page in HTML.</p>
+         * <p>The body of the external page in HTML.</p>
+         * <p>The body of the external page in HTML.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -273,7 +275,8 @@ public final class CreateExternalPageRequest {
         }
 
         /**
-         * The unique identifier for the source of the external page which was given by Intercom. Every external page must be associated with a Content Import Source which represents the place it comes from and from which it inherits a default audience (configured in the UI). For a new source, make a POST request to the Content Import Source endpoint and an ID for the source will be returned in the response.<p>The unique identifier for the source of the external page which was given by Intercom. Every external page must be associated with a Content Import Source which represents the place it comes from and from which it inherits a default audience (configured in the UI). For a new source, make a POST request to the Content Import Source endpoint and an ID for the source will be returned in the response.</p>
+         * <p>The unique identifier for the source of the external page which was given by Intercom. Every external page must be associated with a Content Import Source which represents the place it comes from and from which it inherits a default audience (configured in the UI). For a new source, make a POST request to the Content Import Source endpoint and an ID for the source will be returned in the response.</p>
+         * <p>The unique identifier for the source of the external page which was given by Intercom. Every external page must be associated with a Content Import Source which represents the place it comes from and from which it inherits a default audience (configured in the UI). For a new source, make a POST request to the Content Import Source endpoint and an ID for the source will be returned in the response.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -284,7 +287,8 @@ public final class CreateExternalPageRequest {
         }
 
         /**
-         * The identifier for the external page which was given by the source. Must be unique for the source.<p>The identifier for the external page which was given by the source. Must be unique for the source.</p>
+         * <p>The identifier for the external page which was given by the source. Must be unique for the source.</p>
+         * <p>The identifier for the external page which was given by the source. Must be unique for the source.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

@@ -97,7 +97,7 @@ public final class Error {
 
     public interface TypeStage {
         /**
-         * The type is error.list
+         * <p>The type is error.list</p>
          */
         _FinalStage type(@NotNull String type);
 
@@ -143,7 +143,8 @@ public final class Error {
         }
 
         /**
-         * The type is error.list<p>The type is error.list</p>
+         * <p>The type is error.list</p>
+         * <p>The type is error.list</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -159,7 +160,9 @@ public final class Error {
          */
         @java.lang.Override
         public _FinalStage addAllErrors(List<ErrorsItem> errors) {
-            this.errors.addAll(errors);
+            if (errors != null) {
+                this.errors.addAll(errors);
+            }
             return this;
         }
 
@@ -180,7 +183,9 @@ public final class Error {
         @JsonSetter(value = "errors", nulls = Nulls.SKIP)
         public _FinalStage errors(List<ErrorsItem> errors) {
             this.errors.clear();
-            this.errors.addAll(errors);
+            if (errors != null) {
+                this.errors.addAll(errors);
+            }
             return this;
         }
 
@@ -283,7 +288,7 @@ public final class Error {
 
         public interface CodeStage {
             /**
-             * A string indicating the kind of error, used to further qualify the HTTP response code
+             * <p>A string indicating the kind of error, used to further qualify the HTTP response code</p>
              */
             _FinalStage code(@NotNull String code);
 
@@ -330,7 +335,8 @@ public final class Error {
             }
 
             /**
-             * A string indicating the kind of error, used to further qualify the HTTP response code<p>A string indicating the kind of error, used to further qualify the HTTP response code</p>
+             * <p>A string indicating the kind of error, used to further qualify the HTTP response code</p>
+             * <p>A string indicating the kind of error, used to further qualify the HTTP response code</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override

@@ -66,6 +66,8 @@ public final class Conversation {
 
     private final Optional<String> teamAssigneeId;
 
+    private final Optional<String> companyId;
+
     private final Optional<Tags> tags;
 
     private final Optional<ConversationRating> conversationRating;
@@ -108,6 +110,7 @@ public final class Conversation {
             Optional<Priority> priority,
             Optional<Integer> adminAssigneeId,
             Optional<String> teamAssigneeId,
+            Optional<String> companyId,
             Optional<Tags> tags,
             Optional<ConversationRating> conversationRating,
             Optional<ConversationSource> source,
@@ -135,6 +138,7 @@ public final class Conversation {
         this.priority = priority;
         this.adminAssigneeId = adminAssigneeId;
         this.teamAssigneeId = teamAssigneeId;
+        this.companyId = companyId;
         this.tags = tags;
         this.conversationRating = conversationRating;
         this.source = source;
@@ -255,6 +259,14 @@ public final class Conversation {
         return teamAssigneeId;
     }
 
+    /**
+     * @return The ID of the company that the conversation is associated with. The unique identifier for the company which is given by Intercom.
+     */
+    @JsonProperty("company_id")
+    public Optional<String> getCompanyId() {
+        return companyId;
+    }
+
     @JsonProperty("tags")
     public Optional<Tags> getTags() {
         return tags;
@@ -348,6 +360,7 @@ public final class Conversation {
                 && priority.equals(other.priority)
                 && adminAssigneeId.equals(other.adminAssigneeId)
                 && teamAssigneeId.equals(other.teamAssigneeId)
+                && companyId.equals(other.companyId)
                 && tags.equals(other.tags)
                 && conversationRating.equals(other.conversationRating)
                 && source.equals(other.source)
@@ -379,6 +392,7 @@ public final class Conversation {
                 this.priority,
                 this.adminAssigneeId,
                 this.teamAssigneeId,
+                this.companyId,
                 this.tags,
                 this.conversationRating,
                 this.source,
@@ -431,6 +445,8 @@ public final class Conversation {
 
         private Optional<String> teamAssigneeId = Optional.empty();
 
+        private Optional<String> companyId = Optional.empty();
+
         private Optional<Tags> tags = Optional.empty();
 
         private Optional<ConversationRating> conversationRating = Optional.empty();
@@ -476,6 +492,7 @@ public final class Conversation {
             priority(other.getPriority());
             adminAssigneeId(other.getAdminAssigneeId());
             teamAssigneeId(other.getTeamAssigneeId());
+            companyId(other.getCompanyId());
             tags(other.getTags());
             conversationRating(other.getConversationRating());
             source(other.getSource());
@@ -674,6 +691,20 @@ public final class Conversation {
             return this;
         }
 
+        /**
+         * <p>The ID of the company that the conversation is associated with. The unique identifier for the company which is given by Intercom.</p>
+         */
+        @JsonSetter(value = "company_id", nulls = Nulls.SKIP)
+        public Builder companyId(Optional<String> companyId) {
+            this.companyId = companyId;
+            return this;
+        }
+
+        public Builder companyId(String companyId) {
+            this.companyId = Optional.ofNullable(companyId);
+            return this;
+        }
+
         @JsonSetter(value = "tags", nulls = Nulls.SKIP)
         public Builder tags(Optional<Tags> tags) {
             this.tags = tags;
@@ -835,6 +866,7 @@ public final class Conversation {
                     priority,
                     adminAssigneeId,
                     teamAssigneeId,
+                    companyId,
                     tags,
                     conversationRating,
                     source,
@@ -1098,18 +1130,18 @@ public final class Conversation {
                 Object value = p.readValueAs(Object.class);
                 try {
                     return of(ObjectMappers.JSON_MAPPER.convertValue(value, String.class));
-                } catch (IllegalArgumentException e) {
+                } catch (RuntimeException e) {
                 }
                 if (value instanceof Integer) {
                     return of((Integer) value);
                 }
                 try {
                     return of(ObjectMappers.JSON_MAPPER.convertValue(value, Datetime.class));
-                } catch (IllegalArgumentException e) {
+                } catch (RuntimeException e) {
                 }
                 try {
                     return of(ObjectMappers.JSON_MAPPER.convertValue(value, CustomObjectInstanceList.class));
-                } catch (IllegalArgumentException e) {
+                } catch (RuntimeException e) {
                 }
                 throw new JsonParseException(p, "Failed to deserialize");
             }

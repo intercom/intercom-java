@@ -18,20 +18,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = LinkedObject.Builder.class)
 public final class LinkedObject {
-    private final Type type;
+    private final Optional<Type> type;
 
-    private final String id;
+    private final Optional<String> id;
 
-    private final Optional<String> category;
+    private final Optional<Category> category;
 
     private final Map<String, Object> additionalProperties;
 
-    private LinkedObject(Type type, String id, Optional<String> category, Map<String, Object> additionalProperties) {
+    private LinkedObject(
+            Optional<Type> type,
+            Optional<String> id,
+            Optional<Category> category,
+            Map<String, Object> additionalProperties) {
         this.type = type;
         this.id = id;
         this.category = category;
@@ -42,7 +45,7 @@ public final class LinkedObject {
      * @return ticket or conversation
      */
     @JsonProperty("type")
-    public Type getType() {
+    public Optional<Type> getType() {
         return type;
     }
 
@@ -50,7 +53,7 @@ public final class LinkedObject {
      * @return The ID of the linked object
      */
     @JsonProperty("id")
-    public String getId() {
+    public Optional<String> getId() {
         return id;
     }
 
@@ -58,7 +61,7 @@ public final class LinkedObject {
      * @return Category of the Linked Ticket Object.
      */
     @JsonProperty("category")
-    public Optional<String> getCategory() {
+    public Optional<Category> getCategory() {
         return category;
     }
 
@@ -87,51 +90,23 @@ public final class LinkedObject {
         return ObjectMappers.stringify(this);
     }
 
-    public static TypeStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface TypeStage {
-        /**
-         * ticket or conversation
-         */
-        IdStage type(@NotNull Type type);
-
-        Builder from(LinkedObject other);
-    }
-
-    public interface IdStage {
-        /**
-         * The ID of the linked object
-         */
-        _FinalStage id(@NotNull String id);
-    }
-
-    public interface _FinalStage {
-        LinkedObject build();
-
-        /**
-         * <p>Category of the Linked Ticket Object.</p>
-         */
-        _FinalStage category(Optional<String> category);
-
-        _FinalStage category(String category);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements TypeStage, IdStage, _FinalStage {
-        private Type type;
+    public static final class Builder {
+        private Optional<Type> type = Optional.empty();
 
-        private String id;
+        private Optional<String> id = Optional.empty();
 
-        private Optional<String> category = Optional.empty();
+        private Optional<Category> category = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(LinkedObject other) {
             type(other.getType());
             id(other.getId());
@@ -140,50 +115,134 @@ public final class LinkedObject {
         }
 
         /**
-         * ticket or conversation<p>ticket or conversation</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>ticket or conversation</p>
          */
-        @java.lang.Override
-        @JsonSetter("type")
-        public IdStage type(@NotNull Type type) {
-            this.type = Objects.requireNonNull(type, "type must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<Type> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(Type type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
-         * The ID of the linked object<p>The ID of the linked object</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The ID of the linked object</p>
          */
-        @java.lang.Override
-        @JsonSetter("id")
-        public _FinalStage id(@NotNull String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+        @JsonSetter(value = "id", nulls = Nulls.SKIP)
+        public Builder id(Optional<String> id) {
+            this.id = id;
             return this;
         }
 
-        /**
-         * <p>Category of the Linked Ticket Object.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage category(String category) {
-            this.category = Optional.ofNullable(category);
+        public Builder id(String id) {
+            this.id = Optional.ofNullable(id);
             return this;
         }
 
         /**
          * <p>Category of the Linked Ticket Object.</p>
          */
-        @java.lang.Override
         @JsonSetter(value = "category", nulls = Nulls.SKIP)
-        public _FinalStage category(Optional<String> category) {
+        public Builder category(Optional<Category> category) {
             this.category = category;
             return this;
         }
 
-        @java.lang.Override
+        public Builder category(Category category) {
+            this.category = Optional.ofNullable(category);
+            return this;
+        }
+
         public LinkedObject build() {
             return new LinkedObject(type, id, category, additionalProperties);
+        }
+    }
+
+    public static final class Category {
+        public static final Category BACK_OFFICE = new Category(Value.BACK_OFFICE, "Back-office");
+
+        public static final Category CUSTOMER = new Category(Value.CUSTOMER, "Customer");
+
+        public static final Category TRACKER = new Category(Value.TRACKER, "Tracker");
+
+        private final Value value;
+
+        private final String string;
+
+        Category(Value value, String string) {
+            this.value = value;
+            this.string = string;
+        }
+
+        public Value getEnumValue() {
+            return value;
+        }
+
+        @java.lang.Override
+        @JsonValue
+        public String toString() {
+            return this.string;
+        }
+
+        @java.lang.Override
+        public boolean equals(Object other) {
+            return (this == other) || (other instanceof Category && this.string.equals(((Category) other).string));
+        }
+
+        @java.lang.Override
+        public int hashCode() {
+            return this.string.hashCode();
+        }
+
+        public <T> T visit(Visitor<T> visitor) {
+            switch (value) {
+                case BACK_OFFICE:
+                    return visitor.visitBackOffice();
+                case CUSTOMER:
+                    return visitor.visitCustomer();
+                case TRACKER:
+                    return visitor.visitTracker();
+                case UNKNOWN:
+                default:
+                    return visitor.visitUnknown(string);
+            }
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public static Category valueOf(String value) {
+            switch (value) {
+                case "Back-office":
+                    return BACK_OFFICE;
+                case "Customer":
+                    return CUSTOMER;
+                case "Tracker":
+                    return TRACKER;
+                default:
+                    return new Category(Value.UNKNOWN, value);
+            }
+        }
+
+        public enum Value {
+            CUSTOMER,
+
+            BACK_OFFICE,
+
+            TRACKER,
+
+            UNKNOWN
+        }
+
+        public interface Visitor<T> {
+            T visitCustomer();
+
+            T visitBackOffice();
+
+            T visitTracker();
+
+            T visitUnknown(String unknownType);
         }
     }
 

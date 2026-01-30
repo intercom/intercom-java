@@ -66,7 +66,7 @@ public final class DeleteConversationRequest {
 
     public interface IdStage {
         /**
-         * id
+         * <p>id</p>
          */
         _FinalStage id(int id);
 
@@ -93,7 +93,8 @@ public final class DeleteConversationRequest {
         }
 
         /**
-         * id<p>id</p>
+         * <p>id</p>
+         * <p>id</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

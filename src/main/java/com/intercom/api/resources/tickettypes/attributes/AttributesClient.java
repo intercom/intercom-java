@@ -8,6 +8,7 @@ import com.intercom.api.core.RequestOptions;
 import com.intercom.api.resources.tickettypes.attributes.requests.CreateTicketTypeAttributeRequest;
 import com.intercom.api.resources.tickettypes.attributes.requests.UpdateTicketTypeAttributeRequest;
 import com.intercom.api.types.TicketTypeAttribute;
+import java.util.Optional;
 
 public class AttributesClient {
     protected final ClientOptions clientOptions;
@@ -29,28 +30,30 @@ public class AttributesClient {
     /**
      * You can create a new attribute for a ticket type.
      */
-    public TicketTypeAttribute create(CreateTicketTypeAttributeRequest request) {
+    public Optional<TicketTypeAttribute> create(CreateTicketTypeAttributeRequest request) {
         return this.rawClient.create(request).body();
     }
 
     /**
      * You can create a new attribute for a ticket type.
      */
-    public TicketTypeAttribute create(CreateTicketTypeAttributeRequest request, RequestOptions requestOptions) {
+    public Optional<TicketTypeAttribute> create(
+            CreateTicketTypeAttributeRequest request, RequestOptions requestOptions) {
         return this.rawClient.create(request, requestOptions).body();
     }
 
     /**
      * You can update an existing attribute for a ticket type.
      */
-    public TicketTypeAttribute update(UpdateTicketTypeAttributeRequest request) {
+    public Optional<TicketTypeAttribute> update(UpdateTicketTypeAttributeRequest request) {
         return this.rawClient.update(request).body();
     }
 
     /**
      * You can update an existing attribute for a ticket type.
      */
-    public TicketTypeAttribute update(UpdateTicketTypeAttributeRequest request, RequestOptions requestOptions) {
+    public Optional<TicketTypeAttribute> update(
+            UpdateTicketTypeAttributeRequest request, RequestOptions requestOptions) {
         return this.rawClient.update(request, requestOptions).body();
     }
 }

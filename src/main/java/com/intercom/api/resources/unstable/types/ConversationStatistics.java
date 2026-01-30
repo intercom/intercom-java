@@ -65,6 +65,8 @@ public final class ConversationStatistics {
 
     private final Optional<Integer> handlingTime;
 
+    private final Optional<Integer> adjustedHandlingTime;
+
     private final Map<String, Object> additionalProperties;
 
     private ConversationStatistics(
@@ -90,6 +92,7 @@ public final class ConversationStatistics {
             Optional<List<ConversationResponseTime>> assignedTeamFirstResponseTimeByTeam,
             Optional<List<ConversationResponseTime>> assignedTeamFirstResponseTimeInOfficeHours,
             Optional<Integer> handlingTime,
+            Optional<Integer> adjustedHandlingTime,
             Map<String, Object> additionalProperties) {
         this.type = type;
         this.timeToAssignment = timeToAssignment;
@@ -113,6 +116,7 @@ public final class ConversationStatistics {
         this.assignedTeamFirstResponseTimeByTeam = assignedTeamFirstResponseTimeByTeam;
         this.assignedTeamFirstResponseTimeInOfficeHours = assignedTeamFirstResponseTimeInOfficeHours;
         this.handlingTime = handlingTime;
+        this.adjustedHandlingTime = adjustedHandlingTime;
         this.additionalProperties = additionalProperties;
     }
 
@@ -292,6 +296,14 @@ public final class ConversationStatistics {
         return handlingTime;
     }
 
+    /**
+     * @return Adjusted handling time for conversation in seconds. This is the active handling time excluding idle periods when teammates are not actively working on the conversation.
+     */
+    @JsonProperty("adjusted_handling_time")
+    public Optional<Integer> getAdjustedHandlingTime() {
+        return adjustedHandlingTime;
+    }
+
     @java.lang.Override
     public boolean equals(Object other) {
         if (this == other) return true;
@@ -325,7 +337,8 @@ public final class ConversationStatistics {
                 && countConversationParts.equals(other.countConversationParts)
                 && assignedTeamFirstResponseTimeByTeam.equals(other.assignedTeamFirstResponseTimeByTeam)
                 && assignedTeamFirstResponseTimeInOfficeHours.equals(other.assignedTeamFirstResponseTimeInOfficeHours)
-                && handlingTime.equals(other.handlingTime);
+                && handlingTime.equals(other.handlingTime)
+                && adjustedHandlingTime.equals(other.adjustedHandlingTime);
     }
 
     @java.lang.Override
@@ -352,7 +365,8 @@ public final class ConversationStatistics {
                 this.countConversationParts,
                 this.assignedTeamFirstResponseTimeByTeam,
                 this.assignedTeamFirstResponseTimeInOfficeHours,
-                this.handlingTime);
+                this.handlingTime,
+                this.adjustedHandlingTime);
     }
 
     @java.lang.Override
@@ -410,6 +424,8 @@ public final class ConversationStatistics {
 
         private Optional<Integer> handlingTime = Optional.empty();
 
+        private Optional<Integer> adjustedHandlingTime = Optional.empty();
+
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -438,6 +454,7 @@ public final class ConversationStatistics {
             assignedTeamFirstResponseTimeByTeam(other.getAssignedTeamFirstResponseTimeByTeam());
             assignedTeamFirstResponseTimeInOfficeHours(other.getAssignedTeamFirstResponseTimeInOfficeHours());
             handlingTime(other.getHandlingTime());
+            adjustedHandlingTime(other.getAdjustedHandlingTime());
             return this;
         }
 
@@ -751,6 +768,20 @@ public final class ConversationStatistics {
             return this;
         }
 
+        /**
+         * <p>Adjusted handling time for conversation in seconds. This is the active handling time excluding idle periods when teammates are not actively working on the conversation.</p>
+         */
+        @JsonSetter(value = "adjusted_handling_time", nulls = Nulls.SKIP)
+        public Builder adjustedHandlingTime(Optional<Integer> adjustedHandlingTime) {
+            this.adjustedHandlingTime = adjustedHandlingTime;
+            return this;
+        }
+
+        public Builder adjustedHandlingTime(Integer adjustedHandlingTime) {
+            this.adjustedHandlingTime = Optional.ofNullable(adjustedHandlingTime);
+            return this;
+        }
+
         public ConversationStatistics build() {
             return new ConversationStatistics(
                     type,
@@ -775,6 +806,7 @@ public final class ConversationStatistics {
                     assignedTeamFirstResponseTimeByTeam,
                     assignedTeamFirstResponseTimeInOfficeHours,
                     handlingTime,
+                    adjustedHandlingTime,
                     additionalProperties);
         }
     }

@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.resources.articles.types.ArticleListItem;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,19 +22,23 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ArticleList.Builder.class)
 public final class ArticleList {
+    private final Optional<String> type;
+
     private final Optional<Object> pages;
 
-    private final int totalCount;
+    private final Optional<Integer> totalCount;
 
-    private final List<ArticleListItem> data;
+    private final Optional<List<ArticleListItem>> data;
 
     private final Map<String, Object> additionalProperties;
 
     private ArticleList(
+            Optional<String> type,
             Optional<Object> pages,
-            int totalCount,
-            List<ArticleListItem> data,
+            Optional<Integer> totalCount,
+            Optional<List<ArticleListItem>> data,
             Map<String, Object> additionalProperties) {
+        this.type = type;
         this.pages = pages;
         this.totalCount = totalCount;
         this.data = data;
@@ -46,8 +49,8 @@ public final class ArticleList {
      * @return The type of the object - <code>list</code>.
      */
     @JsonProperty("type")
-    public String getType() {
-        return "list";
+    public Optional<String> getType() {
+        return type;
     }
 
     @JsonProperty("pages")
@@ -59,7 +62,7 @@ public final class ArticleList {
      * @return A count of the total number of articles.
      */
     @JsonProperty("total_count")
-    public int getTotalCount() {
+    public Optional<Integer> getTotalCount() {
         return totalCount;
     }
 
@@ -67,7 +70,7 @@ public final class ArticleList {
      * @return An array of Article objects
      */
     @JsonProperty("data")
-    public List<ArticleListItem> getData() {
+    public Optional<List<ArticleListItem>> getData() {
         return data;
     }
 
@@ -83,12 +86,15 @@ public final class ArticleList {
     }
 
     private boolean equalTo(ArticleList other) {
-        return pages.equals(other.pages) && totalCount == other.totalCount && data.equals(other.data);
+        return type.equals(other.type)
+                && pages.equals(other.pages)
+                && totalCount.equals(other.totalCount)
+                && data.equals(other.data);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.pages, this.totalCount, this.data);
+        return Objects.hash(this.type, this.pages, this.totalCount, this.data);
     }
 
     @java.lang.Override
@@ -96,51 +102,27 @@ public final class ArticleList {
         return ObjectMappers.stringify(this);
     }
 
-    public static TotalCountStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface TotalCountStage {
-        /**
-         * A count of the total number of articles.
-         */
-        _FinalStage totalCount(int totalCount);
-
-        Builder from(ArticleList other);
-    }
-
-    public interface _FinalStage {
-        ArticleList build();
-
-        _FinalStage pages(Optional<Object> pages);
-
-        _FinalStage pages(Object pages);
-
-        /**
-         * <p>An array of Article objects</p>
-         */
-        _FinalStage data(List<ArticleListItem> data);
-
-        _FinalStage addData(ArticleListItem data);
-
-        _FinalStage addAllData(List<ArticleListItem> data);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements TotalCountStage, _FinalStage {
-        private int totalCount;
-
-        private List<ArticleListItem> data = new ArrayList<>();
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
         private Optional<Object> pages = Optional.empty();
+
+        private Optional<Integer> totalCount = Optional.empty();
+
+        private Optional<List<ArticleListItem>> data = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(ArticleList other) {
+            type(other.getType());
             pages(other.getPages());
             totalCount(other.getTotalCount());
             data(other.getData());
@@ -148,63 +130,60 @@ public final class ArticleList {
         }
 
         /**
-         * A count of the total number of articles.<p>A count of the total number of articles.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The type of the object - <code>list</code>.</p>
          */
-        @java.lang.Override
-        @JsonSetter("total_count")
-        public _FinalStage totalCount(int totalCount) {
-            this.totalCount = totalCount;
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
             return this;
         }
 
-        /**
-         * <p>An array of Article objects</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addAllData(List<ArticleListItem> data) {
-            this.data.addAll(data);
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
-        /**
-         * <p>An array of Article objects</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage addData(ArticleListItem data) {
-            this.data.add(data);
-            return this;
-        }
-
-        /**
-         * <p>An array of Article objects</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "data", nulls = Nulls.SKIP)
-        public _FinalStage data(List<ArticleListItem> data) {
-            this.data.clear();
-            this.data.addAll(data);
-            return this;
-        }
-
-        @java.lang.Override
-        public _FinalStage pages(Object pages) {
-            this.pages = Optional.ofNullable(pages);
-            return this;
-        }
-
-        @java.lang.Override
         @JsonSetter(value = "pages", nulls = Nulls.SKIP)
-        public _FinalStage pages(Optional<Object> pages) {
+        public Builder pages(Optional<Object> pages) {
             this.pages = pages;
             return this;
         }
 
-        @java.lang.Override
+        public Builder pages(Object pages) {
+            this.pages = Optional.ofNullable(pages);
+            return this;
+        }
+
+        /**
+         * <p>A count of the total number of articles.</p>
+         */
+        @JsonSetter(value = "total_count", nulls = Nulls.SKIP)
+        public Builder totalCount(Optional<Integer> totalCount) {
+            this.totalCount = totalCount;
+            return this;
+        }
+
+        public Builder totalCount(Integer totalCount) {
+            this.totalCount = Optional.ofNullable(totalCount);
+            return this;
+        }
+
+        /**
+         * <p>An array of Article objects</p>
+         */
+        @JsonSetter(value = "data", nulls = Nulls.SKIP)
+        public Builder data(Optional<List<ArticleListItem>> data) {
+            this.data = data;
+            return this;
+        }
+
+        public Builder data(List<ArticleListItem> data) {
+            this.data = Optional.ofNullable(data);
+            return this;
+        }
+
         public ArticleList build() {
-            return new ArticleList(pages, totalCount, data, additionalProperties);
+            return new ArticleList(type, pages, totalCount, data, additionalProperties);
         }
     }
 }

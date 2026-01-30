@@ -4,6 +4,7 @@
 package com.intercom.api.resources.tickettypes.attributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.IntercomApiException;
 import com.intercom.api.core.IntercomException;
@@ -17,6 +18,7 @@ import com.intercom.api.resources.tickettypes.attributes.requests.UpdateTicketTy
 import com.intercom.api.types.Error;
 import com.intercom.api.types.TicketTypeAttribute;
 import java.io.IOException;
+import java.util.Optional;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -35,14 +37,14 @@ public class RawAttributesClient {
     /**
      * You can create a new attribute for a ticket type.
      */
-    public IntercomHttpResponse<TicketTypeAttribute> create(CreateTicketTypeAttributeRequest request) {
+    public IntercomHttpResponse<Optional<TicketTypeAttribute>> create(CreateTicketTypeAttributeRequest request) {
         return create(request, null);
     }
 
     /**
      * You can create a new attribute for a ticket type.
      */
-    public IntercomHttpResponse<TicketTypeAttribute> create(
+    public IntercomHttpResponse<Optional<TicketTypeAttribute>> create(
             CreateTicketTypeAttributeRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
@@ -70,12 +72,13 @@ public class RawAttributesClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), TicketTypeAttribute.class),
+                        ObjectMappers.JSON_MAPPER.readValue(
+                                responseBodyString, new TypeReference<Optional<TicketTypeAttribute>>() {}),
                         response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 if (response.code() == 401) {
                     throw new UnauthorizedError(
@@ -84,11 +87,9 @@ public class RawAttributesClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }
@@ -97,14 +98,14 @@ public class RawAttributesClient {
     /**
      * You can update an existing attribute for a ticket type.
      */
-    public IntercomHttpResponse<TicketTypeAttribute> update(UpdateTicketTypeAttributeRequest request) {
+    public IntercomHttpResponse<Optional<TicketTypeAttribute>> update(UpdateTicketTypeAttributeRequest request) {
         return update(request, null);
     }
 
     /**
      * You can update an existing attribute for a ticket type.
      */
-    public IntercomHttpResponse<TicketTypeAttribute> update(
+    public IntercomHttpResponse<Optional<TicketTypeAttribute>> update(
             UpdateTicketTypeAttributeRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
@@ -133,12 +134,13 @@ public class RawAttributesClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), TicketTypeAttribute.class),
+                        ObjectMappers.JSON_MAPPER.readValue(
+                                responseBodyString, new TypeReference<Optional<TicketTypeAttribute>>() {}),
                         response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 if (response.code() == 401) {
                     throw new UnauthorizedError(
@@ -147,11 +149,9 @@ public class RawAttributesClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }

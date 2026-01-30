@@ -8,8 +8,11 @@ import com.intercom.api.core.RequestOptions;
 import com.intercom.api.resources.dataexport.requests.CancelDataExportRequest;
 import com.intercom.api.resources.dataexport.requests.CreateDataExportRequest;
 import com.intercom.api.resources.dataexport.requests.DownloadDataExportRequest;
+import com.intercom.api.resources.dataexport.requests.DownloadReportingDataExportRequest;
+import com.intercom.api.resources.dataexport.requests.ExportReportingDataRequest;
 import com.intercom.api.resources.dataexport.requests.FindDataExportRequest;
 import com.intercom.api.resources.dataexport.types.DataExport;
+import com.intercom.api.resources.dataexport.types.DataExportExportReportingDataResponse;
 
 public class DataExportClient {
     protected final ClientOptions clientOptions;
@@ -26,6 +29,37 @@ public class DataExportClient {
      */
     public RawDataExportClient withRawResponse() {
         return this.rawClient;
+    }
+
+    public DataExportExportReportingDataResponse exportReportingData(ExportReportingDataRequest request) {
+        return this.rawClient.exportReportingData(request).body();
+    }
+
+    public DataExportExportReportingDataResponse exportReportingData(
+            ExportReportingDataRequest request, RequestOptions requestOptions) {
+        return this.rawClient.exportReportingData(request, requestOptions).body();
+    }
+
+    /**
+     * Download the data from a completed reporting data export job.
+     * <blockquote>
+     * <p>Octet header required</p>
+     * <p>You will have to specify the header Accept: <code>application/octet-stream</code> when hitting this endpoint.</p>
+     * </blockquote>
+     */
+    public void downloadReportingDataExport(DownloadReportingDataExportRequest request) {
+        this.rawClient.downloadReportingDataExport(request).body();
+    }
+
+    /**
+     * Download the data from a completed reporting data export job.
+     * <blockquote>
+     * <p>Octet header required</p>
+     * <p>You will have to specify the header Accept: <code>application/octet-stream</code> when hitting this endpoint.</p>
+     * </blockquote>
+     */
+    public void downloadReportingDataExport(DownloadReportingDataExportRequest request, RequestOptions requestOptions) {
+        this.rawClient.downloadReportingDataExport(request, requestOptions).body();
     }
 
     /**

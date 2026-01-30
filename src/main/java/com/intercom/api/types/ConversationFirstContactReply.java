@@ -16,21 +16,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ConversationFirstContactReply.Builder.class)
 public final class ConversationFirstContactReply {
-    private final int createdAt;
+    private final Optional<Integer> createdAt;
 
-    private final String type;
+    private final Optional<String> type;
 
     private final Optional<String> url;
 
     private final Map<String, Object> additionalProperties;
 
     private ConversationFirstContactReply(
-            int createdAt, String type, Optional<String> url, Map<String, Object> additionalProperties) {
+            Optional<Integer> createdAt,
+            Optional<String> type,
+            Optional<String> url,
+            Map<String, Object> additionalProperties) {
         this.createdAt = createdAt;
         this.type = type;
         this.url = url;
@@ -41,7 +43,7 @@ public final class ConversationFirstContactReply {
      * @return
      */
     @JsonProperty("created_at")
-    public int getCreatedAt() {
+    public Optional<Integer> getCreatedAt() {
         return createdAt;
     }
 
@@ -49,7 +51,7 @@ public final class ConversationFirstContactReply {
      * @return
      */
     @JsonProperty("type")
-    public String getType() {
+    public Optional<String> getType() {
         return type;
     }
 
@@ -73,7 +75,7 @@ public final class ConversationFirstContactReply {
     }
 
     private boolean equalTo(ConversationFirstContactReply other) {
-        return createdAt == other.createdAt && type.equals(other.type) && url.equals(other.url);
+        return createdAt.equals(other.createdAt) && type.equals(other.type) && url.equals(other.url);
     }
 
     @java.lang.Override
@@ -86,33 +88,15 @@ public final class ConversationFirstContactReply {
         return ObjectMappers.stringify(this);
     }
 
-    public static CreatedAtStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface CreatedAtStage {
-        TypeStage createdAt(int createdAt);
-
-        Builder from(ConversationFirstContactReply other);
-    }
-
-    public interface TypeStage {
-        _FinalStage type(@NotNull String type);
-    }
-
-    public interface _FinalStage {
-        ConversationFirstContactReply build();
-
-        _FinalStage url(Optional<String> url);
-
-        _FinalStage url(String url);
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements CreatedAtStage, TypeStage, _FinalStage {
-        private int createdAt;
+    public static final class Builder {
+        private Optional<Integer> createdAt = Optional.empty();
 
-        private String type;
+        private Optional<String> type = Optional.empty();
 
         private Optional<String> url = Optional.empty();
 
@@ -121,7 +105,6 @@ public final class ConversationFirstContactReply {
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(ConversationFirstContactReply other) {
             createdAt(other.getCreatedAt());
             type(other.getType());
@@ -129,43 +112,39 @@ public final class ConversationFirstContactReply {
             return this;
         }
 
-        /**
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("created_at")
-        public TypeStage createdAt(int createdAt) {
+        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
+        public Builder createdAt(Optional<Integer> createdAt) {
             this.createdAt = createdAt;
             return this;
         }
 
-        /**
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("type")
-        public _FinalStage type(@NotNull String type) {
-            this.type = Objects.requireNonNull(type, "type must not be null");
+        public Builder createdAt(Integer createdAt) {
+            this.createdAt = Optional.ofNullable(createdAt);
             return this;
         }
 
-        /**
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage url(String url) {
-            this.url = Optional.ofNullable(url);
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
             return this;
         }
 
-        @java.lang.Override
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
+            return this;
+        }
+
         @JsonSetter(value = "url", nulls = Nulls.SKIP)
-        public _FinalStage url(Optional<String> url) {
+        public Builder url(Optional<String> url) {
             this.url = url;
             return this;
         }
 
-        @java.lang.Override
+        public Builder url(String url) {
+            this.url = Optional.ofNullable(url);
+            return this;
+        }
+
         public ConversationFirstContactReply build() {
             return new ConversationFirstContactReply(createdAt, type, url, additionalProperties);
         }

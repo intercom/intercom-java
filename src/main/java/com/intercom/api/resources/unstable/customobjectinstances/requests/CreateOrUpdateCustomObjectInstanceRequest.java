@@ -129,7 +129,7 @@ public final class CreateOrUpdateCustomObjectInstanceRequest {
 
     public interface CustomObjectTypeIdentifierStage {
         /**
-         * The unique identifier of the custom object type that defines the structure of the custom object instance.
+         * <p>The unique identifier of the custom object type that defines the structure of the custom object instance.</p>
          */
         _FinalStage customObjectTypeIdentifier(@NotNull String customObjectTypeIdentifier);
 
@@ -196,7 +196,8 @@ public final class CreateOrUpdateCustomObjectInstanceRequest {
         }
 
         /**
-         * The unique identifier of the custom object type that defines the structure of the custom object instance.<p>The unique identifier of the custom object type that defines the structure of the custom object instance.</p>
+         * <p>The unique identifier of the custom object type that defines the structure of the custom object instance.</p>
+         * <p>The unique identifier of the custom object type that defines the structure of the custom object instance.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

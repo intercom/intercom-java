@@ -13,12 +13,17 @@ public class SegmentsTest {
 
     private Intercom client;
     private Segment segment;
+    private String segmentId;
 
     @BeforeEach
     public void before() {
         // arrange
         client = TestClientFactory.create();
-        segment = client.segments().list().getSegments().get(0);
+        segment = client.segments().list().getSegments()
+                .orElseThrow(() -> new RuntimeException("Segments list is required"))
+                .get(0);
+        segmentId = segment.getId()
+                .orElseThrow(() -> new RuntimeException("Segment ID is required"));
     }
 
     @Test
@@ -34,7 +39,7 @@ public class SegmentsTest {
     public void testFind() {
         // act
         Segment response = client.segments()
-                .find(FindSegmentRequest.builder().segmentId(segment.getId()).build());
+                .find(FindSegmentRequest.builder().segmentId(segmentId).build());
 
         // assert
         Assertions.assertNotNull(response);

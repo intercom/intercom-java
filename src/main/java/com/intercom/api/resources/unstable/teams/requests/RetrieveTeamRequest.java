@@ -67,7 +67,7 @@ public final class RetrieveTeamRequest {
 
     public interface IdStage {
         /**
-         * The unique identifier of a given team.
+         * <p>The unique identifier of a given team.</p>
          */
         _FinalStage id(@NotNull String id);
 
@@ -94,7 +94,8 @@ public final class RetrieveTeamRequest {
         }
 
         /**
-         * The unique identifier of a given team.<p>The unique identifier of a given team.</p>
+         * <p>The unique identifier of a given team.</p>
+         * <p>The unique identifier of a given team.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

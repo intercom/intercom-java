@@ -13,20 +13,24 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.resources.dataattributes.types.DataAttribute;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = DataAttributeList.Builder.class)
 public final class DataAttributeList {
-    private final List<DataAttribute> data;
+    private final Optional<String> type;
+
+    private final Optional<List<DataAttribute>> data;
 
     private final Map<String, Object> additionalProperties;
 
-    private DataAttributeList(List<DataAttribute> data, Map<String, Object> additionalProperties) {
+    private DataAttributeList(
+            Optional<String> type, Optional<List<DataAttribute>> data, Map<String, Object> additionalProperties) {
+        this.type = type;
         this.data = data;
         this.additionalProperties = additionalProperties;
     }
@@ -35,15 +39,15 @@ public final class DataAttributeList {
      * @return The type of the object
      */
     @JsonProperty("type")
-    public String getType() {
-        return "list";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return A list of data attributes
      */
     @JsonProperty("data")
-    public List<DataAttribute> getData() {
+    public Optional<List<DataAttribute>> getData() {
         return data;
     }
 
@@ -59,12 +63,12 @@ public final class DataAttributeList {
     }
 
     private boolean equalTo(DataAttributeList other) {
-        return data.equals(other.data);
+        return type.equals(other.type) && data.equals(other.data);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.data);
+        return Objects.hash(this.type, this.data);
     }
 
     @java.lang.Override
@@ -78,7 +82,9 @@ public final class DataAttributeList {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
-        private List<DataAttribute> data = new ArrayList<>();
+        private Optional<String> type = Optional.empty();
+
+        private Optional<List<DataAttribute>> data = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -86,7 +92,22 @@ public final class DataAttributeList {
         private Builder() {}
 
         public Builder from(DataAttributeList other) {
+            type(other.getType());
             data(other.getData());
+            return this;
+        }
+
+        /**
+         * <p>The type of the object</p>
+         */
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
@@ -94,24 +115,18 @@ public final class DataAttributeList {
          * <p>A list of data attributes</p>
          */
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
+        public Builder data(Optional<List<DataAttribute>> data) {
+            this.data = data;
+            return this;
+        }
+
         public Builder data(List<DataAttribute> data) {
-            this.data.clear();
-            this.data.addAll(data);
-            return this;
-        }
-
-        public Builder addData(DataAttribute data) {
-            this.data.add(data);
-            return this;
-        }
-
-        public Builder addAllData(List<DataAttribute> data) {
-            this.data.addAll(data);
+            this.data = Optional.ofNullable(data);
             return this;
         }
 
         public DataAttributeList build() {
-            return new DataAttributeList(data, additionalProperties);
+            return new DataAttributeList(type, data, additionalProperties);
         }
     }
 }

@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.resources.dataevents.types.DataEvent;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,13 +22,20 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = DataEventList.Builder.class)
 public final class DataEventList {
-    private final List<DataEvent> events;
+    private final Optional<String> type;
+
+    private final Optional<List<DataEvent>> events;
 
     private final Optional<Pages> pages;
 
     private final Map<String, Object> additionalProperties;
 
-    private DataEventList(List<DataEvent> events, Optional<Pages> pages, Map<String, Object> additionalProperties) {
+    private DataEventList(
+            Optional<String> type,
+            Optional<List<DataEvent>> events,
+            Optional<Pages> pages,
+            Map<String, Object> additionalProperties) {
+        this.type = type;
         this.events = events;
         this.pages = pages;
         this.additionalProperties = additionalProperties;
@@ -39,15 +45,15 @@ public final class DataEventList {
      * @return The type of the object
      */
     @JsonProperty("type")
-    public String getType() {
-        return "event.list";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return A list of data events
      */
     @JsonProperty("events")
-    public List<DataEvent> getEvents() {
+    public Optional<List<DataEvent>> getEvents() {
         return events;
     }
 
@@ -71,12 +77,12 @@ public final class DataEventList {
     }
 
     private boolean equalTo(DataEventList other) {
-        return events.equals(other.events) && pages.equals(other.pages);
+        return type.equals(other.type) && events.equals(other.events) && pages.equals(other.pages);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.events, this.pages);
+        return Objects.hash(this.type, this.events, this.pages);
     }
 
     @java.lang.Override
@@ -90,7 +96,9 @@ public final class DataEventList {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
-        private List<DataEvent> events = new ArrayList<>();
+        private Optional<String> type = Optional.empty();
+
+        private Optional<List<DataEvent>> events = Optional.empty();
 
         private Optional<Pages> pages = Optional.empty();
 
@@ -100,8 +108,23 @@ public final class DataEventList {
         private Builder() {}
 
         public Builder from(DataEventList other) {
+            type(other.getType());
             events(other.getEvents());
             pages(other.getPages());
+            return this;
+        }
+
+        /**
+         * <p>The type of the object</p>
+         */
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
@@ -109,19 +132,13 @@ public final class DataEventList {
          * <p>A list of data events</p>
          */
         @JsonSetter(value = "events", nulls = Nulls.SKIP)
+        public Builder events(Optional<List<DataEvent>> events) {
+            this.events = events;
+            return this;
+        }
+
         public Builder events(List<DataEvent> events) {
-            this.events.clear();
-            this.events.addAll(events);
-            return this;
-        }
-
-        public Builder addEvents(DataEvent events) {
-            this.events.add(events);
-            return this;
-        }
-
-        public Builder addAllEvents(List<DataEvent> events) {
-            this.events.addAll(events);
+            this.events = Optional.ofNullable(events);
             return this;
         }
 
@@ -140,7 +157,7 @@ public final class DataEventList {
         }
 
         public DataEventList build() {
-            return new DataEventList(events, pages, additionalProperties);
+            return new DataEventList(type, events, pages, additionalProperties);
         }
     }
 

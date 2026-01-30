@@ -80,7 +80,7 @@ public final class CreateOrUpdateTagRequest {
 
     public interface NameStage {
         /**
-         * The name of the tag, which will be created if not found, or the new name for the tag if this is an update request. Names are case insensitive.
+         * <p>The name of the tag, which will be created if not found, or the new name for the tag if this is an update request. Names are case insensitive.</p>
          */
         _FinalStage name(@NotNull String name);
 
@@ -117,7 +117,8 @@ public final class CreateOrUpdateTagRequest {
         }
 
         /**
-         * The name of the tag, which will be created if not found, or the new name for the tag if this is an update request. Names are case insensitive.<p>The name of the tag, which will be created if not found, or the new name for the tag if this is an update request. Names are case insensitive.</p>
+         * <p>The name of the tag, which will be created if not found, or the new name for the tag if this is an update request. Names are case insensitive.</p>
+         * <p>The name of the tag, which will be created if not found, or the new name for the tag if this is an update request. Names are case insensitive.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

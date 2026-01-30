@@ -9,6 +9,8 @@ import com.intercom.api.resources.unstable.admins.AsyncAdminsClient;
 import com.intercom.api.resources.unstable.aicontent.AsyncAiContentClient;
 import com.intercom.api.resources.unstable.articles.AsyncArticlesClient;
 import com.intercom.api.resources.unstable.awaystatusreasons.AsyncAwayStatusReasonsClient;
+import com.intercom.api.resources.unstable.brands.AsyncBrandsClient;
+import com.intercom.api.resources.unstable.calls.AsyncCallsClient;
 import com.intercom.api.resources.unstable.companies.AsyncCompaniesClient;
 import com.intercom.api.resources.unstable.contacts.AsyncContactsClient;
 import com.intercom.api.resources.unstable.conversations.AsyncConversationsClient;
@@ -17,9 +19,12 @@ import com.intercom.api.resources.unstable.customobjectinstances.AsyncCustomObje
 import com.intercom.api.resources.unstable.dataattributes.AsyncDataAttributesClient;
 import com.intercom.api.resources.unstable.dataevents.AsyncDataEventsClient;
 import com.intercom.api.resources.unstable.dataexport.AsyncDataExportClient;
+import com.intercom.api.resources.unstable.emails.AsyncEmailsClient;
 import com.intercom.api.resources.unstable.export.AsyncExportClient;
 import com.intercom.api.resources.unstable.helpcenter.AsyncHelpCenterClient;
+import com.intercom.api.resources.unstable.internalarticles.AsyncInternalArticlesClient;
 import com.intercom.api.resources.unstable.jobs.AsyncJobsClient;
+import com.intercom.api.resources.unstable.macros.AsyncMacrosClient;
 import com.intercom.api.resources.unstable.messages.AsyncMessagesClient;
 import com.intercom.api.resources.unstable.news.AsyncNewsClient;
 import com.intercom.api.resources.unstable.notes.AsyncNotesClient;
@@ -50,11 +55,13 @@ public class AsyncUnstableClient {
 
     protected final Supplier<AsyncHelpCenterClient> helpCenterClient;
 
+    protected final Supplier<AsyncInternalArticlesClient> internalArticlesClient;
+
     protected final Supplier<AsyncCompaniesClient> companiesClient;
 
-    protected final Supplier<AsyncContactsClient> contactsClient;
-
     protected final Supplier<AsyncNotesClient> notesClient;
+
+    protected final Supplier<AsyncContactsClient> contactsClient;
 
     protected final Supplier<AsyncSubscriptionTypesClient> subscriptionTypesClient;
 
@@ -74,6 +81,8 @@ public class AsyncUnstableClient {
 
     protected final Supplier<AsyncJobsClient> jobsClient;
 
+    protected final Supplier<AsyncMacrosClient> macrosClient;
+
     protected final Supplier<AsyncMessagesClient> messagesClient;
 
     protected final Supplier<AsyncNewsClient> newsClient;
@@ -81,6 +90,8 @@ public class AsyncUnstableClient {
     protected final Supplier<AsyncSegmentsClient> segmentsClient;
 
     protected final Supplier<AsyncSwitchClient> switchClient;
+
+    protected final Supplier<AsyncCallsClient> callsClient;
 
     protected final Supplier<AsyncTeamsClient> teamsClient;
 
@@ -94,6 +105,10 @@ public class AsyncUnstableClient {
 
     protected final Supplier<AsyncVisitorsClient> visitorsClient;
 
+    protected final Supplier<AsyncBrandsClient> brandsClient;
+
+    protected final Supplier<AsyncEmailsClient> emailsClient;
+
     public AsyncUnstableClient(ClientOptions clientOptions) {
         this.clientOptions = clientOptions;
         this.adminsClient = Suppliers.memoize(() -> new AsyncAdminsClient(clientOptions));
@@ -102,9 +117,10 @@ public class AsyncUnstableClient {
         this.awayStatusReasonsClient = Suppliers.memoize(() -> new AsyncAwayStatusReasonsClient(clientOptions));
         this.exportClient = Suppliers.memoize(() -> new AsyncExportClient(clientOptions));
         this.helpCenterClient = Suppliers.memoize(() -> new AsyncHelpCenterClient(clientOptions));
+        this.internalArticlesClient = Suppliers.memoize(() -> new AsyncInternalArticlesClient(clientOptions));
         this.companiesClient = Suppliers.memoize(() -> new AsyncCompaniesClient(clientOptions));
-        this.contactsClient = Suppliers.memoize(() -> new AsyncContactsClient(clientOptions));
         this.notesClient = Suppliers.memoize(() -> new AsyncNotesClient(clientOptions));
+        this.contactsClient = Suppliers.memoize(() -> new AsyncContactsClient(clientOptions));
         this.subscriptionTypesClient = Suppliers.memoize(() -> new AsyncSubscriptionTypesClient(clientOptions));
         this.tagsClient = Suppliers.memoize(() -> new AsyncTagsClient(clientOptions));
         this.conversationsClient = Suppliers.memoize(() -> new AsyncConversationsClient(clientOptions));
@@ -114,16 +130,20 @@ public class AsyncUnstableClient {
         this.dataEventsClient = Suppliers.memoize(() -> new AsyncDataEventsClient(clientOptions));
         this.dataExportClient = Suppliers.memoize(() -> new AsyncDataExportClient(clientOptions));
         this.jobsClient = Suppliers.memoize(() -> new AsyncJobsClient(clientOptions));
+        this.macrosClient = Suppliers.memoize(() -> new AsyncMacrosClient(clientOptions));
         this.messagesClient = Suppliers.memoize(() -> new AsyncMessagesClient(clientOptions));
         this.newsClient = Suppliers.memoize(() -> new AsyncNewsClient(clientOptions));
         this.segmentsClient = Suppliers.memoize(() -> new AsyncSegmentsClient(clientOptions));
         this.switchClient = Suppliers.memoize(() -> new AsyncSwitchClient(clientOptions));
+        this.callsClient = Suppliers.memoize(() -> new AsyncCallsClient(clientOptions));
         this.teamsClient = Suppliers.memoize(() -> new AsyncTeamsClient(clientOptions));
         this.ticketStatesClient = Suppliers.memoize(() -> new AsyncTicketStatesClient(clientOptions));
         this.ticketTypeAttributesClient = Suppliers.memoize(() -> new AsyncTicketTypeAttributesClient(clientOptions));
         this.ticketTypesClient = Suppliers.memoize(() -> new AsyncTicketTypesClient(clientOptions));
         this.ticketsClient = Suppliers.memoize(() -> new AsyncTicketsClient(clientOptions));
         this.visitorsClient = Suppliers.memoize(() -> new AsyncVisitorsClient(clientOptions));
+        this.brandsClient = Suppliers.memoize(() -> new AsyncBrandsClient(clientOptions));
+        this.emailsClient = Suppliers.memoize(() -> new AsyncEmailsClient(clientOptions));
     }
 
     public AsyncAdminsClient admins() {
@@ -150,16 +170,20 @@ public class AsyncUnstableClient {
         return this.helpCenterClient.get();
     }
 
+    public AsyncInternalArticlesClient internalArticles() {
+        return this.internalArticlesClient.get();
+    }
+
     public AsyncCompaniesClient companies() {
         return this.companiesClient.get();
     }
 
-    public AsyncContactsClient contacts() {
-        return this.contactsClient.get();
-    }
-
     public AsyncNotesClient notes() {
         return this.notesClient.get();
+    }
+
+    public AsyncContactsClient contacts() {
+        return this.contactsClient.get();
     }
 
     public AsyncSubscriptionTypesClient subscriptionTypes() {
@@ -198,6 +222,10 @@ public class AsyncUnstableClient {
         return this.jobsClient.get();
     }
 
+    public AsyncMacrosClient macros() {
+        return this.macrosClient.get();
+    }
+
     public AsyncMessagesClient messages() {
         return this.messagesClient.get();
     }
@@ -212,6 +240,10 @@ public class AsyncUnstableClient {
 
     public AsyncSwitchClient switch_() {
         return this.switchClient.get();
+    }
+
+    public AsyncCallsClient calls() {
+        return this.callsClient.get();
     }
 
     public AsyncTeamsClient teams() {
@@ -236,5 +268,13 @@ public class AsyncUnstableClient {
 
     public AsyncVisitorsClient visitors() {
         return this.visitorsClient.get();
+    }
+
+    public AsyncBrandsClient brands() {
+        return this.brandsClient.get();
+    }
+
+    public AsyncEmailsClient emails() {
+        return this.emailsClient.get();
     }
 }

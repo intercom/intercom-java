@@ -53,9 +53,9 @@ public final class ArticleListItem implements IArticleListItem {
 
     private final Optional<String> parentType;
 
-    private final String defaultLocale;
+    private final Optional<String> defaultLocale;
 
-    private final ArticleTranslatedContent translatedContent;
+    private final Optional<ArticleTranslatedContent> translatedContent;
 
     private final Map<String, Object> additionalProperties;
 
@@ -74,8 +74,8 @@ public final class ArticleListItem implements IArticleListItem {
             Optional<Integer> parentId,
             Optional<List<Integer>> parentIds,
             Optional<String> parentType,
-            String defaultLocale,
-            ArticleTranslatedContent translatedContent,
+            Optional<String> defaultLocale,
+            Optional<ArticleTranslatedContent> translatedContent,
             Map<String, Object> additionalProperties) {
         this.type = type;
         this.id = id;
@@ -212,12 +212,12 @@ public final class ArticleListItem implements IArticleListItem {
      * @return The default locale of the help center. This field is only returned for multilingual help centers.
      */
     @JsonProperty("default_locale")
-    public String getDefaultLocale() {
+    public Optional<String> getDefaultLocale() {
         return defaultLocale;
     }
 
     @JsonProperty("translated_content")
-    public ArticleTranslatedContent getTranslatedContent() {
+    public Optional<ArticleTranslatedContent> getTranslatedContent() {
         return translatedContent;
     }
 
@@ -283,7 +283,7 @@ public final class ArticleListItem implements IArticleListItem {
 
     public interface IdStage {
         /**
-         * The unique identifier for the article which is given by Intercom.
+         * <p>The unique identifier for the article which is given by Intercom.</p>
          */
         WorkspaceIdStage id(@NotNull String id);
 
@@ -292,55 +292,44 @@ public final class ArticleListItem implements IArticleListItem {
 
     public interface WorkspaceIdStage {
         /**
-         * The id of the workspace which the article belongs to.
+         * <p>The id of the workspace which the article belongs to.</p>
          */
         TitleStage workspaceId(@NotNull String workspaceId);
     }
 
     public interface TitleStage {
         /**
-         * The title of the article. For multilingual articles, this will be the title of the default language's content.
+         * <p>The title of the article. For multilingual articles, this will be the title of the default language's content.</p>
          */
         AuthorIdStage title(@NotNull String title);
     }
 
     public interface AuthorIdStage {
         /**
-         * The id of the author of the article. For multilingual articles, this will be the id of the author of the default language's content. Must be a teammate on the help center's workspace.
+         * <p>The id of the author of the article. For multilingual articles, this will be the id of the author of the default language's content. Must be a teammate on the help center's workspace.</p>
          */
         StateStage authorId(int authorId);
     }
 
     public interface StateStage {
         /**
-         * Whether the article is `published` or is a `draft`. For multilingual articles, this will be the state of the default language's content.
+         * <p>Whether the article is <code>published</code> or is a <code>draft</code>. For multilingual articles, this will be the state of the default language's content.</p>
          */
         CreatedAtStage state(@NotNull State state);
     }
 
     public interface CreatedAtStage {
         /**
-         * The time when the article was created. For multilingual articles, this will be the timestamp of creation of the default language's content in seconds.
+         * <p>The time when the article was created. For multilingual articles, this will be the timestamp of creation of the default language's content in seconds.</p>
          */
         UpdatedAtStage createdAt(int createdAt);
     }
 
     public interface UpdatedAtStage {
         /**
-         * The time when the article was last updated. For multilingual articles, this will be the timestamp of last update of the default language's content in seconds.
+         * <p>The time when the article was last updated. For multilingual articles, this will be the timestamp of last update of the default language's content in seconds.</p>
          */
-        DefaultLocaleStage updatedAt(int updatedAt);
-    }
-
-    public interface DefaultLocaleStage {
-        /**
-         * The default locale of the help center. This field is only returned for multilingual help centers.
-         */
-        TranslatedContentStage defaultLocale(@NotNull String defaultLocale);
-    }
-
-    public interface TranslatedContentStage {
-        _FinalStage translatedContent(@NotNull ArticleTranslatedContent translatedContent);
+        _FinalStage updatedAt(int updatedAt);
     }
 
     public interface _FinalStage {
@@ -394,6 +383,17 @@ public final class ArticleListItem implements IArticleListItem {
         _FinalStage parentType(Optional<String> parentType);
 
         _FinalStage parentType(String parentType);
+
+        /**
+         * <p>The default locale of the help center. This field is only returned for multilingual help centers.</p>
+         */
+        _FinalStage defaultLocale(Optional<String> defaultLocale);
+
+        _FinalStage defaultLocale(String defaultLocale);
+
+        _FinalStage translatedContent(Optional<ArticleTranslatedContent> translatedContent);
+
+        _FinalStage translatedContent(ArticleTranslatedContent translatedContent);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -405,8 +405,6 @@ public final class ArticleListItem implements IArticleListItem {
                     StateStage,
                     CreatedAtStage,
                     UpdatedAtStage,
-                    DefaultLocaleStage,
-                    TranslatedContentStage,
                     _FinalStage {
         private String id;
 
@@ -422,9 +420,9 @@ public final class ArticleListItem implements IArticleListItem {
 
         private int updatedAt;
 
-        private String defaultLocale;
+        private Optional<ArticleTranslatedContent> translatedContent = Optional.empty();
 
-        private ArticleTranslatedContent translatedContent;
+        private Optional<String> defaultLocale = Optional.empty();
 
         private Optional<String> parentType = Optional.empty();
 
@@ -467,7 +465,8 @@ public final class ArticleListItem implements IArticleListItem {
         }
 
         /**
-         * The unique identifier for the article which is given by Intercom.<p>The unique identifier for the article which is given by Intercom.</p>
+         * <p>The unique identifier for the article which is given by Intercom.</p>
+         * <p>The unique identifier for the article which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -478,7 +477,8 @@ public final class ArticleListItem implements IArticleListItem {
         }
 
         /**
-         * The id of the workspace which the article belongs to.<p>The id of the workspace which the article belongs to.</p>
+         * <p>The id of the workspace which the article belongs to.</p>
+         * <p>The id of the workspace which the article belongs to.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -489,7 +489,8 @@ public final class ArticleListItem implements IArticleListItem {
         }
 
         /**
-         * The title of the article. For multilingual articles, this will be the title of the default language's content.<p>The title of the article. For multilingual articles, this will be the title of the default language's content.</p>
+         * <p>The title of the article. For multilingual articles, this will be the title of the default language's content.</p>
+         * <p>The title of the article. For multilingual articles, this will be the title of the default language's content.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -500,7 +501,8 @@ public final class ArticleListItem implements IArticleListItem {
         }
 
         /**
-         * The id of the author of the article. For multilingual articles, this will be the id of the author of the default language's content. Must be a teammate on the help center's workspace.<p>The id of the author of the article. For multilingual articles, this will be the id of the author of the default language's content. Must be a teammate on the help center's workspace.</p>
+         * <p>The id of the author of the article. For multilingual articles, this will be the id of the author of the default language's content. Must be a teammate on the help center's workspace.</p>
+         * <p>The id of the author of the article. For multilingual articles, this will be the id of the author of the default language's content. Must be a teammate on the help center's workspace.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -511,7 +513,8 @@ public final class ArticleListItem implements IArticleListItem {
         }
 
         /**
-         * Whether the article is `published` or is a `draft`. For multilingual articles, this will be the state of the default language's content.<p>Whether the article is <code>published</code> or is a <code>draft</code>. For multilingual articles, this will be the state of the default language's content.</p>
+         * <p>Whether the article is <code>published</code> or is a <code>draft</code>. For multilingual articles, this will be the state of the default language's content.</p>
+         * <p>Whether the article is <code>published</code> or is a <code>draft</code>. For multilingual articles, this will be the state of the default language's content.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -522,7 +525,8 @@ public final class ArticleListItem implements IArticleListItem {
         }
 
         /**
-         * The time when the article was created. For multilingual articles, this will be the timestamp of creation of the default language's content in seconds.<p>The time when the article was created. For multilingual articles, this will be the timestamp of creation of the default language's content in seconds.</p>
+         * <p>The time when the article was created. For multilingual articles, this will be the timestamp of creation of the default language's content in seconds.</p>
+         * <p>The time when the article was created. For multilingual articles, this will be the timestamp of creation of the default language's content in seconds.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -533,31 +537,47 @@ public final class ArticleListItem implements IArticleListItem {
         }
 
         /**
-         * The time when the article was last updated. For multilingual articles, this will be the timestamp of last update of the default language's content in seconds.<p>The time when the article was last updated. For multilingual articles, this will be the timestamp of last update of the default language's content in seconds.</p>
+         * <p>The time when the article was last updated. For multilingual articles, this will be the timestamp of last update of the default language's content in seconds.</p>
+         * <p>The time when the article was last updated. For multilingual articles, this will be the timestamp of last update of the default language's content in seconds.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
         @JsonSetter("updated_at")
-        public DefaultLocaleStage updatedAt(int updatedAt) {
+        public _FinalStage updatedAt(int updatedAt) {
             this.updatedAt = updatedAt;
             return this;
         }
 
-        /**
-         * The default locale of the help center. This field is only returned for multilingual help centers.<p>The default locale of the help center. This field is only returned for multilingual help centers.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
         @java.lang.Override
-        @JsonSetter("default_locale")
-        public TranslatedContentStage defaultLocale(@NotNull String defaultLocale) {
-            this.defaultLocale = Objects.requireNonNull(defaultLocale, "defaultLocale must not be null");
+        public _FinalStage translatedContent(ArticleTranslatedContent translatedContent) {
+            this.translatedContent = Optional.ofNullable(translatedContent);
             return this;
         }
 
         @java.lang.Override
-        @JsonSetter("translated_content")
-        public _FinalStage translatedContent(@NotNull ArticleTranslatedContent translatedContent) {
-            this.translatedContent = Objects.requireNonNull(translatedContent, "translatedContent must not be null");
+        @JsonSetter(value = "translated_content", nulls = Nulls.SKIP)
+        public _FinalStage translatedContent(Optional<ArticleTranslatedContent> translatedContent) {
+            this.translatedContent = translatedContent;
+            return this;
+        }
+
+        /**
+         * <p>The default locale of the help center. This field is only returned for multilingual help centers.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage defaultLocale(String defaultLocale) {
+            this.defaultLocale = Optional.ofNullable(defaultLocale);
+            return this;
+        }
+
+        /**
+         * <p>The default locale of the help center. This field is only returned for multilingual help centers.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "default_locale", nulls = Nulls.SKIP)
+        public _FinalStage defaultLocale(Optional<String> defaultLocale) {
+            this.defaultLocale = defaultLocale;
             return this;
         }
 

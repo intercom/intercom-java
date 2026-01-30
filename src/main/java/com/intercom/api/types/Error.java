@@ -122,7 +122,9 @@ public final class Error {
         @JsonSetter(value = "errors", nulls = Nulls.SKIP)
         public Builder errors(List<ErrorsItem> errors) {
             this.errors.clear();
-            this.errors.addAll(errors);
+            if (errors != null) {
+                this.errors.addAll(errors);
+            }
             return this;
         }
 
@@ -132,7 +134,9 @@ public final class Error {
         }
 
         public Builder addAllErrors(List<ErrorsItem> errors) {
-            this.errors.addAll(errors);
+            if (errors != null) {
+                this.errors.addAll(errors);
+            }
             return this;
         }
 
@@ -218,7 +222,7 @@ public final class Error {
 
         public interface CodeStage {
             /**
-             * A string indicating the kind of error, used to further qualify the HTTP response code
+             * <p>A string indicating the kind of error, used to further qualify the HTTP response code</p>
              */
             _FinalStage code(@NotNull String code);
 
@@ -265,7 +269,8 @@ public final class Error {
             }
 
             /**
-             * A string indicating the kind of error, used to further qualify the HTTP response code<p>A string indicating the kind of error, used to further qualify the HTTP response code</p>
+             * <p>A string indicating the kind of error, used to further qualify the HTTP response code</p>
+             * <p>A string indicating the kind of error, used to further qualify the HTTP response code</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override

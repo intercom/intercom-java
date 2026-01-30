@@ -78,7 +78,7 @@ public final class SnoozeConversationRequest {
 
     public interface AdminIdStage {
         /**
-         * The id of the admin who is performing the action.
+         * <p>The id of the admin who is performing the action.</p>
          */
         SnoozedUntilStage adminId(@NotNull String adminId);
 
@@ -87,7 +87,7 @@ public final class SnoozeConversationRequest {
 
     public interface SnoozedUntilStage {
         /**
-         * The time you want the conversation to reopen.
+         * <p>The time you want the conversation to reopen.</p>
          */
         _FinalStage snoozedUntil(int snoozedUntil);
     }
@@ -115,7 +115,8 @@ public final class SnoozeConversationRequest {
         }
 
         /**
-         * The id of the admin who is performing the action.<p>The id of the admin who is performing the action.</p>
+         * <p>The id of the admin who is performing the action.</p>
+         * <p>The id of the admin who is performing the action.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -126,7 +127,8 @@ public final class SnoozeConversationRequest {
         }
 
         /**
-         * The time you want the conversation to reopen.<p>The time you want the conversation to reopen.</p>
+         * <p>The time you want the conversation to reopen.</p>
+         * <p>The time you want the conversation to reopen.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

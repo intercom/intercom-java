@@ -89,7 +89,7 @@ public final class TagTicketRequest {
 
     public interface TicketIdStage {
         /**
-         * ticket_id
+         * <p>ticket_id</p>
          */
         TagIdStage ticketId(@NotNull String ticketId);
 
@@ -98,14 +98,14 @@ public final class TagTicketRequest {
 
     public interface TagIdStage {
         /**
-         * The unique identifier for the tag which is given by Intercom
+         * <p>The unique identifier for the tag which is given by Intercom</p>
          */
         AdminIdStage tagId(@NotNull String tagId);
     }
 
     public interface AdminIdStage {
         /**
-         * The unique identifier for the admin which is given by Intercom.
+         * <p>The unique identifier for the admin which is given by Intercom.</p>
          */
         _FinalStage adminId(@NotNull String adminId);
     }
@@ -136,7 +136,8 @@ public final class TagTicketRequest {
         }
 
         /**
-         * ticket_id<p>ticket_id</p>
+         * <p>ticket_id</p>
+         * <p>ticket_id</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -147,7 +148,8 @@ public final class TagTicketRequest {
         }
 
         /**
-         * The unique identifier for the tag which is given by Intercom<p>The unique identifier for the tag which is given by Intercom</p>
+         * <p>The unique identifier for the tag which is given by Intercom</p>
+         * <p>The unique identifier for the tag which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -158,7 +160,8 @@ public final class TagTicketRequest {
         }
 
         /**
-         * The unique identifier for the admin which is given by Intercom.<p>The unique identifier for the admin which is given by Intercom.</p>
+         * <p>The unique identifier for the admin which is given by Intercom.</p>
+         * <p>The unique identifier for the admin which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

@@ -14,16 +14,15 @@ import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = DeleteNewsItemRequest.Builder.class)
 public final class DeleteNewsItemRequest {
-    private final String newsItemId;
+    private final int newsItemId;
 
     private final Map<String, Object> additionalProperties;
 
-    private DeleteNewsItemRequest(String newsItemId, Map<String, Object> additionalProperties) {
+    private DeleteNewsItemRequest(int newsItemId, Map<String, Object> additionalProperties) {
         this.newsItemId = newsItemId;
         this.additionalProperties = additionalProperties;
     }
@@ -32,7 +31,7 @@ public final class DeleteNewsItemRequest {
      * @return The unique identifier for the news item which is given by Intercom.
      */
     @JsonProperty("news_item_id")
-    public String getNewsItemId() {
+    public int getNewsItemId() {
         return newsItemId;
     }
 
@@ -48,7 +47,7 @@ public final class DeleteNewsItemRequest {
     }
 
     private boolean equalTo(DeleteNewsItemRequest other) {
-        return newsItemId.equals(other.newsItemId);
+        return newsItemId == other.newsItemId;
     }
 
     @java.lang.Override
@@ -67,9 +66,9 @@ public final class DeleteNewsItemRequest {
 
     public interface NewsItemIdStage {
         /**
-         * The unique identifier for the news item which is given by Intercom.
+         * <p>The unique identifier for the news item which is given by Intercom.</p>
          */
-        _FinalStage newsItemId(@NotNull String newsItemId);
+        _FinalStage newsItemId(int newsItemId);
 
         Builder from(DeleteNewsItemRequest other);
     }
@@ -80,7 +79,7 @@ public final class DeleteNewsItemRequest {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder implements NewsItemIdStage, _FinalStage {
-        private String newsItemId;
+        private int newsItemId;
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -94,13 +93,14 @@ public final class DeleteNewsItemRequest {
         }
 
         /**
-         * The unique identifier for the news item which is given by Intercom.<p>The unique identifier for the news item which is given by Intercom.</p>
+         * <p>The unique identifier for the news item which is given by Intercom.</p>
+         * <p>The unique identifier for the news item which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
         @JsonSetter("news_item_id")
-        public _FinalStage newsItemId(@NotNull String newsItemId) {
-            this.newsItemId = Objects.requireNonNull(newsItemId, "newsItemId must not be null");
+        public _FinalStage newsItemId(int newsItemId) {
+            this.newsItemId = newsItemId;
             return this;
         }
 

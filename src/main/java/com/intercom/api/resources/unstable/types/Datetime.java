@@ -84,7 +84,7 @@ public final class Datetime {
             Object value = p.readValueAs(Object.class);
             try {
                 return of(ObjectMappers.JSON_MAPPER.convertValue(value, OffsetDateTime.class));
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
             }
             if (value instanceof Integer) {
                 return of((Integer) value);

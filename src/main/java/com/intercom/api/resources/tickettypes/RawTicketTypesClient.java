@@ -4,6 +4,7 @@
 package com.intercom.api.resources.tickettypes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.IntercomApiException;
 import com.intercom.api.core.IntercomException;
@@ -13,12 +14,13 @@ import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.core.RequestOptions;
 import com.intercom.api.errors.UnauthorizedError;
 import com.intercom.api.resources.tickets.types.TicketType;
-import com.intercom.api.resources.tickettypes.requests.CreateTicketTypeRequest;
 import com.intercom.api.resources.tickettypes.requests.FindTicketTypeRequest;
 import com.intercom.api.resources.tickettypes.requests.UpdateTicketTypeRequest;
+import com.intercom.api.types.CreateTicketTypeRequest;
 import com.intercom.api.types.Error;
 import com.intercom.api.types.TicketTypeList;
 import java.io.IOException;
+import java.util.Optional;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -53,7 +55,6 @@ public class RawTicketTypesClient {
                 .url(httpUrl)
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json")
                 .build();
         OkHttpClient client = clientOptions.httpClient();
@@ -62,11 +63,11 @@ public class RawTicketTypesClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), TicketTypeList.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, TicketTypeList.class), response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 if (response.code() == 401) {
                     throw new UnauthorizedError(
@@ -75,11 +76,9 @@ public class RawTicketTypesClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }
@@ -93,7 +92,19 @@ public class RawTicketTypesClient {
      * For the <code>icon</code> propery, use an emoji from <a href="https://twemoji-cheatsheet.vercel.app/">Twemoji Cheatsheet</a></p>
      * </blockquote>
      */
-    public IntercomHttpResponse<TicketType> create(CreateTicketTypeRequest request) {
+    public IntercomHttpResponse<Optional<TicketType>> create() {
+        return create(Optional.empty());
+    }
+
+    /**
+     * You can create a new ticket type.
+     * <blockquote>
+     * <p>📘 Creating ticket types.</p>
+     * <p>Every ticket type will be created with two default attributes: <em>default_title</em> and <em>default_description</em>.
+     * For the <code>icon</code> propery, use an emoji from <a href="https://twemoji-cheatsheet.vercel.app/">Twemoji Cheatsheet</a></p>
+     * </blockquote>
+     */
+    public IntercomHttpResponse<Optional<TicketType>> create(Optional<CreateTicketTypeRequest> request) {
         return create(request, null);
     }
 
@@ -105,15 +116,19 @@ public class RawTicketTypesClient {
      * For the <code>icon</code> propery, use an emoji from <a href="https://twemoji-cheatsheet.vercel.app/">Twemoji Cheatsheet</a></p>
      * </blockquote>
      */
-    public IntercomHttpResponse<TicketType> create(CreateTicketTypeRequest request, RequestOptions requestOptions) {
+    public IntercomHttpResponse<Optional<TicketType>> create(
+            Optional<CreateTicketTypeRequest> request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("ticket_types")
                 .build();
         RequestBody body;
         try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+            body = RequestBody.create("", null);
+            if (request.isPresent()) {
+                body = RequestBody.create(
+                        ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+            }
         } catch (JsonProcessingException e) {
             throw new IntercomException("Failed to serialize request", e);
         }
@@ -130,11 +145,13 @@ public class RawTicketTypesClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), TicketType.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(
+                                responseBodyString, new TypeReference<Optional<TicketType>>() {}),
+                        response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 if (response.code() == 401) {
                     throw new UnauthorizedError(
@@ -143,11 +160,9 @@ public class RawTicketTypesClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }
@@ -156,14 +171,15 @@ public class RawTicketTypesClient {
     /**
      * You can fetch the details of a single ticket type.
      */
-    public IntercomHttpResponse<TicketType> get(FindTicketTypeRequest request) {
+    public IntercomHttpResponse<Optional<TicketType>> get(FindTicketTypeRequest request) {
         return get(request, null);
     }
 
     /**
      * You can fetch the details of a single ticket type.
      */
-    public IntercomHttpResponse<TicketType> get(FindTicketTypeRequest request, RequestOptions requestOptions) {
+    public IntercomHttpResponse<Optional<TicketType>> get(
+            FindTicketTypeRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("ticket_types")
@@ -173,7 +189,6 @@ public class RawTicketTypesClient {
                 .url(httpUrl)
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -182,11 +197,13 @@ public class RawTicketTypesClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), TicketType.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(
+                                responseBodyString, new TypeReference<Optional<TicketType>>() {}),
+                        response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 if (response.code() == 401) {
                     throw new UnauthorizedError(
@@ -195,11 +212,9 @@ public class RawTicketTypesClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }
@@ -212,7 +227,7 @@ public class RawTicketTypesClient {
      * <p>For the <code>icon</code> propery, use an emoji from <a href="https://twemoji-cheatsheet.vercel.app/">Twemoji Cheatsheet</a></p>
      * </blockquote>
      */
-    public IntercomHttpResponse<TicketType> update(UpdateTicketTypeRequest request) {
+    public IntercomHttpResponse<Optional<TicketType>> update(UpdateTicketTypeRequest request) {
         return update(request, null);
     }
 
@@ -223,7 +238,8 @@ public class RawTicketTypesClient {
      * <p>For the <code>icon</code> propery, use an emoji from <a href="https://twemoji-cheatsheet.vercel.app/">Twemoji Cheatsheet</a></p>
      * </blockquote>
      */
-    public IntercomHttpResponse<TicketType> update(UpdateTicketTypeRequest request, RequestOptions requestOptions) {
+    public IntercomHttpResponse<Optional<TicketType>> update(
+            UpdateTicketTypeRequest request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("ticket_types")
@@ -249,11 +265,13 @@ public class RawTicketTypesClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), TicketType.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(
+                                responseBodyString, new TypeReference<Optional<TicketType>>() {}),
+                        response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 if (response.code() == 401) {
                     throw new UnauthorizedError(
@@ -262,11 +280,9 @@ public class RawTicketTypesClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }

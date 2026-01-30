@@ -67,7 +67,7 @@ public final class GetContentImportSourceRequest {
 
     public interface IdStage {
         /**
-         * The unique identifier for the content import source which is given by Intercom.
+         * <p>The unique identifier for the content import source which is given by Intercom.</p>
          */
         _FinalStage id(@NotNull String id);
 
@@ -94,7 +94,8 @@ public final class GetContentImportSourceRequest {
         }
 
         /**
-         * The unique identifier for the content import source which is given by Intercom.<p>The unique identifier for the content import source which is given by Intercom.</p>
+         * <p>The unique identifier for the content import source which is given by Intercom.</p>
+         * <p>The unique identifier for the content import source which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

@@ -91,7 +91,7 @@ public final class CreateContentImportSourceRequest {
 
     public interface UrlStage {
         /**
-         * The URL of the content import source.
+         * <p>The URL of the content import source.</p>
          */
         _FinalStage url(@NotNull String url);
 
@@ -128,7 +128,8 @@ public final class CreateContentImportSourceRequest {
         }
 
         /**
-         * The URL of the content import source.<p>The URL of the content import source.</p>
+         * <p>The URL of the content import source.</p>
+         * <p>The URL of the content import source.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

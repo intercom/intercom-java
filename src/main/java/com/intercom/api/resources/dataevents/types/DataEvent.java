@@ -170,7 +170,7 @@ public final class DataEvent {
 
     public interface EventNameStage {
         /**
-         * The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example `updated-plan`.
+         * <p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
          */
         CreatedAtStage eventName(@NotNull String eventName);
 
@@ -179,7 +179,7 @@ public final class DataEvent {
 
     public interface CreatedAtStage {
         /**
-         * The time the event occurred as a UTC Unix timestamp
+         * <p>The time the event occurred as a UTC Unix timestamp</p>
          */
         _FinalStage createdAt(int createdAt);
     }
@@ -267,7 +267,8 @@ public final class DataEvent {
         }
 
         /**
-         * The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example `updated-plan`.<p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
+         * <p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
+         * <p>The name of the event that occurred. This is presented to your App's admins when filtering and creating segments - a good event name is typically a past tense 'verb-noun' combination, to improve readability, for example <code>updated-plan</code>.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -278,7 +279,8 @@ public final class DataEvent {
         }
 
         /**
-         * The time the event occurred as a UTC Unix timestamp<p>The time the event occurred as a UTC Unix timestamp</p>
+         * <p>The time the event occurred as a UTC Unix timestamp</p>
+         * <p>The time the event occurred as a UTC Unix timestamp</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

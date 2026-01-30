@@ -78,7 +78,7 @@ public final class UntagContactRequest {
 
     public interface ContactIdStage {
         /**
-         * The unique identifier for the contact which is given by Intercom
+         * <p>The unique identifier for the contact which is given by Intercom</p>
          */
         TagIdStage contactId(@NotNull String contactId);
 
@@ -87,7 +87,7 @@ public final class UntagContactRequest {
 
     public interface TagIdStage {
         /**
-         * The unique identifier for the tag which is given by Intercom
+         * <p>The unique identifier for the tag which is given by Intercom</p>
          */
         _FinalStage tagId(@NotNull String tagId);
     }
@@ -115,7 +115,8 @@ public final class UntagContactRequest {
         }
 
         /**
-         * The unique identifier for the contact which is given by Intercom<p>The unique identifier for the contact which is given by Intercom</p>
+         * <p>The unique identifier for the contact which is given by Intercom</p>
+         * <p>The unique identifier for the contact which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -126,7 +127,8 @@ public final class UntagContactRequest {
         }
 
         /**
-         * The unique identifier for the tag which is given by Intercom<p>The unique identifier for the tag which is given by Intercom</p>
+         * <p>The unique identifier for the tag which is given by Intercom</p>
+         * <p>The unique identifier for the tag which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

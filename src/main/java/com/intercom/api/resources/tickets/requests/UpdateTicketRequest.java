@@ -5,12 +5,10 @@ package com.intercom.api.resources.tickets.requests;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
@@ -27,7 +25,9 @@ public final class UpdateTicketRequest {
 
     private final Optional<Map<String, Object>> ticketAttributes;
 
-    private final Optional<State> state;
+    private final Optional<String> ticketStateId;
+
+    private final Optional<String> companyId;
 
     private final Optional<Boolean> open;
 
@@ -35,26 +35,32 @@ public final class UpdateTicketRequest {
 
     private final Optional<Integer> snoozedUntil;
 
-    private final Optional<Assignment> assignment;
+    private final Optional<Integer> adminId;
+
+    private final Optional<String> assigneeId;
 
     private final Map<String, Object> additionalProperties;
 
     private UpdateTicketRequest(
             String ticketId,
             Optional<Map<String, Object>> ticketAttributes,
-            Optional<State> state,
+            Optional<String> ticketStateId,
+            Optional<String> companyId,
             Optional<Boolean> open,
             Optional<Boolean> isShared,
             Optional<Integer> snoozedUntil,
-            Optional<Assignment> assignment,
+            Optional<Integer> adminId,
+            Optional<String> assigneeId,
             Map<String, Object> additionalProperties) {
         this.ticketId = ticketId;
         this.ticketAttributes = ticketAttributes;
-        this.state = state;
+        this.ticketStateId = ticketStateId;
+        this.companyId = companyId;
         this.open = open;
         this.isShared = isShared;
         this.snoozedUntil = snoozedUntil;
-        this.assignment = assignment;
+        this.adminId = adminId;
+        this.assigneeId = assigneeId;
         this.additionalProperties = additionalProperties;
     }
 
@@ -75,11 +81,19 @@ public final class UpdateTicketRequest {
     }
 
     /**
-     * @return The state of the ticket.
+     * @return The ID of the ticket state associated with the ticket type.
      */
-    @JsonProperty("state")
-    public Optional<State> getState() {
-        return state;
+    @JsonProperty("ticket_state_id")
+    public Optional<String> getTicketStateId() {
+        return ticketStateId;
+    }
+
+    /**
+     * @return The ID of the company that the ticket is associated with. The unique identifier for the company which is given by Intercom. Set to nil to remove company.
+     */
+    @JsonProperty("company_id")
+    public Optional<String> getCompanyId() {
+        return companyId;
     }
 
     /**
@@ -106,9 +120,20 @@ public final class UpdateTicketRequest {
         return snoozedUntil;
     }
 
-    @JsonProperty("assignment")
-    public Optional<Assignment> getAssignment() {
-        return assignment;
+    /**
+     * @return The ID of the admin performing ticket update. Needed for workflows execution and attributing actions to specific admins.
+     */
+    @JsonProperty("admin_id")
+    public Optional<Integer> getAdminId() {
+        return adminId;
+    }
+
+    /**
+     * @return The ID of the admin or team to which the ticket is assigned. Set this 0 to unassign it.
+     */
+    @JsonProperty("assignee_id")
+    public Optional<String> getAssigneeId() {
+        return assigneeId;
     }
 
     @java.lang.Override
@@ -125,11 +150,13 @@ public final class UpdateTicketRequest {
     private boolean equalTo(UpdateTicketRequest other) {
         return ticketId.equals(other.ticketId)
                 && ticketAttributes.equals(other.ticketAttributes)
-                && state.equals(other.state)
+                && ticketStateId.equals(other.ticketStateId)
+                && companyId.equals(other.companyId)
                 && open.equals(other.open)
                 && isShared.equals(other.isShared)
                 && snoozedUntil.equals(other.snoozedUntil)
-                && assignment.equals(other.assignment);
+                && adminId.equals(other.adminId)
+                && assigneeId.equals(other.assigneeId);
     }
 
     @java.lang.Override
@@ -137,11 +164,13 @@ public final class UpdateTicketRequest {
         return Objects.hash(
                 this.ticketId,
                 this.ticketAttributes,
-                this.state,
+                this.ticketStateId,
+                this.companyId,
                 this.open,
                 this.isShared,
                 this.snoozedUntil,
-                this.assignment);
+                this.adminId,
+                this.assigneeId);
     }
 
     @java.lang.Override
@@ -155,7 +184,7 @@ public final class UpdateTicketRequest {
 
     public interface TicketIdStage {
         /**
-         * The unique identifier for the ticket which is given by Intercom
+         * <p>The unique identifier for the ticket which is given by Intercom</p>
          */
         _FinalStage ticketId(@NotNull String ticketId);
 
@@ -173,11 +202,18 @@ public final class UpdateTicketRequest {
         _FinalStage ticketAttributes(Map<String, Object> ticketAttributes);
 
         /**
-         * <p>The state of the ticket.</p>
+         * <p>The ID of the ticket state associated with the ticket type.</p>
          */
-        _FinalStage state(Optional<State> state);
+        _FinalStage ticketStateId(Optional<String> ticketStateId);
 
-        _FinalStage state(State state);
+        _FinalStage ticketStateId(String ticketStateId);
+
+        /**
+         * <p>The ID of the company that the ticket is associated with. The unique identifier for the company which is given by Intercom. Set to nil to remove company.</p>
+         */
+        _FinalStage companyId(Optional<String> companyId);
+
+        _FinalStage companyId(String companyId);
 
         /**
          * <p>Specify if a ticket is open. Set to false to close a ticket. Closing a ticket will also unsnooze it.</p>
@@ -200,16 +236,28 @@ public final class UpdateTicketRequest {
 
         _FinalStage snoozedUntil(Integer snoozedUntil);
 
-        _FinalStage assignment(Optional<Assignment> assignment);
+        /**
+         * <p>The ID of the admin performing ticket update. Needed for workflows execution and attributing actions to specific admins.</p>
+         */
+        _FinalStage adminId(Optional<Integer> adminId);
 
-        _FinalStage assignment(Assignment assignment);
+        _FinalStage adminId(Integer adminId);
+
+        /**
+         * <p>The ID of the admin or team to which the ticket is assigned. Set this 0 to unassign it.</p>
+         */
+        _FinalStage assigneeId(Optional<String> assigneeId);
+
+        _FinalStage assigneeId(String assigneeId);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder implements TicketIdStage, _FinalStage {
         private String ticketId;
 
-        private Optional<Assignment> assignment = Optional.empty();
+        private Optional<String> assigneeId = Optional.empty();
+
+        private Optional<Integer> adminId = Optional.empty();
 
         private Optional<Integer> snoozedUntil = Optional.empty();
 
@@ -217,7 +265,9 @@ public final class UpdateTicketRequest {
 
         private Optional<Boolean> open = Optional.empty();
 
-        private Optional<State> state = Optional.empty();
+        private Optional<String> companyId = Optional.empty();
+
+        private Optional<String> ticketStateId = Optional.empty();
 
         private Optional<Map<String, Object>> ticketAttributes = Optional.empty();
 
@@ -230,16 +280,19 @@ public final class UpdateTicketRequest {
         public Builder from(UpdateTicketRequest other) {
             ticketId(other.getTicketId());
             ticketAttributes(other.getTicketAttributes());
-            state(other.getState());
+            ticketStateId(other.getTicketStateId());
+            companyId(other.getCompanyId());
             open(other.getOpen());
             isShared(other.getIsShared());
             snoozedUntil(other.getSnoozedUntil());
-            assignment(other.getAssignment());
+            adminId(other.getAdminId());
+            assigneeId(other.getAssigneeId());
             return this;
         }
 
         /**
-         * The unique identifier for the ticket which is given by Intercom<p>The unique identifier for the ticket which is given by Intercom</p>
+         * <p>The unique identifier for the ticket which is given by Intercom</p>
+         * <p>The unique identifier for the ticket which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -249,16 +302,43 @@ public final class UpdateTicketRequest {
             return this;
         }
 
+        /**
+         * <p>The ID of the admin or team to which the ticket is assigned. Set this 0 to unassign it.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
         @java.lang.Override
-        public _FinalStage assignment(Assignment assignment) {
-            this.assignment = Optional.ofNullable(assignment);
+        public _FinalStage assigneeId(String assigneeId) {
+            this.assigneeId = Optional.ofNullable(assigneeId);
             return this;
         }
 
+        /**
+         * <p>The ID of the admin or team to which the ticket is assigned. Set this 0 to unassign it.</p>
+         */
         @java.lang.Override
-        @JsonSetter(value = "assignment", nulls = Nulls.SKIP)
-        public _FinalStage assignment(Optional<Assignment> assignment) {
-            this.assignment = assignment;
+        @JsonSetter(value = "assignee_id", nulls = Nulls.SKIP)
+        public _FinalStage assigneeId(Optional<String> assigneeId) {
+            this.assigneeId = assigneeId;
+            return this;
+        }
+
+        /**
+         * <p>The ID of the admin performing ticket update. Needed for workflows execution and attributing actions to specific admins.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage adminId(Integer adminId) {
+            this.adminId = Optional.ofNullable(adminId);
+            return this;
+        }
+
+        /**
+         * <p>The ID of the admin performing ticket update. Needed for workflows execution and attributing actions to specific admins.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "admin_id", nulls = Nulls.SKIP)
+        public _FinalStage adminId(Optional<Integer> adminId) {
+            this.adminId = adminId;
             return this;
         }
 
@@ -323,22 +403,42 @@ public final class UpdateTicketRequest {
         }
 
         /**
-         * <p>The state of the ticket.</p>
+         * <p>The ID of the company that the ticket is associated with. The unique identifier for the company which is given by Intercom. Set to nil to remove company.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
-        public _FinalStage state(State state) {
-            this.state = Optional.ofNullable(state);
+        public _FinalStage companyId(String companyId) {
+            this.companyId = Optional.ofNullable(companyId);
             return this;
         }
 
         /**
-         * <p>The state of the ticket.</p>
+         * <p>The ID of the company that the ticket is associated with. The unique identifier for the company which is given by Intercom. Set to nil to remove company.</p>
          */
         @java.lang.Override
-        @JsonSetter(value = "state", nulls = Nulls.SKIP)
-        public _FinalStage state(Optional<State> state) {
-            this.state = state;
+        @JsonSetter(value = "company_id", nulls = Nulls.SKIP)
+        public _FinalStage companyId(Optional<String> companyId) {
+            this.companyId = companyId;
+            return this;
+        }
+
+        /**
+         * <p>The ID of the ticket state associated with the ticket type.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage ticketStateId(String ticketStateId) {
+            this.ticketStateId = Optional.ofNullable(ticketStateId);
+            return this;
+        }
+
+        /**
+         * <p>The ID of the ticket state associated with the ticket type.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "ticket_state_id", nulls = Nulls.SKIP)
+        public _FinalStage ticketStateId(Optional<String> ticketStateId) {
+            this.ticketStateId = ticketStateId;
             return this;
         }
 
@@ -365,204 +465,16 @@ public final class UpdateTicketRequest {
         @java.lang.Override
         public UpdateTicketRequest build() {
             return new UpdateTicketRequest(
-                    ticketId, ticketAttributes, state, open, isShared, snoozedUntil, assignment, additionalProperties);
-        }
-    }
-
-    public static final class State {
-        public static final State IN_PROGRESS = new State(Value.IN_PROGRESS, "in_progress");
-
-        public static final State RESOLVED = new State(Value.RESOLVED, "resolved");
-
-        public static final State WAITING_ON_CUSTOMER = new State(Value.WAITING_ON_CUSTOMER, "waiting_on_customer");
-
-        private final Value value;
-
-        private final String string;
-
-        State(Value value, String string) {
-            this.value = value;
-            this.string = string;
-        }
-
-        public Value getEnumValue() {
-            return value;
-        }
-
-        @java.lang.Override
-        @JsonValue
-        public String toString() {
-            return this.string;
-        }
-
-        @java.lang.Override
-        public boolean equals(Object other) {
-            return (this == other) || (other instanceof State && this.string.equals(((State) other).string));
-        }
-
-        @java.lang.Override
-        public int hashCode() {
-            return this.string.hashCode();
-        }
-
-        public <T> T visit(Visitor<T> visitor) {
-            switch (value) {
-                case IN_PROGRESS:
-                    return visitor.visitInProgress();
-                case RESOLVED:
-                    return visitor.visitResolved();
-                case WAITING_ON_CUSTOMER:
-                    return visitor.visitWaitingOnCustomer();
-                case UNKNOWN:
-                default:
-                    return visitor.visitUnknown(string);
-            }
-        }
-
-        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-        public static State valueOf(String value) {
-            switch (value) {
-                case "in_progress":
-                    return IN_PROGRESS;
-                case "resolved":
-                    return RESOLVED;
-                case "waiting_on_customer":
-                    return WAITING_ON_CUSTOMER;
-                default:
-                    return new State(Value.UNKNOWN, value);
-            }
-        }
-
-        public enum Value {
-            IN_PROGRESS,
-
-            WAITING_ON_CUSTOMER,
-
-            RESOLVED,
-
-            UNKNOWN
-        }
-
-        public interface Visitor<T> {
-            T visitInProgress();
-
-            T visitWaitingOnCustomer();
-
-            T visitResolved();
-
-            T visitUnknown(String unknownType);
-        }
-    }
-
-    @JsonInclude(JsonInclude.Include.NON_ABSENT)
-    @JsonDeserialize(builder = Assignment.Builder.class)
-    public static final class Assignment {
-        private final Optional<String> adminId;
-
-        private final Optional<String> assigneeId;
-
-        private final Map<String, Object> additionalProperties;
-
-        private Assignment(
-                Optional<String> adminId, Optional<String> assigneeId, Map<String, Object> additionalProperties) {
-            this.adminId = adminId;
-            this.assigneeId = assigneeId;
-            this.additionalProperties = additionalProperties;
-        }
-
-        /**
-         * @return The ID of the admin performing the action.
-         */
-        @JsonProperty("admin_id")
-        public Optional<String> getAdminId() {
-            return adminId;
-        }
-
-        /**
-         * @return The ID of the admin or team to which the ticket is assigned. Set this 0 to unassign it.
-         */
-        @JsonProperty("assignee_id")
-        public Optional<String> getAssigneeId() {
-            return assigneeId;
-        }
-
-        @java.lang.Override
-        public boolean equals(Object other) {
-            if (this == other) return true;
-            return other instanceof Assignment && equalTo((Assignment) other);
-        }
-
-        @JsonAnyGetter
-        public Map<String, Object> getAdditionalProperties() {
-            return this.additionalProperties;
-        }
-
-        private boolean equalTo(Assignment other) {
-            return adminId.equals(other.adminId) && assigneeId.equals(other.assigneeId);
-        }
-
-        @java.lang.Override
-        public int hashCode() {
-            return Objects.hash(this.adminId, this.assigneeId);
-        }
-
-        @java.lang.Override
-        public String toString() {
-            return ObjectMappers.stringify(this);
-        }
-
-        public static Builder builder() {
-            return new Builder();
-        }
-
-        @JsonIgnoreProperties(ignoreUnknown = true)
-        public static final class Builder {
-            private Optional<String> adminId = Optional.empty();
-
-            private Optional<String> assigneeId = Optional.empty();
-
-            @JsonAnySetter
-            private Map<String, Object> additionalProperties = new HashMap<>();
-
-            private Builder() {}
-
-            public Builder from(Assignment other) {
-                adminId(other.getAdminId());
-                assigneeId(other.getAssigneeId());
-                return this;
-            }
-
-            /**
-             * <p>The ID of the admin performing the action.</p>
-             */
-            @JsonSetter(value = "admin_id", nulls = Nulls.SKIP)
-            public Builder adminId(Optional<String> adminId) {
-                this.adminId = adminId;
-                return this;
-            }
-
-            public Builder adminId(String adminId) {
-                this.adminId = Optional.ofNullable(adminId);
-                return this;
-            }
-
-            /**
-             * <p>The ID of the admin or team to which the ticket is assigned. Set this 0 to unassign it.</p>
-             */
-            @JsonSetter(value = "assignee_id", nulls = Nulls.SKIP)
-            public Builder assigneeId(Optional<String> assigneeId) {
-                this.assigneeId = assigneeId;
-                return this;
-            }
-
-            public Builder assigneeId(String assigneeId) {
-                this.assigneeId = Optional.ofNullable(assigneeId);
-                return this;
-            }
-
-            public Assignment build() {
-                return new Assignment(adminId, assigneeId, additionalProperties);
-            }
+                    ticketId,
+                    ticketAttributes,
+                    ticketStateId,
+                    companyId,
+                    open,
+                    isShared,
+                    snoozedUntil,
+                    adminId,
+                    assigneeId,
+                    additionalProperties);
         }
     }
 }

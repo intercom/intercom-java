@@ -16,10 +16,10 @@ import com.intercom.api.errors.BadRequestError;
 import com.intercom.api.errors.NotFoundError;
 import com.intercom.api.errors.UnauthorizedError;
 import com.intercom.api.errors.UnprocessableEntityError;
-import com.intercom.api.resources.dataattributes.requests.CreateDataAttributeRequest;
 import com.intercom.api.resources.dataattributes.requests.ListDataAttributesRequest;
 import com.intercom.api.resources.dataattributes.requests.UpdateDataAttributeRequest;
 import com.intercom.api.resources.dataattributes.types.DataAttribute;
+import com.intercom.api.types.CreateDataAttributeRequest;
 import com.intercom.api.types.DataAttributeList;
 import com.intercom.api.types.Error;
 import java.io.IOException;
@@ -62,20 +62,16 @@ public class RawDataAttributesClient {
                 .addPathSegments("data_attributes");
         if (request.getModel().isPresent()) {
             QueryStringMapper.addQueryParameter(
-                    httpUrl, "model", request.getModel().get().toString(), false);
+                    httpUrl, "model", request.getModel().get(), false);
         }
         if (request.getIncludeArchived().isPresent()) {
             QueryStringMapper.addQueryParameter(
-                    httpUrl,
-                    "include_archived",
-                    request.getIncludeArchived().get().toString(),
-                    false);
+                    httpUrl, "include_archived", request.getIncludeArchived().get(), false);
         }
         Request.Builder _requestBuilder = new Request.Builder()
                 .url(httpUrl.build())
                 .method("GET", null)
                 .headers(Headers.of(clientOptions.headers(requestOptions)))
-                .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json");
         Request okhttpRequest = _requestBuilder.build();
         OkHttpClient client = clientOptions.httpClient();
@@ -84,11 +80,11 @@ public class RawDataAttributesClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), DataAttributeList.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, DataAttributeList.class), response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 if (response.code() == 401) {
                     throw new UnauthorizedError(
@@ -97,11 +93,9 @@ public class RawDataAttributesClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }
@@ -143,11 +137,11 @@ public class RawDataAttributesClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), DataAttribute.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, DataAttribute.class), response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 switch (response.code()) {
                     case 400:
@@ -160,11 +154,9 @@ public class RawDataAttributesClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }
@@ -193,12 +185,12 @@ public class RawDataAttributesClient {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("data_attributes")
-                .addPathSegment(request.getDataAttributeId())
+                .addPathSegment(Integer.toString(request.getDataAttributeId()))
                 .build();
         RequestBody body;
         try {
             body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request.getBody()), MediaTypes.APPLICATION_JSON);
         } catch (JsonProcessingException e) {
             throw new IntercomException("Failed to serialize request", e);
         }
@@ -215,11 +207,11 @@ public class RawDataAttributesClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), DataAttribute.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, DataAttribute.class), response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 switch (response.code()) {
                     case 400:
@@ -238,11 +230,9 @@ public class RawDataAttributesClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }

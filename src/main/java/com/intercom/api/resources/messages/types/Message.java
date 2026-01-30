@@ -11,11 +11,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
@@ -27,13 +29,13 @@ public final class Message {
 
     private final int createdAt;
 
-    private final String subject;
+    private final Optional<String> subject;
 
     private final String body;
 
     private final MessageType messageType;
 
-    private final String conversationId;
+    private final Optional<String> conversationId;
 
     private final Map<String, Object> additionalProperties;
 
@@ -41,10 +43,10 @@ public final class Message {
             String type,
             String id,
             int createdAt,
-            String subject,
+            Optional<String> subject,
             String body,
             MessageType messageType,
-            String conversationId,
+            Optional<String> conversationId,
             Map<String, Object> additionalProperties) {
         this.type = type;
         this.id = id;
@@ -84,7 +86,7 @@ public final class Message {
      * @return The subject of the message. Only present if message_type: email.
      */
     @JsonProperty("subject")
-    public String getSubject() {
+    public Optional<String> getSubject() {
         return subject;
     }
 
@@ -108,7 +110,7 @@ public final class Message {
      * @return The associated conversation_id
      */
     @JsonProperty("conversation_id")
-    public String getConversationId() {
+    public Optional<String> getConversationId() {
         return conversationId;
     }
 
@@ -150,7 +152,7 @@ public final class Message {
 
     public interface TypeStage {
         /**
-         * The type of the message
+         * <p>The type of the message</p>
          */
         IdStage type(@NotNull String type);
 
@@ -159,73 +161,66 @@ public final class Message {
 
     public interface IdStage {
         /**
-         * The id representing the message.
+         * <p>The id representing the message.</p>
          */
         CreatedAtStage id(@NotNull String id);
     }
 
     public interface CreatedAtStage {
         /**
-         * The time the conversation was created.
+         * <p>The time the conversation was created.</p>
          */
-        SubjectStage createdAt(int createdAt);
-    }
-
-    public interface SubjectStage {
-        /**
-         * The subject of the message. Only present if message_type: email.
-         */
-        BodyStage subject(@NotNull String subject);
+        BodyStage createdAt(int createdAt);
     }
 
     public interface BodyStage {
         /**
-         * The message body, which may contain HTML.
+         * <p>The message body, which may contain HTML.</p>
          */
         MessageTypeStage body(@NotNull String body);
     }
 
     public interface MessageTypeStage {
         /**
-         * The type of message that was sent. Can be email, inapp, facebook or twitter.
+         * <p>The type of message that was sent. Can be email, inapp, facebook or twitter.</p>
          */
-        ConversationIdStage messageType(@NotNull MessageType messageType);
-    }
-
-    public interface ConversationIdStage {
-        /**
-         * The associated conversation_id
-         */
-        _FinalStage conversationId(@NotNull String conversationId);
+        _FinalStage messageType(@NotNull MessageType messageType);
     }
 
     public interface _FinalStage {
         Message build();
+
+        /**
+         * <p>The subject of the message. Only present if message_type: email.</p>
+         */
+        _FinalStage subject(Optional<String> subject);
+
+        _FinalStage subject(String subject);
+
+        /**
+         * <p>The associated conversation_id</p>
+         */
+        _FinalStage conversationId(Optional<String> conversationId);
+
+        _FinalStage conversationId(String conversationId);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder
-            implements TypeStage,
-                    IdStage,
-                    CreatedAtStage,
-                    SubjectStage,
-                    BodyStage,
-                    MessageTypeStage,
-                    ConversationIdStage,
-                    _FinalStage {
+            implements TypeStage, IdStage, CreatedAtStage, BodyStage, MessageTypeStage, _FinalStage {
         private String type;
 
         private String id;
 
         private int createdAt;
 
-        private String subject;
-
         private String body;
 
         private MessageType messageType;
 
-        private String conversationId;
+        private Optional<String> conversationId = Optional.empty();
+
+        private Optional<String> subject = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -245,7 +240,8 @@ public final class Message {
         }
 
         /**
-         * The type of the message<p>The type of the message</p>
+         * <p>The type of the message</p>
+         * <p>The type of the message</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -256,7 +252,8 @@ public final class Message {
         }
 
         /**
-         * The id representing the message.<p>The id representing the message.</p>
+         * <p>The id representing the message.</p>
+         * <p>The id representing the message.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -267,29 +264,20 @@ public final class Message {
         }
 
         /**
-         * The time the conversation was created.<p>The time the conversation was created.</p>
+         * <p>The time the conversation was created.</p>
+         * <p>The time the conversation was created.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
         @JsonSetter("created_at")
-        public SubjectStage createdAt(int createdAt) {
+        public BodyStage createdAt(int createdAt) {
             this.createdAt = createdAt;
             return this;
         }
 
         /**
-         * The subject of the message. Only present if message_type: email.<p>The subject of the message. Only present if message_type: email.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        @JsonSetter("subject")
-        public BodyStage subject(@NotNull String subject) {
-            this.subject = Objects.requireNonNull(subject, "subject must not be null");
-            return this;
-        }
-
-        /**
-         * The message body, which may contain HTML.<p>The message body, which may contain HTML.</p>
+         * <p>The message body, which may contain HTML.</p>
+         * <p>The message body, which may contain HTML.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -300,24 +288,54 @@ public final class Message {
         }
 
         /**
-         * The type of message that was sent. Can be email, inapp, facebook or twitter.<p>The type of message that was sent. Can be email, inapp, facebook or twitter.</p>
+         * <p>The type of message that was sent. Can be email, inapp, facebook or twitter.</p>
+         * <p>The type of message that was sent. Can be email, inapp, facebook or twitter.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
         @JsonSetter("message_type")
-        public ConversationIdStage messageType(@NotNull MessageType messageType) {
+        public _FinalStage messageType(@NotNull MessageType messageType) {
             this.messageType = Objects.requireNonNull(messageType, "messageType must not be null");
             return this;
         }
 
         /**
-         * The associated conversation_id<p>The associated conversation_id</p>
+         * <p>The associated conversation_id</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
-        @JsonSetter("conversation_id")
-        public _FinalStage conversationId(@NotNull String conversationId) {
-            this.conversationId = Objects.requireNonNull(conversationId, "conversationId must not be null");
+        public _FinalStage conversationId(String conversationId) {
+            this.conversationId = Optional.ofNullable(conversationId);
+            return this;
+        }
+
+        /**
+         * <p>The associated conversation_id</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "conversation_id", nulls = Nulls.SKIP)
+        public _FinalStage conversationId(Optional<String> conversationId) {
+            this.conversationId = conversationId;
+            return this;
+        }
+
+        /**
+         * <p>The subject of the message. Only present if message_type: email.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage subject(String subject) {
+            this.subject = Optional.ofNullable(subject);
+            return this;
+        }
+
+        /**
+         * <p>The subject of the message. Only present if message_type: email.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "subject", nulls = Nulls.SKIP)
+        public _FinalStage subject(Optional<String> subject) {
+            this.subject = subject;
             return this;
         }
 

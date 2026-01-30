@@ -110,7 +110,7 @@ public final class CreateNoteRequest {
 
     public interface IdStage {
         /**
-         * The unique identifier of a given contact.
+         * <p>The unique identifier of a given contact.</p>
          */
         BodyStage id(int id);
 
@@ -119,7 +119,7 @@ public final class CreateNoteRequest {
 
     public interface BodyStage {
         /**
-         * The text of the note.
+         * <p>The text of the note.</p>
          */
         _FinalStage body(@NotNull String body);
     }
@@ -167,7 +167,8 @@ public final class CreateNoteRequest {
         }
 
         /**
-         * The unique identifier of a given contact.<p>The unique identifier of a given contact.</p>
+         * <p>The unique identifier of a given contact.</p>
+         * <p>The unique identifier of a given contact.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -178,7 +179,8 @@ public final class CreateNoteRequest {
         }
 
         /**
-         * The text of the note.<p>The text of the note.</p>
+         * <p>The text of the note.</p>
+         * <p>The text of the note.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

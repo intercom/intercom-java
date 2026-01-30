@@ -121,7 +121,7 @@ public final class CreateCollectionRequest {
 
     public interface NameStage {
         /**
-         * The name of the collection. For multilingual collections, this will be the name of the default language's content.
+         * <p>The name of the collection. For multilingual collections, this will be the name of the default language's content.</p>
          */
         _FinalStage name(@NotNull String name);
 
@@ -185,7 +185,8 @@ public final class CreateCollectionRequest {
         }
 
         /**
-         * The name of the collection. For multilingual collections, this will be the name of the default language's content.<p>The name of the collection. For multilingual collections, this will be the name of the default language's content.</p>
+         * <p>The name of the collection. For multilingual collections, this will be the name of the default language's content.</p>
+         * <p>The name of the collection. For multilingual collections, this will be the name of the default language's content.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

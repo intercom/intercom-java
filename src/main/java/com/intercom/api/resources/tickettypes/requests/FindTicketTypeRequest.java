@@ -67,7 +67,7 @@ public final class FindTicketTypeRequest {
 
     public interface TicketTypeIdStage {
         /**
-         * The unique identifier for the ticket type which is given by Intercom.
+         * <p>The unique identifier for the ticket type which is given by Intercom.</p>
          */
         _FinalStage ticketTypeId(@NotNull String ticketTypeId);
 
@@ -94,7 +94,8 @@ public final class FindTicketTypeRequest {
         }
 
         /**
-         * The unique identifier for the ticket type which is given by Intercom.<p>The unique identifier for the ticket type which is given by Intercom.</p>
+         * <p>The unique identifier for the ticket type which is given by Intercom.</p>
+         * <p>The unique identifier for the ticket type which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

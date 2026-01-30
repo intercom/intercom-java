@@ -14,16 +14,15 @@ import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = FindAdminRequest.Builder.class)
 public final class FindAdminRequest {
-    private final String adminId;
+    private final int adminId;
 
     private final Map<String, Object> additionalProperties;
 
-    private FindAdminRequest(String adminId, Map<String, Object> additionalProperties) {
+    private FindAdminRequest(int adminId, Map<String, Object> additionalProperties) {
         this.adminId = adminId;
         this.additionalProperties = additionalProperties;
     }
@@ -32,7 +31,7 @@ public final class FindAdminRequest {
      * @return The unique identifier of a given admin
      */
     @JsonProperty("admin_id")
-    public String getAdminId() {
+    public int getAdminId() {
         return adminId;
     }
 
@@ -48,7 +47,7 @@ public final class FindAdminRequest {
     }
 
     private boolean equalTo(FindAdminRequest other) {
-        return adminId.equals(other.adminId);
+        return adminId == other.adminId;
     }
 
     @java.lang.Override
@@ -67,9 +66,9 @@ public final class FindAdminRequest {
 
     public interface AdminIdStage {
         /**
-         * The unique identifier of a given admin
+         * <p>The unique identifier of a given admin</p>
          */
-        _FinalStage adminId(@NotNull String adminId);
+        _FinalStage adminId(int adminId);
 
         Builder from(FindAdminRequest other);
     }
@@ -80,7 +79,7 @@ public final class FindAdminRequest {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder implements AdminIdStage, _FinalStage {
-        private String adminId;
+        private int adminId;
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -94,13 +93,14 @@ public final class FindAdminRequest {
         }
 
         /**
-         * The unique identifier of a given admin<p>The unique identifier of a given admin</p>
+         * <p>The unique identifier of a given admin</p>
+         * <p>The unique identifier of a given admin</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
         @JsonSetter("admin_id")
-        public _FinalStage adminId(@NotNull String adminId) {
-            this.adminId = Objects.requireNonNull(adminId, "adminId must not be null");
+        public _FinalStage adminId(int adminId) {
+            this.adminId = adminId;
             return this;
         }
 

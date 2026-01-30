@@ -40,7 +40,7 @@ public class RawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a new conversation was created in your custom channel/platform. This triggers conversation creation and workflow automations within Intercom for your custom channel integration.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public IntercomHttpResponse<CustomChannelNotificationResponse> notifyNewConversation(
@@ -51,7 +51,7 @@ public class RawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a new conversation was created in your custom channel/platform. This triggers conversation creation and workflow automations within Intercom for your custom channel integration.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public IntercomHttpResponse<CustomChannelNotificationResponse> notifyNewConversation(
@@ -80,13 +80,13 @@ public class RawCustomChannelEventsClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
                         ObjectMappers.JSON_MAPPER.readValue(
-                                responseBody.string(), CustomChannelNotificationResponse.class),
+                                responseBodyString, CustomChannelNotificationResponse.class),
                         response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 switch (response.code()) {
                     case 400:
@@ -105,11 +105,9 @@ public class RawCustomChannelEventsClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }
@@ -118,7 +116,7 @@ public class RawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a new message was sent in a conversation on your custom channel/platform. This allows Intercom to process the message and trigger any relevant workflow automations.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public IntercomHttpResponse<CustomChannelNotificationResponse> notifyNewMessage(NotifyNewMessageRequest request) {
@@ -128,7 +126,7 @@ public class RawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a new message was sent in a conversation on your custom channel/platform. This allows Intercom to process the message and trigger any relevant workflow automations.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public IntercomHttpResponse<CustomChannelNotificationResponse> notifyNewMessage(
@@ -157,13 +155,13 @@ public class RawCustomChannelEventsClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
                         ObjectMappers.JSON_MAPPER.readValue(
-                                responseBody.string(), CustomChannelNotificationResponse.class),
+                                responseBodyString, CustomChannelNotificationResponse.class),
                         response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 switch (response.code()) {
                     case 400:
@@ -182,11 +180,9 @@ public class RawCustomChannelEventsClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }
@@ -195,7 +191,7 @@ public class RawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a user selected a quick reply option in your custom channel/platform. This allows Intercom to process the response and trigger any relevant workflow automations.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public IntercomHttpResponse<CustomChannelNotificationResponse> notifyQuickReplySelected(
@@ -206,7 +202,7 @@ public class RawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a user selected a quick reply option in your custom channel/platform. This allows Intercom to process the response and trigger any relevant workflow automations.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public IntercomHttpResponse<CustomChannelNotificationResponse> notifyQuickReplySelected(
@@ -235,13 +231,13 @@ public class RawCustomChannelEventsClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
                         ObjectMappers.JSON_MAPPER.readValue(
-                                responseBody.string(), CustomChannelNotificationResponse.class),
+                                responseBodyString, CustomChannelNotificationResponse.class),
                         response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 switch (response.code()) {
                     case 400:
@@ -260,11 +256,9 @@ public class RawCustomChannelEventsClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }
@@ -273,7 +267,7 @@ public class RawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a user provided a response to an attribute collector in your custom channel/platform. This allows Intercom to process the attribute and trigger any relevant workflow automations.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public IntercomHttpResponse<CustomChannelNotificationResponse> notifyAttributeCollected(
@@ -284,7 +278,7 @@ public class RawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a user provided a response to an attribute collector in your custom channel/platform. This allows Intercom to process the attribute and trigger any relevant workflow automations.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public IntercomHttpResponse<CustomChannelNotificationResponse> notifyAttributeCollected(
@@ -313,13 +307,13 @@ public class RawCustomChannelEventsClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
                         ObjectMappers.JSON_MAPPER.readValue(
-                                responseBody.string(), CustomChannelNotificationResponse.class),
+                                responseBodyString, CustomChannelNotificationResponse.class),
                         response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 switch (response.code()) {
                     case 400:
@@ -338,11 +332,9 @@ public class RawCustomChannelEventsClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }

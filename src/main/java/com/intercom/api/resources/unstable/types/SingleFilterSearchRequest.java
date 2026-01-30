@@ -191,7 +191,7 @@ public final class SingleFilterSearchRequest {
             } else if (this.type == 1) {
                 return visitor.visit((int) this.value);
             } else if (this.type == 2) {
-                return visitor.visit((List<Item>) this.value);
+                return visitor.visit((List<TwoItem>) this.value);
             }
             throw new IllegalStateException("Failed to visit value. This should never happen.");
         }
@@ -224,7 +224,7 @@ public final class SingleFilterSearchRequest {
             return new Value(value, 1);
         }
 
-        public static Value of(List<Item> value) {
+        public static Value of(List<TwoItem> value) {
             return new Value(value, 2);
         }
 
@@ -233,7 +233,7 @@ public final class SingleFilterSearchRequest {
 
             T visit(int value);
 
-            T visit(List<Item> value);
+            T visit(List<TwoItem> value);
         }
 
         static final class Deserializer extends StdDeserializer<Value> {
@@ -246,26 +246,26 @@ public final class SingleFilterSearchRequest {
                 Object value = p.readValueAs(Object.class);
                 try {
                     return of(ObjectMappers.JSON_MAPPER.convertValue(value, String.class));
-                } catch (IllegalArgumentException e) {
+                } catch (RuntimeException e) {
                 }
                 if (value instanceof Integer) {
                     return of((Integer) value);
                 }
                 try {
-                    return of(ObjectMappers.JSON_MAPPER.convertValue(value, new TypeReference<List<Item>>() {}));
-                } catch (IllegalArgumentException e) {
+                    return of(ObjectMappers.JSON_MAPPER.convertValue(value, new TypeReference<List<TwoItem>>() {}));
+                } catch (RuntimeException e) {
                 }
                 throw new JsonParseException(p, "Failed to deserialize");
             }
         }
 
-        @JsonDeserialize(using = Item.Deserializer.class)
-        public static final class Item {
+        @JsonDeserialize(using = TwoItem.Deserializer.class)
+        public static final class TwoItem {
             private final Object value;
 
             private final int type;
 
-            private Item(Object value, int type) {
+            private TwoItem(Object value, int type) {
                 this.value = value;
                 this.type = type;
             }
@@ -288,10 +288,10 @@ public final class SingleFilterSearchRequest {
             @java.lang.Override
             public boolean equals(Object other) {
                 if (this == other) return true;
-                return other instanceof Item && equalTo((Item) other);
+                return other instanceof TwoItem && equalTo((TwoItem) other);
             }
 
-            private boolean equalTo(Item other) {
+            private boolean equalTo(TwoItem other) {
                 return value.equals(other.value);
             }
 
@@ -305,12 +305,12 @@ public final class SingleFilterSearchRequest {
                 return this.value.toString();
             }
 
-            public static Item of(String value) {
-                return new Item(value, 0);
+            public static TwoItem of(String value) {
+                return new TwoItem(value, 0);
             }
 
-            public static Item of(int value) {
-                return new Item(value, 1);
+            public static TwoItem of(int value) {
+                return new TwoItem(value, 1);
             }
 
             public interface Visitor<T> {
@@ -319,17 +319,17 @@ public final class SingleFilterSearchRequest {
                 T visit(int value);
             }
 
-            static final class Deserializer extends StdDeserializer<Item> {
+            static final class Deserializer extends StdDeserializer<TwoItem> {
                 Deserializer() {
-                    super(Item.class);
+                    super(TwoItem.class);
                 }
 
                 @java.lang.Override
-                public Item deserialize(JsonParser p, DeserializationContext context) throws IOException {
+                public TwoItem deserialize(JsonParser p, DeserializationContext context) throws IOException {
                     Object value = p.readValueAs(Object.class);
                     try {
                         return of(ObjectMappers.JSON_MAPPER.convertValue(value, String.class));
-                    } catch (IllegalArgumentException e) {
+                    } catch (RuntimeException e) {
                     }
                     if (value instanceof Integer) {
                         return of((Integer) value);

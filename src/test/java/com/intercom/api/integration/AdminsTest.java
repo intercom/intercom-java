@@ -18,12 +18,18 @@ public class AdminsTest {
 
     private Intercom client;
     private String adminId;
+    private int adminIdInt;
 
     @BeforeEach
     public void before() {
         // arrange
         client = TestClientFactory.create();
-        adminId = client.admins().list().getAdmins().get(0).getId();
+        adminId = client.admins().list().getAdmins()
+                .orElseThrow(() -> new RuntimeException("Admins list is required"))
+                .get(0)
+                .orElseThrow(() -> new RuntimeException("Admin is required"))
+                .getId();
+        adminIdInt = Integer.parseInt(adminId);
     }
 
     @Test
@@ -38,8 +44,9 @@ public class AdminsTest {
     @Test
     public void testFind() {
         // act
-        Admin response =
-                client.admins().find(FindAdminRequest.builder().adminId(adminId).build());
+        Admin response = client.admins()
+                .find(FindAdminRequest.builder().adminId(adminIdInt).build())
+                .orElseThrow(() -> new RuntimeException("Admin not found"));
 
         // assert
         Assertions.assertNotNull(response);
@@ -69,10 +76,11 @@ public class AdminsTest {
         // act
         Admin response = client.admins()
                 .away(ConfigureAwayAdminRequest.builder()
-                        .adminId(adminId)
+                        .adminId(adminIdInt)
                         .awayModeEnabled(true)
                         .awayModeReassign(true)
-                        .build());
+                        .build())
+                .orElseThrow(() -> new RuntimeException("Admin not found"));
 
         // assert
         Assertions.assertNotNull(response);
@@ -83,10 +91,11 @@ public class AdminsTest {
         // act
         Admin response = client.admins()
                 .away(ConfigureAwayAdminRequest.builder()
-                        .adminId(adminId)
+                        .adminId(adminIdInt)
                         .awayModeEnabled(false)
                         .awayModeReassign(false)
-                        .build());
+                        .build())
+                .orElseThrow(() -> new RuntimeException("Admin not found"));
 
         // assert
         Assertions.assertNotNull(response);

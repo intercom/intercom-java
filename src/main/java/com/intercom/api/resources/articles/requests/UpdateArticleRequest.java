@@ -19,12 +19,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = UpdateArticleRequest.Builder.class)
 public final class UpdateArticleRequest {
-    private final String articleId;
+    private final int articleId;
 
     private final Optional<String> title;
 
@@ -38,21 +37,21 @@ public final class UpdateArticleRequest {
 
     private final Optional<String> parentId;
 
-    private final Optional<ParentType> parentType;
+    private final Optional<String> parentType;
 
     private final Optional<ArticleTranslatedContent> translatedContent;
 
     private final Map<String, Object> additionalProperties;
 
     private UpdateArticleRequest(
-            String articleId,
+            int articleId,
             Optional<String> title,
             Optional<String> description,
             Optional<String> body,
             Optional<Integer> authorId,
             Optional<State> state,
             Optional<String> parentId,
-            Optional<ParentType> parentType,
+            Optional<String> parentType,
             Optional<ArticleTranslatedContent> translatedContent,
             Map<String, Object> additionalProperties) {
         this.articleId = articleId;
@@ -71,7 +70,7 @@ public final class UpdateArticleRequest {
      * @return The unique identifier for the article which is given by Intercom.
      */
     @JsonProperty("article_id")
-    public String getArticleId() {
+    public int getArticleId() {
         return articleId;
     }
 
@@ -127,7 +126,7 @@ public final class UpdateArticleRequest {
      * @return The type of parent, which can either be a <code>collection</code> or <code>section</code>.
      */
     @JsonProperty("parent_type")
-    public Optional<ParentType> getParentType() {
+    public Optional<String> getParentType() {
         return parentType;
     }
 
@@ -148,7 +147,7 @@ public final class UpdateArticleRequest {
     }
 
     private boolean equalTo(UpdateArticleRequest other) {
-        return articleId.equals(other.articleId)
+        return articleId == other.articleId
                 && title.equals(other.title)
                 && description.equals(other.description)
                 && body.equals(other.body)
@@ -184,9 +183,9 @@ public final class UpdateArticleRequest {
 
     public interface ArticleIdStage {
         /**
-         * The unique identifier for the article which is given by Intercom.
+         * <p>The unique identifier for the article which is given by Intercom.</p>
          */
-        _FinalStage articleId(@NotNull String articleId);
+        _FinalStage articleId(int articleId);
 
         Builder from(UpdateArticleRequest other);
     }
@@ -239,9 +238,9 @@ public final class UpdateArticleRequest {
         /**
          * <p>The type of parent, which can either be a <code>collection</code> or <code>section</code>.</p>
          */
-        _FinalStage parentType(Optional<ParentType> parentType);
+        _FinalStage parentType(Optional<String> parentType);
 
-        _FinalStage parentType(ParentType parentType);
+        _FinalStage parentType(String parentType);
 
         _FinalStage translatedContent(Optional<ArticleTranslatedContent> translatedContent);
 
@@ -250,11 +249,11 @@ public final class UpdateArticleRequest {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder implements ArticleIdStage, _FinalStage {
-        private String articleId;
+        private int articleId;
 
         private Optional<ArticleTranslatedContent> translatedContent = Optional.empty();
 
-        private Optional<ParentType> parentType = Optional.empty();
+        private Optional<String> parentType = Optional.empty();
 
         private Optional<String> parentId = Optional.empty();
 
@@ -288,13 +287,14 @@ public final class UpdateArticleRequest {
         }
 
         /**
-         * The unique identifier for the article which is given by Intercom.<p>The unique identifier for the article which is given by Intercom.</p>
+         * <p>The unique identifier for the article which is given by Intercom.</p>
+         * <p>The unique identifier for the article which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
         @JsonSetter("article_id")
-        public _FinalStage articleId(@NotNull String articleId) {
-            this.articleId = Objects.requireNonNull(articleId, "articleId must not be null");
+        public _FinalStage articleId(int articleId) {
+            this.articleId = articleId;
             return this;
         }
 
@@ -316,7 +316,7 @@ public final class UpdateArticleRequest {
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
-        public _FinalStage parentType(ParentType parentType) {
+        public _FinalStage parentType(String parentType) {
             this.parentType = Optional.ofNullable(parentType);
             return this;
         }
@@ -326,7 +326,7 @@ public final class UpdateArticleRequest {
          */
         @java.lang.Override
         @JsonSetter(value = "parent_type", nulls = Nulls.SKIP)
-        public _FinalStage parentType(Optional<ParentType> parentType) {
+        public _FinalStage parentType(Optional<String> parentType) {
             this.parentType = parentType;
             return this;
         }
@@ -464,81 +464,6 @@ public final class UpdateArticleRequest {
                     parentType,
                     translatedContent,
                     additionalProperties);
-        }
-    }
-
-    public static final class ParentType {
-        public static final ParentType SECTION = new ParentType(Value.SECTION, "section");
-
-        public static final ParentType COLLECTION = new ParentType(Value.COLLECTION, "collection");
-
-        private final Value value;
-
-        private final String string;
-
-        ParentType(Value value, String string) {
-            this.value = value;
-            this.string = string;
-        }
-
-        public Value getEnumValue() {
-            return value;
-        }
-
-        @java.lang.Override
-        @JsonValue
-        public String toString() {
-            return this.string;
-        }
-
-        @java.lang.Override
-        public boolean equals(Object other) {
-            return (this == other) || (other instanceof ParentType && this.string.equals(((ParentType) other).string));
-        }
-
-        @java.lang.Override
-        public int hashCode() {
-            return this.string.hashCode();
-        }
-
-        public <T> T visit(Visitor<T> visitor) {
-            switch (value) {
-                case SECTION:
-                    return visitor.visitSection();
-                case COLLECTION:
-                    return visitor.visitCollection();
-                case UNKNOWN:
-                default:
-                    return visitor.visitUnknown(string);
-            }
-        }
-
-        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-        public static ParentType valueOf(String value) {
-            switch (value) {
-                case "section":
-                    return SECTION;
-                case "collection":
-                    return COLLECTION;
-                default:
-                    return new ParentType(Value.UNKNOWN, value);
-            }
-        }
-
-        public enum Value {
-            COLLECTION,
-
-            SECTION,
-
-            UNKNOWN
-        }
-
-        public interface Visitor<T> {
-            T visitCollection();
-
-            T visitSection();
-
-            T visitUnknown(String unknownType);
         }
     }
 

@@ -1,11 +1,11 @@
 package com.intercom.api.integration;
 
 import com.intercom.api.Intercom;
-import com.intercom.api.resources.companies.requests.CreateOrUpdateCompanyRequest;
+import com.intercom.api.resources.contacts.types.ContactsCreateResponse;
+import com.intercom.api.types.CreateOrUpdateCompanyRequest;
 import com.intercom.api.resources.companies.requests.DeleteCompanyRequest;
 import com.intercom.api.resources.companies.types.Company;
 import com.intercom.api.resources.contacts.requests.DeleteContactRequest;
-import com.intercom.api.resources.contacts.types.Contact;
 import com.intercom.api.resources.conversations.requests.CreateConversationRequest;
 import com.intercom.api.resources.conversations.requests.FindConversationRequest;
 import com.intercom.api.resources.conversations.types.Conversation;
@@ -25,6 +25,7 @@ import com.intercom.api.types.TagList;
 import com.intercom.api.utils.TestClientFactory;
 import com.intercom.api.utils.Utils;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -42,7 +43,11 @@ public class TagsTest {
         // arrange
         client = TestClientFactory.create();
 
-        adminId = client.admins().list().getAdmins().get(0).getId();
+        adminId = client.admins().list().getAdmins()
+                .orElseThrow(() -> new RuntimeException("Admins list is required"))
+                .get(0)
+                .orElseThrow(() -> new RuntimeException("Admin is required"))
+                .getId();
 
         tag = client.tags()
                 .create(TagsCreateRequestBody.of(CreateOrUpdateTagRequest.builder()
@@ -110,15 +115,16 @@ public class TagsTest {
     @Test
     public void testTagContact() {
         // arrange
-        Contact contact = client.contacts()
+        ContactsCreateResponse contact = client.contacts()
                 .create(CreateContactRequest.of(CreateContactRequest.WithExternalId.builder()
                         .externalId(Utils.randomString())
                         .build()));
+        String contactId = contact.getId().orElseThrow(() -> new RuntimeException("Contact ID is required"));
 
         // act
         Tag response = client.tags()
                 .tagContact(TagContactRequest.builder()
-                        .contactId(contact.getId())
+                        .contactId(contactId)
                         .tagId(tag.getId())
                         .build());
 
@@ -129,7 +135,7 @@ public class TagsTest {
         try {
             client.tags()
                     .untagContact(UntagContactRequest.builder()
-                            .contactId(contact.getId())
+                            .contactId(contactId)
                             .tagId(tag.getId())
                             .build());
         } catch (Exception e) {
@@ -139,7 +145,7 @@ public class TagsTest {
         try {
             client.contacts()
                     .delete(DeleteContactRequest.builder()
-                            .contactId(contact.getId())
+                            .contactId(contactId)
                             .build());
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete contact.", e);
@@ -150,9 +156,9 @@ public class TagsTest {
     public void testTagCompany() {
         // arrange
         Company company = client.companies()
-                .createOrUpdate(CreateOrUpdateCompanyRequest.builder()
+                .createOrUpdate(Optional.of(CreateOrUpdateCompanyRequest.builder()
                         .companyId(Utils.randomString())
-                        .build());
+                        .build()));
 
         // act
         Tag response = client.tags()
@@ -193,18 +199,19 @@ public class TagsTest {
     @Test
     public void testTagConversation() {
         // arrange
-        Contact contact = client.contacts()
+        ContactsCreateResponse contact = client.contacts()
                 .create(CreateContactRequest.of(CreateContactRequest.WithExternalId.builder()
                         .externalId(Utils.randomString())
                         .name("John Smith")
                         .build()));
+        String contactId = contact.getId().orElseThrow(() -> new RuntimeException("Contact ID is required"));
 
         Message conversationMessage = client.conversations()
                 .create(CreateConversationRequest.builder()
                         .from(CreateConversationRequest.builder()
                                 .from(CreateConversationRequest.From.builder()
                                         .type(CreateConversationRequest.From.Type.USER)
-                                        .id(contact.getId())
+                                        .id(contactId)
                                         .build())
                                 .body("Raz-dwa-try kalyna, czorniawaja diwczyna")
                                 .build())
@@ -221,13 +228,15 @@ public class TagsTest {
 
         Conversation conversation = client.conversations()
                 .find(FindConversationRequest.builder()
-                        .conversationId(conversationMessage.getConversationId())
+                        .conversationId(conversationMessage.getConversationId()
+                                .orElseThrow(() -> new RuntimeException("Conversation ID is required")))
                         .build());
+        String conversationId = conversation.getId().orElseThrow(() -> new RuntimeException("Conversation ID is required"));
 
         // act
         Tag response = client.tags()
                 .tagConversation(TagConversationRequest.builder()
-                        .conversationId(conversation.getId())
+                        .conversationId(conversationId)
                         .tagId(tag.getId())
                         .adminId(adminId)
                         .build());
@@ -239,7 +248,7 @@ public class TagsTest {
         try {
             client.tags()
                     .untagConversation(UntagConversationRequest.builder()
-                            .conversationId(conversation.getId())
+                            .conversationId(conversationId)
                             .tagId(tag.getId())
                             .adminId(adminId)
                             .build());
@@ -250,7 +259,7 @@ public class TagsTest {
         try {
             client.contacts()
                     .delete(DeleteContactRequest.builder()
-                            .contactId(contact.getId())
+                            .contactId(contactId)
                             .build());
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete contact.", e);

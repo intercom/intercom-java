@@ -9,25 +9,30 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = AddressableList.Builder.class)
 public final class AddressableList {
-    private final String type;
+    private final Optional<String> type;
 
-    private final String id;
+    private final Optional<String> id;
 
-    private final String url;
+    private final Optional<String> url;
 
     private final Map<String, Object> additionalProperties;
 
-    private AddressableList(String type, String id, String url, Map<String, Object> additionalProperties) {
+    private AddressableList(
+            Optional<String> type,
+            Optional<String> id,
+            Optional<String> url,
+            Map<String, Object> additionalProperties) {
         this.type = type;
         this.id = id;
         this.url = url;
@@ -38,7 +43,7 @@ public final class AddressableList {
      * @return The addressable object type
      */
     @JsonProperty("type")
-    public String getType() {
+    public Optional<String> getType() {
         return type;
     }
 
@@ -46,7 +51,7 @@ public final class AddressableList {
      * @return The id of the addressable object
      */
     @JsonProperty("id")
-    public String getId() {
+    public Optional<String> getId() {
         return id;
     }
 
@@ -54,7 +59,7 @@ public final class AddressableList {
      * @return Url to get more company resources for this contact
      */
     @JsonProperty("url")
-    public String getUrl() {
+    public Optional<String> getUrl() {
         return url;
     }
 
@@ -83,51 +88,23 @@ public final class AddressableList {
         return ObjectMappers.stringify(this);
     }
 
-    public static TypeStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface TypeStage {
-        /**
-         * The addressable object type
-         */
-        IdStage type(@NotNull String type);
-
-        Builder from(AddressableList other);
-    }
-
-    public interface IdStage {
-        /**
-         * The id of the addressable object
-         */
-        UrlStage id(@NotNull String id);
-    }
-
-    public interface UrlStage {
-        /**
-         * Url to get more company resources for this contact
-         */
-        _FinalStage url(@NotNull String url);
-    }
-
-    public interface _FinalStage {
-        AddressableList build();
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements TypeStage, IdStage, UrlStage, _FinalStage {
-        private String type;
+    public static final class Builder {
+        private Optional<String> type = Optional.empty();
 
-        private String id;
+        private Optional<String> id = Optional.empty();
 
-        private String url;
+        private Optional<String> url = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(AddressableList other) {
             type(other.getType());
             id(other.getId());
@@ -136,39 +113,47 @@ public final class AddressableList {
         }
 
         /**
-         * The addressable object type<p>The addressable object type</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The addressable object type</p>
          */
-        @java.lang.Override
-        @JsonSetter("type")
-        public IdStage type(@NotNull String type) {
-            this.type = Objects.requireNonNull(type, "type must not be null");
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
         /**
-         * The id of the addressable object<p>The id of the addressable object</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The id of the addressable object</p>
          */
-        @java.lang.Override
-        @JsonSetter("id")
-        public UrlStage id(@NotNull String id) {
-            this.id = Objects.requireNonNull(id, "id must not be null");
+        @JsonSetter(value = "id", nulls = Nulls.SKIP)
+        public Builder id(Optional<String> id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder id(String id) {
+            this.id = Optional.ofNullable(id);
             return this;
         }
 
         /**
-         * Url to get more company resources for this contact<p>Url to get more company resources for this contact</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>Url to get more company resources for this contact</p>
          */
-        @java.lang.Override
-        @JsonSetter("url")
-        public _FinalStage url(@NotNull String url) {
-            this.url = Objects.requireNonNull(url, "url must not be null");
+        @JsonSetter(value = "url", nulls = Nulls.SKIP)
+        public Builder url(Optional<String> url) {
+            this.url = url;
             return this;
         }
 
-        @java.lang.Override
+        public Builder url(String url) {
+            this.url = Optional.ofNullable(url);
+            return this;
+        }
+
         public AddressableList build() {
             return new AddressableList(type, id, url, additionalProperties);
         }

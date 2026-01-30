@@ -83,7 +83,7 @@ public final class ConvertVisitorRequest {
 
     public interface TypeStage {
         /**
-         * Represents the role of the Contact model. Accepts `lead` or `user`.
+         * <p>Represents the role of the Contact model. Accepts <code>lead</code> or <code>user</code>.</p>
          */
         UserStage type(@NotNull String type);
 
@@ -124,7 +124,8 @@ public final class ConvertVisitorRequest {
         }
 
         /**
-         * Represents the role of the Contact model. Accepts `lead` or `user`.<p>Represents the role of the Contact model. Accepts <code>lead</code> or <code>user</code>.</p>
+         * <p>Represents the role of the Contact model. Accepts <code>lead</code> or <code>user</code>.</p>
+         * <p>Represents the role of the Contact model. Accepts <code>lead</code> or <code>user</code>.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

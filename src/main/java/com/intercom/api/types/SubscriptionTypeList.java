@@ -13,20 +13,24 @@ import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.resources.subscriptiontypes.types.SubscriptionType;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = SubscriptionTypeList.Builder.class)
 public final class SubscriptionTypeList {
-    private final List<SubscriptionType> data;
+    private final Optional<String> type;
+
+    private final Optional<List<SubscriptionType>> data;
 
     private final Map<String, Object> additionalProperties;
 
-    private SubscriptionTypeList(List<SubscriptionType> data, Map<String, Object> additionalProperties) {
+    private SubscriptionTypeList(
+            Optional<String> type, Optional<List<SubscriptionType>> data, Map<String, Object> additionalProperties) {
+        this.type = type;
         this.data = data;
         this.additionalProperties = additionalProperties;
     }
@@ -35,15 +39,15 @@ public final class SubscriptionTypeList {
      * @return The type of the object
      */
     @JsonProperty("type")
-    public String getType() {
-        return "list";
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
      * @return A list of subscription type objects associated with the workspace .
      */
     @JsonProperty("data")
-    public List<SubscriptionType> getData() {
+    public Optional<List<SubscriptionType>> getData() {
         return data;
     }
 
@@ -59,12 +63,12 @@ public final class SubscriptionTypeList {
     }
 
     private boolean equalTo(SubscriptionTypeList other) {
-        return data.equals(other.data);
+        return type.equals(other.type) && data.equals(other.data);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.data);
+        return Objects.hash(this.type, this.data);
     }
 
     @java.lang.Override
@@ -78,7 +82,9 @@ public final class SubscriptionTypeList {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder {
-        private List<SubscriptionType> data = new ArrayList<>();
+        private Optional<String> type = Optional.empty();
+
+        private Optional<List<SubscriptionType>> data = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
@@ -86,7 +92,22 @@ public final class SubscriptionTypeList {
         private Builder() {}
 
         public Builder from(SubscriptionTypeList other) {
+            type(other.getType());
             data(other.getData());
+            return this;
+        }
+
+        /**
+         * <p>The type of the object</p>
+         */
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
@@ -94,24 +115,18 @@ public final class SubscriptionTypeList {
          * <p>A list of subscription type objects associated with the workspace .</p>
          */
         @JsonSetter(value = "data", nulls = Nulls.SKIP)
+        public Builder data(Optional<List<SubscriptionType>> data) {
+            this.data = data;
+            return this;
+        }
+
         public Builder data(List<SubscriptionType> data) {
-            this.data.clear();
-            this.data.addAll(data);
-            return this;
-        }
-
-        public Builder addData(SubscriptionType data) {
-            this.data.add(data);
-            return this;
-        }
-
-        public Builder addAllData(List<SubscriptionType> data) {
-            this.data.addAll(data);
+            this.data = Optional.ofNullable(data);
             return this;
         }
 
         public SubscriptionTypeList build() {
-            return new SubscriptionTypeList(data, additionalProperties);
+            return new SubscriptionTypeList(type, data, additionalProperties);
         }
     }
 }

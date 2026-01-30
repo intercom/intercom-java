@@ -226,7 +226,7 @@ public final class UpdateContactRequest {
 
     public interface ContactIdStage {
         /**
-         * id
+         * <p>id</p>
          */
         _FinalStage contactId(@NotNull String contactId);
 
@@ -363,7 +363,8 @@ public final class UpdateContactRequest {
         }
 
         /**
-         * id<p>id</p>
+         * <p>id</p>
+         * <p>id</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

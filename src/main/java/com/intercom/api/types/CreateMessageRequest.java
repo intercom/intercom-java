@@ -353,7 +353,7 @@ public final class CreateMessageRequest {
 
         public interface SubjectStage {
             /**
-             * The title of the email.
+             * <p>The title of the email.</p>
              */
             BodyStage subject(@NotNull String subject);
 
@@ -362,28 +362,28 @@ public final class CreateMessageRequest {
 
         public interface BodyStage {
             /**
-             * The content of the message. HTML and plaintext are supported.
+             * <p>The content of the message. HTML and plaintext are supported.</p>
              */
             TemplateStage body(@NotNull String body);
         }
 
         public interface TemplateStage {
             /**
-             * The style of the outgoing message. Possible values `plain` or `personal`.
+             * <p>The style of the outgoing message. Possible values <code>plain</code> or <code>personal</code>.</p>
              */
             FromStage template(@NotNull String template);
         }
 
         public interface FromStage {
             /**
-             * The sender of the message. If not provided, the default sender will be used.
+             * <p>The sender of the message. If not provided, the default sender will be used.</p>
              */
             ToStage from(@NotNull From from);
         }
 
         public interface ToStage {
             /**
-             * The sender of the message. If not provided, the default sender will be used.
+             * <p>The sender of the message. If not provided, the default sender will be used.</p>
              */
             _FinalStage to(@NotNull To to);
         }
@@ -441,7 +441,8 @@ public final class CreateMessageRequest {
             }
 
             /**
-             * The title of the email.<p>The title of the email.</p>
+             * <p>The title of the email.</p>
+             * <p>The title of the email.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -452,7 +453,8 @@ public final class CreateMessageRequest {
             }
 
             /**
-             * The content of the message. HTML and plaintext are supported.<p>The content of the message. HTML and plaintext are supported.</p>
+             * <p>The content of the message. HTML and plaintext are supported.</p>
+             * <p>The content of the message. HTML and plaintext are supported.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -463,7 +465,8 @@ public final class CreateMessageRequest {
             }
 
             /**
-             * The style of the outgoing message. Possible values `plain` or `personal`.<p>The style of the outgoing message. Possible values <code>plain</code> or <code>personal</code>.</p>
+             * <p>The style of the outgoing message. Possible values <code>plain</code> or <code>personal</code>.</p>
+             * <p>The style of the outgoing message. Possible values <code>plain</code> or <code>personal</code>.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -474,7 +477,8 @@ public final class CreateMessageRequest {
             }
 
             /**
-             * The sender of the message. If not provided, the default sender will be used.<p>The sender of the message. If not provided, the default sender will be used.</p>
+             * <p>The sender of the message. If not provided, the default sender will be used.</p>
+             * <p>The sender of the message. If not provided, the default sender will be used.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -485,7 +489,8 @@ public final class CreateMessageRequest {
             }
 
             /**
-             * The sender of the message. If not provided, the default sender will be used.<p>The sender of the message. If not provided, the default sender will be used.</p>
+             * <p>The sender of the message. If not provided, the default sender will be used.</p>
+             * <p>The sender of the message. If not provided, the default sender will be used.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -609,7 +614,7 @@ public final class CreateMessageRequest {
 
             public interface IdStage {
                 /**
-                 * The identifier for the admin which is given by Intercom.
+                 * <p>The identifier for the admin which is given by Intercom.</p>
                  */
                 _FinalStage id(int id);
 
@@ -636,7 +641,8 @@ public final class CreateMessageRequest {
                 }
 
                 /**
-                 * The identifier for the admin which is given by Intercom.<p>The identifier for the admin which is given by Intercom.</p>
+                 * <p>The identifier for the admin which is given by Intercom.</p>
+                 * <p>The identifier for the admin which is given by Intercom.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override
@@ -715,7 +721,7 @@ public final class CreateMessageRequest {
 
             public interface TypeStage {
                 /**
-                 * The role associated to the contact - `user` or `lead`.
+                 * <p>The role associated to the contact - <code>user</code> or <code>lead</code>.</p>
                  */
                 IdStage type(@NotNull Type type);
 
@@ -724,7 +730,7 @@ public final class CreateMessageRequest {
 
             public interface IdStage {
                 /**
-                 * The identifier for the contact which is given by Intercom.
+                 * <p>The identifier for the contact which is given by Intercom.</p>
                  */
                 _FinalStage id(@NotNull String id);
             }
@@ -752,7 +758,8 @@ public final class CreateMessageRequest {
                 }
 
                 /**
-                 * The role associated to the contact - `user` or `lead`.<p>The role associated to the contact - <code>user</code> or <code>lead</code>.</p>
+                 * <p>The role associated to the contact - <code>user</code> or <code>lead</code>.</p>
+                 * <p>The role associated to the contact - <code>user</code> or <code>lead</code>.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override
@@ -763,7 +770,8 @@ public final class CreateMessageRequest {
                 }
 
                 /**
-                 * The identifier for the contact which is given by Intercom.<p>The identifier for the contact which is given by Intercom.</p>
+                 * <p>The identifier for the contact which is given by Intercom.</p>
+                 * <p>The identifier for the contact which is given by Intercom.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override
@@ -994,7 +1002,7 @@ public final class CreateMessageRequest {
 
         public interface BodyStage {
             /**
-             * The content of the message. HTML and plaintext are supported.
+             * <p>The content of the message. HTML and plaintext are supported.</p>
              */
             FromStage body(@NotNull String body);
 
@@ -1003,14 +1011,14 @@ public final class CreateMessageRequest {
 
         public interface FromStage {
             /**
-             * The sender of the message. If not provided, the default sender will be used.
+             * <p>The sender of the message. If not provided, the default sender will be used.</p>
              */
             ToStage from(@NotNull From from);
         }
 
         public interface ToStage {
             /**
-             * The sender of the message. If not provided, the default sender will be used.
+             * <p>The sender of the message. If not provided, the default sender will be used.</p>
              */
             _FinalStage to(@NotNull To to);
         }
@@ -1081,7 +1089,8 @@ public final class CreateMessageRequest {
             }
 
             /**
-             * The content of the message. HTML and plaintext are supported.<p>The content of the message. HTML and plaintext are supported.</p>
+             * <p>The content of the message. HTML and plaintext are supported.</p>
+             * <p>The content of the message. HTML and plaintext are supported.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -1092,7 +1101,8 @@ public final class CreateMessageRequest {
             }
 
             /**
-             * The sender of the message. If not provided, the default sender will be used.<p>The sender of the message. If not provided, the default sender will be used.</p>
+             * <p>The sender of the message. If not provided, the default sender will be used.</p>
+             * <p>The sender of the message. If not provided, the default sender will be used.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -1103,7 +1113,8 @@ public final class CreateMessageRequest {
             }
 
             /**
-             * The sender of the message. If not provided, the default sender will be used.<p>The sender of the message. If not provided, the default sender will be used.</p>
+             * <p>The sender of the message. If not provided, the default sender will be used.</p>
+             * <p>The sender of the message. If not provided, the default sender will be used.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -1267,7 +1278,7 @@ public final class CreateMessageRequest {
 
             public interface IdStage {
                 /**
-                 * The identifier for the admin which is given by Intercom.
+                 * <p>The identifier for the admin which is given by Intercom.</p>
                  */
                 _FinalStage id(int id);
 
@@ -1294,7 +1305,8 @@ public final class CreateMessageRequest {
                 }
 
                 /**
-                 * The identifier for the admin which is given by Intercom.<p>The identifier for the admin which is given by Intercom.</p>
+                 * <p>The identifier for the admin which is given by Intercom.</p>
+                 * <p>The identifier for the admin which is given by Intercom.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override
@@ -1373,7 +1385,7 @@ public final class CreateMessageRequest {
 
             public interface TypeStage {
                 /**
-                 * The role associated to the contact - `user` or `lead`.
+                 * <p>The role associated to the contact - <code>user</code> or <code>lead</code>.</p>
                  */
                 IdStage type(@NotNull Type type);
 
@@ -1382,7 +1394,7 @@ public final class CreateMessageRequest {
 
             public interface IdStage {
                 /**
-                 * The identifier for the contact which is given by Intercom.
+                 * <p>The identifier for the contact which is given by Intercom.</p>
                  */
                 _FinalStage id(@NotNull String id);
             }
@@ -1410,7 +1422,8 @@ public final class CreateMessageRequest {
                 }
 
                 /**
-                 * The role associated to the contact - `user` or `lead`.<p>The role associated to the contact - <code>user</code> or <code>lead</code>.</p>
+                 * <p>The role associated to the contact - <code>user</code> or <code>lead</code>.</p>
+                 * <p>The role associated to the contact - <code>user</code> or <code>lead</code>.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override
@@ -1421,7 +1434,8 @@ public final class CreateMessageRequest {
                 }
 
                 /**
-                 * The identifier for the contact which is given by Intercom.<p>The identifier for the contact which is given by Intercom.</p>
+                 * <p>The identifier for the contact which is given by Intercom.</p>
+                 * <p>The identifier for the contact which is given by Intercom.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override

@@ -97,7 +97,7 @@ public final class CreateConversationRequest {
 
     public interface BodyStage {
         /**
-         * The content of the message. HTML is not supported.
+         * <p>The content of the message. HTML is not supported.</p>
          */
         _FinalStage body(@NotNull String body);
     }
@@ -142,7 +142,8 @@ public final class CreateConversationRequest {
         }
 
         /**
-         * The content of the message. HTML is not supported.<p>The content of the message. HTML is not supported.</p>
+         * <p>The content of the message. HTML is not supported.</p>
+         * <p>The content of the message. HTML is not supported.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -240,7 +241,7 @@ public final class CreateConversationRequest {
 
         public interface TypeStage {
             /**
-             * The role associated to the contact - user or lead.
+             * <p>The role associated to the contact - user or lead.</p>
              */
             IdStage type(@NotNull Type type);
 
@@ -249,7 +250,7 @@ public final class CreateConversationRequest {
 
         public interface IdStage {
             /**
-             * The identifier for the contact which is given by Intercom.
+             * <p>The identifier for the contact which is given by Intercom.</p>
              */
             _FinalStage id(@NotNull String id);
         }
@@ -277,7 +278,8 @@ public final class CreateConversationRequest {
             }
 
             /**
-             * The role associated to the contact - user or lead.<p>The role associated to the contact - user or lead.</p>
+             * <p>The role associated to the contact - user or lead.</p>
+             * <p>The role associated to the contact - user or lead.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override
@@ -288,7 +290,8 @@ public final class CreateConversationRequest {
             }
 
             /**
-             * The identifier for the contact which is given by Intercom.<p>The identifier for the contact which is given by Intercom.</p>
+             * <p>The identifier for the contact which is given by Intercom.</p>
+             * <p>The identifier for the contact which is given by Intercom.</p>
              * @return Reference to {@code this} so that method calls can be chained together.
              */
             @java.lang.Override

@@ -95,7 +95,9 @@ public final class ConversationTeammates {
         @JsonSetter(value = "admins", nulls = Nulls.SKIP)
         public Builder admins(List<Reference> admins) {
             this.admins.clear();
-            this.admins.addAll(admins);
+            if (admins != null) {
+                this.admins.addAll(admins);
+            }
             return this;
         }
 
@@ -105,7 +107,9 @@ public final class ConversationTeammates {
         }
 
         public Builder addAllAdmins(List<Reference> admins) {
-            this.admins.addAll(admins);
+            if (admins != null) {
+                this.admins.addAll(admins);
+            }
             return this;
         }
 

@@ -168,7 +168,7 @@ public final class EnqueueCreateTicketRequest implements ICreateTicketRequestBod
 
     public interface TicketTypeIdStage {
         /**
-         * The ID of the type of ticket you want to create
+         * <p>The ID of the type of ticket you want to create</p>
          */
         _FinalStage ticketTypeId(@NotNull String ticketTypeId);
 
@@ -260,7 +260,8 @@ public final class EnqueueCreateTicketRequest implements ICreateTicketRequestBod
         }
 
         /**
-         * The ID of the type of ticket you want to create<p>The ID of the type of ticket you want to create</p>
+         * <p>The ID of the type of ticket you want to create</p>
+         * <p>The ID of the type of ticket you want to create</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -381,7 +382,9 @@ public final class EnqueueCreateTicketRequest implements ICreateTicketRequestBod
          */
         @java.lang.Override
         public _FinalStage addAllContacts(List<ContactsItem> contacts) {
-            this.contacts.addAll(contacts);
+            if (contacts != null) {
+                this.contacts.addAll(contacts);
+            }
             return this;
         }
 
@@ -402,7 +405,9 @@ public final class EnqueueCreateTicketRequest implements ICreateTicketRequestBod
         @JsonSetter(value = "contacts", nulls = Nulls.SKIP)
         public _FinalStage contacts(List<ContactsItem> contacts) {
             this.contacts.clear();
-            this.contacts.addAll(contacts);
+            if (contacts != null) {
+                this.contacts.addAll(contacts);
+            }
             return this;
         }
 
@@ -498,15 +503,15 @@ public final class EnqueueCreateTicketRequest implements ICreateTicketRequestBod
                 Object value = p.readValueAs(Object.class);
                 try {
                     return of(ObjectMappers.JSON_MAPPER.convertValue(value, Id.class));
-                } catch (IllegalArgumentException e) {
+                } catch (RuntimeException e) {
                 }
                 try {
                     return of(ObjectMappers.JSON_MAPPER.convertValue(value, ExternalId.class));
-                } catch (IllegalArgumentException e) {
+                } catch (RuntimeException e) {
                 }
                 try {
                     return of(ObjectMappers.JSON_MAPPER.convertValue(value, Email.class));
-                } catch (IllegalArgumentException e) {
+                } catch (RuntimeException e) {
                 }
                 throw new JsonParseException(p, "Failed to deserialize");
             }
@@ -563,7 +568,7 @@ public final class EnqueueCreateTicketRequest implements ICreateTicketRequestBod
 
             public interface IdStage {
                 /**
-                 * The identifier for the contact as given by Intercom.
+                 * <p>The identifier for the contact as given by Intercom.</p>
                  */
                 _FinalStage id(@NotNull String id);
 
@@ -590,7 +595,8 @@ public final class EnqueueCreateTicketRequest implements ICreateTicketRequestBod
                 }
 
                 /**
-                 * The identifier for the contact as given by Intercom.<p>The identifier for the contact as given by Intercom.</p>
+                 * <p>The identifier for the contact as given by Intercom.</p>
+                 * <p>The identifier for the contact as given by Intercom.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override
@@ -658,7 +664,7 @@ public final class EnqueueCreateTicketRequest implements ICreateTicketRequestBod
 
             public interface ExternalIdStage {
                 /**
-                 * The external_id you have defined for the contact who is being added as a participant.
+                 * <p>The external_id you have defined for the contact who is being added as a participant.</p>
                  */
                 _FinalStage externalId(@NotNull String externalId);
 
@@ -685,7 +691,8 @@ public final class EnqueueCreateTicketRequest implements ICreateTicketRequestBod
                 }
 
                 /**
-                 * The external_id you have defined for the contact who is being added as a participant.<p>The external_id you have defined for the contact who is being added as a participant.</p>
+                 * <p>The external_id you have defined for the contact who is being added as a participant.</p>
+                 * <p>The external_id you have defined for the contact who is being added as a participant.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override
@@ -753,7 +760,7 @@ public final class EnqueueCreateTicketRequest implements ICreateTicketRequestBod
 
             public interface EmailStage {
                 /**
-                 * The email you have defined for the contact who is being added as a participant. If a contact with this email does not exist, one will be created.
+                 * <p>The email you have defined for the contact who is being added as a participant. If a contact with this email does not exist, one will be created.</p>
                  */
                 _FinalStage email(@NotNull String email);
 
@@ -780,7 +787,8 @@ public final class EnqueueCreateTicketRequest implements ICreateTicketRequestBod
                 }
 
                 /**
-                 * The email you have defined for the contact who is being added as a participant. If a contact with this email does not exist, one will be created.<p>The email you have defined for the contact who is being added as a participant. If a contact with this email does not exist, one will be created.</p>
+                 * <p>The email you have defined for the contact who is being added as a participant. If a contact with this email does not exist, one will be created.</p>
+                 * <p>The email you have defined for the contact who is being added as a participant. If a contact with this email does not exist, one will be created.</p>
                  * @return Reference to {@code this} so that method calls can be chained together.
                  */
                 @java.lang.Override

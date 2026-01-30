@@ -82,7 +82,7 @@ public final class UntagCompanyRequest {
 
     public interface NameStage {
         /**
-         * The name of the tag which will be untagged from the company
+         * <p>The name of the tag which will be untagged from the company</p>
          */
         _FinalStage name(@NotNull String name);
 
@@ -121,7 +121,8 @@ public final class UntagCompanyRequest {
         }
 
         /**
-         * The name of the tag which will be untagged from the company<p>The name of the tag which will be untagged from the company</p>
+         * <p>The name of the tag which will be untagged from the company</p>
+         * <p>The name of the tag which will be untagged from the company</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -137,7 +138,9 @@ public final class UntagCompanyRequest {
          */
         @java.lang.Override
         public _FinalStage addAllCompanies(List<CompaniesItem> companies) {
-            this.companies.addAll(companies);
+            if (companies != null) {
+                this.companies.addAll(companies);
+            }
             return this;
         }
 
@@ -158,7 +161,9 @@ public final class UntagCompanyRequest {
         @JsonSetter(value = "companies", nulls = Nulls.SKIP)
         public _FinalStage companies(List<CompaniesItem> companies) {
             this.companies.clear();
-            this.companies.addAll(companies);
+            if (companies != null) {
+                this.companies.addAll(companies);
+            }
             return this;
         }
 

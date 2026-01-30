@@ -9,26 +9,30 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.intercom.api.core.ObjectMappers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ConversationAttachmentFiles.Builder.class)
 public final class ConversationAttachmentFiles {
-    private final String contentType;
+    private final Optional<String> contentType;
 
-    private final String data;
+    private final Optional<String> data;
 
-    private final String name;
+    private final Optional<String> name;
 
     private final Map<String, Object> additionalProperties;
 
     private ConversationAttachmentFiles(
-            String contentType, String data, String name, Map<String, Object> additionalProperties) {
+            Optional<String> contentType,
+            Optional<String> data,
+            Optional<String> name,
+            Map<String, Object> additionalProperties) {
         this.contentType = contentType;
         this.data = data;
         this.name = name;
@@ -39,7 +43,7 @@ public final class ConversationAttachmentFiles {
      * @return The content type of the file
      */
     @JsonProperty("content_type")
-    public String getContentType() {
+    public Optional<String> getContentType() {
         return contentType;
     }
 
@@ -47,7 +51,7 @@ public final class ConversationAttachmentFiles {
      * @return The base64 encoded file data.
      */
     @JsonProperty("data")
-    public String getData() {
+    public Optional<String> getData() {
         return data;
     }
 
@@ -55,7 +59,7 @@ public final class ConversationAttachmentFiles {
      * @return The name of the file.
      */
     @JsonProperty("name")
-    public String getName() {
+    public Optional<String> getName() {
         return name;
     }
 
@@ -84,51 +88,23 @@ public final class ConversationAttachmentFiles {
         return ObjectMappers.stringify(this);
     }
 
-    public static ContentTypeStage builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public interface ContentTypeStage {
-        /**
-         * The content type of the file
-         */
-        DataStage contentType(@NotNull String contentType);
-
-        Builder from(ConversationAttachmentFiles other);
-    }
-
-    public interface DataStage {
-        /**
-         * The base64 encoded file data.
-         */
-        NameStage data(@NotNull String data);
-    }
-
-    public interface NameStage {
-        /**
-         * The name of the file.
-         */
-        _FinalStage name(@NotNull String name);
-    }
-
-    public interface _FinalStage {
-        ConversationAttachmentFiles build();
-    }
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder implements ContentTypeStage, DataStage, NameStage, _FinalStage {
-        private String contentType;
+    public static final class Builder {
+        private Optional<String> contentType = Optional.empty();
 
-        private String data;
+        private Optional<String> data = Optional.empty();
 
-        private String name;
+        private Optional<String> name = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
-        @java.lang.Override
         public Builder from(ConversationAttachmentFiles other) {
             contentType(other.getContentType());
             data(other.getData());
@@ -137,39 +113,47 @@ public final class ConversationAttachmentFiles {
         }
 
         /**
-         * The content type of the file<p>The content type of the file</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The content type of the file</p>
          */
-        @java.lang.Override
-        @JsonSetter("content_type")
-        public DataStage contentType(@NotNull String contentType) {
-            this.contentType = Objects.requireNonNull(contentType, "contentType must not be null");
+        @JsonSetter(value = "content_type", nulls = Nulls.SKIP)
+        public Builder contentType(Optional<String> contentType) {
+            this.contentType = contentType;
+            return this;
+        }
+
+        public Builder contentType(String contentType) {
+            this.contentType = Optional.ofNullable(contentType);
             return this;
         }
 
         /**
-         * The base64 encoded file data.<p>The base64 encoded file data.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The base64 encoded file data.</p>
          */
-        @java.lang.Override
-        @JsonSetter("data")
-        public NameStage data(@NotNull String data) {
-            this.data = Objects.requireNonNull(data, "data must not be null");
+        @JsonSetter(value = "data", nulls = Nulls.SKIP)
+        public Builder data(Optional<String> data) {
+            this.data = data;
+            return this;
+        }
+
+        public Builder data(String data) {
+            this.data = Optional.ofNullable(data);
             return this;
         }
 
         /**
-         * The name of the file.<p>The name of the file.</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
+         * <p>The name of the file.</p>
          */
-        @java.lang.Override
-        @JsonSetter("name")
-        public _FinalStage name(@NotNull String name) {
-            this.name = Objects.requireNonNull(name, "name must not be null");
+        @JsonSetter(value = "name", nulls = Nulls.SKIP)
+        public Builder name(Optional<String> name) {
+            this.name = name;
             return this;
         }
 
-        @java.lang.Override
+        public Builder name(String name) {
+            this.name = Optional.ofNullable(name);
+            return this;
+        }
+
         public ConversationAttachmentFiles build() {
             return new ConversationAttachmentFiles(contentType, data, name, additionalProperties);
         }

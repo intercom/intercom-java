@@ -77,7 +77,7 @@ public final class ManageConversationRequest {
 
     public interface IdStage {
         /**
-         * The identifier for the conversation as given by Intercom.
+         * <p>The identifier for the conversation as given by Intercom.</p>
          */
         BodyStage id(@NotNull String id);
 
@@ -111,7 +111,8 @@ public final class ManageConversationRequest {
         }
 
         /**
-         * The identifier for the conversation as given by Intercom.<p>The identifier for the conversation as given by Intercom.</p>
+         * <p>The identifier for the conversation as given by Intercom.</p>
+         * <p>The identifier for the conversation as given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

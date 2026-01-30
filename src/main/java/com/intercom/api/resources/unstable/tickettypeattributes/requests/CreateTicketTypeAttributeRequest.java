@@ -214,7 +214,7 @@ public final class CreateTicketTypeAttributeRequest {
 
     public interface TicketTypeIdStage {
         /**
-         * The unique identifier for the ticket type which is given by Intercom.
+         * <p>The unique identifier for the ticket type which is given by Intercom.</p>
          */
         NameStage ticketTypeId(@NotNull String ticketTypeId);
 
@@ -223,21 +223,21 @@ public final class CreateTicketTypeAttributeRequest {
 
     public interface NameStage {
         /**
-         * The name of the ticket type attribute
+         * <p>The name of the ticket type attribute</p>
          */
         DescriptionStage name(@NotNull String name);
     }
 
     public interface DescriptionStage {
         /**
-         * The description of the attribute presented to the teammate or contact
+         * <p>The description of the attribute presented to the teammate or contact</p>
          */
         DataTypeStage description(@NotNull String description);
     }
 
     public interface DataTypeStage {
         /**
-         * The data type of the attribute
+         * <p>The data type of the attribute</p>
          */
         _FinalStage dataType(@NotNull DataType dataType);
     }
@@ -342,7 +342,8 @@ public final class CreateTicketTypeAttributeRequest {
         }
 
         /**
-         * The unique identifier for the ticket type which is given by Intercom.<p>The unique identifier for the ticket type which is given by Intercom.</p>
+         * <p>The unique identifier for the ticket type which is given by Intercom.</p>
+         * <p>The unique identifier for the ticket type which is given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -353,7 +354,8 @@ public final class CreateTicketTypeAttributeRequest {
         }
 
         /**
-         * The name of the ticket type attribute<p>The name of the ticket type attribute</p>
+         * <p>The name of the ticket type attribute</p>
+         * <p>The name of the ticket type attribute</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -364,7 +366,8 @@ public final class CreateTicketTypeAttributeRequest {
         }
 
         /**
-         * The description of the attribute presented to the teammate or contact<p>The description of the attribute presented to the teammate or contact</p>
+         * <p>The description of the attribute presented to the teammate or contact</p>
+         * <p>The description of the attribute presented to the teammate or contact</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -375,7 +378,8 @@ public final class CreateTicketTypeAttributeRequest {
         }
 
         /**
-         * The data type of the attribute<p>The data type of the attribute</p>
+         * <p>The data type of the attribute</p>
+         * <p>The data type of the attribute</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

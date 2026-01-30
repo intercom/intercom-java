@@ -80,7 +80,7 @@ public final class DetachSubscriptionTypeToContactRequest {
 
     public interface ContactIdStage {
         /**
-         * The unique identifier for the contact which is given by Intercom
+         * <p>The unique identifier for the contact which is given by Intercom</p>
          */
         IdStage contactId(@NotNull String contactId);
 
@@ -89,7 +89,7 @@ public final class DetachSubscriptionTypeToContactRequest {
 
     public interface IdStage {
         /**
-         * The unique identifier for the subscription type which is given by Intercom
+         * <p>The unique identifier for the subscription type which is given by Intercom</p>
          */
         _FinalStage id(@NotNull String id);
     }
@@ -117,7 +117,8 @@ public final class DetachSubscriptionTypeToContactRequest {
         }
 
         /**
-         * The unique identifier for the contact which is given by Intercom<p>The unique identifier for the contact which is given by Intercom</p>
+         * <p>The unique identifier for the contact which is given by Intercom</p>
+         * <p>The unique identifier for the contact which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -128,7 +129,8 @@ public final class DetachSubscriptionTypeToContactRequest {
         }
 
         /**
-         * The unique identifier for the subscription type which is given by Intercom<p>The unique identifier for the subscription type which is given by Intercom</p>
+         * <p>The unique identifier for the subscription type which is given by Intercom</p>
+         * <p>The unique identifier for the subscription type which is given by Intercom</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

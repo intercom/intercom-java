@@ -10,6 +10,7 @@ import com.intercom.api.resources.conversations.requests.AttachContactToConversa
 import com.intercom.api.resources.conversations.requests.AutoAssignConversationRequest;
 import com.intercom.api.resources.conversations.requests.ConvertConversationToTicketRequest;
 import com.intercom.api.resources.conversations.requests.CreateConversationRequest;
+import com.intercom.api.resources.conversations.requests.DeleteConversationRequest;
 import com.intercom.api.resources.conversations.requests.DetachContactFromConversationRequest;
 import com.intercom.api.resources.conversations.requests.FindConversationRequest;
 import com.intercom.api.resources.conversations.requests.ListConversationsRequest;
@@ -19,8 +20,10 @@ import com.intercom.api.resources.conversations.requests.UpdateConversationReque
 import com.intercom.api.resources.conversations.types.Conversation;
 import com.intercom.api.resources.messages.types.Message;
 import com.intercom.api.resources.tickets.types.Ticket;
+import com.intercom.api.types.ConversationDeleted;
 import com.intercom.api.types.RedactConversationRequest;
 import com.intercom.api.types.SearchRequest;
+import java.util.Optional;
 
 public class ConversationsClient {
     protected final ClientOptions clientOptions;
@@ -130,6 +133,10 @@ public class ConversationsClient {
      * <p>{% admonition type=&quot;info&quot; name=&quot;Replying and other actions&quot; %}
      * If you want to reply to a coveration or take an action such as assign, unassign, open, close or snooze, take a look at the reply and manage endpoints.
      * {% /admonition %}</p>
+     * <p>{% admonition type=&quot;info&quot; %}
+     * This endpoint handles both <strong>conversation updates</strong> and <strong>custom object associations</strong>.</p>
+     * <p>See <em><code>update a conversation with an association to a custom object instance</code></em> in the request/response examples to see the custom object association format.
+     * {% /admonition %}</p>
      */
     public Conversation update(UpdateConversationRequest request) {
         return this.rawClient.update(request).body();
@@ -140,9 +147,27 @@ public class ConversationsClient {
      * <p>{% admonition type=&quot;info&quot; name=&quot;Replying and other actions&quot; %}
      * If you want to reply to a coveration or take an action such as assign, unassign, open, close or snooze, take a look at the reply and manage endpoints.
      * {% /admonition %}</p>
+     * <p>{% admonition type=&quot;info&quot; %}
+     * This endpoint handles both <strong>conversation updates</strong> and <strong>custom object associations</strong>.</p>
+     * <p>See <em><code>update a conversation with an association to a custom object instance</code></em> in the request/response examples to see the custom object association format.
+     * {% /admonition %}</p>
      */
     public Conversation update(UpdateConversationRequest request, RequestOptions requestOptions) {
         return this.rawClient.update(request, requestOptions).body();
+    }
+
+    /**
+     * You can delete a single conversation.
+     */
+    public ConversationDeleted deleteConversation(DeleteConversationRequest request) {
+        return this.rawClient.deleteConversation(request).body();
+    }
+
+    /**
+     * You can delete a single conversation.
+     */
+    public ConversationDeleted deleteConversation(DeleteConversationRequest request, RequestOptions requestOptions) {
+        return this.rawClient.deleteConversation(request, requestOptions).body();
     }
 
     /**
@@ -163,7 +188,7 @@ public class ConversationsClient {
      * <li>There's a limit of max 15 filters for each AND or OR group</li>
      * </ul>
      * <h3>Accepted Fields</h3>
-     * <p>Most keys listed as part of the The conversation model is searchable, whether writeable or not. The value you search for has to match the accepted type, otherwise the query will fail (ie. as <code>created_at</code> accepts a date, the <code>value</code> cannot be a string such as <code>&quot;foorbar&quot;</code>).
+     * <p>Most keys listed in the conversation model are searchable, whether writeable or not. The value you search for has to match the accepted type, otherwise the query will fail (ie. as <code>created_at</code> accepts a date, the <code>value</code> cannot be a string such as <code>&quot;foorbar&quot;</code>).
      * The <code>source.body</code> field is unique as the search will not be performed against the entire value, but instead against every element of the value separately. For example, when searching for a conversation with a <code>&quot;I need support&quot;</code> body - the query should contain a <code>=</code> operator with the value <code>&quot;support&quot;</code> for such conversation to be returned. A query with a <code>=</code> operator and a <code>&quot;need support&quot;</code> value will not yield a result.</p>
      * <p>| Field                                     | Type                                                                                                                                                   |
      * | :---------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -260,7 +285,7 @@ public class ConversationsClient {
      * <li>There's a limit of max 15 filters for each AND or OR group</li>
      * </ul>
      * <h3>Accepted Fields</h3>
-     * <p>Most keys listed as part of the The conversation model is searchable, whether writeable or not. The value you search for has to match the accepted type, otherwise the query will fail (ie. as <code>created_at</code> accepts a date, the <code>value</code> cannot be a string such as <code>&quot;foorbar&quot;</code>).
+     * <p>Most keys listed in the conversation model are searchable, whether writeable or not. The value you search for has to match the accepted type, otherwise the query will fail (ie. as <code>created_at</code> accepts a date, the <code>value</code> cannot be a string such as <code>&quot;foorbar&quot;</code>).
      * The <code>source.body</code> field is unique as the search will not be performed against the entire value, but instead against every element of the value separately. For example, when searching for a conversation with a <code>&quot;I need support&quot;</code> body - the query should contain a <code>=</code> operator with the value <code>&quot;support&quot;</code> for such conversation to be returned. A query with a <code>=</code> operator and a <code>&quot;need support&quot;</code> value will not yield a result.</p>
      * <p>| Field                                     | Type                                                                                                                                                   |
      * | :---------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -380,32 +405,6 @@ public class ConversationsClient {
     }
 
     /**
-     * {% admonition type=&quot;danger&quot; name=&quot;Deprecation of Run Assignment Rules&quot; %}
-     * Run assignment rules is now deprecated in version 2.12 and future versions and will be permanently removed on December 31, 2026. After this date, any requests made to this endpoint will fail.
-     * {% /admonition %}
-     * You can let a conversation be automatically assigned following assignment rules.
-     * {% admonition type=&quot;warning&quot; name=&quot;When using workflows&quot; %}
-     * It is not possible to use this endpoint with Workflows.
-     * {% /admonition %}
-     */
-    public Conversation runAssignmentRules(AutoAssignConversationRequest request) {
-        return this.rawClient.runAssignmentRules(request).body();
-    }
-
-    /**
-     * {% admonition type=&quot;danger&quot; name=&quot;Deprecation of Run Assignment Rules&quot; %}
-     * Run assignment rules is now deprecated in version 2.12 and future versions and will be permanently removed on December 31, 2026. After this date, any requests made to this endpoint will fail.
-     * {% /admonition %}
-     * You can let a conversation be automatically assigned following assignment rules.
-     * {% admonition type=&quot;warning&quot; name=&quot;When using workflows&quot; %}
-     * It is not possible to use this endpoint with Workflows.
-     * {% /admonition %}
-     */
-    public Conversation runAssignmentRules(AutoAssignConversationRequest request, RequestOptions requestOptions) {
-        return this.rawClient.runAssignmentRules(request, requestOptions).body();
-    }
-
-    /**
      * You can add participants who are contacts to a conversation, on behalf of either another contact or an admin.
      * <p>{% admonition type=&quot;warning&quot; name=&quot;Contacts without an email&quot; %}
      * If you add a contact via the email parameter and there is no user/lead found on that workspace with he given email, then we will create a new contact with <code>role</code> set to <code>lead</code>.
@@ -470,14 +469,40 @@ public class ConversationsClient {
     /**
      * You can convert a conversation to a ticket.
      */
-    public Ticket convertToTicket(ConvertConversationToTicketRequest request) {
+    public Optional<Ticket> convertToTicket(ConvertConversationToTicketRequest request) {
         return this.rawClient.convertToTicket(request).body();
     }
 
     /**
      * You can convert a conversation to a ticket.
      */
-    public Ticket convertToTicket(ConvertConversationToTicketRequest request, RequestOptions requestOptions) {
+    public Optional<Ticket> convertToTicket(ConvertConversationToTicketRequest request, RequestOptions requestOptions) {
         return this.rawClient.convertToTicket(request, requestOptions).body();
+    }
+
+    /**
+     * {% admonition type=&quot;danger&quot; name=&quot;Deprecation of Run Assignment Rules&quot; %}
+     * Run assignment rules is now deprecated in version 2.12 and future versions and will be permanently removed on December 31, 2026. After this date, any requests made to this endpoint will fail.
+     * {% /admonition %}
+     * You can let a conversation be automatically assigned following assignment rules.
+     * {% admonition type=&quot;warning&quot; name=&quot;When using workflows&quot; %}
+     * It is not possible to use this endpoint with Workflows.
+     * {% /admonition %}
+     */
+    public Conversation runAssignmentRules(AutoAssignConversationRequest request) {
+        return this.rawClient.runAssignmentRules(request).body();
+    }
+
+    /**
+     * {% admonition type=&quot;danger&quot; name=&quot;Deprecation of Run Assignment Rules&quot; %}
+     * Run assignment rules is now deprecated in version 2.12 and future versions and will be permanently removed on December 31, 2026. After this date, any requests made to this endpoint will fail.
+     * {% /admonition %}
+     * You can let a conversation be automatically assigned following assignment rules.
+     * {% admonition type=&quot;warning&quot; name=&quot;When using workflows&quot; %}
+     * It is not possible to use this endpoint with Workflows.
+     * {% /admonition %}
+     */
+    public Conversation runAssignmentRules(AutoAssignConversationRequest request, RequestOptions requestOptions) {
+        return this.rawClient.runAssignmentRules(request, requestOptions).body();
     }
 }

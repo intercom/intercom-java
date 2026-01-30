@@ -167,7 +167,7 @@ public final class AdminReplyConversationRequest {
 
     public interface AdminIdStage {
         /**
-         * The id of the admin who is authoring the comment.
+         * <p>The id of the admin who is authoring the comment.</p>
          */
         _FinalStage adminId(@NotNull String adminId);
     }
@@ -252,7 +252,8 @@ public final class AdminReplyConversationRequest {
         }
 
         /**
-         * The id of the admin who is authoring the comment.<p>The id of the admin who is authoring the comment.</p>
+         * <p>The id of the admin who is authoring the comment.</p>
+         * <p>The id of the admin who is authoring the comment.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

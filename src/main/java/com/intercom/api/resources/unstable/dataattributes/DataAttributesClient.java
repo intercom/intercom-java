@@ -5,7 +5,6 @@ package com.intercom.api.resources.unstable.dataattributes;
 
 import com.intercom.api.core.ClientOptions;
 import com.intercom.api.core.RequestOptions;
-import com.intercom.api.resources.unstable.dataattributes.requests.CreateDataAttributeRequest;
 import com.intercom.api.resources.unstable.dataattributes.requests.LisDataAttributesRequest;
 import com.intercom.api.resources.unstable.dataattributes.requests.UpdateDataAttributeRequest;
 import com.intercom.api.resources.unstable.dataattributes.types.DataAttribute;
@@ -52,14 +51,14 @@ public class DataAttributesClient {
     /**
      * You can create a data attributes for a <code>contact</code> or a <code>company</code>.
      */
-    public DataAttribute createDataAttribute(CreateDataAttributeRequest request) {
+    public DataAttribute createDataAttribute(Object request) {
         return this.rawClient.createDataAttribute(request).body();
     }
 
     /**
      * You can create a data attributes for a <code>contact</code> or a <code>company</code>.
      */
-    public DataAttribute createDataAttribute(CreateDataAttributeRequest request, RequestOptions requestOptions) {
+    public DataAttribute createDataAttribute(Object request, RequestOptions requestOptions) {
         return this.rawClient.createDataAttribute(request, requestOptions).body();
     }
 

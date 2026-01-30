@@ -22,6 +22,8 @@ import java.util.Optional;
 public final class Newsfeed {
     private final Optional<String> id;
 
+    private final Optional<String> type;
+
     private final Optional<String> name;
 
     private final Optional<Integer> createdAt;
@@ -32,11 +34,13 @@ public final class Newsfeed {
 
     private Newsfeed(
             Optional<String> id,
+            Optional<String> type,
             Optional<String> name,
             Optional<Integer> createdAt,
             Optional<Integer> updatedAt,
             Map<String, Object> additionalProperties) {
         this.id = id;
+        this.type = type;
         this.name = name;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -49,6 +53,14 @@ public final class Newsfeed {
     @JsonProperty("id")
     public Optional<String> getId() {
         return id;
+    }
+
+    /**
+     * @return The type of object.
+     */
+    @JsonProperty("type")
+    public Optional<String> getType() {
+        return type;
     }
 
     /**
@@ -88,6 +100,7 @@ public final class Newsfeed {
 
     private boolean equalTo(Newsfeed other) {
         return id.equals(other.id)
+                && type.equals(other.type)
                 && name.equals(other.name)
                 && createdAt.equals(other.createdAt)
                 && updatedAt.equals(other.updatedAt);
@@ -95,7 +108,7 @@ public final class Newsfeed {
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.id, this.name, this.createdAt, this.updatedAt);
+        return Objects.hash(this.id, this.type, this.name, this.createdAt, this.updatedAt);
     }
 
     @java.lang.Override
@@ -111,6 +124,8 @@ public final class Newsfeed {
     public static final class Builder {
         private Optional<String> id = Optional.empty();
 
+        private Optional<String> type = Optional.empty();
+
         private Optional<String> name = Optional.empty();
 
         private Optional<Integer> createdAt = Optional.empty();
@@ -124,6 +139,7 @@ public final class Newsfeed {
 
         public Builder from(Newsfeed other) {
             id(other.getId());
+            type(other.getType());
             name(other.getName());
             createdAt(other.getCreatedAt());
             updatedAt(other.getUpdatedAt());
@@ -141,6 +157,20 @@ public final class Newsfeed {
 
         public Builder id(String id) {
             this.id = Optional.ofNullable(id);
+            return this;
+        }
+
+        /**
+         * <p>The type of object.</p>
+         */
+        @JsonSetter(value = "type", nulls = Nulls.SKIP)
+        public Builder type(Optional<String> type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = Optional.ofNullable(type);
             return this;
         }
 
@@ -187,7 +217,7 @@ public final class Newsfeed {
         }
 
         public Newsfeed build() {
-            return new Newsfeed(id, name, createdAt, updatedAt, additionalProperties);
+            return new Newsfeed(id, type, name, createdAt, updatedAt, additionalProperties);
         }
     }
 }

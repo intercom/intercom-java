@@ -19,6 +19,7 @@ import com.intercom.api.resources.messages.types.Message;
 import com.intercom.api.types.CreateMessageRequest;
 import com.intercom.api.types.Error;
 import java.io.IOException;
+import java.util.Optional;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -46,7 +47,23 @@ public class RawMessagesClient {
      * <p>As this is a message, there will be no conversation present until the contact responds. Once they do, you will have to search for a contact's conversations with the id of the message.</p>
      * </blockquote>
      */
-    public IntercomHttpResponse<Message> create(CreateMessageRequest request) {
+    public IntercomHttpResponse<Message> create() {
+        return create(Optional.empty());
+    }
+
+    /**
+     * You can create a message that has been initiated by an admin. The conversation can be either an in-app message or an email.
+     * <blockquote>
+     * <p>🚧 Sending for visitors</p>
+     * <p>There can be a short delay between when a contact is created and when a contact becomes available to be messaged through the API. A 404 Not Found error will be returned in this case.</p>
+     * </blockquote>
+     * <p>This will return the Message model that has been created.</p>
+     * <blockquote>
+     * <p>🚧 Retrieving Associated Conversations</p>
+     * <p>As this is a message, there will be no conversation present until the contact responds. Once they do, you will have to search for a contact's conversations with the id of the message.</p>
+     * </blockquote>
+     */
+    public IntercomHttpResponse<Message> create(Optional<CreateMessageRequest> request) {
         return create(request, null);
     }
 
@@ -62,15 +79,18 @@ public class RawMessagesClient {
      * <p>As this is a message, there will be no conversation present until the contact responds. Once they do, you will have to search for a contact's conversations with the id of the message.</p>
      * </blockquote>
      */
-    public IntercomHttpResponse<Message> create(CreateMessageRequest request, RequestOptions requestOptions) {
+    public IntercomHttpResponse<Message> create(Optional<CreateMessageRequest> request, RequestOptions requestOptions) {
         HttpUrl httpUrl = HttpUrl.parse(this.clientOptions.environment().getUrl())
                 .newBuilder()
                 .addPathSegments("messages")
                 .build();
         RequestBody body;
         try {
-            body = RequestBody.create(
-                    ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+            body = RequestBody.create("", null);
+            if (request.isPresent()) {
+                body = RequestBody.create(
+                        ObjectMappers.JSON_MAPPER.writeValueAsBytes(request), MediaTypes.APPLICATION_JSON);
+            }
         } catch (JsonProcessingException e) {
             throw new IntercomException("Failed to serialize request", e);
         }
@@ -87,11 +107,11 @@ public class RawMessagesClient {
         }
         try (Response response = client.newCall(okhttpRequest).execute()) {
             ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             if (response.isSuccessful()) {
                 return new IntercomHttpResponse<>(
-                        ObjectMappers.JSON_MAPPER.readValue(responseBody.string(), Message.class), response);
+                        ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Message.class), response);
             }
-            String responseBodyString = responseBody != null ? responseBody.string() : "{}";
             try {
                 switch (response.code()) {
                     case 400:
@@ -110,11 +130,9 @@ public class RawMessagesClient {
             } catch (JsonProcessingException ignored) {
                 // unable to map error response, throwing generic error
             }
+            Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
             throw new IntercomApiException(
-                    "Error with status code " + response.code(),
-                    response.code(),
-                    ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                    response);
+                    "Error with status code " + response.code(), response.code(), errorBody, response);
         } catch (IOException e) {
             throw new IntercomException("Network error executing HTTP request", e);
         }

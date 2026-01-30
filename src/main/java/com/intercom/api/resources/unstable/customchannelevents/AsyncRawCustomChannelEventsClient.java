@@ -44,7 +44,7 @@ public class AsyncRawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a new conversation was created in your custom channel/platform. This triggers conversation creation and workflow automations within Intercom for your custom channel integration.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public CompletableFuture<IntercomHttpResponse<CustomChannelNotificationResponse>> notifyNewConversation(
@@ -55,7 +55,7 @@ public class AsyncRawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a new conversation was created in your custom channel/platform. This triggers conversation creation and workflow automations within Intercom for your custom channel integration.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public CompletableFuture<IntercomHttpResponse<CustomChannelNotificationResponse>> notifyNewConversation(
@@ -87,14 +87,14 @@ public class AsyncRawCustomChannelEventsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
                                 ObjectMappers.JSON_MAPPER.readValue(
-                                        responseBody.string(), CustomChannelNotificationResponse.class),
+                                        responseBodyString, CustomChannelNotificationResponse.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -121,11 +121,9 @@ public class AsyncRawCustomChannelEventsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -143,7 +141,7 @@ public class AsyncRawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a new message was sent in a conversation on your custom channel/platform. This allows Intercom to process the message and trigger any relevant workflow automations.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public CompletableFuture<IntercomHttpResponse<CustomChannelNotificationResponse>> notifyNewMessage(
@@ -154,7 +152,7 @@ public class AsyncRawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a new message was sent in a conversation on your custom channel/platform. This allows Intercom to process the message and trigger any relevant workflow automations.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public CompletableFuture<IntercomHttpResponse<CustomChannelNotificationResponse>> notifyNewMessage(
@@ -186,14 +184,14 @@ public class AsyncRawCustomChannelEventsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
                                 ObjectMappers.JSON_MAPPER.readValue(
-                                        responseBody.string(), CustomChannelNotificationResponse.class),
+                                        responseBodyString, CustomChannelNotificationResponse.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -220,11 +218,9 @@ public class AsyncRawCustomChannelEventsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -242,7 +238,7 @@ public class AsyncRawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a user selected a quick reply option in your custom channel/platform. This allows Intercom to process the response and trigger any relevant workflow automations.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public CompletableFuture<IntercomHttpResponse<CustomChannelNotificationResponse>> notifyQuickReplySelected(
@@ -253,7 +249,7 @@ public class AsyncRawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a user selected a quick reply option in your custom channel/platform. This allows Intercom to process the response and trigger any relevant workflow automations.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public CompletableFuture<IntercomHttpResponse<CustomChannelNotificationResponse>> notifyQuickReplySelected(
@@ -285,14 +281,14 @@ public class AsyncRawCustomChannelEventsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
                                 ObjectMappers.JSON_MAPPER.readValue(
-                                        responseBody.string(), CustomChannelNotificationResponse.class),
+                                        responseBodyString, CustomChannelNotificationResponse.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -319,11 +315,9 @@ public class AsyncRawCustomChannelEventsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));
@@ -341,7 +335,7 @@ public class AsyncRawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a user provided a response to an attribute collector in your custom channel/platform. This allows Intercom to process the attribute and trigger any relevant workflow automations.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public CompletableFuture<IntercomHttpResponse<CustomChannelNotificationResponse>> notifyAttributeCollected(
@@ -352,7 +346,7 @@ public class AsyncRawCustomChannelEventsClient {
     /**
      * Notifies Intercom that a user provided a response to an attribute collector in your custom channel/platform. This allows Intercom to process the attribute and trigger any relevant workflow automations.
      * <blockquote>
-     * <p><strong>Note:</strong> This endpoint is restricted to customers with access to the closed beta for &quot;Fin over API&quot;.</p>
+     * <p><strong>Note:</strong> This endpoint is currently under managed availability. Please reach out to your accounts team to discuss access and tailored, hands-on support.</p>
      * </blockquote>
      */
     public CompletableFuture<IntercomHttpResponse<CustomChannelNotificationResponse>> notifyAttributeCollected(
@@ -384,14 +378,14 @@ public class AsyncRawCustomChannelEventsClient {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 try (ResponseBody responseBody = response.body()) {
+                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     if (response.isSuccessful()) {
                         future.complete(new IntercomHttpResponse<>(
                                 ObjectMappers.JSON_MAPPER.readValue(
-                                        responseBody.string(), CustomChannelNotificationResponse.class),
+                                        responseBodyString, CustomChannelNotificationResponse.class),
                                 response));
                         return;
                     }
-                    String responseBodyString = responseBody != null ? responseBody.string() : "{}";
                     try {
                         switch (response.code()) {
                             case 400:
@@ -418,11 +412,9 @@ public class AsyncRawCustomChannelEventsClient {
                     } catch (JsonProcessingException ignored) {
                         // unable to map error response, throwing generic error
                     }
+                    Object errorBody = ObjectMappers.parseErrorBody(responseBodyString);
                     future.completeExceptionally(new IntercomApiException(
-                            "Error with status code " + response.code(),
-                            response.code(),
-                            ObjectMappers.JSON_MAPPER.readValue(responseBodyString, Object.class),
-                            response));
+                            "Error with status code " + response.code(), response.code(), errorBody, response));
                     return;
                 } catch (IOException e) {
                     future.completeExceptionally(new IntercomException("Network error executing HTTP request", e));

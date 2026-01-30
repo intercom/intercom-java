@@ -67,7 +67,7 @@ public final class AutoAssignConversationRequest {
 
     public interface ConversationIdStage {
         /**
-         * The identifier for the conversation as given by Intercom.
+         * <p>The identifier for the conversation as given by Intercom.</p>
          */
         _FinalStage conversationId(@NotNull String conversationId);
 
@@ -94,7 +94,8 @@ public final class AutoAssignConversationRequest {
         }
 
         /**
-         * The identifier for the conversation as given by Intercom.<p>The identifier for the conversation as given by Intercom.</p>
+         * <p>The identifier for the conversation as given by Intercom.</p>
+         * <p>The identifier for the conversation as given by Intercom.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override

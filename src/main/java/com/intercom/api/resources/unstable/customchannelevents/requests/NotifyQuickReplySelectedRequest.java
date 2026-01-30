@@ -107,7 +107,7 @@ public final class NotifyQuickReplySelectedRequest implements ICustomChannelBase
 
     public interface EventIdStage {
         /**
-         * Unique identifier for the event.
+         * <p>Unique identifier for the event.</p>
          */
         ExternalConversationIdStage eventId(@NotNull String eventId);
 
@@ -116,7 +116,7 @@ public final class NotifyQuickReplySelectedRequest implements ICustomChannelBase
 
     public interface ExternalConversationIdStage {
         /**
-         * Identifier for the conversation in your application.
+         * <p>Identifier for the conversation in your application.</p>
          */
         ContactStage externalConversationId(@NotNull String externalConversationId);
     }
@@ -127,7 +127,7 @@ public final class NotifyQuickReplySelectedRequest implements ICustomChannelBase
 
     public interface QuickReplyOptionIdStage {
         /**
-         * Id of the selected quick reply option.
+         * <p>Id of the selected quick reply option.</p>
          */
         _FinalStage quickReplyOptionId(@NotNull String quickReplyOptionId);
     }
@@ -162,7 +162,8 @@ public final class NotifyQuickReplySelectedRequest implements ICustomChannelBase
         }
 
         /**
-         * Unique identifier for the event.<p>Unique identifier for the event.</p>
+         * <p>Unique identifier for the event.</p>
+         * <p>Unique identifier for the event.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -173,7 +174,8 @@ public final class NotifyQuickReplySelectedRequest implements ICustomChannelBase
         }
 
         /**
-         * Identifier for the conversation in your application.<p>Identifier for the conversation in your application.</p>
+         * <p>Identifier for the conversation in your application.</p>
+         * <p>Identifier for the conversation in your application.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
@@ -192,7 +194,8 @@ public final class NotifyQuickReplySelectedRequest implements ICustomChannelBase
         }
 
         /**
-         * Id of the selected quick reply option.<p>Id of the selected quick reply option.</p>
+         * <p>Id of the selected quick reply option.</p>
+         * <p>Id of the selected quick reply option.</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
