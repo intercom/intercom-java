@@ -30,7 +30,9 @@ public class MessagesTest {
         // arrange
         client = TestClientFactory.create();
 
-        adminId = client.admins().list().getAdmins()
+        adminId = client.admins()
+                .list()
+                .getAdmins()
                 .orElseThrow(() -> new RuntimeException("Admins list is required"))
                 .get(0)
                 .orElseThrow(() -> new RuntimeException("Admin is required"))
@@ -40,8 +42,7 @@ public class MessagesTest {
                         .externalId(Utils.randomString())
                         .name("Message Test User")
                         .build()));
-        userId = user.getId()
-                .orElseThrow(() -> new RuntimeException("User ID is required"));
+        userId = user.getId().orElseThrow(() -> new RuntimeException("User ID is required"));
     }
 
     @AfterEach
@@ -111,9 +112,7 @@ public class MessagesTest {
     private void tryDeleteContact() {
         try {
             client.contacts()
-                    .delete(DeleteContactRequest.builder()
-                            .contactId(userId)
-                            .build());
+                    .delete(DeleteContactRequest.builder().contactId(userId).build());
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete contact.", e);
         }

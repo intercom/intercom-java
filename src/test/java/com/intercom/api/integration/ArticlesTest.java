@@ -2,7 +2,6 @@ package com.intercom.api.integration;
 
 import com.intercom.api.Intercom;
 import com.intercom.api.core.pagination.SyncPagingIterable;
-import com.intercom.api.types.CreateArticleRequest;
 import com.intercom.api.resources.articles.requests.DeleteArticleRequest;
 import com.intercom.api.resources.articles.requests.FindArticleRequest;
 import com.intercom.api.resources.articles.requests.ListArticlesRequest;
@@ -14,6 +13,7 @@ import com.intercom.api.resources.helpcenters.collections.requests.ListCollectio
 import com.intercom.api.types.AdminList;
 import com.intercom.api.types.ArticleContent;
 import com.intercom.api.types.ArticleTranslatedContent;
+import com.intercom.api.types.CreateArticleRequest;
 import com.intercom.api.types.DeletedArticleObject;
 import com.intercom.api.utils.TestClientFactory;
 import com.intercom.api.utils.Utils;
@@ -39,7 +39,8 @@ public class ArticlesTest {
         AdminList randomAdmins = client.admins().list();
 
         Integer parentId = Integer.parseInt(randomCollections.getItems().get(0).getId());
-        int adminId = Integer.parseInt(randomAdmins.getAdmins()
+        int adminId = Integer.parseInt(randomAdmins
+                .getAdmins()
                 .orElseThrow(() -> new RuntimeException("Admins list is required"))
                 .get(0)
                 .orElseThrow(() -> new RuntimeException("Admin is required"))

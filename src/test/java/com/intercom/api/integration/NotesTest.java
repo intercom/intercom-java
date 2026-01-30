@@ -31,7 +31,9 @@ public class NotesTest {
     public void before() {
         // arrange
         client = TestClientFactory.create();
-        adminId = client.admins().list().getAdmins()
+        adminId = client.admins()
+                .list()
+                .getAdmins()
                 .orElseThrow(() -> new RuntimeException("Admins list is required"))
                 .get(0)
                 .orElseThrow(() -> new RuntimeException("Admin is required"))
@@ -41,8 +43,7 @@ public class NotesTest {
                 .create(CreateContactRequest.of(CreateContactRequest.WithExternalId.builder()
                         .externalId(Utils.randomString())
                         .build()));
-        contactId = contact.getId()
-                .orElseThrow(() -> new RuntimeException("Contact ID is required"));
+        contactId = contact.getId().orElseThrow(() -> new RuntimeException("Contact ID is required"));
 
         note = client.notes()
                 .create(CreateContactNoteRequest.builder()
@@ -50,8 +51,7 @@ public class NotesTest {
                         .body(Utils.randomString())
                         .adminId(adminId)
                         .build());
-        noteId = Integer.parseInt(note.getId()
-                .orElseThrow(() -> new RuntimeException("Note ID is required")));
+        noteId = Integer.parseInt(note.getId().orElseThrow(() -> new RuntimeException("Note ID is required")));
     }
 
     @AfterEach
@@ -69,8 +69,8 @@ public class NotesTest {
     @Test
     public void testFind() {
         // act
-        Note response = client.notes()
-                .find(FindNoteRequest.builder().noteId(noteId).build());
+        Note response =
+                client.notes().find(FindNoteRequest.builder().noteId(noteId).build());
 
         // assert
         Assertions.assertNotNull(response);
@@ -174,9 +174,7 @@ public class NotesTest {
     private void tryDeleteContact() {
         try {
             client.contacts()
-                    .delete(DeleteContactRequest.builder()
-                            .contactId(contactId)
-                            .build());
+                    .delete(DeleteContactRequest.builder().contactId(contactId).build());
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete contact.", e);
         }

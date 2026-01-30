@@ -26,8 +26,7 @@ public class DataExportTest {
                         .createdAtAfter(1670000000)
                         .createdAtBefore(1670940528)
                         .build());
-        jobIdentifier = export.getJobIdentifier()
-                .orElseThrow(() -> new RuntimeException("Job identifier is required"));
+        jobIdentifier = export.getJobIdentifier().orElseThrow(() -> new RuntimeException("Job identifier is required"));
     }
 
     @Test
