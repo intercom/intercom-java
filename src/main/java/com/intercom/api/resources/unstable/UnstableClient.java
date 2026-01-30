@@ -38,6 +38,7 @@ import com.intercom.api.resources.unstable.ticketstates.TicketStatesClient;
 import com.intercom.api.resources.unstable.tickettypeattributes.TicketTypeAttributesClient;
 import com.intercom.api.resources.unstable.tickettypes.TicketTypesClient;
 import com.intercom.api.resources.unstable.visitors.VisitorsClient;
+import com.intercom.api.resources.unstable.workflows.WorkflowsClient;
 import java.util.function.Supplier;
 
 public class UnstableClient {
@@ -78,6 +79,8 @@ public class UnstableClient {
     protected final Supplier<DataEventsClient> dataEventsClient;
 
     protected final Supplier<DataExportClient> dataExportClient;
+
+    protected final Supplier<WorkflowsClient> workflowsClient;
 
     protected final Supplier<JobsClient> jobsClient;
 
@@ -129,6 +132,7 @@ public class UnstableClient {
         this.dataAttributesClient = Suppliers.memoize(() -> new DataAttributesClient(clientOptions));
         this.dataEventsClient = Suppliers.memoize(() -> new DataEventsClient(clientOptions));
         this.dataExportClient = Suppliers.memoize(() -> new DataExportClient(clientOptions));
+        this.workflowsClient = Suppliers.memoize(() -> new WorkflowsClient(clientOptions));
         this.jobsClient = Suppliers.memoize(() -> new JobsClient(clientOptions));
         this.macrosClient = Suppliers.memoize(() -> new MacrosClient(clientOptions));
         this.messagesClient = Suppliers.memoize(() -> new MessagesClient(clientOptions));
@@ -216,6 +220,10 @@ public class UnstableClient {
 
     public DataExportClient dataExport() {
         return this.dataExportClient.get();
+    }
+
+    public WorkflowsClient workflows() {
+        return this.workflowsClient.get();
     }
 
     public JobsClient jobs() {

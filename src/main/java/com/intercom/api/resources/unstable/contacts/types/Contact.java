@@ -393,7 +393,7 @@ public final class Contact implements IContact {
     }
 
     /**
-     * @return A preferred language setting for the contact, used by the Intercom Messenger even if their browser settings change.
+     * @return A preferred language setting for the contact, used by Intercom as the language of Fin and the Messenger even if their browser has a different setting. Supports ISO 639-1 two-letter language codes. If an unsupported code is supplied, the field will be set to null.
      */
     @JsonProperty("language_override")
     public Optional<String> getLanguageOverride() {
@@ -1144,7 +1144,7 @@ public final class Contact implements IContact {
         }
 
         /**
-         * <p>A preferred language setting for the contact, used by the Intercom Messenger even if their browser settings change.</p>
+         * <p>A preferred language setting for the contact, used by Intercom as the language of Fin and the Messenger even if their browser has a different setting. Supports ISO 639-1 two-letter language codes. If an unsupported code is supplied, the field will be set to null.</p>
          */
         @JsonSetter(value = "language_override", nulls = Nulls.SKIP)
         public Builder languageOverride(Optional<String> languageOverride) {

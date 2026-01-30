@@ -11,6 +11,7 @@ import com.intercom.api.resources.unstable.conversations.requests.CreateConversa
 import com.intercom.api.resources.unstable.conversations.requests.DeleteConversationRequest;
 import com.intercom.api.resources.unstable.conversations.requests.DetachContactFromConversationRequest;
 import com.intercom.api.resources.unstable.conversations.requests.ListConversationsRequest;
+import com.intercom.api.resources.unstable.conversations.requests.ListHandlingEventsRequest;
 import com.intercom.api.resources.unstable.conversations.requests.ManageConversationRequest;
 import com.intercom.api.resources.unstable.conversations.requests.ReplyConversationRequest;
 import com.intercom.api.resources.unstable.conversations.requests.RetrieveConversationRequest;
@@ -20,6 +21,7 @@ import com.intercom.api.resources.unstable.messages.types.Message;
 import com.intercom.api.resources.unstable.tickets.types.Ticket;
 import com.intercom.api.resources.unstable.types.ConversationDeleted;
 import com.intercom.api.resources.unstable.types.ConversationList;
+import com.intercom.api.resources.unstable.types.HandlingEventList;
 import com.intercom.api.resources.unstable.types.RedactConversationRequest;
 import com.intercom.api.resources.unstable.types.SearchRequest;
 import java.util.Optional;
@@ -447,6 +449,22 @@ public class ConversationsClient {
         return this.rawClient
                 .detachContactFromConversation(request, requestOptions)
                 .body();
+    }
+
+    /**
+     * List all pause/resume events for a conversation. These events track when teammates paused or resumed handling a conversation.
+     * <p>Requires the <code>read_conversations</code> OAuth scope.</p>
+     */
+    public HandlingEventList listHandlingEvents(ListHandlingEventsRequest request) {
+        return this.rawClient.listHandlingEvents(request).body();
+    }
+
+    /**
+     * List all pause/resume events for a conversation. These events track when teammates paused or resumed handling a conversation.
+     * <p>Requires the <code>read_conversations</code> OAuth scope.</p>
+     */
+    public HandlingEventList listHandlingEvents(ListHandlingEventsRequest request, RequestOptions requestOptions) {
+        return this.rawClient.listHandlingEvents(request, requestOptions).body();
     }
 
     /**

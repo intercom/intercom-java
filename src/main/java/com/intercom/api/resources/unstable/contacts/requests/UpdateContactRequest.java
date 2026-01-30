@@ -43,6 +43,8 @@ public final class UpdateContactRequest {
 
     private final Optional<Boolean> unsubscribedFromEmails;
 
+    private final Optional<String> languageOverride;
+
     private final Optional<Map<String, Object>> customAttributes;
 
     private final Map<String, Object> additionalProperties;
@@ -59,6 +61,7 @@ public final class UpdateContactRequest {
             Optional<Integer> lastSeenAt,
             Optional<Integer> ownerId,
             Optional<Boolean> unsubscribedFromEmails,
+            Optional<String> languageOverride,
             Optional<Map<String, Object>> customAttributes,
             Map<String, Object> additionalProperties) {
         this.id = id;
@@ -72,6 +75,7 @@ public final class UpdateContactRequest {
         this.lastSeenAt = lastSeenAt;
         this.ownerId = ownerId;
         this.unsubscribedFromEmails = unsubscribedFromEmails;
+        this.languageOverride = languageOverride;
         this.customAttributes = customAttributes;
         this.additionalProperties = additionalProperties;
     }
@@ -165,6 +169,14 @@ public final class UpdateContactRequest {
     }
 
     /**
+     * @return A preferred language setting for the contact, used by Intercom as the language of Fin and the Messenger even if their browser has a different setting. Supports ISO 639-1 two-letter language codes. If an unsupported code is supplied, the field will be set to null.
+     */
+    @JsonProperty("language_override")
+    public Optional<String> getLanguageOverride() {
+        return languageOverride;
+    }
+
+    /**
      * @return The custom attributes which are set for the contact
      */
     @JsonProperty("custom_attributes")
@@ -195,6 +207,7 @@ public final class UpdateContactRequest {
                 && lastSeenAt.equals(other.lastSeenAt)
                 && ownerId.equals(other.ownerId)
                 && unsubscribedFromEmails.equals(other.unsubscribedFromEmails)
+                && languageOverride.equals(other.languageOverride)
                 && customAttributes.equals(other.customAttributes);
     }
 
@@ -212,6 +225,7 @@ public final class UpdateContactRequest {
                 this.lastSeenAt,
                 this.ownerId,
                 this.unsubscribedFromEmails,
+                this.languageOverride,
                 this.customAttributes);
     }
 
@@ -307,6 +321,13 @@ public final class UpdateContactRequest {
         _FinalStage unsubscribedFromEmails(Boolean unsubscribedFromEmails);
 
         /**
+         * <p>A preferred language setting for the contact, used by Intercom as the language of Fin and the Messenger even if their browser has a different setting. Supports ISO 639-1 two-letter language codes. If an unsupported code is supplied, the field will be set to null.</p>
+         */
+        _FinalStage languageOverride(Optional<String> languageOverride);
+
+        _FinalStage languageOverride(String languageOverride);
+
+        /**
          * <p>The custom attributes which are set for the contact</p>
          */
         _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes);
@@ -319,6 +340,8 @@ public final class UpdateContactRequest {
         private String id;
 
         private Optional<Map<String, Object>> customAttributes = Optional.empty();
+
+        private Optional<String> languageOverride = Optional.empty();
 
         private Optional<Boolean> unsubscribedFromEmails = Optional.empty();
 
@@ -358,6 +381,7 @@ public final class UpdateContactRequest {
             lastSeenAt(other.getLastSeenAt());
             ownerId(other.getOwnerId());
             unsubscribedFromEmails(other.getUnsubscribedFromEmails());
+            languageOverride(other.getLanguageOverride());
             customAttributes(other.getCustomAttributes());
             return this;
         }
@@ -391,6 +415,26 @@ public final class UpdateContactRequest {
         @JsonSetter(value = "custom_attributes", nulls = Nulls.SKIP)
         public _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes) {
             this.customAttributes = customAttributes;
+            return this;
+        }
+
+        /**
+         * <p>A preferred language setting for the contact, used by Intercom as the language of Fin and the Messenger even if their browser has a different setting. Supports ISO 639-1 two-letter language codes. If an unsupported code is supplied, the field will be set to null.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage languageOverride(String languageOverride) {
+            this.languageOverride = Optional.ofNullable(languageOverride);
+            return this;
+        }
+
+        /**
+         * <p>A preferred language setting for the contact, used by Intercom as the language of Fin and the Messenger even if their browser has a different setting. Supports ISO 639-1 two-letter language codes. If an unsupported code is supplied, the field will be set to null.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "language_override", nulls = Nulls.SKIP)
+        public _FinalStage languageOverride(Optional<String> languageOverride) {
+            this.languageOverride = languageOverride;
             return this;
         }
 
@@ -608,6 +652,7 @@ public final class UpdateContactRequest {
                     lastSeenAt,
                     ownerId,
                     unsubscribedFromEmails,
+                    languageOverride,
                     customAttributes,
                     additionalProperties);
         }

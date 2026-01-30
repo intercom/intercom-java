@@ -17,8 +17,10 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled("Workspace has hit CDA limit - see comment in @BeforeEach")
 public class DataAttributesTest {
 
     private Intercom client;

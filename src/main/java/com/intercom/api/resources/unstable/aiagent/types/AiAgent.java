@@ -551,6 +551,9 @@ public final class AiAgent {
         public static final ResolutionState CONFIRMED_RESOLUTION =
                 new ResolutionState(Value.CONFIRMED_RESOLUTION, "confirmed_resolution");
 
+        public static final ResolutionState PROCEDURE_HANDOFF =
+                new ResolutionState(Value.PROCEDURE_HANDOFF, "procedure_handoff");
+
         private final Value value;
 
         private final String string;
@@ -591,6 +594,8 @@ public final class AiAgent {
                     return visitor.visitEscalated();
                 case CONFIRMED_RESOLUTION:
                     return visitor.visitConfirmedResolution();
+                case PROCEDURE_HANDOFF:
+                    return visitor.visitProcedureHandoff();
                 case UNKNOWN:
                 default:
                     return visitor.visitUnknown(string);
@@ -608,6 +613,8 @@ public final class AiAgent {
                     return ESCALATED;
                 case "confirmed_resolution":
                     return CONFIRMED_RESOLUTION;
+                case "procedure_handoff":
+                    return PROCEDURE_HANDOFF;
                 default:
                     return new ResolutionState(Value.UNKNOWN, value);
             }
@@ -622,6 +629,8 @@ public final class AiAgent {
 
             NEGATIVE_FEEDBACK,
 
+            PROCEDURE_HANDOFF,
+
             UNKNOWN
         }
 
@@ -633,6 +642,8 @@ public final class AiAgent {
             T visitEscalated();
 
             T visitNegativeFeedback();
+
+            T visitProcedureHandoff();
 
             T visitUnknown(String unknownType);
         }
