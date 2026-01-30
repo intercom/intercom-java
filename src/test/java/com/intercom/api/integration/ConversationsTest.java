@@ -67,13 +67,17 @@ public class ConversationsTest {
         // arrange
         client = TestClientFactory.create();
 
-        List<Admin> admins = client.admins().list().getAdmins()
-                .orElseThrow(() -> new RuntimeException("Admins list is required"))
-                .stream()
-                .filter(opt -> opt.isPresent())
-                .map(opt -> opt.get())
-                .filter(Admin::getHasInboxSeat)
-                .collect(Collectors.toList());
+        List<Admin> admins =
+                client
+                        .admins()
+                        .list()
+                        .getAdmins()
+                        .orElseThrow(() -> new RuntimeException("Admins list is required"))
+                        .stream()
+                        .filter(opt -> opt.isPresent())
+                        .map(opt -> opt.get())
+                        .filter(Admin::getHasInboxSeat)
+                        .collect(Collectors.toList());
         adminId = admins.get(0).getId();
         secondAdminId = admins.get(1).getId();
 
@@ -116,7 +120,8 @@ public class ConversationsTest {
             after();
         }
 
-        String msgConversationId = conversationMessage.getConversationId()
+        String msgConversationId = conversationMessage
+                .getConversationId()
                 .orElseThrow(() -> new RuntimeException("Conversation ID is required"));
         conversation = client.conversations()
                 .find(FindConversationRequest.builder()
@@ -223,7 +228,8 @@ public class ConversationsTest {
     public void testRunAssignmentRules() {
         Intercom legacyServiceClient = TestClientFactory.create(ApiVersion._2_11);
         // act - runAssignmentRules returns void
-        legacyServiceClient.conversations()
+        legacyServiceClient
+                .conversations()
                 .runAssignmentRules(AutoAssignConversationRequest.builder()
                         .conversationId(conversationId)
                         .build());
@@ -422,17 +428,13 @@ public class ConversationsTest {
     private void tryDeleteContacts() {
         try {
             client.contacts()
-                    .delete(DeleteContactRequest.builder()
-                            .contactId(userId)
-                            .build());
+                    .delete(DeleteContactRequest.builder().contactId(userId).build());
             client.contacts()
                     .delete(DeleteContactRequest.builder()
                             .contactId(secondUserId)
                             .build());
             client.contacts()
-                    .delete(DeleteContactRequest.builder()
-                            .contactId(leadId)
-                            .build());
+                    .delete(DeleteContactRequest.builder().contactId(leadId).build());
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete contacts.", e);
         }

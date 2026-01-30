@@ -24,7 +24,9 @@ public class AdminsTest {
     public void before() {
         // arrange
         client = TestClientFactory.create();
-        adminId = client.admins().list().getAdmins()
+        adminId = client.admins()
+                .list()
+                .getAdmins()
                 .orElseThrow(() -> new RuntimeException("Admins list is required"))
                 .get(0)
                 .orElseThrow(() -> new RuntimeException("Admin is required"))

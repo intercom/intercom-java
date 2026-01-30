@@ -13,7 +13,6 @@ import com.intercom.api.utils.TestClientFactory;
 import com.intercom.api.utils.Utils;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,9 +44,7 @@ public class DataAttributesTest {
                 ObjectMappers.JSON_MAPPER.convertValue(createRequestData, CreateDataAttributeRequest.class);
 
         dataAttribute = client.dataAttributes().create(createRequest);
-        dataAttributeId = dataAttribute
-                .getId()
-                .orElseThrow(() -> new RuntimeException("dataAttribute.id is required"));
+        dataAttributeId = dataAttribute.getId().orElseThrow(() -> new RuntimeException("dataAttribute.id is required"));
     }
 
     @Test

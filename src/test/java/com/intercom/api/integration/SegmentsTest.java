@@ -19,11 +19,12 @@ public class SegmentsTest {
     public void before() {
         // arrange
         client = TestClientFactory.create();
-        segment = client.segments().list().getSegments()
+        segment = client.segments()
+                .list()
+                .getSegments()
                 .orElseThrow(() -> new RuntimeException("Segments list is required"))
                 .get(0);
-        segmentId = segment.getId()
-                .orElseThrow(() -> new RuntimeException("Segment ID is required"));
+        segmentId = segment.getId().orElseThrow(() -> new RuntimeException("Segment ID is required"));
     }
 
     @Test

@@ -4,7 +4,6 @@ import com.intercom.api.Intercom;
 import com.intercom.api.core.pagination.SyncPage;
 import com.intercom.api.core.pagination.SyncPagingIterable;
 import com.intercom.api.resources.companies.requests.AttachContactToCompanyRequest;
-import com.intercom.api.types.CreateOrUpdateCompanyRequest;
 import com.intercom.api.resources.companies.requests.DeleteCompanyRequest;
 import com.intercom.api.resources.companies.requests.DetachContactFromCompanyRequest;
 import com.intercom.api.resources.companies.requests.FindCompanyRequest;
@@ -16,6 +15,7 @@ import com.intercom.api.resources.contacts.requests.ListContactsRequest;
 import com.intercom.api.resources.contacts.types.Contact;
 import com.intercom.api.types.CompanyAttachedContacts;
 import com.intercom.api.types.CompanyAttachedSegments;
+import com.intercom.api.types.CreateOrUpdateCompanyRequest;
 import com.intercom.api.types.DeletedCompanyObject;
 import com.intercom.api.utils.TestClientFactory;
 import com.intercom.api.utils.Utils;
@@ -42,7 +42,11 @@ public class CompaniesTest {
                 client.contacts().list(ListContactsRequest.builder().perPage(1).build());
 
         // act
-        contactId = randomContacts.getItems().get(0).getId().orElseThrow(() -> new RuntimeException("Contact ID is required"));
+        contactId = randomContacts
+                .getItems()
+                .get(0)
+                .getId()
+                .orElseThrow(() -> new RuntimeException("Contact ID is required"));
         company = client.companies()
                 .createOrUpdate(java.util.Optional.of(CreateOrUpdateCompanyRequest.builder()
                         .name(Utils.randomString())

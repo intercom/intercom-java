@@ -2,11 +2,10 @@ package com.intercom.api.integration;
 
 import com.intercom.api.Intercom;
 import com.intercom.api.resources.companies.requests.AttachContactToCompanyRequest;
-import com.intercom.api.resources.contacts.types.ContactsCreateResponse;
-import com.intercom.api.types.CreateOrUpdateCompanyRequest;
 import com.intercom.api.resources.companies.requests.DeleteCompanyRequest;
 import com.intercom.api.resources.companies.types.Company;
 import com.intercom.api.resources.contacts.requests.DeleteContactRequest;
+import com.intercom.api.resources.contacts.types.ContactsCreateResponse;
 import com.intercom.api.resources.conversations.requests.CreateConversationRequest;
 import com.intercom.api.resources.messages.types.Message;
 import com.intercom.api.resources.tags.requests.DeleteTagRequest;
@@ -14,6 +13,7 @@ import com.intercom.api.resources.tags.requests.TagConversationRequest;
 import com.intercom.api.resources.tags.types.Tag;
 import com.intercom.api.resources.tags.types.TagsCreateRequestBody;
 import com.intercom.api.types.CreateContactRequest;
+import com.intercom.api.types.CreateOrUpdateCompanyRequest;
 import com.intercom.api.types.CreateOrUpdateTagRequest;
 import com.intercom.api.utils.TestClientFactory;
 import com.intercom.api.utils.Utils;
@@ -38,7 +38,9 @@ public class IntegrationTest {
     public void before() {
         // arrange
         client = TestClientFactory.create();
-        adminId = client.admins().list().getAdmins()
+        adminId = client.admins()
+                .list()
+                .getAdmins()
                 .orElseThrow(() -> new RuntimeException("Admins list is required"))
                 .get(0)
                 .orElseThrow(() -> new RuntimeException("Admin is required"))
@@ -137,13 +139,9 @@ public class IntegrationTest {
     private void tryDeleteContacts() {
         try {
             client.contacts()
-                    .delete(DeleteContactRequest.builder()
-                            .contactId(userId)
-                            .build());
+                    .delete(DeleteContactRequest.builder().contactId(userId).build());
             client.contacts()
-                    .delete(DeleteContactRequest.builder()
-                            .contactId(leadId)
-                            .build());
+                    .delete(DeleteContactRequest.builder().contactId(leadId).build());
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete contacts.", e);
         }

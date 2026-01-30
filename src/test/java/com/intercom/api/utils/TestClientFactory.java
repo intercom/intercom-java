@@ -24,9 +24,9 @@ public class TestClientFactory {
         }
 
         return new Intercom(ClientOptions.builder()
-            .version(apiVersion)
-            .environment(Environment.US_PRODUCTION)
-            .addHeader("Authorization", "Bearer " + token)
-            .build());
+                .version(apiVersion)
+                .environment(Environment.US_PRODUCTION)
+                .addHeader("Authorization", "Bearer " + token)
+                .build());
     }
 }
