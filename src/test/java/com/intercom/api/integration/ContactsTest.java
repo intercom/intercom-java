@@ -64,7 +64,7 @@ public class ContactsTest {
                         .externalId(Utils.randomString())
                         .phone("+353871234567")
                         .build()));
-        contactId = contact.getId().orElseThrow(() -> new RuntimeException("Contact ID is required"));
+        contactId = contact.getId();
 
         // act
         company = client.companies()
@@ -151,8 +151,7 @@ public class ContactsTest {
         try {
             client.contacts()
                     .delete(DeleteContactRequest.builder()
-                            .contactId(
-                                    response.getId().orElseThrow(() -> new RuntimeException("Contact ID is required")))
+                            .contactId(response.getId())
                             .build());
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete contact.", e);
@@ -218,7 +217,7 @@ public class ContactsTest {
                         .role("lead")
                         .name("Roman Bowling")
                         .build()));
-        String createdId = created.getId().orElseThrow(() -> new RuntimeException("Contact ID is required"));
+        String createdId = created.getId();
         ContactDeleted response = client.contacts()
                 .delete(DeleteContactRequest.builder().contactId(createdId).build());
 
@@ -234,7 +233,7 @@ public class ContactsTest {
                         .role("lead")
                         .name("Roman Bowling")
                         .build()));
-        String leadId = lead.getId().orElseThrow(() -> new RuntimeException("Lead ID is required"));
+        String leadId = lead.getId();
         ContactsMergeLeadInUserResponse response = client.contacts()
                 .mergeLeadInUser(MergeContactsRequest.builder()
                         .leadId(leadId)
