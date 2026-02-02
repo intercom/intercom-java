@@ -35,7 +35,7 @@ public final class Message {
 
     private final MessageType messageType;
 
-    private final Optional<String> conversationId;
+    private final String conversationId;
 
     private final Map<String, Object> additionalProperties;
 
@@ -46,7 +46,7 @@ public final class Message {
             Optional<String> subject,
             String body,
             MessageType messageType,
-            Optional<String> conversationId,
+            String conversationId,
             Map<String, Object> additionalProperties) {
         this.type = type;
         this.id = id;
@@ -110,7 +110,7 @@ public final class Message {
      * @return The associated conversation_id
      */
     @JsonProperty("conversation_id")
-    public Optional<String> getConversationId() {
+    public String getConversationId() {
         return conversationId;
     }
 
@@ -184,7 +184,14 @@ public final class Message {
         /**
          * <p>The type of message that was sent. Can be email, inapp, facebook or twitter.</p>
          */
-        _FinalStage messageType(@NotNull MessageType messageType);
+        ConversationIdStage messageType(@NotNull MessageType messageType);
+    }
+
+    public interface ConversationIdStage {
+        /**
+         * <p>The associated conversation_id</p>
+         */
+        _FinalStage conversationId(@NotNull String conversationId);
     }
 
     public interface _FinalStage {
@@ -196,18 +203,17 @@ public final class Message {
         _FinalStage subject(Optional<String> subject);
 
         _FinalStage subject(String subject);
-
-        /**
-         * <p>The associated conversation_id</p>
-         */
-        _FinalStage conversationId(Optional<String> conversationId);
-
-        _FinalStage conversationId(String conversationId);
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Builder
-            implements TypeStage, IdStage, CreatedAtStage, BodyStage, MessageTypeStage, _FinalStage {
+            implements TypeStage,
+                    IdStage,
+                    CreatedAtStage,
+                    BodyStage,
+                    MessageTypeStage,
+                    ConversationIdStage,
+                    _FinalStage {
         private String type;
 
         private String id;
@@ -218,7 +224,7 @@ public final class Message {
 
         private MessageType messageType;
 
-        private Optional<String> conversationId = Optional.empty();
+        private String conversationId;
 
         private Optional<String> subject = Optional.empty();
 
@@ -294,28 +300,20 @@ public final class Message {
          */
         @java.lang.Override
         @JsonSetter("message_type")
-        public _FinalStage messageType(@NotNull MessageType messageType) {
+        public ConversationIdStage messageType(@NotNull MessageType messageType) {
             this.messageType = Objects.requireNonNull(messageType, "messageType must not be null");
             return this;
         }
 
         /**
          * <p>The associated conversation_id</p>
+         * <p>The associated conversation_id</p>
          * @return Reference to {@code this} so that method calls can be chained together.
          */
         @java.lang.Override
-        public _FinalStage conversationId(String conversationId) {
-            this.conversationId = Optional.ofNullable(conversationId);
-            return this;
-        }
-
-        /**
-         * <p>The associated conversation_id</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "conversation_id", nulls = Nulls.SKIP)
-        public _FinalStage conversationId(Optional<String> conversationId) {
-            this.conversationId = conversationId;
+        @JsonSetter("conversation_id")
+        public _FinalStage conversationId(@NotNull String conversationId) {
+            this.conversationId = Objects.requireNonNull(conversationId, "conversationId must not be null");
             return this;
         }
 

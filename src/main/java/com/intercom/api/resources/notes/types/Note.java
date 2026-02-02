@@ -17,31 +17,32 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = Note.Builder.class)
 public final class Note {
-    private final Optional<String> type;
+    private final String type;
 
-    private final Optional<String> id;
+    private final String id;
 
-    private final Optional<Integer> createdAt;
+    private final int createdAt;
 
     private final Optional<Contact> contact;
 
     private final Optional<Admin> author;
 
-    private final Optional<String> body;
+    private final String body;
 
     private final Map<String, Object> additionalProperties;
 
     private Note(
-            Optional<String> type,
-            Optional<String> id,
-            Optional<Integer> createdAt,
+            String type,
+            String id,
+            int createdAt,
             Optional<Contact> contact,
             Optional<Admin> author,
-            Optional<String> body,
+            String body,
             Map<String, Object> additionalProperties) {
         this.type = type;
         this.id = id;
@@ -56,7 +57,7 @@ public final class Note {
      * @return String representing the object's type. Always has the value <code>note</code>.
      */
     @JsonProperty("type")
-    public Optional<String> getType() {
+    public String getType() {
         return type;
     }
 
@@ -64,7 +65,7 @@ public final class Note {
      * @return The id of the note.
      */
     @JsonProperty("id")
-    public Optional<String> getId() {
+    public String getId() {
         return id;
     }
 
@@ -72,7 +73,7 @@ public final class Note {
      * @return The time the note was created.
      */
     @JsonProperty("created_at")
-    public Optional<Integer> getCreatedAt() {
+    public int getCreatedAt() {
         return createdAt;
     }
 
@@ -96,7 +97,7 @@ public final class Note {
      * @return The body text of the note.
      */
     @JsonProperty("body")
-    public Optional<String> getBody() {
+    public String getBody() {
         return body;
     }
 
@@ -114,7 +115,7 @@ public final class Note {
     private boolean equalTo(Note other) {
         return type.equals(other.type)
                 && id.equals(other.id)
-                && createdAt.equals(other.createdAt)
+                && createdAt == other.createdAt
                 && contact.equals(other.contact)
                 && author.equals(other.author)
                 && body.equals(other.body);
@@ -130,29 +131,78 @@ public final class Note {
         return ObjectMappers.stringify(this);
     }
 
-    public static Builder builder() {
+    public static TypeStage builder() {
         return new Builder();
     }
 
+    public interface TypeStage {
+        /**
+         * <p>String representing the object's type. Always has the value <code>note</code>.</p>
+         */
+        IdStage type(@NotNull String type);
+
+        Builder from(Note other);
+    }
+
+    public interface IdStage {
+        /**
+         * <p>The id of the note.</p>
+         */
+        CreatedAtStage id(@NotNull String id);
+    }
+
+    public interface CreatedAtStage {
+        /**
+         * <p>The time the note was created.</p>
+         */
+        BodyStage createdAt(int createdAt);
+    }
+
+    public interface BodyStage {
+        /**
+         * <p>The body text of the note.</p>
+         */
+        _FinalStage body(@NotNull String body);
+    }
+
+    public interface _FinalStage {
+        Note build();
+
+        /**
+         * <p>Represents the contact that the note was created about.</p>
+         */
+        _FinalStage contact(Optional<Contact> contact);
+
+        _FinalStage contact(Contact contact);
+
+        /**
+         * <p>Optional. Represents the Admin that created the note.</p>
+         */
+        _FinalStage author(Optional<Admin> author);
+
+        _FinalStage author(Admin author);
+    }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder {
-        private Optional<String> type = Optional.empty();
+    public static final class Builder implements TypeStage, IdStage, CreatedAtStage, BodyStage, _FinalStage {
+        private String type;
 
-        private Optional<String> id = Optional.empty();
+        private String id;
 
-        private Optional<Integer> createdAt = Optional.empty();
+        private int createdAt;
 
-        private Optional<Contact> contact = Optional.empty();
+        private String body;
 
         private Optional<Admin> author = Optional.empty();
 
-        private Optional<String> body = Optional.empty();
+        private Optional<Contact> contact = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
+        @java.lang.Override
         public Builder from(Note other) {
             type(other.getType());
             id(other.getId());
@@ -165,88 +215,93 @@ public final class Note {
 
         /**
          * <p>String representing the object's type. Always has the value <code>note</code>.</p>
+         * <p>String representing the object's type. Always has the value <code>note</code>.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "type", nulls = Nulls.SKIP)
-        public Builder type(Optional<String> type) {
-            this.type = type;
-            return this;
-        }
-
-        public Builder type(String type) {
-            this.type = Optional.ofNullable(type);
+        @java.lang.Override
+        @JsonSetter("type")
+        public IdStage type(@NotNull String type) {
+            this.type = Objects.requireNonNull(type, "type must not be null");
             return this;
         }
 
         /**
          * <p>The id of the note.</p>
+         * <p>The id of the note.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "id", nulls = Nulls.SKIP)
-        public Builder id(Optional<String> id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder id(String id) {
-            this.id = Optional.ofNullable(id);
+        @java.lang.Override
+        @JsonSetter("id")
+        public CreatedAtStage id(@NotNull String id) {
+            this.id = Objects.requireNonNull(id, "id must not be null");
             return this;
         }
 
         /**
          * <p>The time the note was created.</p>
+         * <p>The time the note was created.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
-        public Builder createdAt(Optional<Integer> createdAt) {
+        @java.lang.Override
+        @JsonSetter("created_at")
+        public BodyStage createdAt(int createdAt) {
             this.createdAt = createdAt;
             return this;
         }
 
-        public Builder createdAt(Integer createdAt) {
-            this.createdAt = Optional.ofNullable(createdAt);
+        /**
+         * <p>The body text of the note.</p>
+         * <p>The body text of the note.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        @JsonSetter("body")
+        public _FinalStage body(@NotNull String body) {
+            this.body = Objects.requireNonNull(body, "body must not be null");
             return this;
         }
 
         /**
-         * <p>Represents the contact that the note was created about.</p>
+         * <p>Optional. Represents the Admin that created the note.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "contact", nulls = Nulls.SKIP)
-        public Builder contact(Optional<Contact> contact) {
-            this.contact = contact;
-            return this;
-        }
-
-        public Builder contact(Contact contact) {
-            this.contact = Optional.ofNullable(contact);
+        @java.lang.Override
+        public _FinalStage author(Admin author) {
+            this.author = Optional.ofNullable(author);
             return this;
         }
 
         /**
          * <p>Optional. Represents the Admin that created the note.</p>
          */
+        @java.lang.Override
         @JsonSetter(value = "author", nulls = Nulls.SKIP)
-        public Builder author(Optional<Admin> author) {
+        public _FinalStage author(Optional<Admin> author) {
             this.author = author;
             return this;
         }
 
-        public Builder author(Admin author) {
-            this.author = Optional.ofNullable(author);
+        /**
+         * <p>Represents the contact that the note was created about.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage contact(Contact contact) {
+            this.contact = Optional.ofNullable(contact);
             return this;
         }
 
         /**
-         * <p>The body text of the note.</p>
+         * <p>Represents the contact that the note was created about.</p>
          */
-        @JsonSetter(value = "body", nulls = Nulls.SKIP)
-        public Builder body(Optional<String> body) {
-            this.body = body;
+        @java.lang.Override
+        @JsonSetter(value = "contact", nulls = Nulls.SKIP)
+        public _FinalStage contact(Optional<Contact> contact) {
+            this.contact = contact;
             return this;
         }
 
-        public Builder body(String body) {
-            this.body = Optional.ofNullable(body);
-            return this;
-        }
-
+        @java.lang.Override
         public Note build() {
             return new Note(type, id, createdAt, contact, author, body, additionalProperties);
         }

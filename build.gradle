@@ -2,14 +2,12 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'com.diffplug.spotless' version '6.11.0'
-    id 'signing'
-    id 'cl.franciscosolis.sonatype-central-upload' version '1.0.3'
 }
 
 repositories {
     mavenCentral()
     maven {
-        url 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+        url 'https://s01.oss.sonatype.org/content/repositories/releases/'
     }
 }
 
@@ -45,27 +43,6 @@ java {
 }
 
 
-group = 'io.intercom'
-
-version = '4.0.2'
-
-jar {
-    dependsOn(":generatePomFileForMavenPublication")
-    archiveBaseName = "intercom-java"
-}
-
-sourcesJar {
-    archiveBaseName = "intercom-java"
-}
-
-javadocJar {
-    archiveBaseName = "intercom-java"
-}
-
-signing {
-    sign(publishing.publications)
-}
-
 test {
     useJUnitPlatform()
     testLogging {
@@ -73,60 +50,3 @@ test {
     }
 }
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = 'io.intercom'
-            artifactId = 'intercom-java'
-            version = '4.0.2'
-            from components.java
-            pom {
-                name = 'intercom'
-                description = 'The official SDK of intercom'
-                url = 'https://buildwithfern.com'
-                licenses {
-                    license {
-                        name = 'The MIT License (MIT)'
-                        url = 'https://mit-license.org/'
-                    }
-                }
-                developers {
-                    developer {
-                        name = 'intercom'
-                        email = 'developers@intercom.com'
-                    }
-                }
-                scm {
-                    connection = 'scm:git:git://github.com/intercom/intercom-java.git'
-                    developerConnection = 'scm:git:git://github.com/intercom/intercom-java.git'
-                    url = 'https://github.com/intercom/intercom-java'
-                }
-            }
-        }
-    }
-}
-
-sonatypeCentralUpload {
-    username = "$System.env.MAVEN_USERNAME"
-    password = "$System.env.MAVEN_PASSWORD"
-
-    archives = files(
-        "$buildDir/libs/intercom-java-" + version + ".jar",
-        "$buildDir/libs/intercom-java-" + version + "-sources.jar",
-        "$buildDir/libs/intercom-java-" + version + "-javadoc.jar"
-    )
-
-    pom = file("$buildDir/publications/maven/pom-default.xml")
-    signingKey = "$System.env.MAVEN_SIGNATURE_SECRET_KEY"
-    signingKeyPassphrase = "$System.env.MAVEN_SIGNATURE_PASSWORD"
-}
-
-signing {
-    def signingKeyId = "$System.env.MAVEN_SIGNATURE_KID"
-    def signingKey = "$System.env.MAVEN_SIGNATURE_SECRET_KEY"
-    def signingPassword = "$System.env.MAVEN_SIGNATURE_PASSWORD"
-    useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-    sign publishing.publications.maven
-}
-
-sonatypeCentralUpload.dependsOn build

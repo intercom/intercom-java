@@ -21,8 +21,6 @@ import org.jetbrains.annotations.NotNull;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = DataEvent.Builder.class)
 public final class DataEvent {
-    private final Optional<String> type;
-
     private final String eventName;
 
     private final int createdAt;
@@ -40,7 +38,6 @@ public final class DataEvent {
     private final Map<String, Object> additionalProperties;
 
     private DataEvent(
-            Optional<String> type,
             String eventName,
             int createdAt,
             Optional<String> userId,
@@ -49,7 +46,6 @@ public final class DataEvent {
             Optional<String> email,
             Optional<Map<String, String>> metadata,
             Map<String, Object> additionalProperties) {
-        this.type = type;
         this.eventName = eventName;
         this.createdAt = createdAt;
         this.userId = userId;
@@ -64,8 +60,8 @@ public final class DataEvent {
      * @return The type of the object
      */
     @JsonProperty("type")
-    public Optional<String> getType() {
-        return type;
+    public String getType() {
+        return "event";
     }
 
     /**
@@ -136,8 +132,7 @@ public final class DataEvent {
     }
 
     private boolean equalTo(DataEvent other) {
-        return type.equals(other.type)
-                && eventName.equals(other.eventName)
+        return eventName.equals(other.eventName)
                 && createdAt == other.createdAt
                 && userId.equals(other.userId)
                 && id.equals(other.id)
@@ -149,14 +144,7 @@ public final class DataEvent {
     @java.lang.Override
     public int hashCode() {
         return Objects.hash(
-                this.type,
-                this.eventName,
-                this.createdAt,
-                this.userId,
-                this.id,
-                this.intercomUserId,
-                this.email,
-                this.metadata);
+                this.eventName, this.createdAt, this.userId, this.id, this.intercomUserId, this.email, this.metadata);
     }
 
     @java.lang.Override
@@ -186,13 +174,6 @@ public final class DataEvent {
 
     public interface _FinalStage {
         DataEvent build();
-
-        /**
-         * <p>The type of the object</p>
-         */
-        _FinalStage type(Optional<String> type);
-
-        _FinalStage type(String type);
 
         /**
          * <p>Your identifier for the user.</p>
@@ -246,8 +227,6 @@ public final class DataEvent {
 
         private Optional<String> userId = Optional.empty();
 
-        private Optional<String> type = Optional.empty();
-
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -255,7 +234,6 @@ public final class DataEvent {
 
         @java.lang.Override
         public Builder from(DataEvent other) {
-            type(other.getType());
             eventName(other.getEventName());
             createdAt(other.getCreatedAt());
             userId(other.getUserId());
@@ -390,30 +368,10 @@ public final class DataEvent {
             return this;
         }
 
-        /**
-         * <p>The type of the object</p>
-         * @return Reference to {@code this} so that method calls can be chained together.
-         */
-        @java.lang.Override
-        public _FinalStage type(String type) {
-            this.type = Optional.ofNullable(type);
-            return this;
-        }
-
-        /**
-         * <p>The type of the object</p>
-         */
-        @java.lang.Override
-        @JsonSetter(value = "type", nulls = Nulls.SKIP)
-        public _FinalStage type(Optional<String> type) {
-            this.type = type;
-            return this;
-        }
-
         @java.lang.Override
         public DataEvent build() {
             return new DataEvent(
-                    type, eventName, createdAt, userId, id, intercomUserId, email, metadata, additionalProperties);
+                    eventName, createdAt, userId, id, intercomUserId, email, metadata, additionalProperties);
         }
     }
 }
