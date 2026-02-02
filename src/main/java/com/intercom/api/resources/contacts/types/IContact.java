@@ -12,15 +12,15 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface IContact {
-    Optional<String> getType();
+    String getType();
 
-    Optional<String> getId();
+    String getId();
 
     Optional<String> getExternalId();
 
-    Optional<String> getWorkspaceId();
+    String getWorkspaceId();
 
-    Optional<String> getRole();
+    String getRole();
 
     Optional<String> getEmail();
 
@@ -32,15 +32,15 @@ public interface IContact {
 
     Optional<Integer> getOwnerId();
 
-    Optional<Boolean> getHasHardBounced();
+    boolean getHasHardBounced();
 
-    Optional<Boolean> getMarkedEmailAsSpam();
+    boolean getMarkedEmailAsSpam();
 
-    Optional<Boolean> getUnsubscribedFromEmails();
+    boolean getUnsubscribedFromEmails();
 
-    Optional<Integer> getCreatedAt();
+    int getCreatedAt();
 
-    Optional<Integer> getUpdatedAt();
+    int getUpdatedAt();
 
     Optional<Integer> getSignedUpAt();
 

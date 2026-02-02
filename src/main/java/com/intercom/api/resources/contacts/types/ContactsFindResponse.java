@@ -21,19 +21,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ContactsFindResponse.Builder.class)
 public final class ContactsFindResponse implements IContact {
-    private final Optional<String> type;
-
-    private final Optional<String> id;
+    private final String id;
 
     private final Optional<String> externalId;
 
-    private final Optional<String> workspaceId;
+    private final String workspaceId;
 
-    private final Optional<String> role;
+    private final String role;
 
     private final Optional<String> email;
 
@@ -45,15 +44,15 @@ public final class ContactsFindResponse implements IContact {
 
     private final Optional<Integer> ownerId;
 
-    private final Optional<Boolean> hasHardBounced;
+    private final boolean hasHardBounced;
 
-    private final Optional<Boolean> markedEmailAsSpam;
+    private final boolean markedEmailAsSpam;
 
-    private final Optional<Boolean> unsubscribedFromEmails;
+    private final boolean unsubscribedFromEmails;
 
-    private final Optional<Integer> createdAt;
+    private final int createdAt;
 
-    private final Optional<Integer> updatedAt;
+    private final int updatedAt;
 
     private final Optional<Integer> signedUpAt;
 
@@ -120,21 +119,20 @@ public final class ContactsFindResponse implements IContact {
     private final Map<String, Object> additionalProperties;
 
     private ContactsFindResponse(
-            Optional<String> type,
-            Optional<String> id,
+            String id,
             Optional<String> externalId,
-            Optional<String> workspaceId,
-            Optional<String> role,
+            String workspaceId,
+            String role,
             Optional<String> email,
             Optional<String> emailDomain,
             Optional<String> phone,
             Optional<String> name,
             Optional<Integer> ownerId,
-            Optional<Boolean> hasHardBounced,
-            Optional<Boolean> markedEmailAsSpam,
-            Optional<Boolean> unsubscribedFromEmails,
-            Optional<Integer> createdAt,
-            Optional<Integer> updatedAt,
+            boolean hasHardBounced,
+            boolean markedEmailAsSpam,
+            boolean unsubscribedFromEmails,
+            int createdAt,
+            int updatedAt,
             Optional<Integer> signedUpAt,
             Optional<Integer> lastSeenAt,
             Optional<Integer> lastRepliedAt,
@@ -167,7 +165,6 @@ public final class ContactsFindResponse implements IContact {
             Optional<ContactSocialProfiles> socialProfiles,
             Optional<Boolean> enabledPushMessaging,
             Map<String, Object> additionalProperties) {
-        this.type = type;
         this.id = id;
         this.externalId = externalId;
         this.workspaceId = workspaceId;
@@ -220,15 +217,15 @@ public final class ContactsFindResponse implements IContact {
      * @return The type of object.
      */
     @JsonProperty("type")
-    public Optional<String> getType() {
-        return type;
+    public String getType() {
+        return "contact";
     }
 
     /**
      * @return The unique identifier for the contact which is given by Intercom.
      */
     @JsonProperty("id")
-    public Optional<String> getId() {
+    public String getId() {
         return id;
     }
 
@@ -244,7 +241,7 @@ public final class ContactsFindResponse implements IContact {
      * @return The id of the workspace which the contact belongs to.
      */
     @JsonProperty("workspace_id")
-    public Optional<String> getWorkspaceId() {
+    public String getWorkspaceId() {
         return workspaceId;
     }
 
@@ -252,7 +249,7 @@ public final class ContactsFindResponse implements IContact {
      * @return The role of the contact.
      */
     @JsonProperty("role")
-    public Optional<String> getRole() {
+    public String getRole() {
         return role;
     }
 
@@ -300,7 +297,7 @@ public final class ContactsFindResponse implements IContact {
      * @return Whether the contact has had an email sent to them hard bounce.
      */
     @JsonProperty("has_hard_bounced")
-    public Optional<Boolean> getHasHardBounced() {
+    public boolean getHasHardBounced() {
         return hasHardBounced;
     }
 
@@ -308,7 +305,7 @@ public final class ContactsFindResponse implements IContact {
      * @return Whether the contact has marked an email sent to them as spam.
      */
     @JsonProperty("marked_email_as_spam")
-    public Optional<Boolean> getMarkedEmailAsSpam() {
+    public boolean getMarkedEmailAsSpam() {
         return markedEmailAsSpam;
     }
 
@@ -316,7 +313,7 @@ public final class ContactsFindResponse implements IContact {
      * @return Whether the contact is unsubscribed from emails.
      */
     @JsonProperty("unsubscribed_from_emails")
-    public Optional<Boolean> getUnsubscribedFromEmails() {
+    public boolean getUnsubscribedFromEmails() {
         return unsubscribedFromEmails;
     }
 
@@ -324,7 +321,7 @@ public final class ContactsFindResponse implements IContact {
      * @return (UNIX timestamp) The time when the contact was created.
      */
     @JsonProperty("created_at")
-    public Optional<Integer> getCreatedAt() {
+    public int getCreatedAt() {
         return createdAt;
     }
 
@@ -332,7 +329,7 @@ public final class ContactsFindResponse implements IContact {
      * @return (UNIX timestamp) The time when the contact was last updated.
      */
     @JsonProperty("updated_at")
-    public Optional<Integer> getUpdatedAt() {
+    public int getUpdatedAt() {
         return updatedAt;
     }
 
@@ -581,8 +578,7 @@ public final class ContactsFindResponse implements IContact {
     }
 
     private boolean equalTo(ContactsFindResponse other) {
-        return type.equals(other.type)
-                && id.equals(other.id)
+        return id.equals(other.id)
                 && externalId.equals(other.externalId)
                 && workspaceId.equals(other.workspaceId)
                 && role.equals(other.role)
@@ -591,11 +587,11 @@ public final class ContactsFindResponse implements IContact {
                 && phone.equals(other.phone)
                 && name.equals(other.name)
                 && ownerId.equals(other.ownerId)
-                && hasHardBounced.equals(other.hasHardBounced)
-                && markedEmailAsSpam.equals(other.markedEmailAsSpam)
-                && unsubscribedFromEmails.equals(other.unsubscribedFromEmails)
-                && createdAt.equals(other.createdAt)
-                && updatedAt.equals(other.updatedAt)
+                && hasHardBounced == other.hasHardBounced
+                && markedEmailAsSpam == other.markedEmailAsSpam
+                && unsubscribedFromEmails == other.unsubscribedFromEmails
+                && createdAt == other.createdAt
+                && updatedAt == other.updatedAt
                 && signedUpAt.equals(other.signedUpAt)
                 && lastSeenAt.equals(other.lastSeenAt)
                 && lastRepliedAt.equals(other.lastRepliedAt)
@@ -632,7 +628,6 @@ public final class ContactsFindResponse implements IContact {
     @java.lang.Override
     public int hashCode() {
         return Objects.hash(
-                this.type,
                 this.id,
                 this.externalId,
                 this.workspaceId,
@@ -685,111 +680,424 @@ public final class ContactsFindResponse implements IContact {
         return ObjectMappers.stringify(this);
     }
 
-    public static Builder builder() {
+    public static IdStage builder() {
         return new Builder();
     }
 
+    public interface IdStage {
+        /**
+         * <p>The unique identifier for the contact which is given by Intercom.</p>
+         */
+        WorkspaceIdStage id(@NotNull String id);
+
+        Builder from(ContactsFindResponse other);
+    }
+
+    public interface WorkspaceIdStage {
+        /**
+         * <p>The id of the workspace which the contact belongs to.</p>
+         */
+        RoleStage workspaceId(@NotNull String workspaceId);
+    }
+
+    public interface RoleStage {
+        /**
+         * <p>The role of the contact.</p>
+         */
+        HasHardBouncedStage role(@NotNull String role);
+    }
+
+    public interface HasHardBouncedStage {
+        /**
+         * <p>Whether the contact has had an email sent to them hard bounce.</p>
+         */
+        MarkedEmailAsSpamStage hasHardBounced(boolean hasHardBounced);
+    }
+
+    public interface MarkedEmailAsSpamStage {
+        /**
+         * <p>Whether the contact has marked an email sent to them as spam.</p>
+         */
+        UnsubscribedFromEmailsStage markedEmailAsSpam(boolean markedEmailAsSpam);
+    }
+
+    public interface UnsubscribedFromEmailsStage {
+        /**
+         * <p>Whether the contact is unsubscribed from emails.</p>
+         */
+        CreatedAtStage unsubscribedFromEmails(boolean unsubscribedFromEmails);
+    }
+
+    public interface CreatedAtStage {
+        /**
+         * <p>(UNIX timestamp) The time when the contact was created.</p>
+         */
+        UpdatedAtStage createdAt(int createdAt);
+    }
+
+    public interface UpdatedAtStage {
+        /**
+         * <p>(UNIX timestamp) The time when the contact was last updated.</p>
+         */
+        _FinalStage updatedAt(int updatedAt);
+    }
+
+    public interface _FinalStage {
+        ContactsFindResponse build();
+
+        /**
+         * <p>The unique identifier for the contact which is provided by the Client.</p>
+         */
+        _FinalStage externalId(Optional<String> externalId);
+
+        _FinalStage externalId(String externalId);
+
+        /**
+         * <p>The contact's email.</p>
+         */
+        _FinalStage email(Optional<String> email);
+
+        _FinalStage email(String email);
+
+        /**
+         * <p>The contact's email domain.</p>
+         */
+        _FinalStage emailDomain(Optional<String> emailDomain);
+
+        _FinalStage emailDomain(String emailDomain);
+
+        /**
+         * <p>The contacts phone.</p>
+         */
+        _FinalStage phone(Optional<String> phone);
+
+        _FinalStage phone(String phone);
+
+        /**
+         * <p>The contacts name.</p>
+         */
+        _FinalStage name(Optional<String> name);
+
+        _FinalStage name(String name);
+
+        /**
+         * <p>The id of an admin that has been assigned account ownership of the contact.</p>
+         */
+        _FinalStage ownerId(Optional<Integer> ownerId);
+
+        _FinalStage ownerId(Integer ownerId);
+
+        /**
+         * <p>(UNIX timestamp) The time specified for when a contact signed up.</p>
+         */
+        _FinalStage signedUpAt(Optional<Integer> signedUpAt);
+
+        _FinalStage signedUpAt(Integer signedUpAt);
+
+        /**
+         * <p>(UNIX timestamp) The time when the contact was last seen (either where the Intercom Messenger was installed or when specified manually).</p>
+         */
+        _FinalStage lastSeenAt(Optional<Integer> lastSeenAt);
+
+        _FinalStage lastSeenAt(Integer lastSeenAt);
+
+        /**
+         * <p>(UNIX timestamp) The time when the contact last messaged in.</p>
+         */
+        _FinalStage lastRepliedAt(Optional<Integer> lastRepliedAt);
+
+        _FinalStage lastRepliedAt(Integer lastRepliedAt);
+
+        /**
+         * <p>(UNIX timestamp) The time when the contact was last messaged.</p>
+         */
+        _FinalStage lastContactedAt(Optional<Integer> lastContactedAt);
+
+        _FinalStage lastContactedAt(Integer lastContactedAt);
+
+        /**
+         * <p>(UNIX timestamp) The time when the contact last opened an email.</p>
+         */
+        _FinalStage lastEmailOpenedAt(Optional<Integer> lastEmailOpenedAt);
+
+        _FinalStage lastEmailOpenedAt(Integer lastEmailOpenedAt);
+
+        /**
+         * <p>(UNIX timestamp) The time when the contact last clicked a link in an email.</p>
+         */
+        _FinalStage lastEmailClickedAt(Optional<Integer> lastEmailClickedAt);
+
+        _FinalStage lastEmailClickedAt(Integer lastEmailClickedAt);
+
+        /**
+         * <p>A preferred language setting for the contact, used by the Intercom Messenger even if their browser settings change.</p>
+         */
+        _FinalStage languageOverride(Optional<String> languageOverride);
+
+        _FinalStage languageOverride(String languageOverride);
+
+        /**
+         * <p>The name of the browser which the contact is using.</p>
+         */
+        _FinalStage browser(Optional<String> browser);
+
+        _FinalStage browser(String browser);
+
+        /**
+         * <p>The version of the browser which the contact is using.</p>
+         */
+        _FinalStage browserVersion(Optional<String> browserVersion);
+
+        _FinalStage browserVersion(String browserVersion);
+
+        /**
+         * <p>The language set by the browser which the contact is using.</p>
+         */
+        _FinalStage browserLanguage(Optional<String> browserLanguage);
+
+        _FinalStage browserLanguage(String browserLanguage);
+
+        /**
+         * <p>The operating system which the contact is using.</p>
+         */
+        _FinalStage os(Optional<String> os);
+
+        _FinalStage os(String os);
+
+        /**
+         * <p>The name of the Android app which the contact is using.</p>
+         */
+        _FinalStage androidAppName(Optional<String> androidAppName);
+
+        _FinalStage androidAppName(String androidAppName);
+
+        /**
+         * <p>The version of the Android app which the contact is using.</p>
+         */
+        _FinalStage androidAppVersion(Optional<String> androidAppVersion);
+
+        _FinalStage androidAppVersion(String androidAppVersion);
+
+        /**
+         * <p>The Android device which the contact is using.</p>
+         */
+        _FinalStage androidDevice(Optional<String> androidDevice);
+
+        _FinalStage androidDevice(String androidDevice);
+
+        /**
+         * <p>The version of the Android OS which the contact is using.</p>
+         */
+        _FinalStage androidOsVersion(Optional<String> androidOsVersion);
+
+        _FinalStage androidOsVersion(String androidOsVersion);
+
+        /**
+         * <p>The version of the Android SDK which the contact is using.</p>
+         */
+        _FinalStage androidSdkVersion(Optional<String> androidSdkVersion);
+
+        _FinalStage androidSdkVersion(String androidSdkVersion);
+
+        /**
+         * <p>(UNIX timestamp) The time when the contact was last seen on an Android device.</p>
+         */
+        _FinalStage androidLastSeenAt(Optional<Integer> androidLastSeenAt);
+
+        _FinalStage androidLastSeenAt(Integer androidLastSeenAt);
+
+        /**
+         * <p>The name of the iOS app which the contact is using.</p>
+         */
+        _FinalStage iosAppName(Optional<String> iosAppName);
+
+        _FinalStage iosAppName(String iosAppName);
+
+        /**
+         * <p>The version of the iOS app which the contact is using.</p>
+         */
+        _FinalStage iosAppVersion(Optional<String> iosAppVersion);
+
+        _FinalStage iosAppVersion(String iosAppVersion);
+
+        /**
+         * <p>The iOS device which the contact is using.</p>
+         */
+        _FinalStage iosDevice(Optional<String> iosDevice);
+
+        _FinalStage iosDevice(String iosDevice);
+
+        /**
+         * <p>The version of iOS which the contact is using.</p>
+         */
+        _FinalStage iosOsVersion(Optional<String> iosOsVersion);
+
+        _FinalStage iosOsVersion(String iosOsVersion);
+
+        /**
+         * <p>The version of the iOS SDK which the contact is using.</p>
+         */
+        _FinalStage iosSdkVersion(Optional<String> iosSdkVersion);
+
+        _FinalStage iosSdkVersion(String iosSdkVersion);
+
+        /**
+         * <p>(UNIX timestamp) The last time the contact used the iOS app.</p>
+         */
+        _FinalStage iosLastSeenAt(Optional<Integer> iosLastSeenAt);
+
+        _FinalStage iosLastSeenAt(Integer iosLastSeenAt);
+
+        /**
+         * <p>The custom attributes which are set for the contact.</p>
+         */
+        _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes);
+
+        _FinalStage customAttributes(Map<String, Object> customAttributes);
+
+        /**
+         * <p>An image URL containing the avatar of a contact.</p>
+         */
+        _FinalStage avatar(Optional<String> avatar);
+
+        _FinalStage avatar(String avatar);
+
+        _FinalStage tags(Optional<ContactTags> tags);
+
+        _FinalStage tags(ContactTags tags);
+
+        _FinalStage notes(Optional<ContactNotes> notes);
+
+        _FinalStage notes(ContactNotes notes);
+
+        _FinalStage companies(Optional<ContactCompanies> companies);
+
+        _FinalStage companies(ContactCompanies companies);
+
+        _FinalStage location(Optional<ContactLocation> location);
+
+        _FinalStage location(ContactLocation location);
+
+        _FinalStage socialProfiles(Optional<ContactSocialProfiles> socialProfiles);
+
+        _FinalStage socialProfiles(ContactSocialProfiles socialProfiles);
+
+        /**
+         * <p>If the user has enabled push messaging.</p>
+         */
+        _FinalStage enabledPushMessaging(Optional<Boolean> enabledPushMessaging);
+
+        _FinalStage enabledPushMessaging(Boolean enabledPushMessaging);
+    }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder {
-        private Optional<String> type = Optional.empty();
+    public static final class Builder
+            implements IdStage,
+                    WorkspaceIdStage,
+                    RoleStage,
+                    HasHardBouncedStage,
+                    MarkedEmailAsSpamStage,
+                    UnsubscribedFromEmailsStage,
+                    CreatedAtStage,
+                    UpdatedAtStage,
+                    _FinalStage {
+        private String id;
 
-        private Optional<String> id = Optional.empty();
+        private String workspaceId;
 
-        private Optional<String> externalId = Optional.empty();
+        private String role;
 
-        private Optional<String> workspaceId = Optional.empty();
+        private boolean hasHardBounced;
 
-        private Optional<String> role = Optional.empty();
+        private boolean markedEmailAsSpam;
 
-        private Optional<String> email = Optional.empty();
+        private boolean unsubscribedFromEmails;
 
-        private Optional<String> emailDomain = Optional.empty();
+        private int createdAt;
 
-        private Optional<String> phone = Optional.empty();
+        private int updatedAt;
 
-        private Optional<String> name = Optional.empty();
-
-        private Optional<Integer> ownerId = Optional.empty();
-
-        private Optional<Boolean> hasHardBounced = Optional.empty();
-
-        private Optional<Boolean> markedEmailAsSpam = Optional.empty();
-
-        private Optional<Boolean> unsubscribedFromEmails = Optional.empty();
-
-        private Optional<Integer> createdAt = Optional.empty();
-
-        private Optional<Integer> updatedAt = Optional.empty();
-
-        private Optional<Integer> signedUpAt = Optional.empty();
-
-        private Optional<Integer> lastSeenAt = Optional.empty();
-
-        private Optional<Integer> lastRepliedAt = Optional.empty();
-
-        private Optional<Integer> lastContactedAt = Optional.empty();
-
-        private Optional<Integer> lastEmailOpenedAt = Optional.empty();
-
-        private Optional<Integer> lastEmailClickedAt = Optional.empty();
-
-        private Optional<String> languageOverride = Optional.empty();
-
-        private Optional<String> browser = Optional.empty();
-
-        private Optional<String> browserVersion = Optional.empty();
-
-        private Optional<String> browserLanguage = Optional.empty();
-
-        private Optional<String> os = Optional.empty();
-
-        private Optional<String> androidAppName = Optional.empty();
-
-        private Optional<String> androidAppVersion = Optional.empty();
-
-        private Optional<String> androidDevice = Optional.empty();
-
-        private Optional<String> androidOsVersion = Optional.empty();
-
-        private Optional<String> androidSdkVersion = Optional.empty();
-
-        private Optional<Integer> androidLastSeenAt = Optional.empty();
-
-        private Optional<String> iosAppName = Optional.empty();
-
-        private Optional<String> iosAppVersion = Optional.empty();
-
-        private Optional<String> iosDevice = Optional.empty();
-
-        private Optional<String> iosOsVersion = Optional.empty();
-
-        private Optional<String> iosSdkVersion = Optional.empty();
-
-        private Optional<Integer> iosLastSeenAt = Optional.empty();
-
-        private Optional<Map<String, Object>> customAttributes = Optional.empty();
-
-        private Optional<String> avatar = Optional.empty();
-
-        private Optional<ContactTags> tags = Optional.empty();
-
-        private Optional<ContactNotes> notes = Optional.empty();
-
-        private Optional<ContactCompanies> companies = Optional.empty();
-
-        private Optional<ContactLocation> location = Optional.empty();
+        private Optional<Boolean> enabledPushMessaging = Optional.empty();
 
         private Optional<ContactSocialProfiles> socialProfiles = Optional.empty();
 
-        private Optional<Boolean> enabledPushMessaging = Optional.empty();
+        private Optional<ContactLocation> location = Optional.empty();
+
+        private Optional<ContactCompanies> companies = Optional.empty();
+
+        private Optional<ContactNotes> notes = Optional.empty();
+
+        private Optional<ContactTags> tags = Optional.empty();
+
+        private Optional<String> avatar = Optional.empty();
+
+        private Optional<Map<String, Object>> customAttributes = Optional.empty();
+
+        private Optional<Integer> iosLastSeenAt = Optional.empty();
+
+        private Optional<String> iosSdkVersion = Optional.empty();
+
+        private Optional<String> iosOsVersion = Optional.empty();
+
+        private Optional<String> iosDevice = Optional.empty();
+
+        private Optional<String> iosAppVersion = Optional.empty();
+
+        private Optional<String> iosAppName = Optional.empty();
+
+        private Optional<Integer> androidLastSeenAt = Optional.empty();
+
+        private Optional<String> androidSdkVersion = Optional.empty();
+
+        private Optional<String> androidOsVersion = Optional.empty();
+
+        private Optional<String> androidDevice = Optional.empty();
+
+        private Optional<String> androidAppVersion = Optional.empty();
+
+        private Optional<String> androidAppName = Optional.empty();
+
+        private Optional<String> os = Optional.empty();
+
+        private Optional<String> browserLanguage = Optional.empty();
+
+        private Optional<String> browserVersion = Optional.empty();
+
+        private Optional<String> browser = Optional.empty();
+
+        private Optional<String> languageOverride = Optional.empty();
+
+        private Optional<Integer> lastEmailClickedAt = Optional.empty();
+
+        private Optional<Integer> lastEmailOpenedAt = Optional.empty();
+
+        private Optional<Integer> lastContactedAt = Optional.empty();
+
+        private Optional<Integer> lastRepliedAt = Optional.empty();
+
+        private Optional<Integer> lastSeenAt = Optional.empty();
+
+        private Optional<Integer> signedUpAt = Optional.empty();
+
+        private Optional<Integer> ownerId = Optional.empty();
+
+        private Optional<String> name = Optional.empty();
+
+        private Optional<String> phone = Optional.empty();
+
+        private Optional<String> emailDomain = Optional.empty();
+
+        private Optional<String> email = Optional.empty();
+
+        private Optional<String> externalId = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
+        @java.lang.Override
         public Builder from(ContactsFindResponse other) {
-            type(other.getType());
             id(other.getId());
             externalId(other.getExternalId());
             workspaceId(other.getWorkspaceId());
@@ -839,637 +1147,809 @@ public final class ContactsFindResponse implements IContact {
         }
 
         /**
-         * <p>The type of object.</p>
-         */
-        @JsonSetter(value = "type", nulls = Nulls.SKIP)
-        public Builder type(Optional<String> type) {
-            this.type = type;
-            return this;
-        }
-
-        public Builder type(String type) {
-            this.type = Optional.ofNullable(type);
-            return this;
-        }
-
-        /**
          * <p>The unique identifier for the contact which is given by Intercom.</p>
+         * <p>The unique identifier for the contact which is given by Intercom.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "id", nulls = Nulls.SKIP)
-        public Builder id(Optional<String> id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder id(String id) {
-            this.id = Optional.ofNullable(id);
-            return this;
-        }
-
-        /**
-         * <p>The unique identifier for the contact which is provided by the Client.</p>
-         */
-        @JsonSetter(value = "external_id", nulls = Nulls.SKIP)
-        public Builder externalId(Optional<String> externalId) {
-            this.externalId = externalId;
-            return this;
-        }
-
-        public Builder externalId(String externalId) {
-            this.externalId = Optional.ofNullable(externalId);
+        @java.lang.Override
+        @JsonSetter("id")
+        public WorkspaceIdStage id(@NotNull String id) {
+            this.id = Objects.requireNonNull(id, "id must not be null");
             return this;
         }
 
         /**
          * <p>The id of the workspace which the contact belongs to.</p>
+         * <p>The id of the workspace which the contact belongs to.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "workspace_id", nulls = Nulls.SKIP)
-        public Builder workspaceId(Optional<String> workspaceId) {
-            this.workspaceId = workspaceId;
-            return this;
-        }
-
-        public Builder workspaceId(String workspaceId) {
-            this.workspaceId = Optional.ofNullable(workspaceId);
+        @java.lang.Override
+        @JsonSetter("workspace_id")
+        public RoleStage workspaceId(@NotNull String workspaceId) {
+            this.workspaceId = Objects.requireNonNull(workspaceId, "workspaceId must not be null");
             return this;
         }
 
         /**
          * <p>The role of the contact.</p>
+         * <p>The role of the contact.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "role", nulls = Nulls.SKIP)
-        public Builder role(Optional<String> role) {
-            this.role = role;
-            return this;
-        }
-
-        public Builder role(String role) {
-            this.role = Optional.ofNullable(role);
-            return this;
-        }
-
-        /**
-         * <p>The contact's email.</p>
-         */
-        @JsonSetter(value = "email", nulls = Nulls.SKIP)
-        public Builder email(Optional<String> email) {
-            this.email = email;
-            return this;
-        }
-
-        public Builder email(String email) {
-            this.email = Optional.ofNullable(email);
-            return this;
-        }
-
-        /**
-         * <p>The contact's email domain.</p>
-         */
-        @JsonSetter(value = "email_domain", nulls = Nulls.SKIP)
-        public Builder emailDomain(Optional<String> emailDomain) {
-            this.emailDomain = emailDomain;
-            return this;
-        }
-
-        public Builder emailDomain(String emailDomain) {
-            this.emailDomain = Optional.ofNullable(emailDomain);
-            return this;
-        }
-
-        /**
-         * <p>The contacts phone.</p>
-         */
-        @JsonSetter(value = "phone", nulls = Nulls.SKIP)
-        public Builder phone(Optional<String> phone) {
-            this.phone = phone;
-            return this;
-        }
-
-        public Builder phone(String phone) {
-            this.phone = Optional.ofNullable(phone);
-            return this;
-        }
-
-        /**
-         * <p>The contacts name.</p>
-         */
-        @JsonSetter(value = "name", nulls = Nulls.SKIP)
-        public Builder name(Optional<String> name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder name(String name) {
-            this.name = Optional.ofNullable(name);
-            return this;
-        }
-
-        /**
-         * <p>The id of an admin that has been assigned account ownership of the contact.</p>
-         */
-        @JsonSetter(value = "owner_id", nulls = Nulls.SKIP)
-        public Builder ownerId(Optional<Integer> ownerId) {
-            this.ownerId = ownerId;
-            return this;
-        }
-
-        public Builder ownerId(Integer ownerId) {
-            this.ownerId = Optional.ofNullable(ownerId);
+        @java.lang.Override
+        @JsonSetter("role")
+        public HasHardBouncedStage role(@NotNull String role) {
+            this.role = Objects.requireNonNull(role, "role must not be null");
             return this;
         }
 
         /**
          * <p>Whether the contact has had an email sent to them hard bounce.</p>
+         * <p>Whether the contact has had an email sent to them hard bounce.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "has_hard_bounced", nulls = Nulls.SKIP)
-        public Builder hasHardBounced(Optional<Boolean> hasHardBounced) {
+        @java.lang.Override
+        @JsonSetter("has_hard_bounced")
+        public MarkedEmailAsSpamStage hasHardBounced(boolean hasHardBounced) {
             this.hasHardBounced = hasHardBounced;
-            return this;
-        }
-
-        public Builder hasHardBounced(Boolean hasHardBounced) {
-            this.hasHardBounced = Optional.ofNullable(hasHardBounced);
             return this;
         }
 
         /**
          * <p>Whether the contact has marked an email sent to them as spam.</p>
+         * <p>Whether the contact has marked an email sent to them as spam.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "marked_email_as_spam", nulls = Nulls.SKIP)
-        public Builder markedEmailAsSpam(Optional<Boolean> markedEmailAsSpam) {
+        @java.lang.Override
+        @JsonSetter("marked_email_as_spam")
+        public UnsubscribedFromEmailsStage markedEmailAsSpam(boolean markedEmailAsSpam) {
             this.markedEmailAsSpam = markedEmailAsSpam;
-            return this;
-        }
-
-        public Builder markedEmailAsSpam(Boolean markedEmailAsSpam) {
-            this.markedEmailAsSpam = Optional.ofNullable(markedEmailAsSpam);
             return this;
         }
 
         /**
          * <p>Whether the contact is unsubscribed from emails.</p>
+         * <p>Whether the contact is unsubscribed from emails.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "unsubscribed_from_emails", nulls = Nulls.SKIP)
-        public Builder unsubscribedFromEmails(Optional<Boolean> unsubscribedFromEmails) {
+        @java.lang.Override
+        @JsonSetter("unsubscribed_from_emails")
+        public CreatedAtStage unsubscribedFromEmails(boolean unsubscribedFromEmails) {
             this.unsubscribedFromEmails = unsubscribedFromEmails;
-            return this;
-        }
-
-        public Builder unsubscribedFromEmails(Boolean unsubscribedFromEmails) {
-            this.unsubscribedFromEmails = Optional.ofNullable(unsubscribedFromEmails);
             return this;
         }
 
         /**
          * <p>(UNIX timestamp) The time when the contact was created.</p>
+         * <p>(UNIX timestamp) The time when the contact was created.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
-        public Builder createdAt(Optional<Integer> createdAt) {
+        @java.lang.Override
+        @JsonSetter("created_at")
+        public UpdatedAtStage createdAt(int createdAt) {
             this.createdAt = createdAt;
-            return this;
-        }
-
-        public Builder createdAt(Integer createdAt) {
-            this.createdAt = Optional.ofNullable(createdAt);
             return this;
         }
 
         /**
          * <p>(UNIX timestamp) The time when the contact was last updated.</p>
+         * <p>(UNIX timestamp) The time when the contact was last updated.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
-        public Builder updatedAt(Optional<Integer> updatedAt) {
+        @java.lang.Override
+        @JsonSetter("updated_at")
+        public _FinalStage updatedAt(int updatedAt) {
             this.updatedAt = updatedAt;
             return this;
         }
 
-        public Builder updatedAt(Integer updatedAt) {
-            this.updatedAt = Optional.ofNullable(updatedAt);
-            return this;
-        }
-
         /**
-         * <p>(UNIX timestamp) The time specified for when a contact signed up.</p>
+         * <p>If the user has enabled push messaging.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "signed_up_at", nulls = Nulls.SKIP)
-        public Builder signedUpAt(Optional<Integer> signedUpAt) {
-            this.signedUpAt = signedUpAt;
-            return this;
-        }
-
-        public Builder signedUpAt(Integer signedUpAt) {
-            this.signedUpAt = Optional.ofNullable(signedUpAt);
-            return this;
-        }
-
-        /**
-         * <p>(UNIX timestamp) The time when the contact was last seen (either where the Intercom Messenger was installed or when specified manually).</p>
-         */
-        @JsonSetter(value = "last_seen_at", nulls = Nulls.SKIP)
-        public Builder lastSeenAt(Optional<Integer> lastSeenAt) {
-            this.lastSeenAt = lastSeenAt;
-            return this;
-        }
-
-        public Builder lastSeenAt(Integer lastSeenAt) {
-            this.lastSeenAt = Optional.ofNullable(lastSeenAt);
-            return this;
-        }
-
-        /**
-         * <p>(UNIX timestamp) The time when the contact last messaged in.</p>
-         */
-        @JsonSetter(value = "last_replied_at", nulls = Nulls.SKIP)
-        public Builder lastRepliedAt(Optional<Integer> lastRepliedAt) {
-            this.lastRepliedAt = lastRepliedAt;
-            return this;
-        }
-
-        public Builder lastRepliedAt(Integer lastRepliedAt) {
-            this.lastRepliedAt = Optional.ofNullable(lastRepliedAt);
-            return this;
-        }
-
-        /**
-         * <p>(UNIX timestamp) The time when the contact was last messaged.</p>
-         */
-        @JsonSetter(value = "last_contacted_at", nulls = Nulls.SKIP)
-        public Builder lastContactedAt(Optional<Integer> lastContactedAt) {
-            this.lastContactedAt = lastContactedAt;
-            return this;
-        }
-
-        public Builder lastContactedAt(Integer lastContactedAt) {
-            this.lastContactedAt = Optional.ofNullable(lastContactedAt);
-            return this;
-        }
-
-        /**
-         * <p>(UNIX timestamp) The time when the contact last opened an email.</p>
-         */
-        @JsonSetter(value = "last_email_opened_at", nulls = Nulls.SKIP)
-        public Builder lastEmailOpenedAt(Optional<Integer> lastEmailOpenedAt) {
-            this.lastEmailOpenedAt = lastEmailOpenedAt;
-            return this;
-        }
-
-        public Builder lastEmailOpenedAt(Integer lastEmailOpenedAt) {
-            this.lastEmailOpenedAt = Optional.ofNullable(lastEmailOpenedAt);
-            return this;
-        }
-
-        /**
-         * <p>(UNIX timestamp) The time when the contact last clicked a link in an email.</p>
-         */
-        @JsonSetter(value = "last_email_clicked_at", nulls = Nulls.SKIP)
-        public Builder lastEmailClickedAt(Optional<Integer> lastEmailClickedAt) {
-            this.lastEmailClickedAt = lastEmailClickedAt;
-            return this;
-        }
-
-        public Builder lastEmailClickedAt(Integer lastEmailClickedAt) {
-            this.lastEmailClickedAt = Optional.ofNullable(lastEmailClickedAt);
-            return this;
-        }
-
-        /**
-         * <p>A preferred language setting for the contact, used by the Intercom Messenger even if their browser settings change.</p>
-         */
-        @JsonSetter(value = "language_override", nulls = Nulls.SKIP)
-        public Builder languageOverride(Optional<String> languageOverride) {
-            this.languageOverride = languageOverride;
-            return this;
-        }
-
-        public Builder languageOverride(String languageOverride) {
-            this.languageOverride = Optional.ofNullable(languageOverride);
-            return this;
-        }
-
-        /**
-         * <p>The name of the browser which the contact is using.</p>
-         */
-        @JsonSetter(value = "browser", nulls = Nulls.SKIP)
-        public Builder browser(Optional<String> browser) {
-            this.browser = browser;
-            return this;
-        }
-
-        public Builder browser(String browser) {
-            this.browser = Optional.ofNullable(browser);
-            return this;
-        }
-
-        /**
-         * <p>The version of the browser which the contact is using.</p>
-         */
-        @JsonSetter(value = "browser_version", nulls = Nulls.SKIP)
-        public Builder browserVersion(Optional<String> browserVersion) {
-            this.browserVersion = browserVersion;
-            return this;
-        }
-
-        public Builder browserVersion(String browserVersion) {
-            this.browserVersion = Optional.ofNullable(browserVersion);
-            return this;
-        }
-
-        /**
-         * <p>The language set by the browser which the contact is using.</p>
-         */
-        @JsonSetter(value = "browser_language", nulls = Nulls.SKIP)
-        public Builder browserLanguage(Optional<String> browserLanguage) {
-            this.browserLanguage = browserLanguage;
-            return this;
-        }
-
-        public Builder browserLanguage(String browserLanguage) {
-            this.browserLanguage = Optional.ofNullable(browserLanguage);
-            return this;
-        }
-
-        /**
-         * <p>The operating system which the contact is using.</p>
-         */
-        @JsonSetter(value = "os", nulls = Nulls.SKIP)
-        public Builder os(Optional<String> os) {
-            this.os = os;
-            return this;
-        }
-
-        public Builder os(String os) {
-            this.os = Optional.ofNullable(os);
-            return this;
-        }
-
-        /**
-         * <p>The name of the Android app which the contact is using.</p>
-         */
-        @JsonSetter(value = "android_app_name", nulls = Nulls.SKIP)
-        public Builder androidAppName(Optional<String> androidAppName) {
-            this.androidAppName = androidAppName;
-            return this;
-        }
-
-        public Builder androidAppName(String androidAppName) {
-            this.androidAppName = Optional.ofNullable(androidAppName);
-            return this;
-        }
-
-        /**
-         * <p>The version of the Android app which the contact is using.</p>
-         */
-        @JsonSetter(value = "android_app_version", nulls = Nulls.SKIP)
-        public Builder androidAppVersion(Optional<String> androidAppVersion) {
-            this.androidAppVersion = androidAppVersion;
-            return this;
-        }
-
-        public Builder androidAppVersion(String androidAppVersion) {
-            this.androidAppVersion = Optional.ofNullable(androidAppVersion);
-            return this;
-        }
-
-        /**
-         * <p>The Android device which the contact is using.</p>
-         */
-        @JsonSetter(value = "android_device", nulls = Nulls.SKIP)
-        public Builder androidDevice(Optional<String> androidDevice) {
-            this.androidDevice = androidDevice;
-            return this;
-        }
-
-        public Builder androidDevice(String androidDevice) {
-            this.androidDevice = Optional.ofNullable(androidDevice);
-            return this;
-        }
-
-        /**
-         * <p>The version of the Android OS which the contact is using.</p>
-         */
-        @JsonSetter(value = "android_os_version", nulls = Nulls.SKIP)
-        public Builder androidOsVersion(Optional<String> androidOsVersion) {
-            this.androidOsVersion = androidOsVersion;
-            return this;
-        }
-
-        public Builder androidOsVersion(String androidOsVersion) {
-            this.androidOsVersion = Optional.ofNullable(androidOsVersion);
-            return this;
-        }
-
-        /**
-         * <p>The version of the Android SDK which the contact is using.</p>
-         */
-        @JsonSetter(value = "android_sdk_version", nulls = Nulls.SKIP)
-        public Builder androidSdkVersion(Optional<String> androidSdkVersion) {
-            this.androidSdkVersion = androidSdkVersion;
-            return this;
-        }
-
-        public Builder androidSdkVersion(String androidSdkVersion) {
-            this.androidSdkVersion = Optional.ofNullable(androidSdkVersion);
-            return this;
-        }
-
-        /**
-         * <p>(UNIX timestamp) The time when the contact was last seen on an Android device.</p>
-         */
-        @JsonSetter(value = "android_last_seen_at", nulls = Nulls.SKIP)
-        public Builder androidLastSeenAt(Optional<Integer> androidLastSeenAt) {
-            this.androidLastSeenAt = androidLastSeenAt;
-            return this;
-        }
-
-        public Builder androidLastSeenAt(Integer androidLastSeenAt) {
-            this.androidLastSeenAt = Optional.ofNullable(androidLastSeenAt);
-            return this;
-        }
-
-        /**
-         * <p>The name of the iOS app which the contact is using.</p>
-         */
-        @JsonSetter(value = "ios_app_name", nulls = Nulls.SKIP)
-        public Builder iosAppName(Optional<String> iosAppName) {
-            this.iosAppName = iosAppName;
-            return this;
-        }
-
-        public Builder iosAppName(String iosAppName) {
-            this.iosAppName = Optional.ofNullable(iosAppName);
-            return this;
-        }
-
-        /**
-         * <p>The version of the iOS app which the contact is using.</p>
-         */
-        @JsonSetter(value = "ios_app_version", nulls = Nulls.SKIP)
-        public Builder iosAppVersion(Optional<String> iosAppVersion) {
-            this.iosAppVersion = iosAppVersion;
-            return this;
-        }
-
-        public Builder iosAppVersion(String iosAppVersion) {
-            this.iosAppVersion = Optional.ofNullable(iosAppVersion);
-            return this;
-        }
-
-        /**
-         * <p>The iOS device which the contact is using.</p>
-         */
-        @JsonSetter(value = "ios_device", nulls = Nulls.SKIP)
-        public Builder iosDevice(Optional<String> iosDevice) {
-            this.iosDevice = iosDevice;
-            return this;
-        }
-
-        public Builder iosDevice(String iosDevice) {
-            this.iosDevice = Optional.ofNullable(iosDevice);
-            return this;
-        }
-
-        /**
-         * <p>The version of iOS which the contact is using.</p>
-         */
-        @JsonSetter(value = "ios_os_version", nulls = Nulls.SKIP)
-        public Builder iosOsVersion(Optional<String> iosOsVersion) {
-            this.iosOsVersion = iosOsVersion;
-            return this;
-        }
-
-        public Builder iosOsVersion(String iosOsVersion) {
-            this.iosOsVersion = Optional.ofNullable(iosOsVersion);
-            return this;
-        }
-
-        /**
-         * <p>The version of the iOS SDK which the contact is using.</p>
-         */
-        @JsonSetter(value = "ios_sdk_version", nulls = Nulls.SKIP)
-        public Builder iosSdkVersion(Optional<String> iosSdkVersion) {
-            this.iosSdkVersion = iosSdkVersion;
-            return this;
-        }
-
-        public Builder iosSdkVersion(String iosSdkVersion) {
-            this.iosSdkVersion = Optional.ofNullable(iosSdkVersion);
-            return this;
-        }
-
-        /**
-         * <p>(UNIX timestamp) The last time the contact used the iOS app.</p>
-         */
-        @JsonSetter(value = "ios_last_seen_at", nulls = Nulls.SKIP)
-        public Builder iosLastSeenAt(Optional<Integer> iosLastSeenAt) {
-            this.iosLastSeenAt = iosLastSeenAt;
-            return this;
-        }
-
-        public Builder iosLastSeenAt(Integer iosLastSeenAt) {
-            this.iosLastSeenAt = Optional.ofNullable(iosLastSeenAt);
-            return this;
-        }
-
-        /**
-         * <p>The custom attributes which are set for the contact.</p>
-         */
-        @JsonSetter(value = "custom_attributes", nulls = Nulls.SKIP)
-        public Builder customAttributes(Optional<Map<String, Object>> customAttributes) {
-            this.customAttributes = customAttributes;
-            return this;
-        }
-
-        public Builder customAttributes(Map<String, Object> customAttributes) {
-            this.customAttributes = Optional.ofNullable(customAttributes);
-            return this;
-        }
-
-        /**
-         * <p>An image URL containing the avatar of a contact.</p>
-         */
-        @JsonSetter(value = "avatar", nulls = Nulls.SKIP)
-        public Builder avatar(Optional<String> avatar) {
-            this.avatar = avatar;
-            return this;
-        }
-
-        public Builder avatar(String avatar) {
-            this.avatar = Optional.ofNullable(avatar);
-            return this;
-        }
-
-        @JsonSetter(value = "tags", nulls = Nulls.SKIP)
-        public Builder tags(Optional<ContactTags> tags) {
-            this.tags = tags;
-            return this;
-        }
-
-        public Builder tags(ContactTags tags) {
-            this.tags = Optional.ofNullable(tags);
-            return this;
-        }
-
-        @JsonSetter(value = "notes", nulls = Nulls.SKIP)
-        public Builder notes(Optional<ContactNotes> notes) {
-            this.notes = notes;
-            return this;
-        }
-
-        public Builder notes(ContactNotes notes) {
-            this.notes = Optional.ofNullable(notes);
-            return this;
-        }
-
-        @JsonSetter(value = "companies", nulls = Nulls.SKIP)
-        public Builder companies(Optional<ContactCompanies> companies) {
-            this.companies = companies;
-            return this;
-        }
-
-        public Builder companies(ContactCompanies companies) {
-            this.companies = Optional.ofNullable(companies);
-            return this;
-        }
-
-        @JsonSetter(value = "location", nulls = Nulls.SKIP)
-        public Builder location(Optional<ContactLocation> location) {
-            this.location = location;
-            return this;
-        }
-
-        public Builder location(ContactLocation location) {
-            this.location = Optional.ofNullable(location);
-            return this;
-        }
-
-        @JsonSetter(value = "social_profiles", nulls = Nulls.SKIP)
-        public Builder socialProfiles(Optional<ContactSocialProfiles> socialProfiles) {
-            this.socialProfiles = socialProfiles;
-            return this;
-        }
-
-        public Builder socialProfiles(ContactSocialProfiles socialProfiles) {
-            this.socialProfiles = Optional.ofNullable(socialProfiles);
+        @java.lang.Override
+        public _FinalStage enabledPushMessaging(Boolean enabledPushMessaging) {
+            this.enabledPushMessaging = Optional.ofNullable(enabledPushMessaging);
             return this;
         }
 
         /**
          * <p>If the user has enabled push messaging.</p>
          */
+        @java.lang.Override
         @JsonSetter(value = "enabled_push_messaging", nulls = Nulls.SKIP)
-        public Builder enabledPushMessaging(Optional<Boolean> enabledPushMessaging) {
+        public _FinalStage enabledPushMessaging(Optional<Boolean> enabledPushMessaging) {
             this.enabledPushMessaging = enabledPushMessaging;
             return this;
         }
 
-        public Builder enabledPushMessaging(Boolean enabledPushMessaging) {
-            this.enabledPushMessaging = Optional.ofNullable(enabledPushMessaging);
+        @java.lang.Override
+        public _FinalStage socialProfiles(ContactSocialProfiles socialProfiles) {
+            this.socialProfiles = Optional.ofNullable(socialProfiles);
             return this;
         }
 
+        @java.lang.Override
+        @JsonSetter(value = "social_profiles", nulls = Nulls.SKIP)
+        public _FinalStage socialProfiles(Optional<ContactSocialProfiles> socialProfiles) {
+            this.socialProfiles = socialProfiles;
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage location(ContactLocation location) {
+            this.location = Optional.ofNullable(location);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "location", nulls = Nulls.SKIP)
+        public _FinalStage location(Optional<ContactLocation> location) {
+            this.location = location;
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage companies(ContactCompanies companies) {
+            this.companies = Optional.ofNullable(companies);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "companies", nulls = Nulls.SKIP)
+        public _FinalStage companies(Optional<ContactCompanies> companies) {
+            this.companies = companies;
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage notes(ContactNotes notes) {
+            this.notes = Optional.ofNullable(notes);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "notes", nulls = Nulls.SKIP)
+        public _FinalStage notes(Optional<ContactNotes> notes) {
+            this.notes = notes;
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage tags(ContactTags tags) {
+            this.tags = Optional.ofNullable(tags);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "tags", nulls = Nulls.SKIP)
+        public _FinalStage tags(Optional<ContactTags> tags) {
+            this.tags = tags;
+            return this;
+        }
+
+        /**
+         * <p>An image URL containing the avatar of a contact.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage avatar(String avatar) {
+            this.avatar = Optional.ofNullable(avatar);
+            return this;
+        }
+
+        /**
+         * <p>An image URL containing the avatar of a contact.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "avatar", nulls = Nulls.SKIP)
+        public _FinalStage avatar(Optional<String> avatar) {
+            this.avatar = avatar;
+            return this;
+        }
+
+        /**
+         * <p>The custom attributes which are set for the contact.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage customAttributes(Map<String, Object> customAttributes) {
+            this.customAttributes = Optional.ofNullable(customAttributes);
+            return this;
+        }
+
+        /**
+         * <p>The custom attributes which are set for the contact.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "custom_attributes", nulls = Nulls.SKIP)
+        public _FinalStage customAttributes(Optional<Map<String, Object>> customAttributes) {
+            this.customAttributes = customAttributes;
+            return this;
+        }
+
+        /**
+         * <p>(UNIX timestamp) The last time the contact used the iOS app.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage iosLastSeenAt(Integer iosLastSeenAt) {
+            this.iosLastSeenAt = Optional.ofNullable(iosLastSeenAt);
+            return this;
+        }
+
+        /**
+         * <p>(UNIX timestamp) The last time the contact used the iOS app.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "ios_last_seen_at", nulls = Nulls.SKIP)
+        public _FinalStage iosLastSeenAt(Optional<Integer> iosLastSeenAt) {
+            this.iosLastSeenAt = iosLastSeenAt;
+            return this;
+        }
+
+        /**
+         * <p>The version of the iOS SDK which the contact is using.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage iosSdkVersion(String iosSdkVersion) {
+            this.iosSdkVersion = Optional.ofNullable(iosSdkVersion);
+            return this;
+        }
+
+        /**
+         * <p>The version of the iOS SDK which the contact is using.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "ios_sdk_version", nulls = Nulls.SKIP)
+        public _FinalStage iosSdkVersion(Optional<String> iosSdkVersion) {
+            this.iosSdkVersion = iosSdkVersion;
+            return this;
+        }
+
+        /**
+         * <p>The version of iOS which the contact is using.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage iosOsVersion(String iosOsVersion) {
+            this.iosOsVersion = Optional.ofNullable(iosOsVersion);
+            return this;
+        }
+
+        /**
+         * <p>The version of iOS which the contact is using.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "ios_os_version", nulls = Nulls.SKIP)
+        public _FinalStage iosOsVersion(Optional<String> iosOsVersion) {
+            this.iosOsVersion = iosOsVersion;
+            return this;
+        }
+
+        /**
+         * <p>The iOS device which the contact is using.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage iosDevice(String iosDevice) {
+            this.iosDevice = Optional.ofNullable(iosDevice);
+            return this;
+        }
+
+        /**
+         * <p>The iOS device which the contact is using.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "ios_device", nulls = Nulls.SKIP)
+        public _FinalStage iosDevice(Optional<String> iosDevice) {
+            this.iosDevice = iosDevice;
+            return this;
+        }
+
+        /**
+         * <p>The version of the iOS app which the contact is using.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage iosAppVersion(String iosAppVersion) {
+            this.iosAppVersion = Optional.ofNullable(iosAppVersion);
+            return this;
+        }
+
+        /**
+         * <p>The version of the iOS app which the contact is using.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "ios_app_version", nulls = Nulls.SKIP)
+        public _FinalStage iosAppVersion(Optional<String> iosAppVersion) {
+            this.iosAppVersion = iosAppVersion;
+            return this;
+        }
+
+        /**
+         * <p>The name of the iOS app which the contact is using.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage iosAppName(String iosAppName) {
+            this.iosAppName = Optional.ofNullable(iosAppName);
+            return this;
+        }
+
+        /**
+         * <p>The name of the iOS app which the contact is using.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "ios_app_name", nulls = Nulls.SKIP)
+        public _FinalStage iosAppName(Optional<String> iosAppName) {
+            this.iosAppName = iosAppName;
+            return this;
+        }
+
+        /**
+         * <p>(UNIX timestamp) The time when the contact was last seen on an Android device.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage androidLastSeenAt(Integer androidLastSeenAt) {
+            this.androidLastSeenAt = Optional.ofNullable(androidLastSeenAt);
+            return this;
+        }
+
+        /**
+         * <p>(UNIX timestamp) The time when the contact was last seen on an Android device.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "android_last_seen_at", nulls = Nulls.SKIP)
+        public _FinalStage androidLastSeenAt(Optional<Integer> androidLastSeenAt) {
+            this.androidLastSeenAt = androidLastSeenAt;
+            return this;
+        }
+
+        /**
+         * <p>The version of the Android SDK which the contact is using.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage androidSdkVersion(String androidSdkVersion) {
+            this.androidSdkVersion = Optional.ofNullable(androidSdkVersion);
+            return this;
+        }
+
+        /**
+         * <p>The version of the Android SDK which the contact is using.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "android_sdk_version", nulls = Nulls.SKIP)
+        public _FinalStage androidSdkVersion(Optional<String> androidSdkVersion) {
+            this.androidSdkVersion = androidSdkVersion;
+            return this;
+        }
+
+        /**
+         * <p>The version of the Android OS which the contact is using.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage androidOsVersion(String androidOsVersion) {
+            this.androidOsVersion = Optional.ofNullable(androidOsVersion);
+            return this;
+        }
+
+        /**
+         * <p>The version of the Android OS which the contact is using.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "android_os_version", nulls = Nulls.SKIP)
+        public _FinalStage androidOsVersion(Optional<String> androidOsVersion) {
+            this.androidOsVersion = androidOsVersion;
+            return this;
+        }
+
+        /**
+         * <p>The Android device which the contact is using.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage androidDevice(String androidDevice) {
+            this.androidDevice = Optional.ofNullable(androidDevice);
+            return this;
+        }
+
+        /**
+         * <p>The Android device which the contact is using.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "android_device", nulls = Nulls.SKIP)
+        public _FinalStage androidDevice(Optional<String> androidDevice) {
+            this.androidDevice = androidDevice;
+            return this;
+        }
+
+        /**
+         * <p>The version of the Android app which the contact is using.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage androidAppVersion(String androidAppVersion) {
+            this.androidAppVersion = Optional.ofNullable(androidAppVersion);
+            return this;
+        }
+
+        /**
+         * <p>The version of the Android app which the contact is using.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "android_app_version", nulls = Nulls.SKIP)
+        public _FinalStage androidAppVersion(Optional<String> androidAppVersion) {
+            this.androidAppVersion = androidAppVersion;
+            return this;
+        }
+
+        /**
+         * <p>The name of the Android app which the contact is using.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage androidAppName(String androidAppName) {
+            this.androidAppName = Optional.ofNullable(androidAppName);
+            return this;
+        }
+
+        /**
+         * <p>The name of the Android app which the contact is using.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "android_app_name", nulls = Nulls.SKIP)
+        public _FinalStage androidAppName(Optional<String> androidAppName) {
+            this.androidAppName = androidAppName;
+            return this;
+        }
+
+        /**
+         * <p>The operating system which the contact is using.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage os(String os) {
+            this.os = Optional.ofNullable(os);
+            return this;
+        }
+
+        /**
+         * <p>The operating system which the contact is using.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "os", nulls = Nulls.SKIP)
+        public _FinalStage os(Optional<String> os) {
+            this.os = os;
+            return this;
+        }
+
+        /**
+         * <p>The language set by the browser which the contact is using.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage browserLanguage(String browserLanguage) {
+            this.browserLanguage = Optional.ofNullable(browserLanguage);
+            return this;
+        }
+
+        /**
+         * <p>The language set by the browser which the contact is using.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "browser_language", nulls = Nulls.SKIP)
+        public _FinalStage browserLanguage(Optional<String> browserLanguage) {
+            this.browserLanguage = browserLanguage;
+            return this;
+        }
+
+        /**
+         * <p>The version of the browser which the contact is using.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage browserVersion(String browserVersion) {
+            this.browserVersion = Optional.ofNullable(browserVersion);
+            return this;
+        }
+
+        /**
+         * <p>The version of the browser which the contact is using.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "browser_version", nulls = Nulls.SKIP)
+        public _FinalStage browserVersion(Optional<String> browserVersion) {
+            this.browserVersion = browserVersion;
+            return this;
+        }
+
+        /**
+         * <p>The name of the browser which the contact is using.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage browser(String browser) {
+            this.browser = Optional.ofNullable(browser);
+            return this;
+        }
+
+        /**
+         * <p>The name of the browser which the contact is using.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "browser", nulls = Nulls.SKIP)
+        public _FinalStage browser(Optional<String> browser) {
+            this.browser = browser;
+            return this;
+        }
+
+        /**
+         * <p>A preferred language setting for the contact, used by the Intercom Messenger even if their browser settings change.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage languageOverride(String languageOverride) {
+            this.languageOverride = Optional.ofNullable(languageOverride);
+            return this;
+        }
+
+        /**
+         * <p>A preferred language setting for the contact, used by the Intercom Messenger even if their browser settings change.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "language_override", nulls = Nulls.SKIP)
+        public _FinalStage languageOverride(Optional<String> languageOverride) {
+            this.languageOverride = languageOverride;
+            return this;
+        }
+
+        /**
+         * <p>(UNIX timestamp) The time when the contact last clicked a link in an email.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage lastEmailClickedAt(Integer lastEmailClickedAt) {
+            this.lastEmailClickedAt = Optional.ofNullable(lastEmailClickedAt);
+            return this;
+        }
+
+        /**
+         * <p>(UNIX timestamp) The time when the contact last clicked a link in an email.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "last_email_clicked_at", nulls = Nulls.SKIP)
+        public _FinalStage lastEmailClickedAt(Optional<Integer> lastEmailClickedAt) {
+            this.lastEmailClickedAt = lastEmailClickedAt;
+            return this;
+        }
+
+        /**
+         * <p>(UNIX timestamp) The time when the contact last opened an email.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage lastEmailOpenedAt(Integer lastEmailOpenedAt) {
+            this.lastEmailOpenedAt = Optional.ofNullable(lastEmailOpenedAt);
+            return this;
+        }
+
+        /**
+         * <p>(UNIX timestamp) The time when the contact last opened an email.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "last_email_opened_at", nulls = Nulls.SKIP)
+        public _FinalStage lastEmailOpenedAt(Optional<Integer> lastEmailOpenedAt) {
+            this.lastEmailOpenedAt = lastEmailOpenedAt;
+            return this;
+        }
+
+        /**
+         * <p>(UNIX timestamp) The time when the contact was last messaged.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage lastContactedAt(Integer lastContactedAt) {
+            this.lastContactedAt = Optional.ofNullable(lastContactedAt);
+            return this;
+        }
+
+        /**
+         * <p>(UNIX timestamp) The time when the contact was last messaged.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "last_contacted_at", nulls = Nulls.SKIP)
+        public _FinalStage lastContactedAt(Optional<Integer> lastContactedAt) {
+            this.lastContactedAt = lastContactedAt;
+            return this;
+        }
+
+        /**
+         * <p>(UNIX timestamp) The time when the contact last messaged in.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage lastRepliedAt(Integer lastRepliedAt) {
+            this.lastRepliedAt = Optional.ofNullable(lastRepliedAt);
+            return this;
+        }
+
+        /**
+         * <p>(UNIX timestamp) The time when the contact last messaged in.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "last_replied_at", nulls = Nulls.SKIP)
+        public _FinalStage lastRepliedAt(Optional<Integer> lastRepliedAt) {
+            this.lastRepliedAt = lastRepliedAt;
+            return this;
+        }
+
+        /**
+         * <p>(UNIX timestamp) The time when the contact was last seen (either where the Intercom Messenger was installed or when specified manually).</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage lastSeenAt(Integer lastSeenAt) {
+            this.lastSeenAt = Optional.ofNullable(lastSeenAt);
+            return this;
+        }
+
+        /**
+         * <p>(UNIX timestamp) The time when the contact was last seen (either where the Intercom Messenger was installed or when specified manually).</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "last_seen_at", nulls = Nulls.SKIP)
+        public _FinalStage lastSeenAt(Optional<Integer> lastSeenAt) {
+            this.lastSeenAt = lastSeenAt;
+            return this;
+        }
+
+        /**
+         * <p>(UNIX timestamp) The time specified for when a contact signed up.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage signedUpAt(Integer signedUpAt) {
+            this.signedUpAt = Optional.ofNullable(signedUpAt);
+            return this;
+        }
+
+        /**
+         * <p>(UNIX timestamp) The time specified for when a contact signed up.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "signed_up_at", nulls = Nulls.SKIP)
+        public _FinalStage signedUpAt(Optional<Integer> signedUpAt) {
+            this.signedUpAt = signedUpAt;
+            return this;
+        }
+
+        /**
+         * <p>The id of an admin that has been assigned account ownership of the contact.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage ownerId(Integer ownerId) {
+            this.ownerId = Optional.ofNullable(ownerId);
+            return this;
+        }
+
+        /**
+         * <p>The id of an admin that has been assigned account ownership of the contact.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "owner_id", nulls = Nulls.SKIP)
+        public _FinalStage ownerId(Optional<Integer> ownerId) {
+            this.ownerId = ownerId;
+            return this;
+        }
+
+        /**
+         * <p>The contacts name.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage name(String name) {
+            this.name = Optional.ofNullable(name);
+            return this;
+        }
+
+        /**
+         * <p>The contacts name.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "name", nulls = Nulls.SKIP)
+        public _FinalStage name(Optional<String> name) {
+            this.name = name;
+            return this;
+        }
+
+        /**
+         * <p>The contacts phone.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage phone(String phone) {
+            this.phone = Optional.ofNullable(phone);
+            return this;
+        }
+
+        /**
+         * <p>The contacts phone.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "phone", nulls = Nulls.SKIP)
+        public _FinalStage phone(Optional<String> phone) {
+            this.phone = phone;
+            return this;
+        }
+
+        /**
+         * <p>The contact's email domain.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage emailDomain(String emailDomain) {
+            this.emailDomain = Optional.ofNullable(emailDomain);
+            return this;
+        }
+
+        /**
+         * <p>The contact's email domain.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "email_domain", nulls = Nulls.SKIP)
+        public _FinalStage emailDomain(Optional<String> emailDomain) {
+            this.emailDomain = emailDomain;
+            return this;
+        }
+
+        /**
+         * <p>The contact's email.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage email(String email) {
+            this.email = Optional.ofNullable(email);
+            return this;
+        }
+
+        /**
+         * <p>The contact's email.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "email", nulls = Nulls.SKIP)
+        public _FinalStage email(Optional<String> email) {
+            this.email = email;
+            return this;
+        }
+
+        /**
+         * <p>The unique identifier for the contact which is provided by the Client.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage externalId(String externalId) {
+            this.externalId = Optional.ofNullable(externalId);
+            return this;
+        }
+
+        /**
+         * <p>The unique identifier for the contact which is provided by the Client.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "external_id", nulls = Nulls.SKIP)
+        public _FinalStage externalId(Optional<String> externalId) {
+            this.externalId = externalId;
+            return this;
+        }
+
+        @java.lang.Override
         public ContactsFindResponse build() {
             return new ContactsFindResponse(
-                    type,
                     id,
                     externalId,
                     workspaceId,

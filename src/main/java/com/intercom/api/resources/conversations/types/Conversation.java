@@ -33,32 +33,34 @@ import com.intercom.api.types.SlaApplied;
 import com.intercom.api.types.Tags;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = Conversation.Builder.class)
 public final class Conversation {
-    private final Optional<String> type;
+    private final String type;
 
-    private final Optional<String> id;
+    private final String id;
 
     private final Optional<String> title;
 
-    private final Optional<Integer> createdAt;
+    private final int createdAt;
 
-    private final Optional<Integer> updatedAt;
+    private final int updatedAt;
 
     private final Optional<Integer> waitingSince;
 
     private final Optional<Integer> snoozedUntil;
 
-    private final Optional<Boolean> open;
+    private final boolean open;
 
-    private final Optional<State> state;
+    private final State state;
 
-    private final Optional<Boolean> read;
+    private final boolean read;
 
     private final Optional<Priority> priority;
 
@@ -72,13 +74,13 @@ public final class Conversation {
 
     private final Optional<ConversationRating> conversationRating;
 
-    private final Optional<ConversationSource> source;
+    private final ConversationSource source;
 
-    private final Optional<ConversationContacts> contacts;
+    private final ConversationContacts contacts;
 
     private final Optional<ConversationTeammates> teammates;
 
-    private final Optional<Map<String, CustomAttributesValue>> customAttributes;
+    private final Map<String, CustomAttributesValue> customAttributes;
 
     private final Optional<ConversationFirstContactReply> firstContactReply;
 
@@ -97,26 +99,26 @@ public final class Conversation {
     private final Map<String, Object> additionalProperties;
 
     private Conversation(
-            Optional<String> type,
-            Optional<String> id,
+            String type,
+            String id,
             Optional<String> title,
-            Optional<Integer> createdAt,
-            Optional<Integer> updatedAt,
+            int createdAt,
+            int updatedAt,
             Optional<Integer> waitingSince,
             Optional<Integer> snoozedUntil,
-            Optional<Boolean> open,
-            Optional<State> state,
-            Optional<Boolean> read,
+            boolean open,
+            State state,
+            boolean read,
             Optional<Priority> priority,
             Optional<Integer> adminAssigneeId,
             Optional<String> teamAssigneeId,
             Optional<String> companyId,
             Optional<Tags> tags,
             Optional<ConversationRating> conversationRating,
-            Optional<ConversationSource> source,
-            Optional<ConversationContacts> contacts,
+            ConversationSource source,
+            ConversationContacts contacts,
             Optional<ConversationTeammates> teammates,
-            Optional<Map<String, CustomAttributesValue>> customAttributes,
+            Map<String, CustomAttributesValue> customAttributes,
             Optional<ConversationFirstContactReply> firstContactReply,
             Optional<SlaApplied> slaApplied,
             Optional<ConversationStatistics> statistics,
@@ -159,7 +161,7 @@ public final class Conversation {
      * @return Always conversation.
      */
     @JsonProperty("type")
-    public Optional<String> getType() {
+    public String getType() {
         return type;
     }
 
@@ -167,7 +169,7 @@ public final class Conversation {
      * @return The id representing the conversation.
      */
     @JsonProperty("id")
-    public Optional<String> getId() {
+    public String getId() {
         return id;
     }
 
@@ -183,7 +185,7 @@ public final class Conversation {
      * @return The time the conversation was created.
      */
     @JsonProperty("created_at")
-    public Optional<Integer> getCreatedAt() {
+    public int getCreatedAt() {
         return createdAt;
     }
 
@@ -191,7 +193,7 @@ public final class Conversation {
      * @return The last time the conversation was updated.
      */
     @JsonProperty("updated_at")
-    public Optional<Integer> getUpdatedAt() {
+    public int getUpdatedAt() {
         return updatedAt;
     }
 
@@ -215,7 +217,7 @@ public final class Conversation {
      * @return Indicates whether a conversation is open (true) or closed (false).
      */
     @JsonProperty("open")
-    public Optional<Boolean> getOpen() {
+    public boolean getOpen() {
         return open;
     }
 
@@ -223,7 +225,7 @@ public final class Conversation {
      * @return Can be set to &quot;open&quot;, &quot;closed&quot; or &quot;snoozed&quot;.
      */
     @JsonProperty("state")
-    public Optional<State> getState() {
+    public State getState() {
         return state;
     }
 
@@ -231,7 +233,7 @@ public final class Conversation {
      * @return Indicates whether a conversation has been read.
      */
     @JsonProperty("read")
-    public Optional<Boolean> getRead() {
+    public boolean getRead() {
         return read;
     }
 
@@ -278,12 +280,12 @@ public final class Conversation {
     }
 
     @JsonProperty("source")
-    public Optional<ConversationSource> getSource() {
+    public ConversationSource getSource() {
         return source;
     }
 
     @JsonProperty("contacts")
-    public Optional<ConversationContacts> getContacts() {
+    public ConversationContacts getContacts() {
         return contacts;
     }
 
@@ -293,7 +295,7 @@ public final class Conversation {
     }
 
     @JsonProperty("custom_attributes")
-    public Optional<Map<String, CustomAttributesValue>> getCustomAttributes() {
+    public Map<String, CustomAttributesValue> getCustomAttributes() {
         return customAttributes;
     }
 
@@ -350,13 +352,13 @@ public final class Conversation {
         return type.equals(other.type)
                 && id.equals(other.id)
                 && title.equals(other.title)
-                && createdAt.equals(other.createdAt)
-                && updatedAt.equals(other.updatedAt)
+                && createdAt == other.createdAt
+                && updatedAt == other.updatedAt
                 && waitingSince.equals(other.waitingSince)
                 && snoozedUntil.equals(other.snoozedUntil)
-                && open.equals(other.open)
+                && open == other.open
                 && state.equals(other.state)
-                && read.equals(other.read)
+                && read == other.read
                 && priority.equals(other.priority)
                 && adminAssigneeId.equals(other.adminAssigneeId)
                 && teamAssigneeId.equals(other.teamAssigneeId)
@@ -413,71 +415,243 @@ public final class Conversation {
         return ObjectMappers.stringify(this);
     }
 
-    public static Builder builder() {
+    public static TypeStage builder() {
         return new Builder();
     }
 
+    public interface TypeStage {
+        /**
+         * <p>Always conversation.</p>
+         */
+        IdStage type(@NotNull String type);
+
+        Builder from(Conversation other);
+    }
+
+    public interface IdStage {
+        /**
+         * <p>The id representing the conversation.</p>
+         */
+        CreatedAtStage id(@NotNull String id);
+    }
+
+    public interface CreatedAtStage {
+        /**
+         * <p>The time the conversation was created.</p>
+         */
+        UpdatedAtStage createdAt(int createdAt);
+    }
+
+    public interface UpdatedAtStage {
+        /**
+         * <p>The last time the conversation was updated.</p>
+         */
+        OpenStage updatedAt(int updatedAt);
+    }
+
+    public interface OpenStage {
+        /**
+         * <p>Indicates whether a conversation is open (true) or closed (false).</p>
+         */
+        StateStage open(boolean open);
+    }
+
+    public interface StateStage {
+        /**
+         * <p>Can be set to &quot;open&quot;, &quot;closed&quot; or &quot;snoozed&quot;.</p>
+         */
+        ReadStage state(@NotNull State state);
+    }
+
+    public interface ReadStage {
+        /**
+         * <p>Indicates whether a conversation has been read.</p>
+         */
+        SourceStage read(boolean read);
+    }
+
+    public interface SourceStage {
+        ContactsStage source(@NotNull ConversationSource source);
+    }
+
+    public interface ContactsStage {
+        _FinalStage contacts(@NotNull ConversationContacts contacts);
+    }
+
+    public interface _FinalStage {
+        Conversation build();
+
+        /**
+         * <p>The title given to the conversation.</p>
+         */
+        _FinalStage title(Optional<String> title);
+
+        _FinalStage title(String title);
+
+        /**
+         * <p>The last time a Contact responded to an Admin. In other words, the time a customer started waiting for a response. Set to null if last reply is from an Admin.</p>
+         */
+        _FinalStage waitingSince(Optional<Integer> waitingSince);
+
+        _FinalStage waitingSince(Integer waitingSince);
+
+        /**
+         * <p>If set this is the time in the future when this conversation will be marked as open. i.e. it will be in a snoozed state until this time. i.e. it will be in a snoozed state until this time.</p>
+         */
+        _FinalStage snoozedUntil(Optional<Integer> snoozedUntil);
+
+        _FinalStage snoozedUntil(Integer snoozedUntil);
+
+        /**
+         * <p>If marked as priority, it will return priority or else not_priority.</p>
+         */
+        _FinalStage priority(Optional<Priority> priority);
+
+        _FinalStage priority(Priority priority);
+
+        /**
+         * <p>The id of the admin assigned to the conversation. If it's not assigned to an admin it will return null.</p>
+         */
+        _FinalStage adminAssigneeId(Optional<Integer> adminAssigneeId);
+
+        _FinalStage adminAssigneeId(Integer adminAssigneeId);
+
+        /**
+         * <p>The id of the team assigned to the conversation. If it's not assigned to a team it will return null.</p>
+         */
+        _FinalStage teamAssigneeId(Optional<String> teamAssigneeId);
+
+        _FinalStage teamAssigneeId(String teamAssigneeId);
+
+        /**
+         * <p>The ID of the company that the conversation is associated with. The unique identifier for the company which is given by Intercom.</p>
+         */
+        _FinalStage companyId(Optional<String> companyId);
+
+        _FinalStage companyId(String companyId);
+
+        _FinalStage tags(Optional<Tags> tags);
+
+        _FinalStage tags(Tags tags);
+
+        _FinalStage conversationRating(Optional<ConversationRating> conversationRating);
+
+        _FinalStage conversationRating(ConversationRating conversationRating);
+
+        _FinalStage teammates(Optional<ConversationTeammates> teammates);
+
+        _FinalStage teammates(ConversationTeammates teammates);
+
+        _FinalStage customAttributes(Map<String, CustomAttributesValue> customAttributes);
+
+        _FinalStage putAllCustomAttributes(Map<String, CustomAttributesValue> customAttributes);
+
+        _FinalStage customAttributes(String key, CustomAttributesValue value);
+
+        _FinalStage firstContactReply(Optional<ConversationFirstContactReply> firstContactReply);
+
+        _FinalStage firstContactReply(ConversationFirstContactReply firstContactReply);
+
+        _FinalStage slaApplied(Optional<SlaApplied> slaApplied);
+
+        _FinalStage slaApplied(SlaApplied slaApplied);
+
+        _FinalStage statistics(Optional<ConversationStatistics> statistics);
+
+        _FinalStage statistics(ConversationStatistics statistics);
+
+        _FinalStage conversationParts(Optional<ConversationParts> conversationParts);
+
+        _FinalStage conversationParts(ConversationParts conversationParts);
+
+        _FinalStage linkedObjects(Optional<LinkedObjectList> linkedObjects);
+
+        _FinalStage linkedObjects(LinkedObjectList linkedObjects);
+
+        /**
+         * <p>Indicates whether the AI Agent participated in the conversation.</p>
+         */
+        _FinalStage aiAgentParticipated(Optional<Boolean> aiAgentParticipated);
+
+        _FinalStage aiAgentParticipated(Boolean aiAgentParticipated);
+
+        _FinalStage aiAgent(Optional<AiAgent> aiAgent);
+
+        _FinalStage aiAgent(AiAgent aiAgent);
+    }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder {
-        private Optional<String> type = Optional.empty();
+    public static final class Builder
+            implements TypeStage,
+                    IdStage,
+                    CreatedAtStage,
+                    UpdatedAtStage,
+                    OpenStage,
+                    StateStage,
+                    ReadStage,
+                    SourceStage,
+                    ContactsStage,
+                    _FinalStage {
+        private String type;
 
-        private Optional<String> id = Optional.empty();
+        private String id;
 
-        private Optional<String> title = Optional.empty();
+        private int createdAt;
 
-        private Optional<Integer> createdAt = Optional.empty();
+        private int updatedAt;
 
-        private Optional<Integer> updatedAt = Optional.empty();
+        private boolean open;
 
-        private Optional<Integer> waitingSince = Optional.empty();
+        private State state;
 
-        private Optional<Integer> snoozedUntil = Optional.empty();
+        private boolean read;
 
-        private Optional<Boolean> open = Optional.empty();
+        private ConversationSource source;
 
-        private Optional<State> state = Optional.empty();
+        private ConversationContacts contacts;
 
-        private Optional<Boolean> read = Optional.empty();
-
-        private Optional<Priority> priority = Optional.empty();
-
-        private Optional<Integer> adminAssigneeId = Optional.empty();
-
-        private Optional<String> teamAssigneeId = Optional.empty();
-
-        private Optional<String> companyId = Optional.empty();
-
-        private Optional<Tags> tags = Optional.empty();
-
-        private Optional<ConversationRating> conversationRating = Optional.empty();
-
-        private Optional<ConversationSource> source = Optional.empty();
-
-        private Optional<ConversationContacts> contacts = Optional.empty();
-
-        private Optional<ConversationTeammates> teammates = Optional.empty();
-
-        private Optional<Map<String, CustomAttributesValue>> customAttributes = Optional.empty();
-
-        private Optional<ConversationFirstContactReply> firstContactReply = Optional.empty();
-
-        private Optional<SlaApplied> slaApplied = Optional.empty();
-
-        private Optional<ConversationStatistics> statistics = Optional.empty();
-
-        private Optional<ConversationParts> conversationParts = Optional.empty();
-
-        private Optional<LinkedObjectList> linkedObjects = Optional.empty();
+        private Optional<AiAgent> aiAgent = Optional.empty();
 
         private Optional<Boolean> aiAgentParticipated = Optional.empty();
 
-        private Optional<AiAgent> aiAgent = Optional.empty();
+        private Optional<LinkedObjectList> linkedObjects = Optional.empty();
+
+        private Optional<ConversationParts> conversationParts = Optional.empty();
+
+        private Optional<ConversationStatistics> statistics = Optional.empty();
+
+        private Optional<SlaApplied> slaApplied = Optional.empty();
+
+        private Optional<ConversationFirstContactReply> firstContactReply = Optional.empty();
+
+        private Map<String, CustomAttributesValue> customAttributes = new LinkedHashMap<>();
+
+        private Optional<ConversationTeammates> teammates = Optional.empty();
+
+        private Optional<ConversationRating> conversationRating = Optional.empty();
+
+        private Optional<Tags> tags = Optional.empty();
+
+        private Optional<String> companyId = Optional.empty();
+
+        private Optional<String> teamAssigneeId = Optional.empty();
+
+        private Optional<Integer> adminAssigneeId = Optional.empty();
+
+        private Optional<Priority> priority = Optional.empty();
+
+        private Optional<Integer> snoozedUntil = Optional.empty();
+
+        private Optional<Integer> waitingSince = Optional.empty();
+
+        private Optional<String> title = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
+        @java.lang.Override
         public Builder from(Conversation other) {
             type(other.getType());
             id(other.getId());
@@ -511,346 +685,404 @@ public final class Conversation {
 
         /**
          * <p>Always conversation.</p>
+         * <p>Always conversation.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "type", nulls = Nulls.SKIP)
-        public Builder type(Optional<String> type) {
-            this.type = type;
-            return this;
-        }
-
-        public Builder type(String type) {
-            this.type = Optional.ofNullable(type);
+        @java.lang.Override
+        @JsonSetter("type")
+        public IdStage type(@NotNull String type) {
+            this.type = Objects.requireNonNull(type, "type must not be null");
             return this;
         }
 
         /**
          * <p>The id representing the conversation.</p>
+         * <p>The id representing the conversation.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "id", nulls = Nulls.SKIP)
-        public Builder id(Optional<String> id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder id(String id) {
-            this.id = Optional.ofNullable(id);
-            return this;
-        }
-
-        /**
-         * <p>The title given to the conversation.</p>
-         */
-        @JsonSetter(value = "title", nulls = Nulls.SKIP)
-        public Builder title(Optional<String> title) {
-            this.title = title;
-            return this;
-        }
-
-        public Builder title(String title) {
-            this.title = Optional.ofNullable(title);
+        @java.lang.Override
+        @JsonSetter("id")
+        public CreatedAtStage id(@NotNull String id) {
+            this.id = Objects.requireNonNull(id, "id must not be null");
             return this;
         }
 
         /**
          * <p>The time the conversation was created.</p>
+         * <p>The time the conversation was created.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
-        public Builder createdAt(Optional<Integer> createdAt) {
+        @java.lang.Override
+        @JsonSetter("created_at")
+        public UpdatedAtStage createdAt(int createdAt) {
             this.createdAt = createdAt;
-            return this;
-        }
-
-        public Builder createdAt(Integer createdAt) {
-            this.createdAt = Optional.ofNullable(createdAt);
             return this;
         }
 
         /**
          * <p>The last time the conversation was updated.</p>
+         * <p>The last time the conversation was updated.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
-        public Builder updatedAt(Optional<Integer> updatedAt) {
+        @java.lang.Override
+        @JsonSetter("updated_at")
+        public OpenStage updatedAt(int updatedAt) {
             this.updatedAt = updatedAt;
-            return this;
-        }
-
-        public Builder updatedAt(Integer updatedAt) {
-            this.updatedAt = Optional.ofNullable(updatedAt);
-            return this;
-        }
-
-        /**
-         * <p>The last time a Contact responded to an Admin. In other words, the time a customer started waiting for a response. Set to null if last reply is from an Admin.</p>
-         */
-        @JsonSetter(value = "waiting_since", nulls = Nulls.SKIP)
-        public Builder waitingSince(Optional<Integer> waitingSince) {
-            this.waitingSince = waitingSince;
-            return this;
-        }
-
-        public Builder waitingSince(Integer waitingSince) {
-            this.waitingSince = Optional.ofNullable(waitingSince);
-            return this;
-        }
-
-        /**
-         * <p>If set this is the time in the future when this conversation will be marked as open. i.e. it will be in a snoozed state until this time. i.e. it will be in a snoozed state until this time.</p>
-         */
-        @JsonSetter(value = "snoozed_until", nulls = Nulls.SKIP)
-        public Builder snoozedUntil(Optional<Integer> snoozedUntil) {
-            this.snoozedUntil = snoozedUntil;
-            return this;
-        }
-
-        public Builder snoozedUntil(Integer snoozedUntil) {
-            this.snoozedUntil = Optional.ofNullable(snoozedUntil);
             return this;
         }
 
         /**
          * <p>Indicates whether a conversation is open (true) or closed (false).</p>
+         * <p>Indicates whether a conversation is open (true) or closed (false).</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "open", nulls = Nulls.SKIP)
-        public Builder open(Optional<Boolean> open) {
+        @java.lang.Override
+        @JsonSetter("open")
+        public StateStage open(boolean open) {
             this.open = open;
-            return this;
-        }
-
-        public Builder open(Boolean open) {
-            this.open = Optional.ofNullable(open);
             return this;
         }
 
         /**
          * <p>Can be set to &quot;open&quot;, &quot;closed&quot; or &quot;snoozed&quot;.</p>
+         * <p>Can be set to &quot;open&quot;, &quot;closed&quot; or &quot;snoozed&quot;.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "state", nulls = Nulls.SKIP)
-        public Builder state(Optional<State> state) {
-            this.state = state;
-            return this;
-        }
-
-        public Builder state(State state) {
-            this.state = Optional.ofNullable(state);
+        @java.lang.Override
+        @JsonSetter("state")
+        public ReadStage state(@NotNull State state) {
+            this.state = Objects.requireNonNull(state, "state must not be null");
             return this;
         }
 
         /**
          * <p>Indicates whether a conversation has been read.</p>
+         * <p>Indicates whether a conversation has been read.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "read", nulls = Nulls.SKIP)
-        public Builder read(Optional<Boolean> read) {
+        @java.lang.Override
+        @JsonSetter("read")
+        public SourceStage read(boolean read) {
             this.read = read;
             return this;
         }
 
-        public Builder read(Boolean read) {
-            this.read = Optional.ofNullable(read);
+        @java.lang.Override
+        @JsonSetter("source")
+        public ContactsStage source(@NotNull ConversationSource source) {
+            this.source = Objects.requireNonNull(source, "source must not be null");
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter("contacts")
+        public _FinalStage contacts(@NotNull ConversationContacts contacts) {
+            this.contacts = Objects.requireNonNull(contacts, "contacts must not be null");
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage aiAgent(AiAgent aiAgent) {
+            this.aiAgent = Optional.ofNullable(aiAgent);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "ai_agent", nulls = Nulls.SKIP)
+        public _FinalStage aiAgent(Optional<AiAgent> aiAgent) {
+            this.aiAgent = aiAgent;
             return this;
         }
 
         /**
-         * <p>If marked as priority, it will return priority or else not_priority.</p>
+         * <p>Indicates whether the AI Agent participated in the conversation.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "priority", nulls = Nulls.SKIP)
-        public Builder priority(Optional<Priority> priority) {
-            this.priority = priority;
-            return this;
-        }
-
-        public Builder priority(Priority priority) {
-            this.priority = Optional.ofNullable(priority);
-            return this;
-        }
-
-        /**
-         * <p>The id of the admin assigned to the conversation. If it's not assigned to an admin it will return null.</p>
-         */
-        @JsonSetter(value = "admin_assignee_id", nulls = Nulls.SKIP)
-        public Builder adminAssigneeId(Optional<Integer> adminAssigneeId) {
-            this.adminAssigneeId = adminAssigneeId;
-            return this;
-        }
-
-        public Builder adminAssigneeId(Integer adminAssigneeId) {
-            this.adminAssigneeId = Optional.ofNullable(adminAssigneeId);
-            return this;
-        }
-
-        /**
-         * <p>The id of the team assigned to the conversation. If it's not assigned to a team it will return null.</p>
-         */
-        @JsonSetter(value = "team_assignee_id", nulls = Nulls.SKIP)
-        public Builder teamAssigneeId(Optional<String> teamAssigneeId) {
-            this.teamAssigneeId = teamAssigneeId;
-            return this;
-        }
-
-        public Builder teamAssigneeId(String teamAssigneeId) {
-            this.teamAssigneeId = Optional.ofNullable(teamAssigneeId);
-            return this;
-        }
-
-        /**
-         * <p>The ID of the company that the conversation is associated with. The unique identifier for the company which is given by Intercom.</p>
-         */
-        @JsonSetter(value = "company_id", nulls = Nulls.SKIP)
-        public Builder companyId(Optional<String> companyId) {
-            this.companyId = companyId;
-            return this;
-        }
-
-        public Builder companyId(String companyId) {
-            this.companyId = Optional.ofNullable(companyId);
-            return this;
-        }
-
-        @JsonSetter(value = "tags", nulls = Nulls.SKIP)
-        public Builder tags(Optional<Tags> tags) {
-            this.tags = tags;
-            return this;
-        }
-
-        public Builder tags(Tags tags) {
-            this.tags = Optional.ofNullable(tags);
-            return this;
-        }
-
-        @JsonSetter(value = "conversation_rating", nulls = Nulls.SKIP)
-        public Builder conversationRating(Optional<ConversationRating> conversationRating) {
-            this.conversationRating = conversationRating;
-            return this;
-        }
-
-        public Builder conversationRating(ConversationRating conversationRating) {
-            this.conversationRating = Optional.ofNullable(conversationRating);
-            return this;
-        }
-
-        @JsonSetter(value = "source", nulls = Nulls.SKIP)
-        public Builder source(Optional<ConversationSource> source) {
-            this.source = source;
-            return this;
-        }
-
-        public Builder source(ConversationSource source) {
-            this.source = Optional.ofNullable(source);
-            return this;
-        }
-
-        @JsonSetter(value = "contacts", nulls = Nulls.SKIP)
-        public Builder contacts(Optional<ConversationContacts> contacts) {
-            this.contacts = contacts;
-            return this;
-        }
-
-        public Builder contacts(ConversationContacts contacts) {
-            this.contacts = Optional.ofNullable(contacts);
-            return this;
-        }
-
-        @JsonSetter(value = "teammates", nulls = Nulls.SKIP)
-        public Builder teammates(Optional<ConversationTeammates> teammates) {
-            this.teammates = teammates;
-            return this;
-        }
-
-        public Builder teammates(ConversationTeammates teammates) {
-            this.teammates = Optional.ofNullable(teammates);
-            return this;
-        }
-
-        @JsonSetter(value = "custom_attributes", nulls = Nulls.SKIP)
-        public Builder customAttributes(Optional<Map<String, CustomAttributesValue>> customAttributes) {
-            this.customAttributes = customAttributes;
-            return this;
-        }
-
-        public Builder customAttributes(Map<String, CustomAttributesValue> customAttributes) {
-            this.customAttributes = Optional.ofNullable(customAttributes);
-            return this;
-        }
-
-        @JsonSetter(value = "first_contact_reply", nulls = Nulls.SKIP)
-        public Builder firstContactReply(Optional<ConversationFirstContactReply> firstContactReply) {
-            this.firstContactReply = firstContactReply;
-            return this;
-        }
-
-        public Builder firstContactReply(ConversationFirstContactReply firstContactReply) {
-            this.firstContactReply = Optional.ofNullable(firstContactReply);
-            return this;
-        }
-
-        @JsonSetter(value = "sla_applied", nulls = Nulls.SKIP)
-        public Builder slaApplied(Optional<SlaApplied> slaApplied) {
-            this.slaApplied = slaApplied;
-            return this;
-        }
-
-        public Builder slaApplied(SlaApplied slaApplied) {
-            this.slaApplied = Optional.ofNullable(slaApplied);
-            return this;
-        }
-
-        @JsonSetter(value = "statistics", nulls = Nulls.SKIP)
-        public Builder statistics(Optional<ConversationStatistics> statistics) {
-            this.statistics = statistics;
-            return this;
-        }
-
-        public Builder statistics(ConversationStatistics statistics) {
-            this.statistics = Optional.ofNullable(statistics);
-            return this;
-        }
-
-        @JsonSetter(value = "conversation_parts", nulls = Nulls.SKIP)
-        public Builder conversationParts(Optional<ConversationParts> conversationParts) {
-            this.conversationParts = conversationParts;
-            return this;
-        }
-
-        public Builder conversationParts(ConversationParts conversationParts) {
-            this.conversationParts = Optional.ofNullable(conversationParts);
-            return this;
-        }
-
-        @JsonSetter(value = "linked_objects", nulls = Nulls.SKIP)
-        public Builder linkedObjects(Optional<LinkedObjectList> linkedObjects) {
-            this.linkedObjects = linkedObjects;
-            return this;
-        }
-
-        public Builder linkedObjects(LinkedObjectList linkedObjects) {
-            this.linkedObjects = Optional.ofNullable(linkedObjects);
+        @java.lang.Override
+        public _FinalStage aiAgentParticipated(Boolean aiAgentParticipated) {
+            this.aiAgentParticipated = Optional.ofNullable(aiAgentParticipated);
             return this;
         }
 
         /**
          * <p>Indicates whether the AI Agent participated in the conversation.</p>
          */
+        @java.lang.Override
         @JsonSetter(value = "ai_agent_participated", nulls = Nulls.SKIP)
-        public Builder aiAgentParticipated(Optional<Boolean> aiAgentParticipated) {
+        public _FinalStage aiAgentParticipated(Optional<Boolean> aiAgentParticipated) {
             this.aiAgentParticipated = aiAgentParticipated;
             return this;
         }
 
-        public Builder aiAgentParticipated(Boolean aiAgentParticipated) {
-            this.aiAgentParticipated = Optional.ofNullable(aiAgentParticipated);
+        @java.lang.Override
+        public _FinalStage linkedObjects(LinkedObjectList linkedObjects) {
+            this.linkedObjects = Optional.ofNullable(linkedObjects);
             return this;
         }
 
-        @JsonSetter(value = "ai_agent", nulls = Nulls.SKIP)
-        public Builder aiAgent(Optional<AiAgent> aiAgent) {
-            this.aiAgent = aiAgent;
+        @java.lang.Override
+        @JsonSetter(value = "linked_objects", nulls = Nulls.SKIP)
+        public _FinalStage linkedObjects(Optional<LinkedObjectList> linkedObjects) {
+            this.linkedObjects = linkedObjects;
             return this;
         }
 
-        public Builder aiAgent(AiAgent aiAgent) {
-            this.aiAgent = Optional.ofNullable(aiAgent);
+        @java.lang.Override
+        public _FinalStage conversationParts(ConversationParts conversationParts) {
+            this.conversationParts = Optional.ofNullable(conversationParts);
             return this;
         }
 
+        @java.lang.Override
+        @JsonSetter(value = "conversation_parts", nulls = Nulls.SKIP)
+        public _FinalStage conversationParts(Optional<ConversationParts> conversationParts) {
+            this.conversationParts = conversationParts;
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage statistics(ConversationStatistics statistics) {
+            this.statistics = Optional.ofNullable(statistics);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "statistics", nulls = Nulls.SKIP)
+        public _FinalStage statistics(Optional<ConversationStatistics> statistics) {
+            this.statistics = statistics;
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage slaApplied(SlaApplied slaApplied) {
+            this.slaApplied = Optional.ofNullable(slaApplied);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "sla_applied", nulls = Nulls.SKIP)
+        public _FinalStage slaApplied(Optional<SlaApplied> slaApplied) {
+            this.slaApplied = slaApplied;
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage firstContactReply(ConversationFirstContactReply firstContactReply) {
+            this.firstContactReply = Optional.ofNullable(firstContactReply);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "first_contact_reply", nulls = Nulls.SKIP)
+        public _FinalStage firstContactReply(Optional<ConversationFirstContactReply> firstContactReply) {
+            this.firstContactReply = firstContactReply;
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage customAttributes(String key, CustomAttributesValue value) {
+            this.customAttributes.put(key, value);
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage putAllCustomAttributes(Map<String, CustomAttributesValue> customAttributes) {
+            if (customAttributes != null) {
+                this.customAttributes.putAll(customAttributes);
+            }
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "custom_attributes", nulls = Nulls.SKIP)
+        public _FinalStage customAttributes(Map<String, CustomAttributesValue> customAttributes) {
+            this.customAttributes.clear();
+            if (customAttributes != null) {
+                this.customAttributes.putAll(customAttributes);
+            }
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage teammates(ConversationTeammates teammates) {
+            this.teammates = Optional.ofNullable(teammates);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "teammates", nulls = Nulls.SKIP)
+        public _FinalStage teammates(Optional<ConversationTeammates> teammates) {
+            this.teammates = teammates;
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage conversationRating(ConversationRating conversationRating) {
+            this.conversationRating = Optional.ofNullable(conversationRating);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "conversation_rating", nulls = Nulls.SKIP)
+        public _FinalStage conversationRating(Optional<ConversationRating> conversationRating) {
+            this.conversationRating = conversationRating;
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage tags(Tags tags) {
+            this.tags = Optional.ofNullable(tags);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "tags", nulls = Nulls.SKIP)
+        public _FinalStage tags(Optional<Tags> tags) {
+            this.tags = tags;
+            return this;
+        }
+
+        /**
+         * <p>The ID of the company that the conversation is associated with. The unique identifier for the company which is given by Intercom.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage companyId(String companyId) {
+            this.companyId = Optional.ofNullable(companyId);
+            return this;
+        }
+
+        /**
+         * <p>The ID of the company that the conversation is associated with. The unique identifier for the company which is given by Intercom.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "company_id", nulls = Nulls.SKIP)
+        public _FinalStage companyId(Optional<String> companyId) {
+            this.companyId = companyId;
+            return this;
+        }
+
+        /**
+         * <p>The id of the team assigned to the conversation. If it's not assigned to a team it will return null.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage teamAssigneeId(String teamAssigneeId) {
+            this.teamAssigneeId = Optional.ofNullable(teamAssigneeId);
+            return this;
+        }
+
+        /**
+         * <p>The id of the team assigned to the conversation. If it's not assigned to a team it will return null.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "team_assignee_id", nulls = Nulls.SKIP)
+        public _FinalStage teamAssigneeId(Optional<String> teamAssigneeId) {
+            this.teamAssigneeId = teamAssigneeId;
+            return this;
+        }
+
+        /**
+         * <p>The id of the admin assigned to the conversation. If it's not assigned to an admin it will return null.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage adminAssigneeId(Integer adminAssigneeId) {
+            this.adminAssigneeId = Optional.ofNullable(adminAssigneeId);
+            return this;
+        }
+
+        /**
+         * <p>The id of the admin assigned to the conversation. If it's not assigned to an admin it will return null.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "admin_assignee_id", nulls = Nulls.SKIP)
+        public _FinalStage adminAssigneeId(Optional<Integer> adminAssigneeId) {
+            this.adminAssigneeId = adminAssigneeId;
+            return this;
+        }
+
+        /**
+         * <p>If marked as priority, it will return priority or else not_priority.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage priority(Priority priority) {
+            this.priority = Optional.ofNullable(priority);
+            return this;
+        }
+
+        /**
+         * <p>If marked as priority, it will return priority or else not_priority.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "priority", nulls = Nulls.SKIP)
+        public _FinalStage priority(Optional<Priority> priority) {
+            this.priority = priority;
+            return this;
+        }
+
+        /**
+         * <p>If set this is the time in the future when this conversation will be marked as open. i.e. it will be in a snoozed state until this time. i.e. it will be in a snoozed state until this time.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage snoozedUntil(Integer snoozedUntil) {
+            this.snoozedUntil = Optional.ofNullable(snoozedUntil);
+            return this;
+        }
+
+        /**
+         * <p>If set this is the time in the future when this conversation will be marked as open. i.e. it will be in a snoozed state until this time. i.e. it will be in a snoozed state until this time.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "snoozed_until", nulls = Nulls.SKIP)
+        public _FinalStage snoozedUntil(Optional<Integer> snoozedUntil) {
+            this.snoozedUntil = snoozedUntil;
+            return this;
+        }
+
+        /**
+         * <p>The last time a Contact responded to an Admin. In other words, the time a customer started waiting for a response. Set to null if last reply is from an Admin.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage waitingSince(Integer waitingSince) {
+            this.waitingSince = Optional.ofNullable(waitingSince);
+            return this;
+        }
+
+        /**
+         * <p>The last time a Contact responded to an Admin. In other words, the time a customer started waiting for a response. Set to null if last reply is from an Admin.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "waiting_since", nulls = Nulls.SKIP)
+        public _FinalStage waitingSince(Optional<Integer> waitingSince) {
+            this.waitingSince = waitingSince;
+            return this;
+        }
+
+        /**
+         * <p>The title given to the conversation.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage title(String title) {
+            this.title = Optional.ofNullable(title);
+            return this;
+        }
+
+        /**
+         * <p>The title given to the conversation.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "title", nulls = Nulls.SKIP)
+        public _FinalStage title(Optional<String> title) {
+            this.title = title;
+            return this;
+        }
+
+        @java.lang.Override
         public Conversation build() {
             return new Conversation(
                     type,

@@ -17,28 +17,28 @@ import com.intercom.api.core.ObjectMappers;
 import com.intercom.api.types.LinkedObjectList;
 import com.intercom.api.types.TicketParts;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = Ticket.Builder.class)
 public final class Ticket {
-    private final Optional<String> type;
+    private final String id;
 
-    private final Optional<String> id;
+    private final String ticketId;
 
-    private final Optional<String> ticketId;
+    private final Category category;
 
-    private final Optional<Category> category;
-
-    private final Optional<Map<String, Object>> ticketAttributes;
+    private final Map<String, Object> ticketAttributes;
 
     private final Optional<TicketState> ticketState;
 
     private final Optional<TicketType> ticketType;
 
-    private final Optional<TicketContacts> contacts;
+    private final TicketContacts contacts;
 
     private final Optional<String> adminAssigneeId;
 
@@ -61,14 +61,13 @@ public final class Ticket {
     private final Map<String, Object> additionalProperties;
 
     private Ticket(
-            Optional<String> type,
-            Optional<String> id,
-            Optional<String> ticketId,
-            Optional<Category> category,
-            Optional<Map<String, Object>> ticketAttributes,
+            String id,
+            String ticketId,
+            Category category,
+            Map<String, Object> ticketAttributes,
             Optional<TicketState> ticketState,
             Optional<TicketType> ticketType,
-            Optional<TicketContacts> contacts,
+            TicketContacts contacts,
             Optional<String> adminAssigneeId,
             Optional<String> teamAssigneeId,
             Optional<Integer> createdAt,
@@ -79,7 +78,6 @@ public final class Ticket {
             Optional<TicketParts> ticketParts,
             Optional<Boolean> isShared,
             Map<String, Object> additionalProperties) {
-        this.type = type;
         this.id = id;
         this.ticketId = ticketId;
         this.category = category;
@@ -103,15 +101,15 @@ public final class Ticket {
      * @return Always ticket
      */
     @JsonProperty("type")
-    public Optional<String> getType() {
-        return type;
+    public String getType() {
+        return "ticket";
     }
 
     /**
      * @return The unique identifier for the ticket which is given by Intercom.
      */
     @JsonProperty("id")
-    public Optional<String> getId() {
+    public String getId() {
         return id;
     }
 
@@ -119,7 +117,7 @@ public final class Ticket {
      * @return The ID of the Ticket used in the Intercom Inbox and Messenger. Do not use ticket_id for API queries.
      */
     @JsonProperty("ticket_id")
-    public Optional<String> getTicketId() {
+    public String getTicketId() {
         return ticketId;
     }
 
@@ -127,12 +125,12 @@ public final class Ticket {
      * @return Category of the Ticket.
      */
     @JsonProperty("category")
-    public Optional<Category> getCategory() {
+    public Category getCategory() {
         return category;
     }
 
     @JsonProperty("ticket_attributes")
-    public Optional<Map<String, Object>> getTicketAttributes() {
+    public Map<String, Object> getTicketAttributes() {
         return ticketAttributes;
     }
 
@@ -147,7 +145,7 @@ public final class Ticket {
     }
 
     @JsonProperty("contacts")
-    public Optional<TicketContacts> getContacts() {
+    public TicketContacts getContacts() {
         return contacts;
     }
 
@@ -229,8 +227,7 @@ public final class Ticket {
     }
 
     private boolean equalTo(Ticket other) {
-        return type.equals(other.type)
-                && id.equals(other.id)
+        return id.equals(other.id)
                 && ticketId.equals(other.ticketId)
                 && category.equals(other.category)
                 && ticketAttributes.equals(other.ticketAttributes)
@@ -251,7 +248,6 @@ public final class Ticket {
     @java.lang.Override
     public int hashCode() {
         return Objects.hash(
-                this.type,
                 this.id,
                 this.ticketId,
                 this.category,
@@ -275,53 +271,153 @@ public final class Ticket {
         return ObjectMappers.stringify(this);
     }
 
-    public static Builder builder() {
+    public static IdStage builder() {
         return new Builder();
     }
 
+    public interface IdStage {
+        /**
+         * <p>The unique identifier for the ticket which is given by Intercom.</p>
+         */
+        TicketIdStage id(@NotNull String id);
+
+        Builder from(Ticket other);
+    }
+
+    public interface TicketIdStage {
+        /**
+         * <p>The ID of the Ticket used in the Intercom Inbox and Messenger. Do not use ticket_id for API queries.</p>
+         */
+        CategoryStage ticketId(@NotNull String ticketId);
+    }
+
+    public interface CategoryStage {
+        /**
+         * <p>Category of the Ticket.</p>
+         */
+        ContactsStage category(@NotNull Category category);
+    }
+
+    public interface ContactsStage {
+        _FinalStage contacts(@NotNull TicketContacts contacts);
+    }
+
+    public interface _FinalStage {
+        Ticket build();
+
+        _FinalStage ticketAttributes(Map<String, Object> ticketAttributes);
+
+        _FinalStage putAllTicketAttributes(Map<String, Object> ticketAttributes);
+
+        _FinalStage ticketAttributes(String key, Object value);
+
+        _FinalStage ticketState(Optional<TicketState> ticketState);
+
+        _FinalStage ticketState(TicketState ticketState);
+
+        _FinalStage ticketType(Optional<TicketType> ticketType);
+
+        _FinalStage ticketType(TicketType ticketType);
+
+        /**
+         * <p>The id representing the admin assigned to the ticket.</p>
+         */
+        _FinalStage adminAssigneeId(Optional<String> adminAssigneeId);
+
+        _FinalStage adminAssigneeId(String adminAssigneeId);
+
+        /**
+         * <p>The id representing the team assigned to the ticket.</p>
+         */
+        _FinalStage teamAssigneeId(Optional<String> teamAssigneeId);
+
+        _FinalStage teamAssigneeId(String teamAssigneeId);
+
+        /**
+         * <p>The time the ticket was created as a UTC Unix timestamp.</p>
+         */
+        _FinalStage createdAt(Optional<Integer> createdAt);
+
+        _FinalStage createdAt(Integer createdAt);
+
+        /**
+         * <p>The last time the ticket was updated as a UTC Unix timestamp.</p>
+         */
+        _FinalStage updatedAt(Optional<Integer> updatedAt);
+
+        _FinalStage updatedAt(Integer updatedAt);
+
+        /**
+         * <p>Whether or not the ticket is open. If false, the ticket is closed.</p>
+         */
+        _FinalStage open(Optional<Boolean> open);
+
+        _FinalStage open(Boolean open);
+
+        /**
+         * <p>The time the ticket will be snoozed until as a UTC Unix timestamp. If null, the ticket is not currently snoozed.</p>
+         */
+        _FinalStage snoozedUntil(Optional<Integer> snoozedUntil);
+
+        _FinalStage snoozedUntil(Integer snoozedUntil);
+
+        _FinalStage linkedObjects(Optional<LinkedObjectList> linkedObjects);
+
+        _FinalStage linkedObjects(LinkedObjectList linkedObjects);
+
+        _FinalStage ticketParts(Optional<TicketParts> ticketParts);
+
+        _FinalStage ticketParts(TicketParts ticketParts);
+
+        /**
+         * <p>Whether or not the ticket is shared with the customer.</p>
+         */
+        _FinalStage isShared(Optional<Boolean> isShared);
+
+        _FinalStage isShared(Boolean isShared);
+    }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder {
-        private Optional<String> type = Optional.empty();
+    public static final class Builder implements IdStage, TicketIdStage, CategoryStage, ContactsStage, _FinalStage {
+        private String id;
 
-        private Optional<String> id = Optional.empty();
+        private String ticketId;
 
-        private Optional<String> ticketId = Optional.empty();
+        private Category category;
 
-        private Optional<Category> category = Optional.empty();
+        private TicketContacts contacts;
 
-        private Optional<Map<String, Object>> ticketAttributes = Optional.empty();
-
-        private Optional<TicketState> ticketState = Optional.empty();
-
-        private Optional<TicketType> ticketType = Optional.empty();
-
-        private Optional<TicketContacts> contacts = Optional.empty();
-
-        private Optional<String> adminAssigneeId = Optional.empty();
-
-        private Optional<String> teamAssigneeId = Optional.empty();
-
-        private Optional<Integer> createdAt = Optional.empty();
-
-        private Optional<Integer> updatedAt = Optional.empty();
-
-        private Optional<Boolean> open = Optional.empty();
-
-        private Optional<Integer> snoozedUntil = Optional.empty();
-
-        private Optional<LinkedObjectList> linkedObjects = Optional.empty();
+        private Optional<Boolean> isShared = Optional.empty();
 
         private Optional<TicketParts> ticketParts = Optional.empty();
 
-        private Optional<Boolean> isShared = Optional.empty();
+        private Optional<LinkedObjectList> linkedObjects = Optional.empty();
+
+        private Optional<Integer> snoozedUntil = Optional.empty();
+
+        private Optional<Boolean> open = Optional.empty();
+
+        private Optional<Integer> updatedAt = Optional.empty();
+
+        private Optional<Integer> createdAt = Optional.empty();
+
+        private Optional<String> teamAssigneeId = Optional.empty();
+
+        private Optional<String> adminAssigneeId = Optional.empty();
+
+        private Optional<TicketType> ticketType = Optional.empty();
+
+        private Optional<TicketState> ticketState = Optional.empty();
+
+        private Map<String, Object> ticketAttributes = new LinkedHashMap<>();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
+        @java.lang.Override
         public Builder from(Ticket other) {
-            type(other.getType());
             id(other.getId());
             ticketId(other.getTicketId());
             category(other.getCategory());
@@ -342,228 +438,267 @@ public final class Ticket {
         }
 
         /**
-         * <p>Always ticket</p>
-         */
-        @JsonSetter(value = "type", nulls = Nulls.SKIP)
-        public Builder type(Optional<String> type) {
-            this.type = type;
-            return this;
-        }
-
-        public Builder type(String type) {
-            this.type = Optional.ofNullable(type);
-            return this;
-        }
-
-        /**
          * <p>The unique identifier for the ticket which is given by Intercom.</p>
+         * <p>The unique identifier for the ticket which is given by Intercom.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "id", nulls = Nulls.SKIP)
-        public Builder id(Optional<String> id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder id(String id) {
-            this.id = Optional.ofNullable(id);
+        @java.lang.Override
+        @JsonSetter("id")
+        public TicketIdStage id(@NotNull String id) {
+            this.id = Objects.requireNonNull(id, "id must not be null");
             return this;
         }
 
         /**
          * <p>The ID of the Ticket used in the Intercom Inbox and Messenger. Do not use ticket_id for API queries.</p>
+         * <p>The ID of the Ticket used in the Intercom Inbox and Messenger. Do not use ticket_id for API queries.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "ticket_id", nulls = Nulls.SKIP)
-        public Builder ticketId(Optional<String> ticketId) {
-            this.ticketId = ticketId;
-            return this;
-        }
-
-        public Builder ticketId(String ticketId) {
-            this.ticketId = Optional.ofNullable(ticketId);
+        @java.lang.Override
+        @JsonSetter("ticket_id")
+        public CategoryStage ticketId(@NotNull String ticketId) {
+            this.ticketId = Objects.requireNonNull(ticketId, "ticketId must not be null");
             return this;
         }
 
         /**
          * <p>Category of the Ticket.</p>
+         * <p>Category of the Ticket.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "category", nulls = Nulls.SKIP)
-        public Builder category(Optional<Category> category) {
-            this.category = category;
+        @java.lang.Override
+        @JsonSetter("category")
+        public ContactsStage category(@NotNull Category category) {
+            this.category = Objects.requireNonNull(category, "category must not be null");
             return this;
         }
 
-        public Builder category(Category category) {
-            this.category = Optional.ofNullable(category);
-            return this;
-        }
-
-        @JsonSetter(value = "ticket_attributes", nulls = Nulls.SKIP)
-        public Builder ticketAttributes(Optional<Map<String, Object>> ticketAttributes) {
-            this.ticketAttributes = ticketAttributes;
-            return this;
-        }
-
-        public Builder ticketAttributes(Map<String, Object> ticketAttributes) {
-            this.ticketAttributes = Optional.ofNullable(ticketAttributes);
-            return this;
-        }
-
-        @JsonSetter(value = "ticket_state", nulls = Nulls.SKIP)
-        public Builder ticketState(Optional<TicketState> ticketState) {
-            this.ticketState = ticketState;
-            return this;
-        }
-
-        public Builder ticketState(TicketState ticketState) {
-            this.ticketState = Optional.ofNullable(ticketState);
-            return this;
-        }
-
-        @JsonSetter(value = "ticket_type", nulls = Nulls.SKIP)
-        public Builder ticketType(Optional<TicketType> ticketType) {
-            this.ticketType = ticketType;
-            return this;
-        }
-
-        public Builder ticketType(TicketType ticketType) {
-            this.ticketType = Optional.ofNullable(ticketType);
-            return this;
-        }
-
-        @JsonSetter(value = "contacts", nulls = Nulls.SKIP)
-        public Builder contacts(Optional<TicketContacts> contacts) {
-            this.contacts = contacts;
-            return this;
-        }
-
-        public Builder contacts(TicketContacts contacts) {
-            this.contacts = Optional.ofNullable(contacts);
+        @java.lang.Override
+        @JsonSetter("contacts")
+        public _FinalStage contacts(@NotNull TicketContacts contacts) {
+            this.contacts = Objects.requireNonNull(contacts, "contacts must not be null");
             return this;
         }
 
         /**
-         * <p>The id representing the admin assigned to the ticket.</p>
+         * <p>Whether or not the ticket is shared with the customer.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "admin_assignee_id", nulls = Nulls.SKIP)
-        public Builder adminAssigneeId(Optional<String> adminAssigneeId) {
-            this.adminAssigneeId = adminAssigneeId;
-            return this;
-        }
-
-        public Builder adminAssigneeId(String adminAssigneeId) {
-            this.adminAssigneeId = Optional.ofNullable(adminAssigneeId);
-            return this;
-        }
-
-        /**
-         * <p>The id representing the team assigned to the ticket.</p>
-         */
-        @JsonSetter(value = "team_assignee_id", nulls = Nulls.SKIP)
-        public Builder teamAssigneeId(Optional<String> teamAssigneeId) {
-            this.teamAssigneeId = teamAssigneeId;
-            return this;
-        }
-
-        public Builder teamAssigneeId(String teamAssigneeId) {
-            this.teamAssigneeId = Optional.ofNullable(teamAssigneeId);
-            return this;
-        }
-
-        /**
-         * <p>The time the ticket was created as a UTC Unix timestamp.</p>
-         */
-        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
-        public Builder createdAt(Optional<Integer> createdAt) {
-            this.createdAt = createdAt;
-            return this;
-        }
-
-        public Builder createdAt(Integer createdAt) {
-            this.createdAt = Optional.ofNullable(createdAt);
-            return this;
-        }
-
-        /**
-         * <p>The last time the ticket was updated as a UTC Unix timestamp.</p>
-         */
-        @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
-        public Builder updatedAt(Optional<Integer> updatedAt) {
-            this.updatedAt = updatedAt;
-            return this;
-        }
-
-        public Builder updatedAt(Integer updatedAt) {
-            this.updatedAt = Optional.ofNullable(updatedAt);
-            return this;
-        }
-
-        /**
-         * <p>Whether or not the ticket is open. If false, the ticket is closed.</p>
-         */
-        @JsonSetter(value = "open", nulls = Nulls.SKIP)
-        public Builder open(Optional<Boolean> open) {
-            this.open = open;
-            return this;
-        }
-
-        public Builder open(Boolean open) {
-            this.open = Optional.ofNullable(open);
-            return this;
-        }
-
-        /**
-         * <p>The time the ticket will be snoozed until as a UTC Unix timestamp. If null, the ticket is not currently snoozed.</p>
-         */
-        @JsonSetter(value = "snoozed_until", nulls = Nulls.SKIP)
-        public Builder snoozedUntil(Optional<Integer> snoozedUntil) {
-            this.snoozedUntil = snoozedUntil;
-            return this;
-        }
-
-        public Builder snoozedUntil(Integer snoozedUntil) {
-            this.snoozedUntil = Optional.ofNullable(snoozedUntil);
-            return this;
-        }
-
-        @JsonSetter(value = "linked_objects", nulls = Nulls.SKIP)
-        public Builder linkedObjects(Optional<LinkedObjectList> linkedObjects) {
-            this.linkedObjects = linkedObjects;
-            return this;
-        }
-
-        public Builder linkedObjects(LinkedObjectList linkedObjects) {
-            this.linkedObjects = Optional.ofNullable(linkedObjects);
-            return this;
-        }
-
-        @JsonSetter(value = "ticket_parts", nulls = Nulls.SKIP)
-        public Builder ticketParts(Optional<TicketParts> ticketParts) {
-            this.ticketParts = ticketParts;
-            return this;
-        }
-
-        public Builder ticketParts(TicketParts ticketParts) {
-            this.ticketParts = Optional.ofNullable(ticketParts);
+        @java.lang.Override
+        public _FinalStage isShared(Boolean isShared) {
+            this.isShared = Optional.ofNullable(isShared);
             return this;
         }
 
         /**
          * <p>Whether or not the ticket is shared with the customer.</p>
          */
+        @java.lang.Override
         @JsonSetter(value = "is_shared", nulls = Nulls.SKIP)
-        public Builder isShared(Optional<Boolean> isShared) {
+        public _FinalStage isShared(Optional<Boolean> isShared) {
             this.isShared = isShared;
             return this;
         }
 
-        public Builder isShared(Boolean isShared) {
-            this.isShared = Optional.ofNullable(isShared);
+        @java.lang.Override
+        public _FinalStage ticketParts(TicketParts ticketParts) {
+            this.ticketParts = Optional.ofNullable(ticketParts);
             return this;
         }
 
+        @java.lang.Override
+        @JsonSetter(value = "ticket_parts", nulls = Nulls.SKIP)
+        public _FinalStage ticketParts(Optional<TicketParts> ticketParts) {
+            this.ticketParts = ticketParts;
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage linkedObjects(LinkedObjectList linkedObjects) {
+            this.linkedObjects = Optional.ofNullable(linkedObjects);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "linked_objects", nulls = Nulls.SKIP)
+        public _FinalStage linkedObjects(Optional<LinkedObjectList> linkedObjects) {
+            this.linkedObjects = linkedObjects;
+            return this;
+        }
+
+        /**
+         * <p>The time the ticket will be snoozed until as a UTC Unix timestamp. If null, the ticket is not currently snoozed.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage snoozedUntil(Integer snoozedUntil) {
+            this.snoozedUntil = Optional.ofNullable(snoozedUntil);
+            return this;
+        }
+
+        /**
+         * <p>The time the ticket will be snoozed until as a UTC Unix timestamp. If null, the ticket is not currently snoozed.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "snoozed_until", nulls = Nulls.SKIP)
+        public _FinalStage snoozedUntil(Optional<Integer> snoozedUntil) {
+            this.snoozedUntil = snoozedUntil;
+            return this;
+        }
+
+        /**
+         * <p>Whether or not the ticket is open. If false, the ticket is closed.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage open(Boolean open) {
+            this.open = Optional.ofNullable(open);
+            return this;
+        }
+
+        /**
+         * <p>Whether or not the ticket is open. If false, the ticket is closed.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "open", nulls = Nulls.SKIP)
+        public _FinalStage open(Optional<Boolean> open) {
+            this.open = open;
+            return this;
+        }
+
+        /**
+         * <p>The last time the ticket was updated as a UTC Unix timestamp.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage updatedAt(Integer updatedAt) {
+            this.updatedAt = Optional.ofNullable(updatedAt);
+            return this;
+        }
+
+        /**
+         * <p>The last time the ticket was updated as a UTC Unix timestamp.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
+        public _FinalStage updatedAt(Optional<Integer> updatedAt) {
+            this.updatedAt = updatedAt;
+            return this;
+        }
+
+        /**
+         * <p>The time the ticket was created as a UTC Unix timestamp.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage createdAt(Integer createdAt) {
+            this.createdAt = Optional.ofNullable(createdAt);
+            return this;
+        }
+
+        /**
+         * <p>The time the ticket was created as a UTC Unix timestamp.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
+        public _FinalStage createdAt(Optional<Integer> createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        /**
+         * <p>The id representing the team assigned to the ticket.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage teamAssigneeId(String teamAssigneeId) {
+            this.teamAssigneeId = Optional.ofNullable(teamAssigneeId);
+            return this;
+        }
+
+        /**
+         * <p>The id representing the team assigned to the ticket.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "team_assignee_id", nulls = Nulls.SKIP)
+        public _FinalStage teamAssigneeId(Optional<String> teamAssigneeId) {
+            this.teamAssigneeId = teamAssigneeId;
+            return this;
+        }
+
+        /**
+         * <p>The id representing the admin assigned to the ticket.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage adminAssigneeId(String adminAssigneeId) {
+            this.adminAssigneeId = Optional.ofNullable(adminAssigneeId);
+            return this;
+        }
+
+        /**
+         * <p>The id representing the admin assigned to the ticket.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "admin_assignee_id", nulls = Nulls.SKIP)
+        public _FinalStage adminAssigneeId(Optional<String> adminAssigneeId) {
+            this.adminAssigneeId = adminAssigneeId;
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage ticketType(TicketType ticketType) {
+            this.ticketType = Optional.ofNullable(ticketType);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "ticket_type", nulls = Nulls.SKIP)
+        public _FinalStage ticketType(Optional<TicketType> ticketType) {
+            this.ticketType = ticketType;
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage ticketState(TicketState ticketState) {
+            this.ticketState = Optional.ofNullable(ticketState);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "ticket_state", nulls = Nulls.SKIP)
+        public _FinalStage ticketState(Optional<TicketState> ticketState) {
+            this.ticketState = ticketState;
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage ticketAttributes(String key, Object value) {
+            this.ticketAttributes.put(key, value);
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage putAllTicketAttributes(Map<String, Object> ticketAttributes) {
+            if (ticketAttributes != null) {
+                this.ticketAttributes.putAll(ticketAttributes);
+            }
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "ticket_attributes", nulls = Nulls.SKIP)
+        public _FinalStage ticketAttributes(Map<String, Object> ticketAttributes) {
+            this.ticketAttributes.clear();
+            if (ticketAttributes != null) {
+                this.ticketAttributes.putAll(ticketAttributes);
+            }
+            return this;
+        }
+
+        @java.lang.Override
         public Ticket build() {
             return new Ticket(
-                    type,
                     id,
                     ticketId,
                     category,
