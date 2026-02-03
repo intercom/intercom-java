@@ -42,11 +42,7 @@ public class CompaniesTest {
                 client.contacts().list(ListContactsRequest.builder().perPage(1).build());
 
         // act
-        contactId = randomContacts
-                .getItems()
-                .get(0)
-                .getId()
-                .orElseThrow(() -> new RuntimeException("Contact ID is required"));
+        contactId = randomContacts.getItems().get(0).getId();
         company = client.companies()
                 .createOrUpdate(java.util.Optional.of(CreateOrUpdateCompanyRequest.builder()
                         .name(Utils.randomString())

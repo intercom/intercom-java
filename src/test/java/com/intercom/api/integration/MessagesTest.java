@@ -42,7 +42,7 @@ public class MessagesTest {
                         .externalId(Utils.randomString())
                         .name("Message Test User")
                         .build()));
-        userId = user.getId().orElseThrow(() -> new RuntimeException("User ID is required"));
+        userId = user.getId();
     }
 
     @AfterEach
