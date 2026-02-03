@@ -121,7 +121,7 @@ public class TagsTest {
                 .create(CreateContactRequest.of(CreateContactRequest.WithExternalId.builder()
                         .externalId(Utils.randomString())
                         .build()));
-        String contactId = contact.getId().orElseThrow(() -> new RuntimeException("Contact ID is required"));
+        String contactId = contact.getId();
 
         // act
         Tag response = client.tags()
@@ -204,7 +204,7 @@ public class TagsTest {
                         .externalId(Utils.randomString())
                         .name("John Smith")
                         .build()));
-        String contactId = contact.getId().orElseThrow(() -> new RuntimeException("Contact ID is required"));
+        String contactId = contact.getId();
 
         Message conversationMessage = client.conversations()
                 .create(CreateConversationRequest.builder()
@@ -228,12 +228,9 @@ public class TagsTest {
 
         Conversation conversation = client.conversations()
                 .find(FindConversationRequest.builder()
-                        .conversationId(conversationMessage
-                                .getConversationId()
-                                .orElseThrow(() -> new RuntimeException("Conversation ID is required")))
+                        .conversationId(conversationMessage.getConversationId())
                         .build());
-        String conversationId =
-                conversation.getId().orElseThrow(() -> new RuntimeException("Conversation ID is required"));
+        String conversationId = conversation.getId();
 
         // act
         Tag response = client.tags()
