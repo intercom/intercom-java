@@ -44,7 +44,7 @@ public class DataAttributesTest {
                 ObjectMappers.JSON_MAPPER.convertValue(createRequestData, CreateDataAttributeRequest.class);
 
         dataAttribute = client.dataAttributes().create(createRequest);
-        dataAttributeId = dataAttribute.getId().orElseThrow(() -> new RuntimeException("dataAttribute.id is required"));
+        dataAttributeId = Integer.parseInt(dataAttribute.getId());
     }
 
     @Test

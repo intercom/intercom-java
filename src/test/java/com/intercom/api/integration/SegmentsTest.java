@@ -24,7 +24,7 @@ public class SegmentsTest {
                 .getSegments()
                 .orElseThrow(() -> new RuntimeException("Segments list is required"))
                 .get(0);
-        segmentId = segment.getId().orElseThrow(() -> new RuntimeException("Segment ID is required"));
+        segmentId = segment.getId();
     }
 
     @Test
