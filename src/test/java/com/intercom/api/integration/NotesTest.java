@@ -43,7 +43,7 @@ public class NotesTest {
                 .create(CreateContactRequest.of(CreateContactRequest.WithExternalId.builder()
                         .externalId(Utils.randomString())
                         .build()));
-        contactId = contact.getId().orElseThrow(() -> new RuntimeException("Contact ID is required"));
+        contactId = contact.getId();
 
         note = client.notes()
                 .create(CreateContactNoteRequest.builder()
@@ -51,7 +51,7 @@ public class NotesTest {
                         .body(Utils.randomString())
                         .adminId(adminId)
                         .build());
-        noteId = Integer.parseInt(note.getId().orElseThrow(() -> new RuntimeException("Note ID is required")));
+        noteId = Integer.parseInt(note.getId());
     }
 
     @AfterEach

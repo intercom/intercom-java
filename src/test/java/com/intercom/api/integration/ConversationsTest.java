@@ -86,19 +86,19 @@ public class ConversationsTest {
                         .externalId(Utils.randomString())
                         .name("Baba Booey")
                         .build()));
-        userId = user.getId().orElseThrow(() -> new RuntimeException("User ID is required"));
+        userId = user.getId();
         secondUser = client.contacts()
                 .create(CreateContactRequest.of(CreateContactRequest.WithExternalId.builder()
                         .externalId(Utils.randomString())
                         .name("Babusha Boy")
                         .build()));
-        secondUserId = secondUser.getId().orElseThrow(() -> new RuntimeException("Second user ID is required"));
+        secondUserId = secondUser.getId();
         lead = client.contacts()
                 .create(CreateContactRequest.of(CreateContactRequest.WithExternalId.builder()
                         .externalId(Utils.randomString())
                         .name("Babushka Lead")
                         .build()));
-        leadId = lead.getId().orElseThrow(() -> new RuntimeException("Lead ID is required"));
+        leadId = lead.getId();
 
         Message conversationMessage = client.conversations()
                 .create(CreateConversationRequest.builder()
@@ -120,14 +120,12 @@ public class ConversationsTest {
             after();
         }
 
-        String msgConversationId = conversationMessage
-                .getConversationId()
-                .orElseThrow(() -> new RuntimeException("Conversation ID is required"));
+        String msgConversationId = conversationMessage.getConversationId();
         conversation = client.conversations()
                 .find(FindConversationRequest.builder()
                         .conversationId(msgConversationId)
                         .build());
-        conversationId = conversation.getId().orElseThrow(() -> new RuntimeException("Conversation ID is required"));
+        conversationId = conversation.getId();
     }
 
     @AfterEach

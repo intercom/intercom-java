@@ -61,13 +61,13 @@ public class IntegrationTest {
                 .create(CreateContactRequest.of(CreateContactRequest.WithExternalId.builder()
                         .externalId(Utils.randomString())
                         .build()));
-        userId = user.getId();
+        userId = user.getId().orElseThrow(() -> new RuntimeException("User ID is required"));
         lead = client.contacts()
                 .create(CreateContactRequest.of(CreateContactRequest.WithRole.builder()
                         .role("lead")
                         .name("Marek Barek")
                         .build()));
-        leadId = lead.getId();
+        leadId = lead.getId().orElseThrow(() -> new RuntimeException("Lead ID is required"));
         tag = client.tags()
                 .create(TagsCreateRequestBody.of(CreateOrUpdateTagRequest.builder()
                         .name(Utils.randomString())
@@ -126,7 +126,8 @@ public class IntegrationTest {
         // act
         Tag response = client.tags()
                 .tagConversation(TagConversationRequest.builder()
-                        .conversationId(message.getConversationId())
+                        .conversationId(message.getConversationId()
+                                .orElseThrow(() -> new RuntimeException("Conversation ID is required")))
                         .tagId(tag.getId())
                         .adminId(adminId)
                         .build());
