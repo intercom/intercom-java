@@ -23,8 +23,7 @@ public class TeamsTest {
                 .getTeams()
                 .orElseThrow(() -> new RuntimeException("Teams list is required"))
                 .get(0)
-                .getId()
-                .orElseThrow(() -> new RuntimeException("Team ID is required"));
+                .getId();
     }
 
     @Test

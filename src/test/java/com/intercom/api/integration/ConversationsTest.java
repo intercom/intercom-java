@@ -318,8 +318,7 @@ public class ConversationsTest {
                                 .conversationPartId(conversation
                                         .getConversationParts()
                                         .flatMap(parts -> parts.getConversationParts())
-                                        .map(list -> list.get(2))
-                                        .flatMap(part -> part.getId())
+                                        .map(list -> list.get(2).getId())
                                         .orElse(""))
                                 .build()));
 
