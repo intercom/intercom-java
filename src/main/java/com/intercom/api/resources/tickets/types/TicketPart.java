@@ -33,11 +33,11 @@ import org.jetbrains.annotations.NotNull;
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = TicketPart.Builder.class)
 public final class TicketPart {
-    private final Optional<String> type;
+    private final String type;
 
-    private final Optional<String> id;
+    private final String id;
 
-    private final Optional<String> partType;
+    private final String partType;
 
     private final Optional<String> body;
 
@@ -45,19 +45,19 @@ public final class TicketPart {
 
     private final Optional<TicketState> ticketState;
 
-    private final Optional<Integer> createdAt;
+    private final int createdAt;
 
-    private final Optional<Integer> updatedAt;
+    private final int updatedAt;
 
     private final Optional<Reference> assignedTo;
 
-    private final Optional<TicketPartAuthor> author;
+    private final TicketPartAuthor author;
 
     private final Optional<List<PartAttachment>> attachments;
 
     private final Optional<String> externalId;
 
-    private final Optional<Boolean> redacted;
+    private final boolean redacted;
 
     private final Optional<String> appPackageCode;
 
@@ -66,19 +66,19 @@ public final class TicketPart {
     private final Map<String, Object> additionalProperties;
 
     private TicketPart(
-            Optional<String> type,
-            Optional<String> id,
-            Optional<String> partType,
+            String type,
+            String id,
+            String partType,
             Optional<String> body,
             Optional<PreviousTicketState> previousTicketState,
             Optional<TicketState> ticketState,
-            Optional<Integer> createdAt,
-            Optional<Integer> updatedAt,
+            int createdAt,
+            int updatedAt,
             Optional<Reference> assignedTo,
-            Optional<TicketPartAuthor> author,
+            TicketPartAuthor author,
             Optional<List<PartAttachment>> attachments,
             Optional<String> externalId,
-            Optional<Boolean> redacted,
+            boolean redacted,
             Optional<String> appPackageCode,
             Optional<UpdatedAttributeData> updatedAttributeData,
             Map<String, Object> additionalProperties) {
@@ -104,7 +104,7 @@ public final class TicketPart {
      * @return Always ticket_part
      */
     @JsonProperty("type")
-    public Optional<String> getType() {
+    public String getType() {
         return type;
     }
 
@@ -112,7 +112,7 @@ public final class TicketPart {
      * @return The id representing the ticket part.
      */
     @JsonProperty("id")
-    public Optional<String> getId() {
+    public String getId() {
         return id;
     }
 
@@ -120,7 +120,7 @@ public final class TicketPart {
      * @return The type of ticket part.
      */
     @JsonProperty("part_type")
-    public Optional<String> getPartType() {
+    public String getPartType() {
         return partType;
     }
 
@@ -152,7 +152,7 @@ public final class TicketPart {
      * @return The time the ticket part was created.
      */
     @JsonProperty("created_at")
-    public Optional<Integer> getCreatedAt() {
+    public int getCreatedAt() {
         return createdAt;
     }
 
@@ -160,7 +160,7 @@ public final class TicketPart {
      * @return The last time the ticket part was updated.
      */
     @JsonProperty("updated_at")
-    public Optional<Integer> getUpdatedAt() {
+    public int getUpdatedAt() {
         return updatedAt;
     }
 
@@ -173,7 +173,7 @@ public final class TicketPart {
     }
 
     @JsonProperty("author")
-    public Optional<TicketPartAuthor> getAuthor() {
+    public TicketPartAuthor getAuthor() {
         return author;
     }
 
@@ -197,7 +197,7 @@ public final class TicketPart {
      * @return Whether or not the ticket part has been redacted.
      */
     @JsonProperty("redacted")
-    public Optional<Boolean> getRedacted() {
+    public boolean getRedacted() {
         return redacted;
     }
 
@@ -235,13 +235,13 @@ public final class TicketPart {
                 && body.equals(other.body)
                 && previousTicketState.equals(other.previousTicketState)
                 && ticketState.equals(other.ticketState)
-                && createdAt.equals(other.createdAt)
-                && updatedAt.equals(other.updatedAt)
+                && createdAt == other.createdAt
+                && updatedAt == other.updatedAt
                 && assignedTo.equals(other.assignedTo)
                 && author.equals(other.author)
                 && attachments.equals(other.attachments)
                 && externalId.equals(other.externalId)
-                && redacted.equals(other.redacted)
+                && redacted == other.redacted
                 && appPackageCode.equals(other.appPackageCode)
                 && updatedAttributeData.equals(other.updatedAttributeData);
     }
@@ -271,47 +271,164 @@ public final class TicketPart {
         return ObjectMappers.stringify(this);
     }
 
-    public static Builder builder() {
+    public static TypeStage builder() {
         return new Builder();
     }
 
+    public interface TypeStage {
+        /**
+         * <p>Always ticket_part</p>
+         */
+        IdStage type(@NotNull String type);
+
+        Builder from(TicketPart other);
+    }
+
+    public interface IdStage {
+        /**
+         * <p>The id representing the ticket part.</p>
+         */
+        PartTypeStage id(@NotNull String id);
+    }
+
+    public interface PartTypeStage {
+        /**
+         * <p>The type of ticket part.</p>
+         */
+        CreatedAtStage partType(@NotNull String partType);
+    }
+
+    public interface CreatedAtStage {
+        /**
+         * <p>The time the ticket part was created.</p>
+         */
+        UpdatedAtStage createdAt(int createdAt);
+    }
+
+    public interface UpdatedAtStage {
+        /**
+         * <p>The last time the ticket part was updated.</p>
+         */
+        AuthorStage updatedAt(int updatedAt);
+    }
+
+    public interface AuthorStage {
+        RedactedStage author(@NotNull TicketPartAuthor author);
+    }
+
+    public interface RedactedStage {
+        /**
+         * <p>Whether or not the ticket part has been redacted.</p>
+         */
+        _FinalStage redacted(boolean redacted);
+    }
+
+    public interface _FinalStage {
+        TicketPart build();
+
+        /**
+         * <p>The message body, which may contain HTML.</p>
+         */
+        _FinalStage body(Optional<String> body);
+
+        _FinalStage body(String body);
+
+        /**
+         * <p>The previous state of the ticket.</p>
+         */
+        _FinalStage previousTicketState(Optional<PreviousTicketState> previousTicketState);
+
+        _FinalStage previousTicketState(PreviousTicketState previousTicketState);
+
+        /**
+         * <p>The state of the ticket.</p>
+         */
+        _FinalStage ticketState(Optional<TicketState> ticketState);
+
+        _FinalStage ticketState(TicketState ticketState);
+
+        /**
+         * <p>The id of the admin that was assigned the ticket by this ticket_part (null if there has been no change in assignment.)</p>
+         */
+        _FinalStage assignedTo(Optional<Reference> assignedTo);
+
+        _FinalStage assignedTo(Reference assignedTo);
+
+        /**
+         * <p>A list of attachments for the part.</p>
+         */
+        _FinalStage attachments(Optional<List<PartAttachment>> attachments);
+
+        _FinalStage attachments(List<PartAttachment> attachments);
+
+        /**
+         * <p>The external id of the ticket part</p>
+         */
+        _FinalStage externalId(Optional<String> externalId);
+
+        _FinalStage externalId(String externalId);
+
+        /**
+         * <p>The app package code if this part was created via API. Note this field won't show if the part was not created via API.</p>
+         */
+        _FinalStage appPackageCode(Optional<String> appPackageCode);
+
+        _FinalStage appPackageCode(String appPackageCode);
+
+        /**
+         * <p>The updated attribute data of the ticket part. Only present for attribute update parts.</p>
+         */
+        _FinalStage updatedAttributeData(Optional<UpdatedAttributeData> updatedAttributeData);
+
+        _FinalStage updatedAttributeData(UpdatedAttributeData updatedAttributeData);
+    }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder {
-        private Optional<String> type = Optional.empty();
+    public static final class Builder
+            implements TypeStage,
+                    IdStage,
+                    PartTypeStage,
+                    CreatedAtStage,
+                    UpdatedAtStage,
+                    AuthorStage,
+                    RedactedStage,
+                    _FinalStage {
+        private String type;
 
-        private Optional<String> id = Optional.empty();
+        private String id;
 
-        private Optional<String> partType = Optional.empty();
+        private String partType;
 
-        private Optional<String> body = Optional.empty();
+        private int createdAt;
 
-        private Optional<PreviousTicketState> previousTicketState = Optional.empty();
+        private int updatedAt;
 
-        private Optional<TicketState> ticketState = Optional.empty();
+        private TicketPartAuthor author;
 
-        private Optional<Integer> createdAt = Optional.empty();
+        private boolean redacted;
 
-        private Optional<Integer> updatedAt = Optional.empty();
-
-        private Optional<Reference> assignedTo = Optional.empty();
-
-        private Optional<TicketPartAuthor> author = Optional.empty();
-
-        private Optional<List<PartAttachment>> attachments = Optional.empty();
-
-        private Optional<String> externalId = Optional.empty();
-
-        private Optional<Boolean> redacted = Optional.empty();
+        private Optional<UpdatedAttributeData> updatedAttributeData = Optional.empty();
 
         private Optional<String> appPackageCode = Optional.empty();
 
-        private Optional<UpdatedAttributeData> updatedAttributeData = Optional.empty();
+        private Optional<String> externalId = Optional.empty();
+
+        private Optional<List<PartAttachment>> attachments = Optional.empty();
+
+        private Optional<Reference> assignedTo = Optional.empty();
+
+        private Optional<TicketState> ticketState = Optional.empty();
+
+        private Optional<PreviousTicketState> previousTicketState = Optional.empty();
+
+        private Optional<String> body = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
+        @java.lang.Override
         public Builder from(TicketPart other) {
             type(other.getType());
             id(other.getId());
@@ -333,211 +450,244 @@ public final class TicketPart {
 
         /**
          * <p>Always ticket_part</p>
+         * <p>Always ticket_part</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "type", nulls = Nulls.SKIP)
-        public Builder type(Optional<String> type) {
-            this.type = type;
-            return this;
-        }
-
-        public Builder type(String type) {
-            this.type = Optional.ofNullable(type);
+        @java.lang.Override
+        @JsonSetter("type")
+        public IdStage type(@NotNull String type) {
+            this.type = Objects.requireNonNull(type, "type must not be null");
             return this;
         }
 
         /**
          * <p>The id representing the ticket part.</p>
+         * <p>The id representing the ticket part.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "id", nulls = Nulls.SKIP)
-        public Builder id(Optional<String> id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder id(String id) {
-            this.id = Optional.ofNullable(id);
+        @java.lang.Override
+        @JsonSetter("id")
+        public PartTypeStage id(@NotNull String id) {
+            this.id = Objects.requireNonNull(id, "id must not be null");
             return this;
         }
 
         /**
          * <p>The type of ticket part.</p>
+         * <p>The type of ticket part.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "part_type", nulls = Nulls.SKIP)
-        public Builder partType(Optional<String> partType) {
-            this.partType = partType;
-            return this;
-        }
-
-        public Builder partType(String partType) {
-            this.partType = Optional.ofNullable(partType);
-            return this;
-        }
-
-        /**
-         * <p>The message body, which may contain HTML.</p>
-         */
-        @JsonSetter(value = "body", nulls = Nulls.SKIP)
-        public Builder body(Optional<String> body) {
-            this.body = body;
-            return this;
-        }
-
-        public Builder body(String body) {
-            this.body = Optional.ofNullable(body);
-            return this;
-        }
-
-        /**
-         * <p>The previous state of the ticket.</p>
-         */
-        @JsonSetter(value = "previous_ticket_state", nulls = Nulls.SKIP)
-        public Builder previousTicketState(Optional<PreviousTicketState> previousTicketState) {
-            this.previousTicketState = previousTicketState;
-            return this;
-        }
-
-        public Builder previousTicketState(PreviousTicketState previousTicketState) {
-            this.previousTicketState = Optional.ofNullable(previousTicketState);
-            return this;
-        }
-
-        /**
-         * <p>The state of the ticket.</p>
-         */
-        @JsonSetter(value = "ticket_state", nulls = Nulls.SKIP)
-        public Builder ticketState(Optional<TicketState> ticketState) {
-            this.ticketState = ticketState;
-            return this;
-        }
-
-        public Builder ticketState(TicketState ticketState) {
-            this.ticketState = Optional.ofNullable(ticketState);
+        @java.lang.Override
+        @JsonSetter("part_type")
+        public CreatedAtStage partType(@NotNull String partType) {
+            this.partType = Objects.requireNonNull(partType, "partType must not be null");
             return this;
         }
 
         /**
          * <p>The time the ticket part was created.</p>
+         * <p>The time the ticket part was created.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
-        public Builder createdAt(Optional<Integer> createdAt) {
+        @java.lang.Override
+        @JsonSetter("created_at")
+        public UpdatedAtStage createdAt(int createdAt) {
             this.createdAt = createdAt;
-            return this;
-        }
-
-        public Builder createdAt(Integer createdAt) {
-            this.createdAt = Optional.ofNullable(createdAt);
             return this;
         }
 
         /**
          * <p>The last time the ticket part was updated.</p>
+         * <p>The last time the ticket part was updated.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
-        public Builder updatedAt(Optional<Integer> updatedAt) {
+        @java.lang.Override
+        @JsonSetter("updated_at")
+        public AuthorStage updatedAt(int updatedAt) {
             this.updatedAt = updatedAt;
             return this;
         }
 
-        public Builder updatedAt(Integer updatedAt) {
-            this.updatedAt = Optional.ofNullable(updatedAt);
-            return this;
-        }
-
-        /**
-         * <p>The id of the admin that was assigned the ticket by this ticket_part (null if there has been no change in assignment.)</p>
-         */
-        @JsonSetter(value = "assigned_to", nulls = Nulls.SKIP)
-        public Builder assignedTo(Optional<Reference> assignedTo) {
-            this.assignedTo = assignedTo;
-            return this;
-        }
-
-        public Builder assignedTo(Reference assignedTo) {
-            this.assignedTo = Optional.ofNullable(assignedTo);
-            return this;
-        }
-
-        @JsonSetter(value = "author", nulls = Nulls.SKIP)
-        public Builder author(Optional<TicketPartAuthor> author) {
-            this.author = author;
-            return this;
-        }
-
-        public Builder author(TicketPartAuthor author) {
-            this.author = Optional.ofNullable(author);
-            return this;
-        }
-
-        /**
-         * <p>A list of attachments for the part.</p>
-         */
-        @JsonSetter(value = "attachments", nulls = Nulls.SKIP)
-        public Builder attachments(Optional<List<PartAttachment>> attachments) {
-            this.attachments = attachments;
-            return this;
-        }
-
-        public Builder attachments(List<PartAttachment> attachments) {
-            this.attachments = Optional.ofNullable(attachments);
-            return this;
-        }
-
-        /**
-         * <p>The external id of the ticket part</p>
-         */
-        @JsonSetter(value = "external_id", nulls = Nulls.SKIP)
-        public Builder externalId(Optional<String> externalId) {
-            this.externalId = externalId;
-            return this;
-        }
-
-        public Builder externalId(String externalId) {
-            this.externalId = Optional.ofNullable(externalId);
+        @java.lang.Override
+        @JsonSetter("author")
+        public RedactedStage author(@NotNull TicketPartAuthor author) {
+            this.author = Objects.requireNonNull(author, "author must not be null");
             return this;
         }
 
         /**
          * <p>Whether or not the ticket part has been redacted.</p>
+         * <p>Whether or not the ticket part has been redacted.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "redacted", nulls = Nulls.SKIP)
-        public Builder redacted(Optional<Boolean> redacted) {
+        @java.lang.Override
+        @JsonSetter("redacted")
+        public _FinalStage redacted(boolean redacted) {
             this.redacted = redacted;
             return this;
         }
 
-        public Builder redacted(Boolean redacted) {
-            this.redacted = Optional.ofNullable(redacted);
-            return this;
-        }
-
         /**
-         * <p>The app package code if this part was created via API. Note this field won't show if the part was not created via API.</p>
+         * <p>The updated attribute data of the ticket part. Only present for attribute update parts.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "app_package_code", nulls = Nulls.SKIP)
-        public Builder appPackageCode(Optional<String> appPackageCode) {
-            this.appPackageCode = appPackageCode;
-            return this;
-        }
-
-        public Builder appPackageCode(String appPackageCode) {
-            this.appPackageCode = Optional.ofNullable(appPackageCode);
+        @java.lang.Override
+        public _FinalStage updatedAttributeData(UpdatedAttributeData updatedAttributeData) {
+            this.updatedAttributeData = Optional.ofNullable(updatedAttributeData);
             return this;
         }
 
         /**
          * <p>The updated attribute data of the ticket part. Only present for attribute update parts.</p>
          */
+        @java.lang.Override
         @JsonSetter(value = "updated_attribute_data", nulls = Nulls.SKIP)
-        public Builder updatedAttributeData(Optional<UpdatedAttributeData> updatedAttributeData) {
+        public _FinalStage updatedAttributeData(Optional<UpdatedAttributeData> updatedAttributeData) {
             this.updatedAttributeData = updatedAttributeData;
             return this;
         }
 
-        public Builder updatedAttributeData(UpdatedAttributeData updatedAttributeData) {
-            this.updatedAttributeData = Optional.ofNullable(updatedAttributeData);
+        /**
+         * <p>The app package code if this part was created via API. Note this field won't show if the part was not created via API.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage appPackageCode(String appPackageCode) {
+            this.appPackageCode = Optional.ofNullable(appPackageCode);
             return this;
         }
 
+        /**
+         * <p>The app package code if this part was created via API. Note this field won't show if the part was not created via API.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "app_package_code", nulls = Nulls.SKIP)
+        public _FinalStage appPackageCode(Optional<String> appPackageCode) {
+            this.appPackageCode = appPackageCode;
+            return this;
+        }
+
+        /**
+         * <p>The external id of the ticket part</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage externalId(String externalId) {
+            this.externalId = Optional.ofNullable(externalId);
+            return this;
+        }
+
+        /**
+         * <p>The external id of the ticket part</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "external_id", nulls = Nulls.SKIP)
+        public _FinalStage externalId(Optional<String> externalId) {
+            this.externalId = externalId;
+            return this;
+        }
+
+        /**
+         * <p>A list of attachments for the part.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage attachments(List<PartAttachment> attachments) {
+            this.attachments = Optional.ofNullable(attachments);
+            return this;
+        }
+
+        /**
+         * <p>A list of attachments for the part.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "attachments", nulls = Nulls.SKIP)
+        public _FinalStage attachments(Optional<List<PartAttachment>> attachments) {
+            this.attachments = attachments;
+            return this;
+        }
+
+        /**
+         * <p>The id of the admin that was assigned the ticket by this ticket_part (null if there has been no change in assignment.)</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage assignedTo(Reference assignedTo) {
+            this.assignedTo = Optional.ofNullable(assignedTo);
+            return this;
+        }
+
+        /**
+         * <p>The id of the admin that was assigned the ticket by this ticket_part (null if there has been no change in assignment.)</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "assigned_to", nulls = Nulls.SKIP)
+        public _FinalStage assignedTo(Optional<Reference> assignedTo) {
+            this.assignedTo = assignedTo;
+            return this;
+        }
+
+        /**
+         * <p>The state of the ticket.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage ticketState(TicketState ticketState) {
+            this.ticketState = Optional.ofNullable(ticketState);
+            return this;
+        }
+
+        /**
+         * <p>The state of the ticket.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "ticket_state", nulls = Nulls.SKIP)
+        public _FinalStage ticketState(Optional<TicketState> ticketState) {
+            this.ticketState = ticketState;
+            return this;
+        }
+
+        /**
+         * <p>The previous state of the ticket.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage previousTicketState(PreviousTicketState previousTicketState) {
+            this.previousTicketState = Optional.ofNullable(previousTicketState);
+            return this;
+        }
+
+        /**
+         * <p>The previous state of the ticket.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "previous_ticket_state", nulls = Nulls.SKIP)
+        public _FinalStage previousTicketState(Optional<PreviousTicketState> previousTicketState) {
+            this.previousTicketState = previousTicketState;
+            return this;
+        }
+
+        /**
+         * <p>The message body, which may contain HTML.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage body(String body) {
+            this.body = Optional.ofNullable(body);
+            return this;
+        }
+
+        /**
+         * <p>The message body, which may contain HTML.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "body", nulls = Nulls.SKIP)
+        public _FinalStage body(Optional<String> body) {
+            this.body = body;
+            return this;
+        }
+
+        @java.lang.Override
         public TicketPart build() {
             return new TicketPart(
                     type,

@@ -18,36 +18,33 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = Segment.Builder.class)
 public final class Segment {
-    private final Optional<String> type;
+    private final String id;
 
-    private final Optional<String> id;
+    private final String name;
 
-    private final Optional<String> name;
+    private final int createdAt;
 
-    private final Optional<Integer> createdAt;
+    private final int updatedAt;
 
-    private final Optional<Integer> updatedAt;
-
-    private final Optional<PersonType> personType;
+    private final PersonType personType;
 
     private final Optional<Integer> count;
 
     private final Map<String, Object> additionalProperties;
 
     private Segment(
-            Optional<String> type,
-            Optional<String> id,
-            Optional<String> name,
-            Optional<Integer> createdAt,
-            Optional<Integer> updatedAt,
-            Optional<PersonType> personType,
+            String id,
+            String name,
+            int createdAt,
+            int updatedAt,
+            PersonType personType,
             Optional<Integer> count,
             Map<String, Object> additionalProperties) {
-        this.type = type;
         this.id = id;
         this.name = name;
         this.createdAt = createdAt;
@@ -61,15 +58,15 @@ public final class Segment {
      * @return The type of object.
      */
     @JsonProperty("type")
-    public Optional<String> getType() {
-        return type;
+    public String getType() {
+        return "segment";
     }
 
     /**
      * @return The unique identifier representing the segment.
      */
     @JsonProperty("id")
-    public Optional<String> getId() {
+    public String getId() {
         return id;
     }
 
@@ -77,7 +74,7 @@ public final class Segment {
      * @return The name of the segment.
      */
     @JsonProperty("name")
-    public Optional<String> getName() {
+    public String getName() {
         return name;
     }
 
@@ -85,7 +82,7 @@ public final class Segment {
      * @return The time the segment was created.
      */
     @JsonProperty("created_at")
-    public Optional<Integer> getCreatedAt() {
+    public int getCreatedAt() {
         return createdAt;
     }
 
@@ -93,7 +90,7 @@ public final class Segment {
      * @return The time the segment was updated.
      */
     @JsonProperty("updated_at")
-    public Optional<Integer> getUpdatedAt() {
+    public int getUpdatedAt() {
         return updatedAt;
     }
 
@@ -101,7 +98,7 @@ public final class Segment {
      * @return Type of the contact: contact (lead) or user.
      */
     @JsonProperty("person_type")
-    public Optional<PersonType> getPersonType() {
+    public PersonType getPersonType() {
         return personType;
     }
 
@@ -125,18 +122,17 @@ public final class Segment {
     }
 
     private boolean equalTo(Segment other) {
-        return type.equals(other.type)
-                && id.equals(other.id)
+        return id.equals(other.id)
                 && name.equals(other.name)
-                && createdAt.equals(other.createdAt)
-                && updatedAt.equals(other.updatedAt)
+                && createdAt == other.createdAt
+                && updatedAt == other.updatedAt
                 && personType.equals(other.personType)
                 && count.equals(other.count);
     }
 
     @java.lang.Override
     public int hashCode() {
-        return Objects.hash(this.type, this.id, this.name, this.createdAt, this.updatedAt, this.personType, this.count);
+        return Objects.hash(this.id, this.name, this.createdAt, this.updatedAt, this.personType, this.count);
     }
 
     @java.lang.Override
@@ -144,23 +140,70 @@ public final class Segment {
         return ObjectMappers.stringify(this);
     }
 
-    public static Builder builder() {
+    public static IdStage builder() {
         return new Builder();
     }
 
+    public interface IdStage {
+        /**
+         * <p>The unique identifier representing the segment.</p>
+         */
+        NameStage id(@NotNull String id);
+
+        Builder from(Segment other);
+    }
+
+    public interface NameStage {
+        /**
+         * <p>The name of the segment.</p>
+         */
+        CreatedAtStage name(@NotNull String name);
+    }
+
+    public interface CreatedAtStage {
+        /**
+         * <p>The time the segment was created.</p>
+         */
+        UpdatedAtStage createdAt(int createdAt);
+    }
+
+    public interface UpdatedAtStage {
+        /**
+         * <p>The time the segment was updated.</p>
+         */
+        PersonTypeStage updatedAt(int updatedAt);
+    }
+
+    public interface PersonTypeStage {
+        /**
+         * <p>Type of the contact: contact (lead) or user.</p>
+         */
+        _FinalStage personType(@NotNull PersonType personType);
+    }
+
+    public interface _FinalStage {
+        Segment build();
+
+        /**
+         * <p>The number of items in the user segment. It's returned when <code>include_count=true</code> is included in the request.</p>
+         */
+        _FinalStage count(Optional<Integer> count);
+
+        _FinalStage count(Integer count);
+    }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder {
-        private Optional<String> type = Optional.empty();
+    public static final class Builder
+            implements IdStage, NameStage, CreatedAtStage, UpdatedAtStage, PersonTypeStage, _FinalStage {
+        private String id;
 
-        private Optional<String> id = Optional.empty();
+        private String name;
 
-        private Optional<String> name = Optional.empty();
+        private int createdAt;
 
-        private Optional<Integer> createdAt = Optional.empty();
+        private int updatedAt;
 
-        private Optional<Integer> updatedAt = Optional.empty();
-
-        private Optional<PersonType> personType = Optional.empty();
+        private PersonType personType;
 
         private Optional<Integer> count = Optional.empty();
 
@@ -169,8 +212,8 @@ public final class Segment {
 
         private Builder() {}
 
+        @java.lang.Override
         public Builder from(Segment other) {
-            type(other.getType());
             id(other.getId());
             name(other.getName());
             createdAt(other.getCreatedAt());
@@ -181,105 +224,88 @@ public final class Segment {
         }
 
         /**
-         * <p>The type of object.</p>
-         */
-        @JsonSetter(value = "type", nulls = Nulls.SKIP)
-        public Builder type(Optional<String> type) {
-            this.type = type;
-            return this;
-        }
-
-        public Builder type(String type) {
-            this.type = Optional.ofNullable(type);
-            return this;
-        }
-
-        /**
          * <p>The unique identifier representing the segment.</p>
+         * <p>The unique identifier representing the segment.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "id", nulls = Nulls.SKIP)
-        public Builder id(Optional<String> id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder id(String id) {
-            this.id = Optional.ofNullable(id);
+        @java.lang.Override
+        @JsonSetter("id")
+        public NameStage id(@NotNull String id) {
+            this.id = Objects.requireNonNull(id, "id must not be null");
             return this;
         }
 
         /**
          * <p>The name of the segment.</p>
+         * <p>The name of the segment.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "name", nulls = Nulls.SKIP)
-        public Builder name(Optional<String> name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder name(String name) {
-            this.name = Optional.ofNullable(name);
+        @java.lang.Override
+        @JsonSetter("name")
+        public CreatedAtStage name(@NotNull String name) {
+            this.name = Objects.requireNonNull(name, "name must not be null");
             return this;
         }
 
         /**
          * <p>The time the segment was created.</p>
+         * <p>The time the segment was created.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
-        public Builder createdAt(Optional<Integer> createdAt) {
+        @java.lang.Override
+        @JsonSetter("created_at")
+        public UpdatedAtStage createdAt(int createdAt) {
             this.createdAt = createdAt;
-            return this;
-        }
-
-        public Builder createdAt(Integer createdAt) {
-            this.createdAt = Optional.ofNullable(createdAt);
             return this;
         }
 
         /**
          * <p>The time the segment was updated.</p>
+         * <p>The time the segment was updated.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
-        public Builder updatedAt(Optional<Integer> updatedAt) {
+        @java.lang.Override
+        @JsonSetter("updated_at")
+        public PersonTypeStage updatedAt(int updatedAt) {
             this.updatedAt = updatedAt;
-            return this;
-        }
-
-        public Builder updatedAt(Integer updatedAt) {
-            this.updatedAt = Optional.ofNullable(updatedAt);
             return this;
         }
 
         /**
          * <p>Type of the contact: contact (lead) or user.</p>
+         * <p>Type of the contact: contact (lead) or user.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "person_type", nulls = Nulls.SKIP)
-        public Builder personType(Optional<PersonType> personType) {
-            this.personType = personType;
+        @java.lang.Override
+        @JsonSetter("person_type")
+        public _FinalStage personType(@NotNull PersonType personType) {
+            this.personType = Objects.requireNonNull(personType, "personType must not be null");
             return this;
         }
 
-        public Builder personType(PersonType personType) {
-            this.personType = Optional.ofNullable(personType);
+        /**
+         * <p>The number of items in the user segment. It's returned when <code>include_count=true</code> is included in the request.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage count(Integer count) {
+            this.count = Optional.ofNullable(count);
             return this;
         }
 
         /**
          * <p>The number of items in the user segment. It's returned when <code>include_count=true</code> is included in the request.</p>
          */
+        @java.lang.Override
         @JsonSetter(value = "count", nulls = Nulls.SKIP)
-        public Builder count(Optional<Integer> count) {
+        public _FinalStage count(Optional<Integer> count) {
             this.count = count;
             return this;
         }
 
-        public Builder count(Integer count) {
-            this.count = Optional.ofNullable(count);
-            return this;
-        }
-
+        @java.lang.Override
         public Segment build() {
-            return new Segment(type, id, name, createdAt, updatedAt, personType, count, additionalProperties);
+            return new Segment(id, name, createdAt, updatedAt, personType, count, additionalProperties);
         }
     }
 

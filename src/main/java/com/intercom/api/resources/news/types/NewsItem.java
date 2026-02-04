@@ -19,23 +19,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = NewsItem.Builder.class)
 public final class NewsItem {
-    private final Optional<String> type;
+    private final String id;
 
-    private final Optional<String> id;
+    private final String workspaceId;
 
-    private final Optional<String> workspaceId;
-
-    private final Optional<String> title;
+    private final String title;
 
     private final Optional<String> body;
 
     private final Optional<Integer> senderId;
 
-    private final Optional<State> state;
+    private final State state;
 
     private final Optional<List<NewsfeedAssignment>> newsfeedAssignments;
 
@@ -47,29 +46,27 @@ public final class NewsItem {
 
     private final Optional<Boolean> deliverSilently;
 
-    private final Optional<Integer> createdAt;
+    private final int createdAt;
 
-    private final Optional<Integer> updatedAt;
+    private final int updatedAt;
 
     private final Map<String, Object> additionalProperties;
 
     private NewsItem(
-            Optional<String> type,
-            Optional<String> id,
-            Optional<String> workspaceId,
-            Optional<String> title,
+            String id,
+            String workspaceId,
+            String title,
             Optional<String> body,
             Optional<Integer> senderId,
-            Optional<State> state,
+            State state,
             Optional<List<NewsfeedAssignment>> newsfeedAssignments,
             Optional<List<Optional<String>>> labels,
             Optional<String> coverImageUrl,
             Optional<List<Optional<String>>> reactions,
             Optional<Boolean> deliverSilently,
-            Optional<Integer> createdAt,
-            Optional<Integer> updatedAt,
+            int createdAt,
+            int updatedAt,
             Map<String, Object> additionalProperties) {
-        this.type = type;
         this.id = id;
         this.workspaceId = workspaceId;
         this.title = title;
@@ -90,15 +87,15 @@ public final class NewsItem {
      * @return The type of object.
      */
     @JsonProperty("type")
-    public Optional<String> getType() {
-        return type;
+    public String getType() {
+        return "news-item";
     }
 
     /**
      * @return The unique identifier for the news item which is given by Intercom.
      */
     @JsonProperty("id")
-    public Optional<String> getId() {
+    public String getId() {
         return id;
     }
 
@@ -106,7 +103,7 @@ public final class NewsItem {
      * @return The id of the workspace which the news item belongs to.
      */
     @JsonProperty("workspace_id")
-    public Optional<String> getWorkspaceId() {
+    public String getWorkspaceId() {
         return workspaceId;
     }
 
@@ -114,7 +111,7 @@ public final class NewsItem {
      * @return The title of the news item.
      */
     @JsonProperty("title")
-    public Optional<String> getTitle() {
+    public String getTitle() {
         return title;
     }
 
@@ -138,7 +135,7 @@ public final class NewsItem {
      * @return News items will not be visible to your users in the assigned newsfeeds until they are set live.
      */
     @JsonProperty("state")
-    public Optional<State> getState() {
+    public State getState() {
         return state;
     }
 
@@ -186,7 +183,7 @@ public final class NewsItem {
      * @return Timestamp for when the news item was created.
      */
     @JsonProperty("created_at")
-    public Optional<Integer> getCreatedAt() {
+    public int getCreatedAt() {
         return createdAt;
     }
 
@@ -194,7 +191,7 @@ public final class NewsItem {
      * @return Timestamp for when the news item was last updated.
      */
     @JsonProperty("updated_at")
-    public Optional<Integer> getUpdatedAt() {
+    public int getUpdatedAt() {
         return updatedAt;
     }
 
@@ -210,8 +207,7 @@ public final class NewsItem {
     }
 
     private boolean equalTo(NewsItem other) {
-        return type.equals(other.type)
-                && id.equals(other.id)
+        return id.equals(other.id)
                 && workspaceId.equals(other.workspaceId)
                 && title.equals(other.title)
                 && body.equals(other.body)
@@ -222,14 +218,13 @@ public final class NewsItem {
                 && coverImageUrl.equals(other.coverImageUrl)
                 && reactions.equals(other.reactions)
                 && deliverSilently.equals(other.deliverSilently)
-                && createdAt.equals(other.createdAt)
-                && updatedAt.equals(other.updatedAt);
+                && createdAt == other.createdAt
+                && updatedAt == other.updatedAt;
     }
 
     @java.lang.Override
     public int hashCode() {
         return Objects.hash(
-                this.type,
                 this.id,
                 this.workspaceId,
                 this.title,
@@ -250,47 +245,143 @@ public final class NewsItem {
         return ObjectMappers.stringify(this);
     }
 
-    public static Builder builder() {
+    public static IdStage builder() {
         return new Builder();
     }
 
+    public interface IdStage {
+        /**
+         * <p>The unique identifier for the news item which is given by Intercom.</p>
+         */
+        WorkspaceIdStage id(@NotNull String id);
+
+        Builder from(NewsItem other);
+    }
+
+    public interface WorkspaceIdStage {
+        /**
+         * <p>The id of the workspace which the news item belongs to.</p>
+         */
+        TitleStage workspaceId(@NotNull String workspaceId);
+    }
+
+    public interface TitleStage {
+        /**
+         * <p>The title of the news item.</p>
+         */
+        StateStage title(@NotNull String title);
+    }
+
+    public interface StateStage {
+        /**
+         * <p>News items will not be visible to your users in the assigned newsfeeds until they are set live.</p>
+         */
+        CreatedAtStage state(@NotNull State state);
+    }
+
+    public interface CreatedAtStage {
+        /**
+         * <p>Timestamp for when the news item was created.</p>
+         */
+        UpdatedAtStage createdAt(int createdAt);
+    }
+
+    public interface UpdatedAtStage {
+        /**
+         * <p>Timestamp for when the news item was last updated.</p>
+         */
+        _FinalStage updatedAt(int updatedAt);
+    }
+
+    public interface _FinalStage {
+        NewsItem build();
+
+        /**
+         * <p>The news item body, which may contain HTML.</p>
+         */
+        _FinalStage body(Optional<String> body);
+
+        _FinalStage body(String body);
+
+        /**
+         * <p>The id of the sender of the news item. Must be a teammate on the workspace.</p>
+         */
+        _FinalStage senderId(Optional<Integer> senderId);
+
+        _FinalStage senderId(Integer senderId);
+
+        /**
+         * <p>A list of newsfeed_assignments to assign to the specified newsfeed.</p>
+         */
+        _FinalStage newsfeedAssignments(Optional<List<NewsfeedAssignment>> newsfeedAssignments);
+
+        _FinalStage newsfeedAssignments(List<NewsfeedAssignment> newsfeedAssignments);
+
+        /**
+         * <p>Label names displayed to users to categorize the news item.</p>
+         */
+        _FinalStage labels(Optional<List<Optional<String>>> labels);
+
+        _FinalStage labels(List<Optional<String>> labels);
+
+        /**
+         * <p>URL of the image used as cover. Must have .jpg or .png extension.</p>
+         */
+        _FinalStage coverImageUrl(Optional<String> coverImageUrl);
+
+        _FinalStage coverImageUrl(String coverImageUrl);
+
+        /**
+         * <p>Ordered list of emoji reactions to the news item. When empty, reactions are disabled.</p>
+         */
+        _FinalStage reactions(Optional<List<Optional<String>>> reactions);
+
+        _FinalStage reactions(List<Optional<String>> reactions);
+
+        /**
+         * <p>When set to true, the news item will appear in the messenger newsfeed without showing a notification badge.</p>
+         */
+        _FinalStage deliverSilently(Optional<Boolean> deliverSilently);
+
+        _FinalStage deliverSilently(Boolean deliverSilently);
+    }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder {
-        private Optional<String> type = Optional.empty();
+    public static final class Builder
+            implements IdStage, WorkspaceIdStage, TitleStage, StateStage, CreatedAtStage, UpdatedAtStage, _FinalStage {
+        private String id;
 
-        private Optional<String> id = Optional.empty();
+        private String workspaceId;
 
-        private Optional<String> workspaceId = Optional.empty();
+        private String title;
 
-        private Optional<String> title = Optional.empty();
+        private State state;
 
-        private Optional<String> body = Optional.empty();
+        private int createdAt;
 
-        private Optional<Integer> senderId = Optional.empty();
-
-        private Optional<State> state = Optional.empty();
-
-        private Optional<List<NewsfeedAssignment>> newsfeedAssignments = Optional.empty();
-
-        private Optional<List<Optional<String>>> labels = Optional.empty();
-
-        private Optional<String> coverImageUrl = Optional.empty();
-
-        private Optional<List<Optional<String>>> reactions = Optional.empty();
+        private int updatedAt;
 
         private Optional<Boolean> deliverSilently = Optional.empty();
 
-        private Optional<Integer> createdAt = Optional.empty();
+        private Optional<List<Optional<String>>> reactions = Optional.empty();
 
-        private Optional<Integer> updatedAt = Optional.empty();
+        private Optional<String> coverImageUrl = Optional.empty();
+
+        private Optional<List<Optional<String>>> labels = Optional.empty();
+
+        private Optional<List<NewsfeedAssignment>> newsfeedAssignments = Optional.empty();
+
+        private Optional<Integer> senderId = Optional.empty();
+
+        private Optional<String> body = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
+        @java.lang.Override
         public Builder from(NewsItem other) {
-            type(other.getType());
             id(other.getId());
             workspaceId(other.getWorkspaceId());
             title(other.getTitle());
@@ -308,204 +399,220 @@ public final class NewsItem {
         }
 
         /**
-         * <p>The type of object.</p>
-         */
-        @JsonSetter(value = "type", nulls = Nulls.SKIP)
-        public Builder type(Optional<String> type) {
-            this.type = type;
-            return this;
-        }
-
-        public Builder type(String type) {
-            this.type = Optional.ofNullable(type);
-            return this;
-        }
-
-        /**
          * <p>The unique identifier for the news item which is given by Intercom.</p>
+         * <p>The unique identifier for the news item which is given by Intercom.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "id", nulls = Nulls.SKIP)
-        public Builder id(Optional<String> id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder id(String id) {
-            this.id = Optional.ofNullable(id);
+        @java.lang.Override
+        @JsonSetter("id")
+        public WorkspaceIdStage id(@NotNull String id) {
+            this.id = Objects.requireNonNull(id, "id must not be null");
             return this;
         }
 
         /**
          * <p>The id of the workspace which the news item belongs to.</p>
+         * <p>The id of the workspace which the news item belongs to.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "workspace_id", nulls = Nulls.SKIP)
-        public Builder workspaceId(Optional<String> workspaceId) {
-            this.workspaceId = workspaceId;
-            return this;
-        }
-
-        public Builder workspaceId(String workspaceId) {
-            this.workspaceId = Optional.ofNullable(workspaceId);
+        @java.lang.Override
+        @JsonSetter("workspace_id")
+        public TitleStage workspaceId(@NotNull String workspaceId) {
+            this.workspaceId = Objects.requireNonNull(workspaceId, "workspaceId must not be null");
             return this;
         }
 
         /**
          * <p>The title of the news item.</p>
+         * <p>The title of the news item.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "title", nulls = Nulls.SKIP)
-        public Builder title(Optional<String> title) {
-            this.title = title;
-            return this;
-        }
-
-        public Builder title(String title) {
-            this.title = Optional.ofNullable(title);
-            return this;
-        }
-
-        /**
-         * <p>The news item body, which may contain HTML.</p>
-         */
-        @JsonSetter(value = "body", nulls = Nulls.SKIP)
-        public Builder body(Optional<String> body) {
-            this.body = body;
-            return this;
-        }
-
-        public Builder body(String body) {
-            this.body = Optional.ofNullable(body);
-            return this;
-        }
-
-        /**
-         * <p>The id of the sender of the news item. Must be a teammate on the workspace.</p>
-         */
-        @JsonSetter(value = "sender_id", nulls = Nulls.SKIP)
-        public Builder senderId(Optional<Integer> senderId) {
-            this.senderId = senderId;
-            return this;
-        }
-
-        public Builder senderId(Integer senderId) {
-            this.senderId = Optional.ofNullable(senderId);
+        @java.lang.Override
+        @JsonSetter("title")
+        public StateStage title(@NotNull String title) {
+            this.title = Objects.requireNonNull(title, "title must not be null");
             return this;
         }
 
         /**
          * <p>News items will not be visible to your users in the assigned newsfeeds until they are set live.</p>
+         * <p>News items will not be visible to your users in the assigned newsfeeds until they are set live.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "state", nulls = Nulls.SKIP)
-        public Builder state(Optional<State> state) {
-            this.state = state;
-            return this;
-        }
-
-        public Builder state(State state) {
-            this.state = Optional.ofNullable(state);
+        @java.lang.Override
+        @JsonSetter("state")
+        public CreatedAtStage state(@NotNull State state) {
+            this.state = Objects.requireNonNull(state, "state must not be null");
             return this;
         }
 
         /**
-         * <p>A list of newsfeed_assignments to assign to the specified newsfeed.</p>
+         * <p>Timestamp for when the news item was created.</p>
+         * <p>Timestamp for when the news item was created.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "newsfeed_assignments", nulls = Nulls.SKIP)
-        public Builder newsfeedAssignments(Optional<List<NewsfeedAssignment>> newsfeedAssignments) {
-            this.newsfeedAssignments = newsfeedAssignments;
-            return this;
-        }
-
-        public Builder newsfeedAssignments(List<NewsfeedAssignment> newsfeedAssignments) {
-            this.newsfeedAssignments = Optional.ofNullable(newsfeedAssignments);
+        @java.lang.Override
+        @JsonSetter("created_at")
+        public UpdatedAtStage createdAt(int createdAt) {
+            this.createdAt = createdAt;
             return this;
         }
 
         /**
-         * <p>Label names displayed to users to categorize the news item.</p>
+         * <p>Timestamp for when the news item was last updated.</p>
+         * <p>Timestamp for when the news item was last updated.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "labels", nulls = Nulls.SKIP)
-        public Builder labels(Optional<List<Optional<String>>> labels) {
-            this.labels = labels;
-            return this;
-        }
-
-        public Builder labels(List<Optional<String>> labels) {
-            this.labels = Optional.ofNullable(labels);
+        @java.lang.Override
+        @JsonSetter("updated_at")
+        public _FinalStage updatedAt(int updatedAt) {
+            this.updatedAt = updatedAt;
             return this;
         }
 
         /**
-         * <p>URL of the image used as cover. Must have .jpg or .png extension.</p>
+         * <p>When set to true, the news item will appear in the messenger newsfeed without showing a notification badge.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "cover_image_url", nulls = Nulls.SKIP)
-        public Builder coverImageUrl(Optional<String> coverImageUrl) {
-            this.coverImageUrl = coverImageUrl;
-            return this;
-        }
-
-        public Builder coverImageUrl(String coverImageUrl) {
-            this.coverImageUrl = Optional.ofNullable(coverImageUrl);
-            return this;
-        }
-
-        /**
-         * <p>Ordered list of emoji reactions to the news item. When empty, reactions are disabled.</p>
-         */
-        @JsonSetter(value = "reactions", nulls = Nulls.SKIP)
-        public Builder reactions(Optional<List<Optional<String>>> reactions) {
-            this.reactions = reactions;
-            return this;
-        }
-
-        public Builder reactions(List<Optional<String>> reactions) {
-            this.reactions = Optional.ofNullable(reactions);
+        @java.lang.Override
+        public _FinalStage deliverSilently(Boolean deliverSilently) {
+            this.deliverSilently = Optional.ofNullable(deliverSilently);
             return this;
         }
 
         /**
          * <p>When set to true, the news item will appear in the messenger newsfeed without showing a notification badge.</p>
          */
+        @java.lang.Override
         @JsonSetter(value = "deliver_silently", nulls = Nulls.SKIP)
-        public Builder deliverSilently(Optional<Boolean> deliverSilently) {
+        public _FinalStage deliverSilently(Optional<Boolean> deliverSilently) {
             this.deliverSilently = deliverSilently;
             return this;
         }
 
-        public Builder deliverSilently(Boolean deliverSilently) {
-            this.deliverSilently = Optional.ofNullable(deliverSilently);
+        /**
+         * <p>Ordered list of emoji reactions to the news item. When empty, reactions are disabled.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage reactions(List<Optional<String>> reactions) {
+            this.reactions = Optional.ofNullable(reactions);
             return this;
         }
 
         /**
-         * <p>Timestamp for when the news item was created.</p>
+         * <p>Ordered list of emoji reactions to the news item. When empty, reactions are disabled.</p>
          */
-        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
-        public Builder createdAt(Optional<Integer> createdAt) {
-            this.createdAt = createdAt;
-            return this;
-        }
-
-        public Builder createdAt(Integer createdAt) {
-            this.createdAt = Optional.ofNullable(createdAt);
+        @java.lang.Override
+        @JsonSetter(value = "reactions", nulls = Nulls.SKIP)
+        public _FinalStage reactions(Optional<List<Optional<String>>> reactions) {
+            this.reactions = reactions;
             return this;
         }
 
         /**
-         * <p>Timestamp for when the news item was last updated.</p>
+         * <p>URL of the image used as cover. Must have .jpg or .png extension.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
-        public Builder updatedAt(Optional<Integer> updatedAt) {
-            this.updatedAt = updatedAt;
+        @java.lang.Override
+        public _FinalStage coverImageUrl(String coverImageUrl) {
+            this.coverImageUrl = Optional.ofNullable(coverImageUrl);
             return this;
         }
 
-        public Builder updatedAt(Integer updatedAt) {
-            this.updatedAt = Optional.ofNullable(updatedAt);
+        /**
+         * <p>URL of the image used as cover. Must have .jpg or .png extension.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "cover_image_url", nulls = Nulls.SKIP)
+        public _FinalStage coverImageUrl(Optional<String> coverImageUrl) {
+            this.coverImageUrl = coverImageUrl;
             return this;
         }
 
+        /**
+         * <p>Label names displayed to users to categorize the news item.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage labels(List<Optional<String>> labels) {
+            this.labels = Optional.ofNullable(labels);
+            return this;
+        }
+
+        /**
+         * <p>Label names displayed to users to categorize the news item.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "labels", nulls = Nulls.SKIP)
+        public _FinalStage labels(Optional<List<Optional<String>>> labels) {
+            this.labels = labels;
+            return this;
+        }
+
+        /**
+         * <p>A list of newsfeed_assignments to assign to the specified newsfeed.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage newsfeedAssignments(List<NewsfeedAssignment> newsfeedAssignments) {
+            this.newsfeedAssignments = Optional.ofNullable(newsfeedAssignments);
+            return this;
+        }
+
+        /**
+         * <p>A list of newsfeed_assignments to assign to the specified newsfeed.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "newsfeed_assignments", nulls = Nulls.SKIP)
+        public _FinalStage newsfeedAssignments(Optional<List<NewsfeedAssignment>> newsfeedAssignments) {
+            this.newsfeedAssignments = newsfeedAssignments;
+            return this;
+        }
+
+        /**
+         * <p>The id of the sender of the news item. Must be a teammate on the workspace.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage senderId(Integer senderId) {
+            this.senderId = Optional.ofNullable(senderId);
+            return this;
+        }
+
+        /**
+         * <p>The id of the sender of the news item. Must be a teammate on the workspace.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "sender_id", nulls = Nulls.SKIP)
+        public _FinalStage senderId(Optional<Integer> senderId) {
+            this.senderId = senderId;
+            return this;
+        }
+
+        /**
+         * <p>The news item body, which may contain HTML.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage body(String body) {
+            this.body = Optional.ofNullable(body);
+            return this;
+        }
+
+        /**
+         * <p>The news item body, which may contain HTML.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "body", nulls = Nulls.SKIP)
+        public _FinalStage body(Optional<String> body) {
+            this.body = body;
+            return this;
+        }
+
+        @java.lang.Override
         public NewsItem build() {
             return new NewsItem(
-                    type,
                     id,
                     workspaceId,
                     title,

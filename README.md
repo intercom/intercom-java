@@ -41,7 +41,7 @@ Add the dependency in your `pom.xml` file:
 <dependency>
   <groupId>io.intercom</groupId>
   <artifactId>intercom-java</artifactId>
-  <version>4.0.3</version>
+  <version>4.0.4</version>
 </dependency>
 ```
 

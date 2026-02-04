@@ -20,33 +20,34 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ConversationPart.Builder.class)
 public final class ConversationPart {
-    private final Optional<String> type;
+    private final String type;
 
-    private final Optional<String> id;
+    private final String id;
 
-    private final Optional<String> partType;
+    private final String partType;
 
     private final Optional<String> body;
 
-    private final Optional<Integer> createdAt;
+    private final int createdAt;
 
-    private final Optional<Integer> updatedAt;
+    private final int updatedAt;
 
     private final Optional<Integer> notifiedAt;
 
     private final Optional<Reference> assignedTo;
 
-    private final Optional<ConversationPartAuthor> author;
+    private final ConversationPartAuthor author;
 
     private final Optional<List<PartAttachment>> attachments;
 
     private final Optional<String> externalId;
 
-    private final Optional<Boolean> redacted;
+    private final boolean redacted;
 
     private final Optional<EmailMessageMetadata> emailMessageMetadata;
 
@@ -63,18 +64,18 @@ public final class ConversationPart {
     private final Map<String, Object> additionalProperties;
 
     private ConversationPart(
-            Optional<String> type,
-            Optional<String> id,
-            Optional<String> partType,
+            String type,
+            String id,
+            String partType,
             Optional<String> body,
-            Optional<Integer> createdAt,
-            Optional<Integer> updatedAt,
+            int createdAt,
+            int updatedAt,
             Optional<Integer> notifiedAt,
             Optional<Reference> assignedTo,
-            Optional<ConversationPartAuthor> author,
+            ConversationPartAuthor author,
             Optional<List<PartAttachment>> attachments,
             Optional<String> externalId,
-            Optional<Boolean> redacted,
+            boolean redacted,
             Optional<EmailMessageMetadata> emailMessageMetadata,
             Optional<ConversationPartMetadata> metadata,
             Optional<State> state,
@@ -107,7 +108,7 @@ public final class ConversationPart {
      * @return Always conversation_part
      */
     @JsonProperty("type")
-    public Optional<String> getType() {
+    public String getType() {
         return type;
     }
 
@@ -115,7 +116,7 @@ public final class ConversationPart {
      * @return The id representing the conversation part.
      */
     @JsonProperty("id")
-    public Optional<String> getId() {
+    public String getId() {
         return id;
     }
 
@@ -123,7 +124,7 @@ public final class ConversationPart {
      * @return The type of conversation part.
      */
     @JsonProperty("part_type")
-    public Optional<String> getPartType() {
+    public String getPartType() {
         return partType;
     }
 
@@ -139,7 +140,7 @@ public final class ConversationPart {
      * @return The time the conversation part was created.
      */
     @JsonProperty("created_at")
-    public Optional<Integer> getCreatedAt() {
+    public int getCreatedAt() {
         return createdAt;
     }
 
@@ -147,7 +148,7 @@ public final class ConversationPart {
      * @return The last time the conversation part was updated.
      */
     @JsonProperty("updated_at")
-    public Optional<Integer> getUpdatedAt() {
+    public int getUpdatedAt() {
         return updatedAt;
     }
 
@@ -168,7 +169,7 @@ public final class ConversationPart {
     }
 
     @JsonProperty("author")
-    public Optional<ConversationPartAuthor> getAuthor() {
+    public ConversationPartAuthor getAuthor() {
         return author;
     }
 
@@ -192,7 +193,7 @@ public final class ConversationPart {
      * @return Whether or not the conversation part has been redacted.
      */
     @JsonProperty("redacted")
-    public Optional<Boolean> getRedacted() {
+    public boolean getRedacted() {
         return redacted;
     }
 
@@ -251,14 +252,14 @@ public final class ConversationPart {
                 && id.equals(other.id)
                 && partType.equals(other.partType)
                 && body.equals(other.body)
-                && createdAt.equals(other.createdAt)
-                && updatedAt.equals(other.updatedAt)
+                && createdAt == other.createdAt
+                && updatedAt == other.updatedAt
                 && notifiedAt.equals(other.notifiedAt)
                 && assignedTo.equals(other.assignedTo)
                 && author.equals(other.author)
                 && attachments.equals(other.attachments)
                 && externalId.equals(other.externalId)
-                && redacted.equals(other.redacted)
+                && redacted == other.redacted
                 && emailMessageMetadata.equals(other.emailMessageMetadata)
                 && metadata.equals(other.metadata)
                 && state.equals(other.state)
@@ -295,53 +296,182 @@ public final class ConversationPart {
         return ObjectMappers.stringify(this);
     }
 
-    public static Builder builder() {
+    public static TypeStage builder() {
         return new Builder();
     }
 
+    public interface TypeStage {
+        /**
+         * <p>Always conversation_part</p>
+         */
+        IdStage type(@NotNull String type);
+
+        Builder from(ConversationPart other);
+    }
+
+    public interface IdStage {
+        /**
+         * <p>The id representing the conversation part.</p>
+         */
+        PartTypeStage id(@NotNull String id);
+    }
+
+    public interface PartTypeStage {
+        /**
+         * <p>The type of conversation part.</p>
+         */
+        CreatedAtStage partType(@NotNull String partType);
+    }
+
+    public interface CreatedAtStage {
+        /**
+         * <p>The time the conversation part was created.</p>
+         */
+        UpdatedAtStage createdAt(int createdAt);
+    }
+
+    public interface UpdatedAtStage {
+        /**
+         * <p>The last time the conversation part was updated.</p>
+         */
+        AuthorStage updatedAt(int updatedAt);
+    }
+
+    public interface AuthorStage {
+        RedactedStage author(@NotNull ConversationPartAuthor author);
+    }
+
+    public interface RedactedStage {
+        /**
+         * <p>Whether or not the conversation part has been redacted.</p>
+         */
+        _FinalStage redacted(boolean redacted);
+    }
+
+    public interface _FinalStage {
+        ConversationPart build();
+
+        /**
+         * <p>The message body, which may contain HTML. For Twitter, this will show a generic message regarding why the body is obscured.</p>
+         */
+        _FinalStage body(Optional<String> body);
+
+        _FinalStage body(String body);
+
+        /**
+         * <p>The time the user was notified with the conversation part.</p>
+         */
+        _FinalStage notifiedAt(Optional<Integer> notifiedAt);
+
+        _FinalStage notifiedAt(Integer notifiedAt);
+
+        /**
+         * <p>The id of the admin that was assigned the conversation by this conversation_part (null if there has been no change in assignment.)</p>
+         */
+        _FinalStage assignedTo(Optional<Reference> assignedTo);
+
+        _FinalStage assignedTo(Reference assignedTo);
+
+        /**
+         * <p>A list of attachments for the part.</p>
+         */
+        _FinalStage attachments(Optional<List<PartAttachment>> attachments);
+
+        _FinalStage attachments(List<PartAttachment> attachments);
+
+        /**
+         * <p>The external id of the conversation part</p>
+         */
+        _FinalStage externalId(Optional<String> externalId);
+
+        _FinalStage externalId(String externalId);
+
+        _FinalStage emailMessageMetadata(Optional<EmailMessageMetadata> emailMessageMetadata);
+
+        _FinalStage emailMessageMetadata(EmailMessageMetadata emailMessageMetadata);
+
+        _FinalStage metadata(Optional<ConversationPartMetadata> metadata);
+
+        _FinalStage metadata(ConversationPartMetadata metadata);
+
+        /**
+         * <p>Indicates the current state of conversation when the conversation part was created.</p>
+         */
+        _FinalStage state(Optional<State> state);
+
+        _FinalStage state(State state);
+
+        /**
+         * <p>A list of tags objects associated with the conversation part.</p>
+         */
+        _FinalStage tags(Optional<List<TagBasic>> tags);
+
+        _FinalStage tags(List<TagBasic> tags);
+
+        _FinalStage eventDetails(Optional<EventDetails> eventDetails);
+
+        _FinalStage eventDetails(EventDetails eventDetails);
+
+        /**
+         * <p>The app package code if this part was created via API. null if the part was not created via API.</p>
+         */
+        _FinalStage appPackageCode(Optional<String> appPackageCode);
+
+        _FinalStage appPackageCode(String appPackageCode);
+    }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder {
-        private Optional<String> type = Optional.empty();
+    public static final class Builder
+            implements TypeStage,
+                    IdStage,
+                    PartTypeStage,
+                    CreatedAtStage,
+                    UpdatedAtStage,
+                    AuthorStage,
+                    RedactedStage,
+                    _FinalStage {
+        private String type;
 
-        private Optional<String> id = Optional.empty();
+        private String id;
 
-        private Optional<String> partType = Optional.empty();
+        private String partType;
 
-        private Optional<String> body = Optional.empty();
+        private int createdAt;
 
-        private Optional<Integer> createdAt = Optional.empty();
+        private int updatedAt;
 
-        private Optional<Integer> updatedAt = Optional.empty();
+        private ConversationPartAuthor author;
 
-        private Optional<Integer> notifiedAt = Optional.empty();
+        private boolean redacted;
 
-        private Optional<Reference> assignedTo = Optional.empty();
-
-        private Optional<ConversationPartAuthor> author = Optional.empty();
-
-        private Optional<List<PartAttachment>> attachments = Optional.empty();
-
-        private Optional<String> externalId = Optional.empty();
-
-        private Optional<Boolean> redacted = Optional.empty();
-
-        private Optional<EmailMessageMetadata> emailMessageMetadata = Optional.empty();
-
-        private Optional<ConversationPartMetadata> metadata = Optional.empty();
-
-        private Optional<State> state = Optional.empty();
-
-        private Optional<List<TagBasic>> tags = Optional.empty();
+        private Optional<String> appPackageCode = Optional.empty();
 
         private Optional<EventDetails> eventDetails = Optional.empty();
 
-        private Optional<String> appPackageCode = Optional.empty();
+        private Optional<List<TagBasic>> tags = Optional.empty();
+
+        private Optional<State> state = Optional.empty();
+
+        private Optional<ConversationPartMetadata> metadata = Optional.empty();
+
+        private Optional<EmailMessageMetadata> emailMessageMetadata = Optional.empty();
+
+        private Optional<String> externalId = Optional.empty();
+
+        private Optional<List<PartAttachment>> attachments = Optional.empty();
+
+        private Optional<Reference> assignedTo = Optional.empty();
+
+        private Optional<Integer> notifiedAt = Optional.empty();
+
+        private Optional<String> body = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
+        @java.lang.Override
         public Builder from(ConversationPart other) {
             type(other.getType());
             id(other.getId());
@@ -366,244 +496,283 @@ public final class ConversationPart {
 
         /**
          * <p>Always conversation_part</p>
+         * <p>Always conversation_part</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "type", nulls = Nulls.SKIP)
-        public Builder type(Optional<String> type) {
-            this.type = type;
-            return this;
-        }
-
-        public Builder type(String type) {
-            this.type = Optional.ofNullable(type);
+        @java.lang.Override
+        @JsonSetter("type")
+        public IdStage type(@NotNull String type) {
+            this.type = Objects.requireNonNull(type, "type must not be null");
             return this;
         }
 
         /**
          * <p>The id representing the conversation part.</p>
+         * <p>The id representing the conversation part.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "id", nulls = Nulls.SKIP)
-        public Builder id(Optional<String> id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder id(String id) {
-            this.id = Optional.ofNullable(id);
+        @java.lang.Override
+        @JsonSetter("id")
+        public PartTypeStage id(@NotNull String id) {
+            this.id = Objects.requireNonNull(id, "id must not be null");
             return this;
         }
 
         /**
          * <p>The type of conversation part.</p>
+         * <p>The type of conversation part.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "part_type", nulls = Nulls.SKIP)
-        public Builder partType(Optional<String> partType) {
-            this.partType = partType;
-            return this;
-        }
-
-        public Builder partType(String partType) {
-            this.partType = Optional.ofNullable(partType);
-            return this;
-        }
-
-        /**
-         * <p>The message body, which may contain HTML. For Twitter, this will show a generic message regarding why the body is obscured.</p>
-         */
-        @JsonSetter(value = "body", nulls = Nulls.SKIP)
-        public Builder body(Optional<String> body) {
-            this.body = body;
-            return this;
-        }
-
-        public Builder body(String body) {
-            this.body = Optional.ofNullable(body);
+        @java.lang.Override
+        @JsonSetter("part_type")
+        public CreatedAtStage partType(@NotNull String partType) {
+            this.partType = Objects.requireNonNull(partType, "partType must not be null");
             return this;
         }
 
         /**
          * <p>The time the conversation part was created.</p>
+         * <p>The time the conversation part was created.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
-        public Builder createdAt(Optional<Integer> createdAt) {
+        @java.lang.Override
+        @JsonSetter("created_at")
+        public UpdatedAtStage createdAt(int createdAt) {
             this.createdAt = createdAt;
-            return this;
-        }
-
-        public Builder createdAt(Integer createdAt) {
-            this.createdAt = Optional.ofNullable(createdAt);
             return this;
         }
 
         /**
          * <p>The last time the conversation part was updated.</p>
+         * <p>The last time the conversation part was updated.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
-        public Builder updatedAt(Optional<Integer> updatedAt) {
+        @java.lang.Override
+        @JsonSetter("updated_at")
+        public AuthorStage updatedAt(int updatedAt) {
             this.updatedAt = updatedAt;
             return this;
         }
 
-        public Builder updatedAt(Integer updatedAt) {
-            this.updatedAt = Optional.ofNullable(updatedAt);
-            return this;
-        }
-
-        /**
-         * <p>The time the user was notified with the conversation part.</p>
-         */
-        @JsonSetter(value = "notified_at", nulls = Nulls.SKIP)
-        public Builder notifiedAt(Optional<Integer> notifiedAt) {
-            this.notifiedAt = notifiedAt;
-            return this;
-        }
-
-        public Builder notifiedAt(Integer notifiedAt) {
-            this.notifiedAt = Optional.ofNullable(notifiedAt);
-            return this;
-        }
-
-        /**
-         * <p>The id of the admin that was assigned the conversation by this conversation_part (null if there has been no change in assignment.)</p>
-         */
-        @JsonSetter(value = "assigned_to", nulls = Nulls.SKIP)
-        public Builder assignedTo(Optional<Reference> assignedTo) {
-            this.assignedTo = assignedTo;
-            return this;
-        }
-
-        public Builder assignedTo(Reference assignedTo) {
-            this.assignedTo = Optional.ofNullable(assignedTo);
-            return this;
-        }
-
-        @JsonSetter(value = "author", nulls = Nulls.SKIP)
-        public Builder author(Optional<ConversationPartAuthor> author) {
-            this.author = author;
-            return this;
-        }
-
-        public Builder author(ConversationPartAuthor author) {
-            this.author = Optional.ofNullable(author);
-            return this;
-        }
-
-        /**
-         * <p>A list of attachments for the part.</p>
-         */
-        @JsonSetter(value = "attachments", nulls = Nulls.SKIP)
-        public Builder attachments(Optional<List<PartAttachment>> attachments) {
-            this.attachments = attachments;
-            return this;
-        }
-
-        public Builder attachments(List<PartAttachment> attachments) {
-            this.attachments = Optional.ofNullable(attachments);
-            return this;
-        }
-
-        /**
-         * <p>The external id of the conversation part</p>
-         */
-        @JsonSetter(value = "external_id", nulls = Nulls.SKIP)
-        public Builder externalId(Optional<String> externalId) {
-            this.externalId = externalId;
-            return this;
-        }
-
-        public Builder externalId(String externalId) {
-            this.externalId = Optional.ofNullable(externalId);
+        @java.lang.Override
+        @JsonSetter("author")
+        public RedactedStage author(@NotNull ConversationPartAuthor author) {
+            this.author = Objects.requireNonNull(author, "author must not be null");
             return this;
         }
 
         /**
          * <p>Whether or not the conversation part has been redacted.</p>
+         * <p>Whether or not the conversation part has been redacted.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "redacted", nulls = Nulls.SKIP)
-        public Builder redacted(Optional<Boolean> redacted) {
+        @java.lang.Override
+        @JsonSetter("redacted")
+        public _FinalStage redacted(boolean redacted) {
             this.redacted = redacted;
             return this;
         }
 
-        public Builder redacted(Boolean redacted) {
-            this.redacted = Optional.ofNullable(redacted);
-            return this;
-        }
-
-        @JsonSetter(value = "email_message_metadata", nulls = Nulls.SKIP)
-        public Builder emailMessageMetadata(Optional<EmailMessageMetadata> emailMessageMetadata) {
-            this.emailMessageMetadata = emailMessageMetadata;
-            return this;
-        }
-
-        public Builder emailMessageMetadata(EmailMessageMetadata emailMessageMetadata) {
-            this.emailMessageMetadata = Optional.ofNullable(emailMessageMetadata);
-            return this;
-        }
-
-        @JsonSetter(value = "metadata", nulls = Nulls.SKIP)
-        public Builder metadata(Optional<ConversationPartMetadata> metadata) {
-            this.metadata = metadata;
-            return this;
-        }
-
-        public Builder metadata(ConversationPartMetadata metadata) {
-            this.metadata = Optional.ofNullable(metadata);
-            return this;
-        }
-
         /**
-         * <p>Indicates the current state of conversation when the conversation part was created.</p>
+         * <p>The app package code if this part was created via API. null if the part was not created via API.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "state", nulls = Nulls.SKIP)
-        public Builder state(Optional<State> state) {
-            this.state = state;
-            return this;
-        }
-
-        public Builder state(State state) {
-            this.state = Optional.ofNullable(state);
-            return this;
-        }
-
-        /**
-         * <p>A list of tags objects associated with the conversation part.</p>
-         */
-        @JsonSetter(value = "tags", nulls = Nulls.SKIP)
-        public Builder tags(Optional<List<TagBasic>> tags) {
-            this.tags = tags;
-            return this;
-        }
-
-        public Builder tags(List<TagBasic> tags) {
-            this.tags = Optional.ofNullable(tags);
-            return this;
-        }
-
-        @JsonSetter(value = "event_details", nulls = Nulls.SKIP)
-        public Builder eventDetails(Optional<EventDetails> eventDetails) {
-            this.eventDetails = eventDetails;
-            return this;
-        }
-
-        public Builder eventDetails(EventDetails eventDetails) {
-            this.eventDetails = Optional.ofNullable(eventDetails);
+        @java.lang.Override
+        public _FinalStage appPackageCode(String appPackageCode) {
+            this.appPackageCode = Optional.ofNullable(appPackageCode);
             return this;
         }
 
         /**
          * <p>The app package code if this part was created via API. null if the part was not created via API.</p>
          */
+        @java.lang.Override
         @JsonSetter(value = "app_package_code", nulls = Nulls.SKIP)
-        public Builder appPackageCode(Optional<String> appPackageCode) {
+        public _FinalStage appPackageCode(Optional<String> appPackageCode) {
             this.appPackageCode = appPackageCode;
             return this;
         }
 
-        public Builder appPackageCode(String appPackageCode) {
-            this.appPackageCode = Optional.ofNullable(appPackageCode);
+        @java.lang.Override
+        public _FinalStage eventDetails(EventDetails eventDetails) {
+            this.eventDetails = Optional.ofNullable(eventDetails);
             return this;
         }
 
+        @java.lang.Override
+        @JsonSetter(value = "event_details", nulls = Nulls.SKIP)
+        public _FinalStage eventDetails(Optional<EventDetails> eventDetails) {
+            this.eventDetails = eventDetails;
+            return this;
+        }
+
+        /**
+         * <p>A list of tags objects associated with the conversation part.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage tags(List<TagBasic> tags) {
+            this.tags = Optional.ofNullable(tags);
+            return this;
+        }
+
+        /**
+         * <p>A list of tags objects associated with the conversation part.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "tags", nulls = Nulls.SKIP)
+        public _FinalStage tags(Optional<List<TagBasic>> tags) {
+            this.tags = tags;
+            return this;
+        }
+
+        /**
+         * <p>Indicates the current state of conversation when the conversation part was created.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage state(State state) {
+            this.state = Optional.ofNullable(state);
+            return this;
+        }
+
+        /**
+         * <p>Indicates the current state of conversation when the conversation part was created.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "state", nulls = Nulls.SKIP)
+        public _FinalStage state(Optional<State> state) {
+            this.state = state;
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage metadata(ConversationPartMetadata metadata) {
+            this.metadata = Optional.ofNullable(metadata);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "metadata", nulls = Nulls.SKIP)
+        public _FinalStage metadata(Optional<ConversationPartMetadata> metadata) {
+            this.metadata = metadata;
+            return this;
+        }
+
+        @java.lang.Override
+        public _FinalStage emailMessageMetadata(EmailMessageMetadata emailMessageMetadata) {
+            this.emailMessageMetadata = Optional.ofNullable(emailMessageMetadata);
+            return this;
+        }
+
+        @java.lang.Override
+        @JsonSetter(value = "email_message_metadata", nulls = Nulls.SKIP)
+        public _FinalStage emailMessageMetadata(Optional<EmailMessageMetadata> emailMessageMetadata) {
+            this.emailMessageMetadata = emailMessageMetadata;
+            return this;
+        }
+
+        /**
+         * <p>The external id of the conversation part</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage externalId(String externalId) {
+            this.externalId = Optional.ofNullable(externalId);
+            return this;
+        }
+
+        /**
+         * <p>The external id of the conversation part</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "external_id", nulls = Nulls.SKIP)
+        public _FinalStage externalId(Optional<String> externalId) {
+            this.externalId = externalId;
+            return this;
+        }
+
+        /**
+         * <p>A list of attachments for the part.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage attachments(List<PartAttachment> attachments) {
+            this.attachments = Optional.ofNullable(attachments);
+            return this;
+        }
+
+        /**
+         * <p>A list of attachments for the part.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "attachments", nulls = Nulls.SKIP)
+        public _FinalStage attachments(Optional<List<PartAttachment>> attachments) {
+            this.attachments = attachments;
+            return this;
+        }
+
+        /**
+         * <p>The id of the admin that was assigned the conversation by this conversation_part (null if there has been no change in assignment.)</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage assignedTo(Reference assignedTo) {
+            this.assignedTo = Optional.ofNullable(assignedTo);
+            return this;
+        }
+
+        /**
+         * <p>The id of the admin that was assigned the conversation by this conversation_part (null if there has been no change in assignment.)</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "assigned_to", nulls = Nulls.SKIP)
+        public _FinalStage assignedTo(Optional<Reference> assignedTo) {
+            this.assignedTo = assignedTo;
+            return this;
+        }
+
+        /**
+         * <p>The time the user was notified with the conversation part.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage notifiedAt(Integer notifiedAt) {
+            this.notifiedAt = Optional.ofNullable(notifiedAt);
+            return this;
+        }
+
+        /**
+         * <p>The time the user was notified with the conversation part.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "notified_at", nulls = Nulls.SKIP)
+        public _FinalStage notifiedAt(Optional<Integer> notifiedAt) {
+            this.notifiedAt = notifiedAt;
+            return this;
+        }
+
+        /**
+         * <p>The message body, which may contain HTML. For Twitter, this will show a generic message regarding why the body is obscured.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage body(String body) {
+            this.body = Optional.ofNullable(body);
+            return this;
+        }
+
+        /**
+         * <p>The message body, which may contain HTML. For Twitter, this will show a generic message regarding why the body is obscured.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "body", nulls = Nulls.SKIP)
+        public _FinalStage body(Optional<String> body) {
+            this.body = body;
+            return this;
+        }
+
+        @java.lang.Override
         public ConversationPart build() {
             return new ConversationPart(
                     type,

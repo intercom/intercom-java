@@ -16,19 +16,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = HelpCenter.Builder.class)
 public final class HelpCenter {
-    private final Optional<String> id;
+    private final String id;
 
-    private final Optional<String> workspaceId;
+    private final String workspaceId;
 
-    private final Optional<Integer> createdAt;
+    private final int createdAt;
 
-    private final Optional<Integer> updatedAt;
+    private final int updatedAt;
 
-    private final Optional<String> identifier;
+    private final String identifier;
 
     private final Optional<Boolean> websiteTurnedOn;
 
@@ -41,11 +42,11 @@ public final class HelpCenter {
     private final Map<String, Object> additionalProperties;
 
     private HelpCenter(
-            Optional<String> id,
-            Optional<String> workspaceId,
-            Optional<Integer> createdAt,
-            Optional<Integer> updatedAt,
-            Optional<String> identifier,
+            String id,
+            String workspaceId,
+            int createdAt,
+            int updatedAt,
+            String identifier,
             Optional<Boolean> websiteTurnedOn,
             Optional<String> displayName,
             Optional<String> url,
@@ -67,7 +68,7 @@ public final class HelpCenter {
      * @return The unique identifier for the Help Center which is given by Intercom.
      */
     @JsonProperty("id")
-    public Optional<String> getId() {
+    public String getId() {
         return id;
     }
 
@@ -75,7 +76,7 @@ public final class HelpCenter {
      * @return The id of the workspace which the Help Center belongs to.
      */
     @JsonProperty("workspace_id")
-    public Optional<String> getWorkspaceId() {
+    public String getWorkspaceId() {
         return workspaceId;
     }
 
@@ -83,7 +84,7 @@ public final class HelpCenter {
      * @return The time when the Help Center was created.
      */
     @JsonProperty("created_at")
-    public Optional<Integer> getCreatedAt() {
+    public int getCreatedAt() {
         return createdAt;
     }
 
@@ -91,7 +92,7 @@ public final class HelpCenter {
      * @return The time when the Help Center was last updated.
      */
     @JsonProperty("updated_at")
-    public Optional<Integer> getUpdatedAt() {
+    public int getUpdatedAt() {
         return updatedAt;
     }
 
@@ -99,7 +100,7 @@ public final class HelpCenter {
      * @return The identifier of the Help Center. This is used in the URL of the Help Center.
      */
     @JsonProperty("identifier")
-    public Optional<String> getIdentifier() {
+    public String getIdentifier() {
         return identifier;
     }
 
@@ -149,8 +150,8 @@ public final class HelpCenter {
     private boolean equalTo(HelpCenter other) {
         return id.equals(other.id)
                 && workspaceId.equals(other.workspaceId)
-                && createdAt.equals(other.createdAt)
-                && updatedAt.equals(other.updatedAt)
+                && createdAt == other.createdAt
+                && updatedAt == other.updatedAt
                 && identifier.equals(other.identifier)
                 && websiteTurnedOn.equals(other.websiteTurnedOn)
                 && displayName.equals(other.displayName)
@@ -177,35 +178,106 @@ public final class HelpCenter {
         return ObjectMappers.stringify(this);
     }
 
-    public static Builder builder() {
+    public static IdStage builder() {
         return new Builder();
     }
 
+    public interface IdStage {
+        /**
+         * <p>The unique identifier for the Help Center which is given by Intercom.</p>
+         */
+        WorkspaceIdStage id(@NotNull String id);
+
+        Builder from(HelpCenter other);
+    }
+
+    public interface WorkspaceIdStage {
+        /**
+         * <p>The id of the workspace which the Help Center belongs to.</p>
+         */
+        CreatedAtStage workspaceId(@NotNull String workspaceId);
+    }
+
+    public interface CreatedAtStage {
+        /**
+         * <p>The time when the Help Center was created.</p>
+         */
+        UpdatedAtStage createdAt(int createdAt);
+    }
+
+    public interface UpdatedAtStage {
+        /**
+         * <p>The time when the Help Center was last updated.</p>
+         */
+        IdentifierStage updatedAt(int updatedAt);
+    }
+
+    public interface IdentifierStage {
+        /**
+         * <p>The identifier of the Help Center. This is used in the URL of the Help Center.</p>
+         */
+        _FinalStage identifier(@NotNull String identifier);
+    }
+
+    public interface _FinalStage {
+        HelpCenter build();
+
+        /**
+         * <p>Whether the Help Center is turned on or not. This is controlled in your Help Center settings.</p>
+         */
+        _FinalStage websiteTurnedOn(Optional<Boolean> websiteTurnedOn);
+
+        _FinalStage websiteTurnedOn(Boolean websiteTurnedOn);
+
+        /**
+         * <p>The display name of the Help Center only seen by teammates.</p>
+         */
+        _FinalStage displayName(Optional<String> displayName);
+
+        _FinalStage displayName(String displayName);
+
+        /**
+         * <p>The URL for the help center, if you have a custom domain then this will show the URL using the custom domain.</p>
+         */
+        _FinalStage url(Optional<String> url);
+
+        _FinalStage url(String url);
+
+        /**
+         * <p>Custom domain configured for the help center</p>
+         */
+        _FinalStage customDomain(Optional<String> customDomain);
+
+        _FinalStage customDomain(String customDomain);
+    }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder {
-        private Optional<String> id = Optional.empty();
+    public static final class Builder
+            implements IdStage, WorkspaceIdStage, CreatedAtStage, UpdatedAtStage, IdentifierStage, _FinalStage {
+        private String id;
 
-        private Optional<String> workspaceId = Optional.empty();
+        private String workspaceId;
 
-        private Optional<Integer> createdAt = Optional.empty();
+        private int createdAt;
 
-        private Optional<Integer> updatedAt = Optional.empty();
+        private int updatedAt;
 
-        private Optional<String> identifier = Optional.empty();
+        private String identifier;
 
-        private Optional<Boolean> websiteTurnedOn = Optional.empty();
-
-        private Optional<String> displayName = Optional.empty();
+        private Optional<String> customDomain = Optional.empty();
 
         private Optional<String> url = Optional.empty();
 
-        private Optional<String> customDomain = Optional.empty();
+        private Optional<String> displayName = Optional.empty();
+
+        private Optional<Boolean> websiteTurnedOn = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
+        @java.lang.Override
         public Builder from(HelpCenter other) {
             id(other.getId());
             workspaceId(other.getWorkspaceId());
@@ -221,130 +293,145 @@ public final class HelpCenter {
 
         /**
          * <p>The unique identifier for the Help Center which is given by Intercom.</p>
+         * <p>The unique identifier for the Help Center which is given by Intercom.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "id", nulls = Nulls.SKIP)
-        public Builder id(Optional<String> id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder id(String id) {
-            this.id = Optional.ofNullable(id);
+        @java.lang.Override
+        @JsonSetter("id")
+        public WorkspaceIdStage id(@NotNull String id) {
+            this.id = Objects.requireNonNull(id, "id must not be null");
             return this;
         }
 
         /**
          * <p>The id of the workspace which the Help Center belongs to.</p>
+         * <p>The id of the workspace which the Help Center belongs to.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "workspace_id", nulls = Nulls.SKIP)
-        public Builder workspaceId(Optional<String> workspaceId) {
-            this.workspaceId = workspaceId;
-            return this;
-        }
-
-        public Builder workspaceId(String workspaceId) {
-            this.workspaceId = Optional.ofNullable(workspaceId);
+        @java.lang.Override
+        @JsonSetter("workspace_id")
+        public CreatedAtStage workspaceId(@NotNull String workspaceId) {
+            this.workspaceId = Objects.requireNonNull(workspaceId, "workspaceId must not be null");
             return this;
         }
 
         /**
          * <p>The time when the Help Center was created.</p>
+         * <p>The time when the Help Center was created.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "created_at", nulls = Nulls.SKIP)
-        public Builder createdAt(Optional<Integer> createdAt) {
+        @java.lang.Override
+        @JsonSetter("created_at")
+        public UpdatedAtStage createdAt(int createdAt) {
             this.createdAt = createdAt;
-            return this;
-        }
-
-        public Builder createdAt(Integer createdAt) {
-            this.createdAt = Optional.ofNullable(createdAt);
             return this;
         }
 
         /**
          * <p>The time when the Help Center was last updated.</p>
+         * <p>The time when the Help Center was last updated.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "updated_at", nulls = Nulls.SKIP)
-        public Builder updatedAt(Optional<Integer> updatedAt) {
+        @java.lang.Override
+        @JsonSetter("updated_at")
+        public IdentifierStage updatedAt(int updatedAt) {
             this.updatedAt = updatedAt;
-            return this;
-        }
-
-        public Builder updatedAt(Integer updatedAt) {
-            this.updatedAt = Optional.ofNullable(updatedAt);
             return this;
         }
 
         /**
          * <p>The identifier of the Help Center. This is used in the URL of the Help Center.</p>
+         * <p>The identifier of the Help Center. This is used in the URL of the Help Center.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "identifier", nulls = Nulls.SKIP)
-        public Builder identifier(Optional<String> identifier) {
-            this.identifier = identifier;
-            return this;
-        }
-
-        public Builder identifier(String identifier) {
-            this.identifier = Optional.ofNullable(identifier);
+        @java.lang.Override
+        @JsonSetter("identifier")
+        public _FinalStage identifier(@NotNull String identifier) {
+            this.identifier = Objects.requireNonNull(identifier, "identifier must not be null");
             return this;
         }
 
         /**
-         * <p>Whether the Help Center is turned on or not. This is controlled in your Help Center settings.</p>
+         * <p>Custom domain configured for the help center</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "website_turned_on", nulls = Nulls.SKIP)
-        public Builder websiteTurnedOn(Optional<Boolean> websiteTurnedOn) {
-            this.websiteTurnedOn = websiteTurnedOn;
-            return this;
-        }
-
-        public Builder websiteTurnedOn(Boolean websiteTurnedOn) {
-            this.websiteTurnedOn = Optional.ofNullable(websiteTurnedOn);
-            return this;
-        }
-
-        /**
-         * <p>The display name of the Help Center only seen by teammates.</p>
-         */
-        @JsonSetter(value = "display_name", nulls = Nulls.SKIP)
-        public Builder displayName(Optional<String> displayName) {
-            this.displayName = displayName;
-            return this;
-        }
-
-        public Builder displayName(String displayName) {
-            this.displayName = Optional.ofNullable(displayName);
-            return this;
-        }
-
-        /**
-         * <p>The URL for the help center, if you have a custom domain then this will show the URL using the custom domain.</p>
-         */
-        @JsonSetter(value = "url", nulls = Nulls.SKIP)
-        public Builder url(Optional<String> url) {
-            this.url = url;
-            return this;
-        }
-
-        public Builder url(String url) {
-            this.url = Optional.ofNullable(url);
+        @java.lang.Override
+        public _FinalStage customDomain(String customDomain) {
+            this.customDomain = Optional.ofNullable(customDomain);
             return this;
         }
 
         /**
          * <p>Custom domain configured for the help center</p>
          */
+        @java.lang.Override
         @JsonSetter(value = "custom_domain", nulls = Nulls.SKIP)
-        public Builder customDomain(Optional<String> customDomain) {
+        public _FinalStage customDomain(Optional<String> customDomain) {
             this.customDomain = customDomain;
             return this;
         }
 
-        public Builder customDomain(String customDomain) {
-            this.customDomain = Optional.ofNullable(customDomain);
+        /**
+         * <p>The URL for the help center, if you have a custom domain then this will show the URL using the custom domain.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage url(String url) {
+            this.url = Optional.ofNullable(url);
             return this;
         }
 
+        /**
+         * <p>The URL for the help center, if you have a custom domain then this will show the URL using the custom domain.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "url", nulls = Nulls.SKIP)
+        public _FinalStage url(Optional<String> url) {
+            this.url = url;
+            return this;
+        }
+
+        /**
+         * <p>The display name of the Help Center only seen by teammates.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage displayName(String displayName) {
+            this.displayName = Optional.ofNullable(displayName);
+            return this;
+        }
+
+        /**
+         * <p>The display name of the Help Center only seen by teammates.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "display_name", nulls = Nulls.SKIP)
+        public _FinalStage displayName(Optional<String> displayName) {
+            this.displayName = displayName;
+            return this;
+        }
+
+        /**
+         * <p>Whether the Help Center is turned on or not. This is controlled in your Help Center settings.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage websiteTurnedOn(Boolean websiteTurnedOn) {
+            this.websiteTurnedOn = Optional.ofNullable(websiteTurnedOn);
+            return this;
+        }
+
+        /**
+         * <p>Whether the Help Center is turned on or not. This is controlled in your Help Center settings.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "website_turned_on", nulls = Nulls.SKIP)
+        public _FinalStage websiteTurnedOn(Optional<Boolean> websiteTurnedOn) {
+            this.websiteTurnedOn = websiteTurnedOn;
+            return this;
+        }
+
+        @java.lang.Override
         public HelpCenter build() {
             return new HelpCenter(
                     id,

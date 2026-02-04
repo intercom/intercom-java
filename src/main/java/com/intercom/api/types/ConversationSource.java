@@ -19,40 +19,41 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 @JsonDeserialize(builder = ConversationSource.Builder.class)
 public final class ConversationSource {
-    private final Optional<Type> type;
+    private final Type type;
 
-    private final Optional<String> id;
+    private final String id;
 
-    private final Optional<String> deliveredAs;
+    private final String deliveredAs;
 
     private final Optional<String> subject;
 
     private final Optional<String> body;
 
-    private final Optional<ConversationPartAuthor> author;
+    private final ConversationPartAuthor author;
 
     private final Optional<List<PartAttachment>> attachments;
 
     private final Optional<String> url;
 
-    private final Optional<Boolean> redacted;
+    private final boolean redacted;
 
     private final Map<String, Object> additionalProperties;
 
     private ConversationSource(
-            Optional<Type> type,
-            Optional<String> id,
-            Optional<String> deliveredAs,
+            Type type,
+            String id,
+            String deliveredAs,
             Optional<String> subject,
             Optional<String> body,
-            Optional<ConversationPartAuthor> author,
+            ConversationPartAuthor author,
             Optional<List<PartAttachment>> attachments,
             Optional<String> url,
-            Optional<Boolean> redacted,
+            boolean redacted,
             Map<String, Object> additionalProperties) {
         this.type = type;
         this.id = id;
@@ -70,7 +71,7 @@ public final class ConversationSource {
      * @return This includes conversation, email, facebook, instagram, phone_call, phone_switch, push, sms, twitter and whatsapp.
      */
     @JsonProperty("type")
-    public Optional<Type> getType() {
+    public Type getType() {
         return type;
     }
 
@@ -78,7 +79,7 @@ public final class ConversationSource {
      * @return The id representing the message.
      */
     @JsonProperty("id")
-    public Optional<String> getId() {
+    public String getId() {
         return id;
     }
 
@@ -86,7 +87,7 @@ public final class ConversationSource {
      * @return The conversation's initiation type. Possible values are customer_initiated, campaigns_initiated (legacy campaigns), operator_initiated (Custom bot), automated (Series and other outbounds with dynamic audience message) and admin_initiated (fixed audience message, ticket initiated by an admin, group email).
      */
     @JsonProperty("delivered_as")
-    public Optional<String> getDeliveredAs() {
+    public String getDeliveredAs() {
         return deliveredAs;
     }
 
@@ -107,7 +108,7 @@ public final class ConversationSource {
     }
 
     @JsonProperty("author")
-    public Optional<ConversationPartAuthor> getAuthor() {
+    public ConversationPartAuthor getAuthor() {
         return author;
     }
 
@@ -131,7 +132,7 @@ public final class ConversationSource {
      * @return Whether or not the source message has been redacted. Only applicable for contact initiated messages.
      */
     @JsonProperty("redacted")
-    public Optional<Boolean> getRedacted() {
+    public boolean getRedacted() {
         return redacted;
     }
 
@@ -155,7 +156,7 @@ public final class ConversationSource {
                 && author.equals(other.author)
                 && attachments.equals(other.attachments)
                 && url.equals(other.url)
-                && redacted.equals(other.redacted);
+                && redacted == other.redacted;
     }
 
     @java.lang.Override
@@ -177,35 +178,103 @@ public final class ConversationSource {
         return ObjectMappers.stringify(this);
     }
 
-    public static Builder builder() {
+    public static TypeStage builder() {
         return new Builder();
     }
 
+    public interface TypeStage {
+        /**
+         * <p>This includes conversation, email, facebook, instagram, phone_call, phone_switch, push, sms, twitter and whatsapp.</p>
+         */
+        IdStage type(@NotNull Type type);
+
+        Builder from(ConversationSource other);
+    }
+
+    public interface IdStage {
+        /**
+         * <p>The id representing the message.</p>
+         */
+        DeliveredAsStage id(@NotNull String id);
+    }
+
+    public interface DeliveredAsStage {
+        /**
+         * <p>The conversation's initiation type. Possible values are customer_initiated, campaigns_initiated (legacy campaigns), operator_initiated (Custom bot), automated (Series and other outbounds with dynamic audience message) and admin_initiated (fixed audience message, ticket initiated by an admin, group email).</p>
+         */
+        AuthorStage deliveredAs(@NotNull String deliveredAs);
+    }
+
+    public interface AuthorStage {
+        RedactedStage author(@NotNull ConversationPartAuthor author);
+    }
+
+    public interface RedactedStage {
+        /**
+         * <p>Whether or not the source message has been redacted. Only applicable for contact initiated messages.</p>
+         */
+        _FinalStage redacted(boolean redacted);
+    }
+
+    public interface _FinalStage {
+        ConversationSource build();
+
+        /**
+         * <p>Optional. The message subject. For Twitter, this will show a generic message regarding why the subject is obscured.</p>
+         */
+        _FinalStage subject(Optional<String> subject);
+
+        _FinalStage subject(String subject);
+
+        /**
+         * <p>The message body, which may contain HTML. For Twitter, this will show a generic message regarding why the body is obscured.</p>
+         */
+        _FinalStage body(Optional<String> body);
+
+        _FinalStage body(String body);
+
+        /**
+         * <p>A list of attachments for the part.</p>
+         */
+        _FinalStage attachments(Optional<List<PartAttachment>> attachments);
+
+        _FinalStage attachments(List<PartAttachment> attachments);
+
+        /**
+         * <p>The URL where the conversation was started. For Twitter, Email, and Bots, this will be blank.</p>
+         */
+        _FinalStage url(Optional<String> url);
+
+        _FinalStage url(String url);
+    }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static final class Builder {
-        private Optional<Type> type = Optional.empty();
+    public static final class Builder
+            implements TypeStage, IdStage, DeliveredAsStage, AuthorStage, RedactedStage, _FinalStage {
+        private Type type;
 
-        private Optional<String> id = Optional.empty();
+        private String id;
 
-        private Optional<String> deliveredAs = Optional.empty();
+        private String deliveredAs;
 
-        private Optional<String> subject = Optional.empty();
+        private ConversationPartAuthor author;
 
-        private Optional<String> body = Optional.empty();
-
-        private Optional<ConversationPartAuthor> author = Optional.empty();
-
-        private Optional<List<PartAttachment>> attachments = Optional.empty();
+        private boolean redacted;
 
         private Optional<String> url = Optional.empty();
 
-        private Optional<Boolean> redacted = Optional.empty();
+        private Optional<List<PartAttachment>> attachments = Optional.empty();
+
+        private Optional<String> body = Optional.empty();
+
+        private Optional<String> subject = Optional.empty();
 
         @JsonAnySetter
         private Map<String, Object> additionalProperties = new HashMap<>();
 
         private Builder() {}
 
+        @java.lang.Override
         public Builder from(ConversationSource other) {
             type(other.getType());
             id(other.getId());
@@ -221,127 +290,140 @@ public final class ConversationSource {
 
         /**
          * <p>This includes conversation, email, facebook, instagram, phone_call, phone_switch, push, sms, twitter and whatsapp.</p>
+         * <p>This includes conversation, email, facebook, instagram, phone_call, phone_switch, push, sms, twitter and whatsapp.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "type", nulls = Nulls.SKIP)
-        public Builder type(Optional<Type> type) {
-            this.type = type;
-            return this;
-        }
-
-        public Builder type(Type type) {
-            this.type = Optional.ofNullable(type);
+        @java.lang.Override
+        @JsonSetter("type")
+        public IdStage type(@NotNull Type type) {
+            this.type = Objects.requireNonNull(type, "type must not be null");
             return this;
         }
 
         /**
          * <p>The id representing the message.</p>
+         * <p>The id representing the message.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "id", nulls = Nulls.SKIP)
-        public Builder id(Optional<String> id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder id(String id) {
-            this.id = Optional.ofNullable(id);
+        @java.lang.Override
+        @JsonSetter("id")
+        public DeliveredAsStage id(@NotNull String id) {
+            this.id = Objects.requireNonNull(id, "id must not be null");
             return this;
         }
 
         /**
          * <p>The conversation's initiation type. Possible values are customer_initiated, campaigns_initiated (legacy campaigns), operator_initiated (Custom bot), automated (Series and other outbounds with dynamic audience message) and admin_initiated (fixed audience message, ticket initiated by an admin, group email).</p>
+         * <p>The conversation's initiation type. Possible values are customer_initiated, campaigns_initiated (legacy campaigns), operator_initiated (Custom bot), automated (Series and other outbounds with dynamic audience message) and admin_initiated (fixed audience message, ticket initiated by an admin, group email).</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "delivered_as", nulls = Nulls.SKIP)
-        public Builder deliveredAs(Optional<String> deliveredAs) {
-            this.deliveredAs = deliveredAs;
+        @java.lang.Override
+        @JsonSetter("delivered_as")
+        public AuthorStage deliveredAs(@NotNull String deliveredAs) {
+            this.deliveredAs = Objects.requireNonNull(deliveredAs, "deliveredAs must not be null");
             return this;
         }
 
-        public Builder deliveredAs(String deliveredAs) {
-            this.deliveredAs = Optional.ofNullable(deliveredAs);
+        @java.lang.Override
+        @JsonSetter("author")
+        public RedactedStage author(@NotNull ConversationPartAuthor author) {
+            this.author = Objects.requireNonNull(author, "author must not be null");
             return this;
         }
 
         /**
-         * <p>Optional. The message subject. For Twitter, this will show a generic message regarding why the subject is obscured.</p>
+         * <p>Whether or not the source message has been redacted. Only applicable for contact initiated messages.</p>
+         * <p>Whether or not the source message has been redacted. Only applicable for contact initiated messages.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "subject", nulls = Nulls.SKIP)
-        public Builder subject(Optional<String> subject) {
-            this.subject = subject;
-            return this;
-        }
-
-        public Builder subject(String subject) {
-            this.subject = Optional.ofNullable(subject);
+        @java.lang.Override
+        @JsonSetter("redacted")
+        public _FinalStage redacted(boolean redacted) {
+            this.redacted = redacted;
             return this;
         }
 
         /**
-         * <p>The message body, which may contain HTML. For Twitter, this will show a generic message regarding why the body is obscured.</p>
+         * <p>The URL where the conversation was started. For Twitter, Email, and Bots, this will be blank.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
          */
-        @JsonSetter(value = "body", nulls = Nulls.SKIP)
-        public Builder body(Optional<String> body) {
-            this.body = body;
-            return this;
-        }
-
-        public Builder body(String body) {
-            this.body = Optional.ofNullable(body);
-            return this;
-        }
-
-        @JsonSetter(value = "author", nulls = Nulls.SKIP)
-        public Builder author(Optional<ConversationPartAuthor> author) {
-            this.author = author;
-            return this;
-        }
-
-        public Builder author(ConversationPartAuthor author) {
-            this.author = Optional.ofNullable(author);
-            return this;
-        }
-
-        /**
-         * <p>A list of attachments for the part.</p>
-         */
-        @JsonSetter(value = "attachments", nulls = Nulls.SKIP)
-        public Builder attachments(Optional<List<PartAttachment>> attachments) {
-            this.attachments = attachments;
-            return this;
-        }
-
-        public Builder attachments(List<PartAttachment> attachments) {
-            this.attachments = Optional.ofNullable(attachments);
+        @java.lang.Override
+        public _FinalStage url(String url) {
+            this.url = Optional.ofNullable(url);
             return this;
         }
 
         /**
          * <p>The URL where the conversation was started. For Twitter, Email, and Bots, this will be blank.</p>
          */
+        @java.lang.Override
         @JsonSetter(value = "url", nulls = Nulls.SKIP)
-        public Builder url(Optional<String> url) {
+        public _FinalStage url(Optional<String> url) {
             this.url = url;
             return this;
         }
 
-        public Builder url(String url) {
-            this.url = Optional.ofNullable(url);
+        /**
+         * <p>A list of attachments for the part.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage attachments(List<PartAttachment> attachments) {
+            this.attachments = Optional.ofNullable(attachments);
             return this;
         }
 
         /**
-         * <p>Whether or not the source message has been redacted. Only applicable for contact initiated messages.</p>
+         * <p>A list of attachments for the part.</p>
          */
-        @JsonSetter(value = "redacted", nulls = Nulls.SKIP)
-        public Builder redacted(Optional<Boolean> redacted) {
-            this.redacted = redacted;
+        @java.lang.Override
+        @JsonSetter(value = "attachments", nulls = Nulls.SKIP)
+        public _FinalStage attachments(Optional<List<PartAttachment>> attachments) {
+            this.attachments = attachments;
             return this;
         }
 
-        public Builder redacted(Boolean redacted) {
-            this.redacted = Optional.ofNullable(redacted);
+        /**
+         * <p>The message body, which may contain HTML. For Twitter, this will show a generic message regarding why the body is obscured.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage body(String body) {
+            this.body = Optional.ofNullable(body);
             return this;
         }
 
+        /**
+         * <p>The message body, which may contain HTML. For Twitter, this will show a generic message regarding why the body is obscured.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "body", nulls = Nulls.SKIP)
+        public _FinalStage body(Optional<String> body) {
+            this.body = body;
+            return this;
+        }
+
+        /**
+         * <p>Optional. The message subject. For Twitter, this will show a generic message regarding why the subject is obscured.</p>
+         * @return Reference to {@code this} so that method calls can be chained together.
+         */
+        @java.lang.Override
+        public _FinalStage subject(String subject) {
+            this.subject = Optional.ofNullable(subject);
+            return this;
+        }
+
+        /**
+         * <p>Optional. The message subject. For Twitter, this will show a generic message regarding why the subject is obscured.</p>
+         */
+        @java.lang.Override
+        @JsonSetter(value = "subject", nulls = Nulls.SKIP)
+        public _FinalStage subject(Optional<String> subject) {
+            this.subject = subject;
+            return this;
+        }
+
+        @java.lang.Override
         public ConversationSource build() {
             return new ConversationSource(
                     type, id, deliveredAs, subject, body, author, attachments, url, redacted, additionalProperties);
