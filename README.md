@@ -233,3 +233,86 @@ a proof of concept, but know that we will not be able to merge it as-is. We sugg
 an issue first to discuss with us!
 
 On the other hand, contributions to the README are always very welcome!
+
+## For Maintainers
+
+### Regenerating the SDK
+
+This SDK is generated using [Fern](https://buildwithfern.com). To regenerate the SDK after API changes:
+
+#### Prerequisites
+
+- Ensure you have Fern CLI installed
+- Navigate to the `fern/` directory of the Fern config repo
+- If you only need regeneration without publishing, you can empty credentials in `generators.yml` to skip the publish step:
+  ```yaml
+  # Example: Clear Maven credentials to skip publish
+  username: ""
+  password: ""
+  signing-key-id: ""
+  ```
+
+#### Regeneration Command
+
+```bash
+fern generate --group java-sdk
+```
+
+#### Common Issues
+
+- **Integration tests failing**: Fix the tests locally and push updates to the PR branch
+- **Spotless formatting errors**: Run the Spotless formatter locally to fix formatting issues
+- **Maven signing errors**: If publishing is enabled, ensure these environment variables are set:
+  - `MAVEN_SIGNING_KEY_ID`
+  - `MAVEN_SIGNING_KEY`
+  - `MAVEN_SIGNING_PASSWORD`
+- **GitHub Actions delays**: If CI is degraded, pipelines may need retries
+
+### Publishing to Maven Central
+
+After regenerating the SDK and merging the PR:
+
+#### 1. Create a Release Tag
+
+Manually create and push a Git tag for the release:
+
+```bash
+git tag v4.0.x
+git push origin v4.0.x
+```
+
+#### 2. Trigger Publish Workflow
+
+The tag push triggers the publish workflow automatically. Ensure the version in the repo config aligns with the intended release.
+
+#### 3. Verify Publication
+
+- Check [Maven Central](https://central.sonatype.com/artifact/io.intercom/intercom-java/overview) for the new version
+- Note: Maven Central indexing can take some time to appear
+
+#### Required Credentials
+
+Publishing requires:
+- Maven Central credentials (username/password)
+- GPG signing key configuration:
+  - `MAVEN_SIGNING_KEY_ID`
+  - `MAVEN_SIGNING_KEY`
+  - `MAVEN_SIGNING_PASSWORD`
+
+Contributors without publish credentials can open regeneration PRs. Team members with credentials can complete the publish steps.
+
+### Example Workflow
+
+1. **Update OpenAPI spec** (if needed): Add overrides in `openapi-overrides.yml` in the Intercom-OpenAPI repo
+2. **Regenerate SDK**: Run `fern generate --group java-sdk`
+3. **Fix any issues**: Address integration test failures or formatting issues
+4. **Create PR**: Open a pull request with the regenerated code
+5. **Merge PR**: After review and approval
+6. **Tag release**: Create and push a Git tag
+7. **Verify publish**: Check Maven Central for the new version
+
+### Related Resources
+
+- [Fern Documentation](https://buildwithfern.com)
+- [Maven Central Repository](https://central.sonatype.com/artifact/io.intercom/intercom-java)
+- [Intercom OpenAPI Spec](https://github.com/intercom/Intercom-OpenAPI)
